@@ -55,7 +55,7 @@ template <class T> SepaControlDispatch<T>::~SepaControlDispatch()
 template <class T> template <class C> HRESULT SepaControlDispatch<T>::Create(REFCLSID rclid, void** pvvObject)
 {
 	HRESULT hr;
-	ClieopDispatch<T>* pDispatch;
+	SepaControlDispatch<T>* pDispatch;
 
 	pDispatch = new C();
 	if(!pDispatch)

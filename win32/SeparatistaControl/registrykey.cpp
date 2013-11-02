@@ -18,47 +18,73 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-[
-   uuid(6B20C63D-F57B-4755-9D58-11D93D7EC908), 
-   helpstring("Separatista 1.0 Type Library."),
-   lcid(0),
-   version(1)
-]
+#include <string>
+#include <locale>
+#include <tchar.h>
 
-library Separatista
+#include "registrykey.h"
+
+RegistryKey::RegistryKey(HKEY hKey, LPCTSTR lpSubKey)
 {
-	importlib("stdole.tlb");
+	m_bIsOpen = false;
 
-	typedef enum
+	if(RegCreateKeyEx(
+		hKey,
+		lpSubKey,
+		NULL,
+		NULL,
+		REG_OPTION_NON_VOLATILE,
+		KEY_ALL_ACCESS,
+		NULL,
+		&m_hKey,
+		NULL) == ERROR_SUCCESS)
 	{
-		OK,
-		E_FILE,
-		E_FORMAT
-	} MT940SOpenStatus;
-	
-	[
-		uuid(051E4622-F5B0-40c4-81BC-F12EB35F1868),
-		helpstring("IMT940SDocument interface"),
-		oleautomation,
-		dual,
-		odl
-	]
-	interface IMT940SDocument : IDispatch
-	{
-		[ helpstring("Open a mt940s document") ]
-		HRESULT __stdcall Open(
-			[in] BSTR Path,
-			[out, retval] MT940SOpenStatus* pStatus);
-	};
-	[
-		uuid(6DF05A76-0582-415a-9B96-163F76914250),
-		helpstring("MT940SDocument object")
-	]
-	coclass MT940SDocument 
-	{
-		[default] interface IMT940SDocument;
-		interface IDispatch;
-	};
-
-
+		m_bIsOpen = true;
+	}
 }
+
+RegistryKey::~RegistryKey()
+{
+	if(m_bIsOpen)
+		RegCloseKey(m_hKey);
+}
+
+bool RegistryKey::isOpen() const
+{
+	return m_bIsOpen;
+}
+
+bool RegistryKey::setValue(LPCTSTR lpValue)
+{
+	return setValue(NULL, lpValue);
+}
+
+bool RegistryKey::setValue(LPCTSTR lpValueName, LPCTSTR lpValue)
+{
+	if(!m_bIsOpen)
+		return false;
+
+	if(RegSetValueEx(
+		m_hKey,
+		lpValueName,
+		NULL,
+		REG_SZ,
+		(const BYTE*)lpValue,
+		_tcslen(lpValue) * sizeof(TCHAR)) == ERROR_SUCCESS)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void RegistryKey::operator =(LPCTSTR lpValue)
+{
+	setValue(lpValue);
+}
+
+RegistryKey::operator HKEY()
+{
+	return m_hKey;
+}
+

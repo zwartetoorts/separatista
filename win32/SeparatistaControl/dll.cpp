@@ -23,6 +23,8 @@
 
 #include "dll.h"
 #include "classfactory.h"
+#include "mt940sdocument.h"
+#include "registrykey.h"
 
 
 /**
@@ -63,20 +65,22 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 		if(g_lpszDllPath)
 			delete g_lpszDllPath;
 	}
-	Separatista::MT940SDocument *doc = new Separatista::MT940SDocument();
-	doc->Open("C:\\Documents and Settings\\Okkel Klaver\\Mijn documenten\\Downloads\\MT940.swi");
+
 	return TRUE;
 }
 
 STDAPI DllGetClassObject(REFCLSID rclsid,
 						 REFIID riid,
-						 LPVOID* ppv)
+						 LPVOID *ppv)
 {
 	HRESULT hRet;
-	SepaControlClassFactory* pFactory;
+	SepaControlClassFactory *pFactory;
 
 	*ppv = NULL;
-	return CLASS_E_CLASSNOTAVAILABLE;
+	if(IsEqualIID(rclsid, __uuidof(IMT940SDocument)))
+		pFactory = new SepaControlClassFactory(SepaControlDispatch<IMT940SDocument>::Create<CMT940SDocument>);
+	else
+		return CLASS_E_CLASSNOTAVAILABLE;
 
 	if(!pFactory)
 		return E_OUTOFMEMORY;
@@ -102,6 +106,8 @@ STDAPI DllUnregisterServer()
 	HRESULT hRet;
 	
 	hRet = UnRegisterTypeLib(__uuidof(ISepaControlTypeLib), 1, 0, 0, SYS_WIN32);
+
+	RegistryKey 
 	
 	return S_OK;
 }
@@ -110,13 +116,51 @@ STDAPI DllRegisterServer()
 {
 	HRESULT hr = S_OK;
 	ITypeLib* pTypeLib;
-
+	
 	if(!g_lpszDllPath)
 		return SELFREG_E_TYPELIB;
 
 	hr = LoadTypeLibEx(g_lpszDllPath, REGKIND_REGISTER, &pTypeLib);
 	if(hr != S_OK)
 		return SELFREG_E_TYPELIB;
+
+	RegistryKey MT940SDocumentKey(HKEY_CLASSES_ROOT, TEXT("CLSID\\{6DF05A76-0582-415a-9B96-163F76914250}"));
+
+	if(MT940SDocumentKey.isOpen())
+	{
+		MT940SDocumentKey = TEXT("MT940SDocument");
+
+		RegistryKey MT940SDocumentInProcServerKey(MT940SDocumentKey, TEXT("InProcServer32"));
+
+		if(!MT940SDocumentInProcServerKey.isOpen() ||
+			!MT940SDocumentInProcServerKey.setValue(g_lpszDllPath) ||
+			!MT940SDocumentInProcServerKey.setValue(TEXT("ThreadingModel"), TEXT("Apartment")))
+			hr = E_FAIL;
+		else
+			if(!MT940SDocumentKey.setValue(TEXT("InProcServer32"), g_lpszDllPath) ||
+				!MT940SDocumentKey.setValue(TEXT("ProgId"), TEXT("Separatista.MT940SDocument.1")) ||
+				!MT940SDocumentKey.setValue(TEXT("VersIndProgId"), TEXT("Separatista.MT940SDocument")))
+				hr = E_FAIL;
+	}
+	else
+		hr = E_FAIL;
+
+	if(hr == S_OK)
+	{
+		RegistryKey MT940SDocumentAppKey(HKEY_CLASSES_ROOT, TEXT("Separatista.MT940SDocument.1"));
+		RegistryKey MT940SDocumentIndAppKey(HKEY_CLASSES_ROOT, TEXT("Separatista.MT940SDocument"));
+
+		if(MT940SDocumentAppKey.isOpen() &&
+			MT940SDocumentIndAppKey.isOpen())
+		{
+			if(!MT940SDocumentAppKey.setValue(TEXT("CLSID"), TEXT("{6DF05A76-0582-415a-9B96-163F76914250}")) ||
+				!MT940SDocumentAppKey.setValue(TEXT("CurVer"), TEXT("Separatista.MT940SDocument")) ||
+				!MT940SDocumentIndAppKey.setValue(TEXT("CLSID"), TEXT("{6DF05A76-0582-415a-9B96-163F76914250}")))
+				hr = E_FAIL;
+		}
+		else
+			hr = E_FAIL;
+	}
 
 	if(hr != S_OK)
 		DllUnregisterServer();

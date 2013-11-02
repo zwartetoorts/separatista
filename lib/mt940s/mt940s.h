@@ -183,14 +183,14 @@ protected:
 	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord20(int line, int rline, std::string& data, ReadInfo *info);
 	
 	/**
-		Handle header 21 Account number record
+		Handle header 25 Account number record
 		@param line The line number in the document
 		@param rline The line number in the record
 		@param data The to be parsed data
 		@param info Parser information needed internally. Should be provided by the caller.
 		@see ReadRecord
 	*/
-	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord21(int line, int rline, std::string& data, ReadInfo *info);
+	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord25(int line, int rline, std::string& data, ReadInfo *info);
 	
 	/**
 		Handle header 28C Serial number record

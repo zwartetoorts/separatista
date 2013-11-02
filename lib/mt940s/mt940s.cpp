@@ -86,6 +86,9 @@ MT940SDocument::OpenStatus MT940SDocument::Open(const char *path)
 						m_recordsets.push_back(recordset);
 					}
 				}
+
+				// Next character
+				++it;
 			} else {
 				// It's the same record
 				rline++;
@@ -93,7 +96,7 @@ MT940SDocument::OpenStatus MT940SDocument::Open(const char *path)
 
 			// Check recordset
 			if(recordset != NULL)
-				status = recordset->ReadRecord(nline, rline, header, string(++it, line.end()), &info);
+				status = recordset->ReadRecord(nline, rline, header, string(it, line.end()), &info);
 		}
 		nline++;
 	}
@@ -114,8 +117,8 @@ MT940SDocument::OpenStatus MT940SRecordset::ReadRecord(int line, int rline, std:
 		return ReadRecord20(line, rline, data, info);
 
 	// Account number record
-	if(header == "21")
-		return ReadRecord21(line, rline, data, info);
+	if(header == "25")
+		return ReadRecord25(line, rline, data, info);
 
 	// Serial number record
 	if(header == "28C")
@@ -146,7 +149,7 @@ MT940SDocument::OpenStatus MT940SRecordset::ReadRecord20(int line, int rline, st
 	return MT940SDocument::OK;
 }
 
-MT940SDocument::OpenStatus MT940SRecordset::ReadRecord21(int line, int rline, std::string &data, MT940SRecordset::ReadInfo *info)
+MT940SDocument::OpenStatus MT940SRecordset::ReadRecord25(int line, int rline, std::string &data, MT940SRecordset::ReadInfo *info)
 {
 	size_t i;
 
