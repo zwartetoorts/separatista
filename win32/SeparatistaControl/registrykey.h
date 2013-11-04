@@ -39,6 +39,8 @@ public:
 	void operator = (LPCTSTR lpValue);
 
 	operator HKEY();
+
+	void DeleteTree(LPCTSTR lpSubKeyName);
 private:
 	HKEY m_hKey;
 	bool m_bIsOpen;

@@ -101,14 +101,133 @@ STDAPI DllCanUnloadNow()
 
 struct __declspec(uuid("6B20C63D-F57B-4755-9D58-11D93D7EC908")) ISepaControlTypeLib;
 
+/**
+	Unregister a COM object by clearing all the registry values
+	@param lpCLSID CLSID in { } form
+	@param lpProgID ProgID like Toolkit.Object.Version
+	@param VersIndProgID Version independent ProgID like Toolkit.Object
+*/
+
+void DllUnregisterObject(LPCTSTR lpCLSID, LPCTSTR lpProgID, LPCTSTR lpVersIndProgID)
+{
+	// Open the classes root key
+	RegistryKey classesKey(HKEY_LOCAL_MACHINE, TEXT("SOFTWARE\\Classes"));
+	if(!classesKey.isOpen())
+		return;
+
+	// Remove ProdID and VersionIndependentProgID
+	classesKey.DeleteTree(lpProgID);
+	classesKey.DeleteTree(lpVersIndProgID);
+
+	// Open the CLSID subkey
+	RegistryKey clsidKey(classesKey, TEXT("CLSID"));
+	if(!clsidKey.isOpen())
+		return;
+
+	// Remove the CLSID key
+	clsidKey.DeleteTree(lpCLSID);
+}
+
 STDAPI DllUnregisterServer()
 {
-	HRESULT hRet;
-	
-	hRet = UnRegisterTypeLib(__uuidof(ISepaControlTypeLib), 1, 0, 0, SYS_WIN32);
+	// Self unregister typelib
+	UnRegisterTypeLib(__uuidof(ISepaControlTypeLib), 1, 0, 0, SYS_WIN32);
 
-	RegistryKey 
+	// Unregister Separatista.MT940SDocument
+	DllUnregisterObject(
+		TEXT("{6DF05A76-0582-415a-9B96-163F76914250}"),
+		TEXT("Separatista.MT940SDocument.1"),
+		TEXT("Separatista.MT940SDocument"));
 	
+	return S_OK;
+}
+
+/**
+	Register a COM object by setting all the registry values
+	@param lpCLSID CLSID in { } form
+	@param lpProgID ProgID like Toolkit.Object.Version
+	@param VersIndProgID Version independent ProgID like Toolkit.Object
+	@return S_OK on success, SELFREG_E_CLASS on error
+*/
+
+HRESULT DllRegisterObject(LPCTSTR lpCLSID, LPCTSTR lpProgID, LPCTSTR lpVersIndProgID)
+{
+	// Open the classes root key
+	RegistryKey classesKey(HKEY_LOCAL_MACHINE, TEXT("SOFTWARE\\Classes"));
+	if(!classesKey.isOpen())
+		return SELFREG_E_CLASS;
+
+	// Open root clsid key first
+	RegistryKey rootKey(classesKey, TEXT("CLSID"));
+	if(!rootKey.isOpen())
+		return SELFREG_E_CLASS;
+
+	// Create the clsid subkey
+	RegistryKey clsidKey(rootKey, lpCLSID);
+	if(!clsidKey.isOpen())
+		return SELFREG_E_CLASS;
+	if(!clsidKey.setValue(lpVersIndProgID))
+		return SELFREG_E_CLASS;
+
+	// Set subkeyvalues on the clsid subkey
+	// InprocServer32
+	RegistryKey inprocKey(clsidKey, TEXT("InprocServer32"));
+	if(!inprocKey.isOpen())
+		return SELFREG_E_CLASS;
+	if(!inprocKey.setValue(g_lpszDllPath))
+		return SELFREG_E_CLASS;
+	if(!inprocKey.setValue(TEXT("ThreadingModel"), TEXT("Apartment")))
+		return SELFREG_E_CLASS;
+	
+	// ProgID
+	RegistryKey progIDKey(clsidKey, TEXT("ProgID"));
+	if(!progIDKey.isOpen())
+		return SELFREG_E_CLASS;
+	if(!progIDKey.setValue(lpProgID))
+		return SELFREG_E_CLASS;
+
+	// VersionIndependentProgID
+	RegistryKey vidProgIDKey(clsidKey, TEXT("VersionIndependentProgID"));
+	if(!vidProgIDKey.isOpen())
+		return SELFREG_E_CLASS;
+	if(!vidProgIDKey.setValue(lpVersIndProgID))
+		return SELFREG_E_CLASS;
+
+	// Create the classes ProgID key
+	RegistryKey classesProgIDKey(classesKey, lpProgID);
+	if(!classesProgIDKey.isOpen())
+		return SELFREG_E_CLASS;
+	if(!classesProgIDKey.setValue(lpVersIndProgID))
+		return SELFREG_E_CLASS;
+
+	// Classes ProgID CLSID
+	RegistryKey classesCLSIDKey(classesProgIDKey, TEXT("CLSID"));
+	if(!classesCLSIDKey.isOpen())
+		return SELFREG_E_CLASS;
+	if(!classesCLSIDKey.setValue(lpCLSID))
+		return SELFREG_E_CLASS;
+
+	// Classes ProgID CurVer
+	RegistryKey classesCurVerKey(classesProgIDKey, TEXT("CurVer"));
+	if(!classesCurVerKey.isOpen())
+		return SELFREG_E_CLASS;
+	if(!classesCurVerKey.setValue(lpVersIndProgID))
+		return SELFREG_E_CLASS;
+
+	// Create the classes VersionIndependentProgID key
+	RegistryKey classesVidProgIDKey(classesKey, lpVersIndProgID);
+	if(!classesVidProgIDKey.isOpen())
+		return SELFREG_E_CLASS;
+	if(!classesVidProgIDKey.setValue(lpVersIndProgID))
+		return SELFREG_E_CLASS;
+
+	// VersionIndependentProgID CLSID
+	RegistryKey classesVidCLSIDKey(classesVidProgIDKey, TEXT("CLSID"));
+	if(!classesVidCLSIDKey.isOpen())
+		return SELFREG_E_CLASS;
+	if(!classesVidCLSIDKey.setValue(lpCLSID))
+		return SELFREG_E_CLASS;
+
 	return S_OK;
 }
 
@@ -117,54 +236,29 @@ STDAPI DllRegisterServer()
 	HRESULT hr = S_OK;
 	ITypeLib* pTypeLib;
 	
+	// Check dll path
 	if(!g_lpszDllPath)
 		return SELFREG_E_TYPELIB;
 
+	// Try to self register typelib
 	hr = LoadTypeLibEx(g_lpszDllPath, REGKIND_REGISTER, &pTypeLib);
-	if(hr != S_OK)
+	if(FAILED(hr))
 		return SELFREG_E_TYPELIB;
 
-	RegistryKey MT940SDocumentKey(HKEY_CLASSES_ROOT, TEXT("CLSID\\{6DF05A76-0582-415a-9B96-163F76914250}"));
-
-	if(MT940SDocumentKey.isOpen())
-	{
-		MT940SDocumentKey = TEXT("MT940SDocument");
-
-		RegistryKey MT940SDocumentInProcServerKey(MT940SDocumentKey, TEXT("InProcServer32"));
-
-		if(!MT940SDocumentInProcServerKey.isOpen() ||
-			!MT940SDocumentInProcServerKey.setValue(g_lpszDllPath) ||
-			!MT940SDocumentInProcServerKey.setValue(TEXT("ThreadingModel"), TEXT("Apartment")))
-			hr = E_FAIL;
-		else
-			if(!MT940SDocumentKey.setValue(TEXT("InProcServer32"), g_lpszDllPath) ||
-				!MT940SDocumentKey.setValue(TEXT("ProgId"), TEXT("Separatista.MT940SDocument.1")) ||
-				!MT940SDocumentKey.setValue(TEXT("VersIndProgId"), TEXT("Separatista.MT940SDocument")))
-				hr = E_FAIL;
-	}
-	else
-		hr = E_FAIL;
-
-	if(hr == S_OK)
-	{
-		RegistryKey MT940SDocumentAppKey(HKEY_CLASSES_ROOT, TEXT("Separatista.MT940SDocument.1"));
-		RegistryKey MT940SDocumentIndAppKey(HKEY_CLASSES_ROOT, TEXT("Separatista.MT940SDocument"));
-
-		if(MT940SDocumentAppKey.isOpen() &&
-			MT940SDocumentIndAppKey.isOpen())
-		{
-			if(!MT940SDocumentAppKey.setValue(TEXT("CLSID"), TEXT("{6DF05A76-0582-415a-9B96-163F76914250}")) ||
-				!MT940SDocumentAppKey.setValue(TEXT("CurVer"), TEXT("Separatista.MT940SDocument")) ||
-				!MT940SDocumentIndAppKey.setValue(TEXT("CLSID"), TEXT("{6DF05A76-0582-415a-9B96-163F76914250}")))
-				hr = E_FAIL;
-		}
-		else
-			hr = E_FAIL;
-	}
-
-	if(hr != S_OK)
-		DllUnregisterServer();
+	// Free the typelib
 	pTypeLib->Release();
+
+	// Try to register Separatista.MT940SDocument
+	hr = DllRegisterObject(
+		TEXT("{6DF05A76-0582-415a-9B96-163F76914250}"),
+		TEXT("Separatista.MT940SDocument.1"),
+		TEXT("Separatista.MT940SDocument"));
+	if(FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
+
 	return hr;
 }
 

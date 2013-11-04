@@ -21,6 +21,7 @@
 #include <string>
 #include <locale>
 #include <tchar.h>
+#include <shlwapi.h>
 
 #include "registrykey.h"
 
@@ -88,3 +89,12 @@ RegistryKey::operator HKEY()
 	return m_hKey;
 }
 
+void RegistryKey::DeleteTree(LPCTSTR lpSubKeyName)
+{
+	if(m_bIsOpen)
+	{
+		SHDeleteKey(
+			m_hKey,
+			lpSubKeyName);
+	}
+}

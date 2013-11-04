@@ -59,6 +59,4 @@ library Separatista
 		[default] interface IMT940SDocument;
 		interface IDispatch;
 	};
-
-
 }
