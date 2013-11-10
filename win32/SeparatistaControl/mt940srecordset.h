@@ -18,26 +18,25 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef SEPARATISTA_MT940SDOCUMENT_H
-#define SEPARATISTA_MT940SDOCUMENT_H
+#ifndef SEPARATISTA_MT940SRECORDSET_H
+#define SEPARATISTA_MT940SRECORDSET_H
 
 #include <windows.h>
 #include <oleauto.h>
 
 #include "mt940s/mt940s.h"
 #include "dispatch.h"
+#include "mt940sdocument.h"
 
-struct IMT940SRecordset;
+// {B61526D3-1B0E-42c0-A276-C0F1DAA94CC8}
+DEFINE_GUID(IID_IMT940SRecordset, 
+0xb61526d3, 0x1b0e, 0x42c0, 0xa2, 0x76, 0xc0, 0xf1, 0xda, 0xa9, 0x4c, 0xc8);
 
-// {051E4622-F5B0-40c4-81BC-F12EB35F1868}
-DEFINE_GUID(IID_IMT940SDocument, 
-0x51e4622, 0xf5b0, 0x40c4, 0x81, 0xbc, 0xf1, 0x2e, 0xb3, 0x5f, 0x18, 0x68);
+// {343F637E-DA0B-43a4-A802-8F9EF2DCC5DF}
+DEFINE_GUID(CLSID_CMT940SRecordset, 
+0x343f637e, 0xda0b, 0x43a4, 0xa8, 0x2, 0x8f, 0x9e, 0xf2, 0xdc, 0xc5, 0xdf);
 
-// {6DF05A76-0582-415a-9B96-163F76914250}
-DEFINE_GUID(CLSID_CMT940SDocument, 
-0x6df05a76, 0x582, 0x415a, 0x9b, 0x96, 0x16, 0x3f, 0x76, 0x91, 0x42, 0x50);
-
-struct IMT940SDocument : public IDispatch
+struct IMT940SRecordset : public IDispatch
 {
 	STDMETHOD_(ULONG, AddRef)() PURE;
 	STDMETHOD_(ULONG, Release)() PURE;
@@ -47,34 +46,29 @@ struct IMT940SDocument : public IDispatch
 	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId) PURE;
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
 
-	STDMETHOD(Open)(BSTR Path, Separatista::MT940SDocument::OpenStatus *pStatus) PURE;
-	STDMETHOD(Count)(long *plCount) PURE;
-	STDMETHOD(Item)(VARIANT vIndex, IMT940SRecordset **ppIMT940SRecordset) PURE;
-	STDMETHOD(_NewEnum)(IUnknown ** ppUnk) PURE;
 };
 
-struct __declspec(uuid("{051E4622-F5B0-40c4-81BC-F12EB35F1868}")) IMT940SDocument;
+struct __declspec(uuid("{B61526D3-1B0E-42c0-A276-C0F1DAA94CC8}")) IMT940SRecordset;
 
 /**
-	COM representation of a MT940SDocument. 
+	COM representation of a MT940SRecordset. 
 	Memory management takes 2 strategies. The CMT940SDocument will persist until all references are released. 
 	Other classes like CMT940SRecordset will come and go on-the-fly and hold only references to the child 
 	objects in the parent CMT940SDocument. 
 */
-class CMT940SDocument : public SepaControlDispatch<IMT940SDocument>
+class CMT940SRecordset : public SepaControlDispatch<IMT940SRecordset>
 {
 public:
-	/// Try to open a MT940SDocument
-	STDMETHOD(Open)(BSTR Path, Separatista::MT940SDocument::OpenStatus *pStatus);
+	/**
+		Assignment operator, will set the internal pointer to the recordset
+	*/
+	CMT940SRecordset& operator = (Separatista::MT940SRecordset *pMT940SRecordset);
 
-	STDMETHOD(Count)(long *plCount);
-	STDMETHOD(Item)(VARIANT vIndex, IMT940SRecordset **ppIMT940SRecordset);
-	STDMETHOD(_NewEnum)(IUnknown ** ppUnk);
 private:
-	/// The internal MT940SDocument
-	Separatista::MT940SDocument m_MT940SDocument;
+	/// Pointer to the MT940SRecordset it represents
+	Separatista::MT940SRecordset *m_pMT940SRecordset;
 };
 
-class __declspec(uuid("{6DF05A76-0582-415a-9B96-163F76914250}")) CMT940SDocument;
+class __declspec(uuid("{343F637E-DA0B-43a4-A802-8F9EF2DCC5DF}")) CMT940SRecordset;
 
-#endif // ifndef SEPARATISTA_MT940SDOCUMENT_H
+#endif // ifndef SEPARATISTA_MT940SRECORDSET_H

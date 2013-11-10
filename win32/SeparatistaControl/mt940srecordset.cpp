@@ -21,36 +21,10 @@
 #include <comutil.h>
 
 #include "mt940srecordset.h"
-#include "mt940sdocument.h"
 
-STDMETHODIMP CMT940SDocument::Open(BSTR Path, Separatista::MT940SDocument::OpenStatus *pStatus)
+CMT940SRecordset& CMT940SRecordset::operator = (Separatista::MT940SRecordset *pMT940SRecordset)
 {
-	_bstr_t path(Path);
+	m_pMT940SRecordset = pMT940SRecordset;
 
-	*pStatus = m_MT940SDocument.Open(path);
-
-	return S_OK;
-}
-
-STDMETHODIMP CMT940SDocument::Count(long *plCount)
-{
-	*plCount = m_MT940SDocument.getRecordsetCount();
-
-	return S_OK;
-}
-
-STDMETHODIMP CMT940SDocument::Item(VARIANT vIndex, IMT940SRecordset **ppIMT940SRecordset)
-{
-	CMT940SRecordset *pCMT940SRecordset = new CMT940SRecordset(this);
-	_variant_t index(vIndex);
-
-	pCMT940SRecordset ;
-	if(!pCMT940SRecordset)
-		return E_OUTOFMEMORY;
-
-	pCMT940SRecordset = m_MT940SDocument.getRecordset(index);
-
-	*ppIMT940SRecordset = pCMT940SRecordset;
-
-	return S_OK;
+	return *this;
 }

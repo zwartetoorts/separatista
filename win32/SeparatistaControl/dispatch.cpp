@@ -41,6 +41,16 @@ template <class T> SepaControlDispatch<T>::SepaControlDispatch()
 			m_pTypeLib = NULL;
 		}
 	}
+
+	// Set parent to NULL
+	m_pParent = NULL;
+}
+
+template <class T> SepaControlDispatch<T>::SepaControlDispatch(IDispatch *pParent)
+:SepaControlDispatch<T>
+{
+	m_pParent = pParent;
+	pParent->AddRef();
 }
 
 template <class T> SepaControlDispatch<T>::~SepaControlDispatch()
@@ -50,6 +60,10 @@ template <class T> SepaControlDispatch<T>::~SepaControlDispatch()
 	if(m_pTypeLib)
 		m_pTypeLib->Release();
 	g_uDllRefCount--;
+
+	// Check parent and release if necessary
+	if(m_pParent)
+		m_pParent->Release();
 }
 
 template <class T> template <class C> HRESULT SepaControlDispatch<T>::Create(REFCLSID rclid, void** pvvObject)

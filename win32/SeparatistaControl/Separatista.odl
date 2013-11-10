@@ -29,6 +29,42 @@ library Separatista
 {
 	importlib("stdole.tlb");
 
+	/**
+		MT940SRecordset
+	*/
+	[
+		uuid(6DF05A76-0582-415a-9B96-163F76914250),
+		helpstring("MT940SDocument object")
+	]
+	coclass MT940SDocument 
+	{
+		[default] interface IMT940SDocument;
+		interface IDispatch;
+	};
+
+	[
+		uuid(B61526D3-1B0E-42c0-A276-C0F1DAA94CC8),
+		helpstring("IMT940SRecordset interface"),
+		oleautomation,
+		dual,
+		odl
+	]
+	interface IMT940SRecordset : IDispatch
+	{
+	};
+	[
+		uuid(343F637E-DA0B-43a4-A802-8F9EF2DCC5DF),
+		helpstring("MT940SRecordset object")
+	]
+	coclass MT940SRecordset 
+	{
+		[default] interface IMT940SRecordset;
+		interface IDispatch;
+	};
+
+	/**
+		MT940SDocument
+	*/
 	typedef enum
 	{
 		OK,
@@ -49,14 +85,21 @@ library Separatista
 		HRESULT __stdcall Open(
 			[in] BSTR Path,
 			[out, retval] MT940SOpenStatus* pStatus);
+
+		[ propget, helpstring("The number of MT940SRecordsets in this MT940SDocument" ) ]
+		HRESULT __stdcall Count(
+			[out, retval] long *plCount);
+
+		[ propget, id(DISPID_VALUE),
+			helpstring("Get the MT940Recordset at index") ]
+		HRESULT __stdcall Item(
+			[in] VARIANT vIndex,
+			[out, retval] IMT940SRecordset **ppIMT940SRecordset);
+
+		[ propget, restricted, id(DISPID_NEWENUM), 
+			helpstring("Get the enumerator") ]
+		HRESULT __stdcall _NewEnum(
+			[out, retval] IUnknown **ppUnk);
 	};
-	[
-		uuid(6DF05A76-0582-415a-9B96-163F76914250),
-		helpstring("MT940SDocument object")
-	]
-	coclass MT940SDocument 
-	{
-		[default] interface IMT940SDocument;
-		interface IDispatch;
-	};
+
 }

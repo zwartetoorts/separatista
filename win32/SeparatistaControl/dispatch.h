@@ -27,7 +27,20 @@ template <class T>
 class SepaControlDispatch : public T
 {
 public:
+	/// Default constructor
 	SepaControlDispatch();
+
+	/**
+		This constructor takes the parent COM object as an argument.
+		It will call AddRef on the parent object and call Release on destruction. This
+		will make sure the parent object isn't destroyed before this child.
+	*/
+	SepaControlDispatch(IDispatch* pParent);
+
+	/**
+		Destructor.
+		Calls Release on the parent COM object if set
+	*/
 	virtual ~SepaControlDispatch();
 
 	template <class C> static HRESULT Create(REFCLSID rclid, void** pvvObject);
@@ -46,6 +59,7 @@ protected:
 	ULONG m_uRefCount;
 	ITypeLib* m_pTypeLib;
 	ITypeInfo* m_pTypeInfo;
+	IDispatch *m_pParent;
 };
 
 #endif // !defined SEPARATISTA_DISPATCH_H
