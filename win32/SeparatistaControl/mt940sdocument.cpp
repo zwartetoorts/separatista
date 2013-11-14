@@ -22,6 +22,7 @@
 
 #include "mt940srecordset.h"
 #include "mt940sdocument.h"
+#include "dispatch.cpp"
 
 STDMETHODIMP CMT940SDocument::Open(BSTR Path, Separatista::MT940SDocument::OpenStatus *pStatus)
 {
@@ -41,16 +42,25 @@ STDMETHODIMP CMT940SDocument::Count(long *plCount)
 
 STDMETHODIMP CMT940SDocument::Item(VARIANT vIndex, IMT940SRecordset **ppIMT940SRecordset)
 {
-	CMT940SRecordset *pCMT940SRecordset = new CMT940SRecordset(this);
+	CMT940SRecordset *pCMT940SRecordset;
 	_variant_t index(vIndex);
 
-	pCMT940SRecordset ;
+	pCMT940SRecordset  = new CMT940SRecordset(this);
 	if(!pCMT940SRecordset)
 		return E_OUTOFMEMORY;
 
-	pCMT940SRecordset = m_MT940SDocument.getRecordset(index);
+	*pCMT940SRecordset = m_MT940SDocument.getRecordset(index);
 
 	*ppIMT940SRecordset = pCMT940SRecordset;
 
 	return S_OK;
 }
+
+STDMETHODIMP CMT940SDocument::_NewEnum(IUnknown **ppUnk)
+{
+	*ppUnk = (IEnumVARIANT*)this;
+
+	return S_OK;
+}
+
+

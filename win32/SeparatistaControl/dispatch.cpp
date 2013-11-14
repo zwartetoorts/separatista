@@ -47,8 +47,9 @@ template <class T> SepaControlDispatch<T>::SepaControlDispatch()
 }
 
 template <class T> SepaControlDispatch<T>::SepaControlDispatch(IDispatch *pParent)
-:SepaControlDispatch<T>
 {
+	SepaControlDispatch<T>();
+
 	m_pParent = pParent;
 	pParent->AddRef();
 }

@@ -60,6 +60,12 @@ class CMT940SRecordset : public SepaControlDispatch<IMT940SRecordset>
 {
 public:
 	/**
+		@see SepaControllDispatch
+	*/
+	CMT940SRecordset(IDispatch *pParent) :
+	  SepaControlDispatch<IMT940SRecordset>(pParent) {};
+
+	/**
 		Assignment operator, will set the internal pointer to the recordset
 	*/
 	CMT940SRecordset& operator = (Separatista::MT940SRecordset *pMT940SRecordset);

@@ -18,14 +18,38 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <comutil.h>
+#include "windows.h"
+#include <vector>
 
-#include "mt940srecordset.h"
-#include "dispatch.cpp"
+#ifndef SEPARATISTA_ENUMVARIANT_H
+#define SEPARATISTA_ENUMVARIANT_G
 
-CMT940SRecordset& CMT940SRecordset::operator = (Separatista::MT940SRecordset *pMT940SRecordset)
+class EnumVariant : public IEnumVARIANT
 {
-	m_pMT940SRecordset = pMT940SRecordset;
+public:
+	EnumVariant();
 
-	return *this;
-}
+	// Destructor
+	~EnumVariant();
+
+	// IUnknown methods
+	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** pvvObject);
+	ULONG STDMETHODCALLTYPE AddRef();
+	ULONG STDMETHODCALLTYPE Release();
+
+	// IEnumVARIANT methods
+	STDMETHOD(Next)(unsigned long celt, VARIANT FAR* rgvar, unsigned long FAR* pceltFetched);
+	STDMETHOD(Skip)(unsigned long celt);
+	STDMETHOD(Reset)();
+	STDMETHOD(Clone)(IEnumVARIANT FAR* FAR* ppenum);
+
+	// Other methods
+	EnumVariant& operator = (std::vector<IUnknown*> *objects);
+
+private:
+	ULONG m_uRefCount;
+	std::vector<IUnknown*> m_objects;
+
+};
+
+#endif // !defined SEPARATISTA_ENUMVARIANT_H

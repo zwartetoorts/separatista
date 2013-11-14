@@ -39,6 +39,7 @@ DEFINE_GUID(CLSID_CMT940SDocument,
 
 struct IMT940SDocument : public IDispatch
 {
+	// IDispatch
 	STDMETHOD_(ULONG, AddRef)() PURE;
 	STDMETHOD_(ULONG, Release)() PURE;
 	STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject) PURE;
@@ -47,10 +48,12 @@ struct IMT940SDocument : public IDispatch
 	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId) PURE;
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
 
+	// IMT940SDocument
 	STDMETHOD(Open)(BSTR Path, Separatista::MT940SDocument::OpenStatus *pStatus) PURE;
 	STDMETHOD(Count)(long *plCount) PURE;
 	STDMETHOD(Item)(VARIANT vIndex, IMT940SRecordset **ppIMT940SRecordset) PURE;
 	STDMETHOD(_NewEnum)(IUnknown ** ppUnk) PURE;
+
 };
 
 struct __declspec(uuid("{051E4622-F5B0-40c4-81BC-F12EB35F1868}")) IMT940SDocument;
@@ -70,6 +73,7 @@ public:
 	STDMETHOD(Count)(long *plCount);
 	STDMETHOD(Item)(VARIANT vIndex, IMT940SRecordset **ppIMT940SRecordset);
 	STDMETHOD(_NewEnum)(IUnknown ** ppUnk);
+
 private:
 	/// The internal MT940SDocument
 	Separatista::MT940SDocument m_MT940SDocument;

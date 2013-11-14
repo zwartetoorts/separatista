@@ -40,10 +40,10 @@
 namespace Separatista 
 {
 
-class IBAN_EXTERN IBAN 
+class IBAN 
 {
 public:
-	IBAN& operator = (const char *iban);
+	IBAN_EXTERN IBAN& operator = (const char *iban);
 
 private:
 	std::string m_iban;

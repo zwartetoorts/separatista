@@ -28,6 +28,25 @@
 using namespace std;
 using namespace Separatista;
 
+MT940SDocument::~MT940SDocument()
+{
+	vector<MT940SRecordset*>::iterator it;
+
+	// Delete all recordsets
+	for(it = m_recordsets.begin(); it != m_recordsets.end(); it++)
+		delete *it;
+}
+
+size_t MT940SDocument::getRecordsetCount()
+{
+	return m_recordsets.size();
+}
+
+MT940SRecordset* MT940SDocument::getRecordset(size_t i) 
+{
+	return m_recordsets[i];
+}
+
 MT940SRecordset::~MT940SRecordset()
 {
 	vector<MT940STransaction*>::iterator it;
@@ -373,9 +392,11 @@ void MT940SCurrency::set(const char dcCode, const char *currency, const char *am
 	m_amount = amount;
 }
 
-void MT940SDate::operator =(const char *date)
+MT940SDate& MT940SDate::operator =(const char *date)
 {
 	m_date = date;
+
+	return *this;
 }
 
 

@@ -38,7 +38,7 @@
 namespace Separatista 
 {
 
-class MT940S_EXTERN MT940SCurrency
+class MT940SCurrency
 {
 public:
 	/**
@@ -47,7 +47,7 @@ public:
 		@param currency International currencty code
 		@param amount Amount as text with decimal sign
 	*/
-	void set(const char dcCode, const char *currency, const char *amount);
+	MT940S_EXTERN void set(const char dcCode, const char *currency, const char *amount);
 
 private:
 	char m_dcCode;
@@ -55,14 +55,14 @@ private:
 	std::string m_amount;
 };
 
-class MT940S_EXTERN MT940SDate
+class MT940SDate
 {
 public:
 	/**
 		Set the date
 		@param date Must be in YYMMDD format
 	*/
-	void operator = (const char *date);
+	MT940S_EXTERN MT940SDate& operator = (const char *date);
 private:
 	std::string m_date;
 };
@@ -110,6 +110,11 @@ class MT940SDocument
 {
 public:
 	/**
+		Destructor
+	*/
+	MT940S_EXTERN ~MT940SDocument();
+
+	/**
 		Code indicating success or failure reading a MT940S file
 	*/
 	enum OpenStatus 
@@ -128,6 +133,16 @@ public:
 		@return OK for success, or error code
 	*/
 	MT940S_EXTERN MT940SDocument::OpenStatus Open(const char *path);
+
+	/**
+		Get the number of recordsets in the document
+	*/
+	MT940S_EXTERN size_t getRecordsetCount();
+
+	/**
+		Get the MT940SRecord at index i
+	*/
+	MT940S_EXTERN MT940SRecordset* getRecordset(size_t i);
 protected:
 	/**
 		Handle header 940 Optional standard header
