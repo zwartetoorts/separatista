@@ -23,6 +23,9 @@
 #include "mt940srecordset.h"
 #include "mt940sdocument.h"
 #include "dispatch.cpp"
+#include "enumvariant.h"
+
+using namespace Separatista;
 
 STDMETHODIMP CMT940SDocument::Open(BSTR Path, Separatista::MT940SDocument::OpenStatus *pStatus)
 {
@@ -58,7 +61,38 @@ STDMETHODIMP CMT940SDocument::Item(VARIANT vIndex, IMT940SRecordset **ppIMT940SR
 
 STDMETHODIMP CMT940SDocument::_NewEnum(IUnknown **ppUnk)
 {
-	*ppUnk = (IEnumVARIANT*)this;
+	EnumVariant *pEnumVariant;
+	std::size_t index;
+	MT940SRecordset *pMT940SRecordset;
+	CMT940SRecordset *pCMT940SRecordset;
+
+	// Create new EnumVariant
+	pEnumVariant = new EnumVariant();
+	if(!pEnumVariant)
+		return E_OUTOFMEMORY;
+	pEnumVariant->AddRef();
+
+	// Enum all recordsets in this document
+	for(index = 0; index < m_MT940SDocument.getRecordsetCount(); index++)
+	{
+		pMT940SRecordset = m_MT940SDocument.getRecordset(index);
+
+		// Create new CMT940SRecordset
+		pCMT940SRecordset = new CMT940SRecordset(this);
+		if(!pCMT940SRecordset)
+		{
+			pEnumVariant->Release();
+			return E_OUTOFMEMORY;
+		}
+		*pCMT940SRecordset = pMT940SRecordset;
+		
+		// Add CMT940SRecordset object to EnumVariant
+		pCMT940SRecordset->AddRef();
+		pEnumVariant->Add(pCMT940SRecordset);
+	}
+
+	// Set out
+	*ppUnk = pEnumVariant;
 
 	return S_OK;
 }

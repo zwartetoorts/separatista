@@ -37,12 +37,6 @@ public:
 	*/
 	SepaControlDispatch(IDispatch* pParent);
 
-	/**
-		Destructor.
-		Calls Release on the parent COM object if set
-	*/
-	virtual ~SepaControlDispatch();
-
 	template <class C> static HRESULT Create(REFCLSID rclid, void** pvvObject);
 
 	// IUnknown methods
@@ -56,6 +50,15 @@ public:
 	HRESULT STDMETHODCALLTYPE GetIDsOfNames(REFIID riid, OLECHAR FAR* FAR* rgszNames, unsigned int cNames, LCID lcid, DISPID FAR* rgDispId);
 	HRESULT STDMETHODCALLTYPE Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr);
 protected:
+	/**
+		Destructor.
+		Calls Release on the parent COM object if set through the constructor.
+		Destructor with protected access. This object has to be freed through Release method
+		since it uses reference counting.
+		@see Release()
+	*/
+	virtual ~SepaControlDispatch();
+
 	ULONG m_uRefCount;
 	ITypeLib* m_pTypeLib;
 	ITypeInfo* m_pTypeInfo;

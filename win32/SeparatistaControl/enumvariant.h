@@ -29,9 +29,6 @@ class EnumVariant : public IEnumVARIANT
 public:
 	EnumVariant();
 
-	// Destructor
-	~EnumVariant();
-
 	// IUnknown methods
 	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** pvvObject);
 	ULONG STDMETHODCALLTYPE AddRef();
@@ -44,11 +41,24 @@ public:
 	STDMETHOD(Clone)(IEnumVARIANT FAR* FAR* ppenum);
 
 	// Other methods
-	EnumVariant& operator = (std::vector<IUnknown*> *objects);
+	/**
+		Add COM object to the internal list.
+		@param pUnknown Pointer to the COM object
+	*/
+	void Add(IUnknown *pUnknown);
+
+protected:
+	/**
+		Destructor with protected access. This object has to be freed through Release method
+		since it uses reference counting.
+		@see Release()
+	*/
+	~EnumVariant();
 
 private:
 	ULONG m_uRefCount;
 	std::vector<IUnknown*> m_objects;
+	std::size_t m_pos;
 
 };
 

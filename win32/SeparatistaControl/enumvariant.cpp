@@ -21,12 +21,14 @@
 #include <windows.h>
 #include <oleauto.h>
 #include <comutil.h>
+#include <array>
 
 #include "enumvariant.h"
 
 EnumVariant::EnumVariant()
 {
 	m_uRefCount = 0;
+	m_pos = 0;
 }
 
 EnumVariant::~EnumVariant()
@@ -70,22 +72,74 @@ HRESULT EnumVariant::QueryInterface(REFIID iid, void** pvvObject)
 
 STDMETHODIMP EnumVariant::Next(unsigned long celt, VARIANT FAR* rgvar, unsigned long FAR* pceltFetched)
 {
-	_variant_t v;
+	std::size_t pos;
 
 	if(pceltFetched != NULL)
-		*pceltFetched = NULL;
+		*pceltFetched = 0;
 
 	if(rgvar == NULL)
 		return E_INVALIDARG;
 
-	for(ULONG l = 0; l < celt; l++)
-		VariantInit(&rgvar[l]);
+	pos = m_pos;
+	for(ULONG l = 0; l < celt && pos < m_objects.size(); l++, pos++)
+	{
+		_variant_t value(&rgvar[l]);
 
+		// Copy reference
+		value = m_objects[pos];
+		
+		if(m_objects[pos])
+			m_objects[pos]->AddRef();
+	}
 
+	m_pos = pos;
+
+	return S_OK;
 }
 
-EnumVariant& EnumVariant::operator = (std::vector<IUnknown*> *objects)
+STDMETHODIMP EnumVariant::Skip(unsigned long celt)
 {
+	m_pos += celt;
 
-	return *this;
+	if(m_pos > m_objects.size())
+		m_pos = m_objects.size() - 1;
+
+	return S_OK;
 }
+
+STDMETHODIMP EnumVariant::Reset()
+{
+	m_pos = 0;
+
+	return S_OK;
+}
+
+STDMETHODIMP EnumVariant::Clone(IEnumVARIANT FAR* FAR* ppenum)
+{
+	std::vector<IUnknown*>::iterator it;
+	
+	if(!ppenum)
+		return E_INVALIDARG;
+
+	EnumVariant *pEnumVariant = new EnumVariant();
+	if(!pEnumVariant)
+		return E_OUTOFMEMORY;
+
+	// Copy and AddRef objects
+	for(it = m_objects.begin(); it != m_objects.end(); it++)
+	{
+		pEnumVariant->m_objects.push_back(*it);
+		(*it)->AddRef();
+	}
+
+	*ppenum = pEnumVariant;
+	pEnumVariant->AddRef();
+
+	return S_OK;
+}
+
+void EnumVariant::Add(IUnknown *pUnknown)
+{
+	m_objects.push_back(pUnknown);
+}
+
