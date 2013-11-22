@@ -314,6 +314,46 @@ MT940SDocument::OpenStatus MT940SRecordset::ReadRecord62F(int line, int rline, s
 	return MT940SDocument::OK;
 }
 
+const char* MT940SRecordset::getCurrencyClient() const
+{
+	return m_currencyClient.c_str();
+}
+
+const char* MT940SRecordset::getTransactionReference() const
+{
+	return m_transactionReference.c_str();
+}
+
+const char* MT940SRecordset::getSerialNumber() const
+{
+	return m_serialNumber.c_str();
+}
+
+const IBAN* MT940SRecordset::getIBANClient() const
+{
+	return &m_ibanClient;
+}
+
+const MT940SCurrency* MT940SRecordset::getPreviousBalance() const
+{
+	return &m_previousBalance;
+}
+
+const MT940SDate* MT940SRecordset::getPreviousBalanceDate() const
+{
+	return &m_previousBalanceDate;
+}
+
+const MT940SCurrency* MT940SRecordset::getCurrentBalance() const
+{
+	return &m_currentBalance;
+}
+
+const MT940SDate* MT940SRecordset::getCurrentBalanceDate() const
+{
+	return &m_currentBalanceDate;
+}
+
 const MT940SDate* MT940STransaction::getDate() const
 {
 	return &m_date;

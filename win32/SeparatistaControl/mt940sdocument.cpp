@@ -48,10 +48,13 @@ STDMETHODIMP CMT940SDocument::Item(VARIANT vIndex, IMT940SRecordset **ppIMT940SR
 	CMT940SRecordset *pCMT940SRecordset;
 	_variant_t index(vIndex);
 
+	if((size_t)index >= m_MT940SDocument.getRecordsetCount())
+		return DISP_E_BADINDEX;
+
 	pCMT940SRecordset  = new CMT940SRecordset(this);
 	if(!pCMT940SRecordset)
 		return E_OUTOFMEMORY;
-
+	
 	*pCMT940SRecordset = m_MT940SDocument.getRecordset(index);
 
 	*ppIMT940SRecordset = pCMT940SRecordset;

@@ -23,9 +23,63 @@
 #include "mt940srecordset.h"
 #include "dispatch.cpp"
 
+CMT940SRecordset::CMT940SRecordset(IDispatch *pParent)
+:SepaControlDispatch<IMT940SRecordset>(pParent)
+{
+	m_pMT940SRecordset = NULL;
+}
+
 CMT940SRecordset& CMT940SRecordset::operator = (Separatista::MT940SRecordset *pMT940SRecordset)
 {
 	m_pMT940SRecordset = pMT940SRecordset;
 
 	return *this;
 }
+
+STDMETHODIMP CMT940SRecordset::CurrencyClient(BSTR *pCurrencyClient)
+{
+	if(!m_pMT940SRecordset)
+		return E_UNEXPECTED;
+
+	*pCurrencyClient = _bstr_t(m_pMT940SRecordset->getCurrencyClient());
+
+	return S_OK;
+}
+
+STDMETHODIMP CMT940SRecordset::TransactionReference(BSTR *pTransactionReference)
+{
+	if(!m_pMT940SRecordset)
+		return E_UNEXPECTED;
+
+	*pTransactionReference = _bstr_t(m_pMT940SRecordset->getTransactionReference());
+
+	return S_OK;
+}
+
+STDMETHODIMP CMT940SRecordset::SerialNumber(BSTR *pSerialNumber)
+{
+	if(!m_pMT940SRecordset)
+		return E_UNEXPECTED;
+
+	*pSerialNumber = _bstr_t(m_pMT940SRecordset->getSerialNumber());
+
+	return S_OK;
+}
+
+STDMETHODIMP CMT940SRecordset::IBANClient(CIBAN **ppIBANClient)
+{
+	if(!m_pMT940SRecordset)
+		return E_UNEXPECTED;
+
+	*ppIBANClient = new CIBAN();
+	if(!*ppIBANClient)
+		return E_OUTOFMEMORY;
+
+	(*ppIBANClient)->AddRef();
+
+	(**ppIBANClient) = (Separatista::IBAN*)m_pMT940SRecordset->getIBANClient();
+
+	return S_OK;
+}
+
+

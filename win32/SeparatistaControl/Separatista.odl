@@ -30,18 +30,31 @@ library Separatista
 	importlib("stdole.tlb");
 
 	/**
-		MT940SRecordset
+		IBAN
 	*/
 	[
-		uuid(6DF05A76-0582-415a-9B96-163F76914250),
-		helpstring("MT940SDocument object")
+		uuid(3CDADD67-109C-49b4-9B1B-5C10B7121EB6),
+		helpstring("IIBAN interface"),
+		oleautomation,
+		dual,
+		odl
 	]
-	coclass MT940SDocument 
+	interface IIBAN : IDispatch
 	{
-		[default] interface IMT940SDocument;
+	};
+	[
+		uuid(2BD7342E-B12D-45b0-A5D6-ADF118386112),
+		helpstring("IBAN object")
+	]
+	coclass IBAN
+	{
+		[default] interface IIBAN;
 		interface IDispatch;
 	};
 
+	/**
+		MT940SRecordset
+	*/
 	[
 		uuid(B61526D3-1B0E-42c0-A276-C0F1DAA94CC8),
 		helpstring("IMT940SRecordset interface"),
@@ -51,6 +64,21 @@ library Separatista
 	]
 	interface IMT940SRecordset : IDispatch
 	{
+		[ propget, helpstring("Client Currency") ]
+		HRESULT __stdcall CurrencyClient(
+			[out, retval] BSTR *pCurrencyClient);
+
+		[ propget, helpstring("Transaction Reference") ]
+		HRESULT __stdcall TransactionReference(
+			[out, retval] BSTR *pTransactionReference);
+
+		[ propget, helpstring("Serial Number") ]
+		HRESULT __stdcall SerialNumber(
+			[out, retval] BSTR *pSerialNumber);
+
+		[ propget, helpstring("The Client IBAN") ]
+		HRESULT __stdcall IBANClient(
+			[out, retval] IIBAN **ppIBANClient);
 	};
 	[
 		uuid(343F637E-DA0B-43a4-A802-8F9EF2DCC5DF),
@@ -87,7 +115,7 @@ library Separatista
 			[out, retval] MT940SOpenStatus* pStatus);
 
 		[ propget, helpstring("The number of MT940SRecordsets in this MT940SDocument" ) ]
-		HRESULT __stdcall Count(
+		HRESULT __stdcall RecordsetCount(
 			[out, retval] long *plCount);
 
 		[ propget, id(DISPID_VALUE),
@@ -100,6 +128,18 @@ library Separatista
 			helpstring("Get the enumerator") ]
 		HRESULT __stdcall _NewEnum(
 			[out, retval] IUnknown **ppUnk);
+
+
 	};
+	[
+		uuid(6DF05A76-0582-415a-9B96-163F76914250),
+		helpstring("MT940SDocument object")
+	]
+	coclass MT940SDocument 
+	{
+		[default] interface IMT940SDocument;
+		interface IDispatch;
+	};
+
 
 }

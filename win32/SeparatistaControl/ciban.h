@@ -18,27 +18,25 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef SEPARATISTA_MT940SRECORDSET_H
-#define SEPARATISTA_MT940SRECORDSET_H
+#include "windows.h"
 
-#include <windows.h>
-#include <oleauto.h>
-
-#include "mt940s/mt940s.h"
+#include "iban/iban.h"
 #include "dispatch.h"
-#include "mt940sdocument.h"
-#include "ciban.h"
 
-// {B61526D3-1B0E-42c0-A276-C0F1DAA94CC8}
-DEFINE_GUID(IID_IMT940SRecordset, 
-0xb61526d3, 0x1b0e, 0x42c0, 0xa2, 0x76, 0xc0, 0xf1, 0xda, 0xa9, 0x4c, 0xc8);
+#ifndef SEPARATISTA_CIBAN_H
+#define SEPARATISTA_CIBAN_H
 
-// {343F637E-DA0B-43a4-A802-8F9EF2DCC5DF}
-DEFINE_GUID(CLSID_CMT940SRecordset, 
-0x343f637e, 0xda0b, 0x43a4, 0xa8, 0x2, 0x8f, 0x9e, 0xf2, 0xdc, 0xc5, 0xdf);
+// {3CDADD67-109C-49b4-9B1B-5C10B7121EB6}
+DEFINE_GUID(IID_IBAN, 
+0x3cdadd67, 0x109c, 0x49b4, 0x9b, 0x1b, 0x5c, 0x10, 0xb7, 0x12, 0x1e, 0xb6);
 
-struct IMT940SRecordset : public IDispatch
+// {2BD7342E-B12D-45b0-A5D6-ADF118386112}
+DEFINE_GUID(CLSID_CIBAN, 
+0x2bd7342e, 0xb12d, 0x45b0, 0xa5, 0xd6, 0xad, 0xf1, 0x18, 0x38, 0x61, 0x12);
+
+struct IIBAN : public IDispatch
 {
+	// IDispatch
 	STDMETHOD_(ULONG, AddRef)() PURE;
 	STDMETHOD_(ULONG, Release)() PURE;
 	STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject) PURE;
@@ -46,46 +44,35 @@ struct IMT940SRecordset : public IDispatch
 	STDMETHOD(GetTypeInfo)(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo) PURE;
 	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId) PURE;
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
-	
-	// Methods
-	STDMETHOD(CurrencyClient)(BSTR *pCurrencyClient) PURE;
-	STDMETHOD(TransactionReference)(BSTR *pTransactionReference) PURE;
-	STDMETHOD(SerialNumber)(BSTR *pSerialNumber) PURE;
-	STDMETHOD(IBANClient)(CIBAN **ppIBANClient) PURE;
+
+	// IIBAN
 };
 
-struct __declspec(uuid("{B61526D3-1B0E-42c0-A276-C0F1DAA94CC8}")) IMT940SRecordset;
+struct __declspec(uuid("{3CDADD67-109C-49b4-9B1B-5C10B7121EB6}")) IIBAN;
 
 /**
-	COM representation of a MT940SRecordset. 
+	COM representation of an IBAN class. 
 	Memory management takes 2 strategies. The CMT940SDocument will persist until all references are released. 
 	Other classes like CMT940SRecordset will come and go on-the-fly and hold only references to the child 
 	objects in the parent CMT940SDocument. 
 */
-class CMT940SRecordset : public SepaControlDispatch<IMT940SRecordset>
+class CIBAN : public SepaControlDispatch<IIBAN>
 {
 public:
 	/**
 		@see SepaControllDispatch
 	*/
-	CMT940SRecordset(IDispatch *pParent);
+	CIBAN(IDispatch *pParent = NULL);
 
 	/**
 		Assignment operator, will set the internal pointer to the recordset
 	*/
-	CMT940SRecordset& operator = (Separatista::MT940SRecordset *pMT940SRecordset);
-
-  	// Methods
-	STDMETHOD(CurrencyClient)(BSTR *pCurrencyClient);
-	STDMETHOD(TransactionReference)(BSTR *pTransactionReference);
-	STDMETHOD(SerialNumber)(BSTR *pSerialNumber);
-	STDMETHOD(IBANClient)(CIBAN **ppIBANClient);
+	CIBAN& operator = (Separatista::IBAN *pIBAN);
 
 private:
-	/// Pointer to the MT940SRecordset it represents
-	Separatista::MT940SRecordset *m_pMT940SRecordset;
+	Separatista::IBAN *m_pIBAN;
 };
 
-class __declspec(uuid("{343F637E-DA0B-43a4-A802-8F9EF2DCC5DF}")) CMT940SRecordset;
+class __declspec(uuid("{2BD7342E-B12D-45b0-A5D6-ADF118386112}")) CIBAN;
 
-#endif // ifndef SEPARATISTA_MT940SRECORDSET_H
+#endif // !defined SEPARATISTA_CIBAN_H

@@ -185,6 +185,22 @@ public:
 	*/
 	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord(int line, int rline, std::string& header, std::string& data, ReadInfo *info);
 
+	MT940S_EXTERN const char* getCurrencyClient() const;
+
+	MT940S_EXTERN const char* getTransactionReference() const;
+
+	MT940S_EXTERN const char* getSerialNumber() const;
+
+	MT940S_EXTERN const IBAN* getIBANClient() const;
+
+	MT940S_EXTERN const MT940SCurrency* getPreviousBalance() const;
+
+	MT940S_EXTERN const MT940SDate* getPreviousBalanceDate() const;
+
+	MT940S_EXTERN const MT940SCurrency* getCurrentBalance() const;
+
+	MT940S_EXTERN const MT940SDate* getCurrentBalanceDate() const;
+
 protected:
 	
 	/**

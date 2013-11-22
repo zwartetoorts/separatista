@@ -25,7 +25,7 @@
 #include "dll.h"
 #include "dispatch.h"
 
-template <class T> SepaControlDispatch<T>::SepaControlDispatch()
+template <class T> SepaControlDispatch<T>::SepaControlDispatch(IDispatch *pParent)
 {
 	g_uDllRefCount++;
 	m_uRefCount = 0;
@@ -42,14 +42,7 @@ template <class T> SepaControlDispatch<T>::SepaControlDispatch()
 		}
 	}
 
-	// Set parent to NULL
-	m_pParent = NULL;
-}
-
-template <class T> SepaControlDispatch<T>::SepaControlDispatch(IDispatch *pParent)
-{
-	SepaControlDispatch<T>();
-
+	// Set parent
 	m_pParent = pParent;
 	pParent->AddRef();
 }

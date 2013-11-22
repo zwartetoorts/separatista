@@ -18,48 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "windows.h"
-#include <vector>
+#include "ciban.h"
+#include "dispatch.cpp"
 
-#ifndef SEPARATISTA_ENUMVARIANT_H
-#define SEPARATISTA_ENUMVARIANT_H
-
-class EnumVariant : public IEnumVARIANT
+CIBAN::CIBAN(IDispatch *pParent)
+:SepaControlDispatch<IIBAN>(pParent)
 {
-public:
-	EnumVariant();
+	m_pIBAN = NULL;
+}
 
-	// IUnknown methods
-	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** pvvObject);
-	ULONG STDMETHODCALLTYPE AddRef();
-	ULONG STDMETHODCALLTYPE Release();
+CIBAN& CIBAN::operator = (Separatista::IBAN *pIBAN)
+{
+	m_pIBAN = pIBAN;
 
-	// IEnumVARIANT methods
-	STDMETHOD(Next)(unsigned long celt, VARIANT FAR* rgvar, unsigned long FAR* pceltFetched);
-	STDMETHOD(Skip)(unsigned long celt);
-	STDMETHOD(Reset)();
-	STDMETHOD(Clone)(IEnumVARIANT FAR* FAR* ppenum);
-
-	// Other methods
-	/**
-		Add COM object to the internal list. Does NOT call AddRef in the object.
-		@param pUnknown Pointer to the COM object
-	*/
-	void Add(IUnknown *pUnknown);
-
-protected:
-	/**
-		Destructor with protected access. This object has to be freed through Release method
-		since it uses reference counting. Calls Release() on all COM objects in the internal list.
-		@see Release()
-	*/
-	~EnumVariant();
-
-private:
-	ULONG m_uRefCount;
-	std::vector<IUnknown*> m_objects;
-	std::size_t m_pos;
-
-};
-
-#endif // !defined SEPARATISTA_ENUMVARIANT_H
+	return *this;
+}
