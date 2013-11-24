@@ -79,6 +79,36 @@ library Separatista
 		[ propget, helpstring("The Client IBAN") ]
 		HRESULT __stdcall IBANClient(
 			[out, retval] IIBAN **ppIBANClient);
+
+		[ propget, helpstring("Previous Balance") ]
+		HRESULT __stdcall PreviousBalance(
+			[out, retval] VARIANT *pPreviousBalance);
+
+		[ propget, helpstring("Previous Balance Date") ]
+		HRESULT __stdcall PreviousBalanceDate(
+			[out, retval] DATE *pPreviousBalanceDate);
+
+		[ propget, helpstring("Current Balance") ]
+		HRESULT __stdcall CurrentBalance(
+			[out, retval] VARIANT *pCurrentBalance);
+
+		[ propget, helpstring("Current Balance Date") ]
+		HRESULT __stdcall CurrentBalanceDate(
+			[out, retval] DATE *pCurrentBalanceDate);
+
+		[ helpstring("Move the internal pointer to the to first record") ]
+		HRESULT __stdcall MoveFirst();
+
+		[ helpstring("Move the internal pointer to the next record") ]
+		HRESULT __stdcall MoveNext();
+
+		[ propget, helpstring("Check for the End-Of-File bit") ]
+		HRESULT __stdcall EOF(
+			[out, retval] BOOL *pEOF);
+
+		[ propget, helpstring("Transaction date") ]
+		HRESULT __stdcall TransactionDate(
+			[out, retval] DATE *pTransactionDate);
 	};
 	[
 		uuid(343F637E-DA0B-43a4-A802-8F9EF2DCC5DF),

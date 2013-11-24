@@ -24,6 +24,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <ctime>
 
 #include "iban/iban.h"
 
@@ -49,10 +50,16 @@ public:
 	*/
 	MT940S_EXTERN void set(const char dcCode, const char *currency, const char *amount);
 
+	/**
+		Converts to a char array. Will include sign.
+	*/
+	MT940S_EXTERN operator const char* ();
+
 private:
 	char m_dcCode;
 	std::string m_currency;
 	std::string m_amount;
+	std::string m_buffer;	// Internal buffer for formatting
 };
 
 class MT940SDate
@@ -63,6 +70,10 @@ public:
 		@param date Must be in YYMMDD format
 	*/
 	MT940S_EXTERN MT940SDate& operator = (const char *date);
+
+	MT940S_EXTERN time_t getTime() const;
+
+	MT940S_EXTERN operator time_t () const;
 private:
 	std::string m_date;
 };
@@ -201,6 +212,12 @@ public:
 
 	MT940S_EXTERN const MT940SDate* getCurrentBalanceDate() const;
 
+	typedef std::vector<MT940STransaction*>::iterator TransactionIterator;
+
+	MT940S_EXTERN const TransactionIterator getTransactionBegin(); 
+
+	MT940S_EXTERN const TransactionIterator getTransactionEnd();
+	
 protected:
 	
 	/**
@@ -283,6 +300,7 @@ private:
 	MT940SCurrency m_currentBalance;
 	MT940SDate m_currentBalanceDate;
 	std::vector<MT940STransaction*> m_transactions;
+	std::vector<MT940STransaction*>::iterator m_transactionsIterator;
 };
 
 }

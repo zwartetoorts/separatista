@@ -52,6 +52,13 @@ struct IMT940SRecordset : public IDispatch
 	STDMETHOD(TransactionReference)(BSTR *pTransactionReference) PURE;
 	STDMETHOD(SerialNumber)(BSTR *pSerialNumber) PURE;
 	STDMETHOD(IBANClient)(CIBAN **ppIBANClient) PURE;
+	STDMETHOD(PreviousBalance)(VARIANT *pPreviousBalance) PURE;
+	STDMETHOD(PreviousBalanceDate)(DATE *pPreviousBalanceDate) PURE;
+	STDMETHOD(CurrentBalance)(VARIANT *pCurrentBalance) PURE;
+	STDMETHOD(CurrentBalanceDate)(DATE *pCurrentBalanceDate) PURE;
+	STDMETHOD(MoveFirst)() PURE;
+	STDMETHOD(MoveNext)() PURE;
+	STDMETHOD(FEOF)(int *pEOF) PURE;
 };
 
 struct __declspec(uuid("{B61526D3-1B0E-42c0-A276-C0F1DAA94CC8}")) IMT940SRecordset;
@@ -75,15 +82,37 @@ public:
 	*/
 	CMT940SRecordset& operator = (Separatista::MT940SRecordset *pMT940SRecordset);
 
-  	// Methods
+  	// COM Methods
 	STDMETHOD(CurrencyClient)(BSTR *pCurrencyClient);
 	STDMETHOD(TransactionReference)(BSTR *pTransactionReference);
 	STDMETHOD(SerialNumber)(BSTR *pSerialNumber);
 	STDMETHOD(IBANClient)(CIBAN **ppIBANClient);
+	STDMETHOD(PreviousBalance)(VARIANT *pPreviousBalance);
+	STDMETHOD(PreviousBalanceDate)(DATE *pPreviousBalanceDate);
+	STDMETHOD(CurrentBalance)(VARIANT *pCurrentBalance);
+	STDMETHOD(CurrentBalanceDate)(DATE *pCurrentBalanceDate);
+	STDMETHOD(MoveFirst)();
+	STDMETHOD(MoveNext)();
+	STDMETHOD(FEOF)(int *pEOF);
+
+protected:
+	/**
+		Converts a string to a currency variant.
+	*/
+	static HRESULT VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency);
+
+	/**
+		Converts a time_t to a DATE.
+	*/
+	static HRESULT DateTypeFromStdTime(time_t t, DATE *pDate);
 
 private:
 	/// Pointer to the MT940SRecordset it represents
 	Separatista::MT940SRecordset *m_pMT940SRecordset;
+
+	Separatista::MT940SRecordset::TransactionIterator m_transactionIterator;
+
+
 };
 
 class __declspec(uuid("{343F637E-DA0B-43a4-A802-8F9EF2DCC5DF}")) CMT940SRecordset;

@@ -354,6 +354,16 @@ const MT940SDate* MT940SRecordset::getCurrentBalanceDate() const
 	return &m_currentBalanceDate;
 }
 
+const MT940SRecordset::TransactionIterator MT940SRecordset::getTransactionBegin()
+{
+	return m_transactions.begin();
+}
+
+const MT940SRecordset::TransactionIterator MT940SRecordset::getTransactionEnd()
+{
+	return m_transactions.end();
+}
+
 const MT940SDate* MT940STransaction::getDate() const
 {
 	return &m_date;
@@ -432,11 +442,52 @@ void MT940SCurrency::set(const char dcCode, const char *currency, const char *am
 	m_amount = amount;
 }
 
+MT940SCurrency::operator const char* ()
+{
+	// dcCode
+	if(m_dcCode == 'D' || m_dcCode == 'd')
+		m_buffer = "-";
+	else
+		m_buffer.clear();
+
+	// Value
+	m_buffer += m_currency;
+
+	return m_buffer.c_str();
+}
+
 MT940SDate& MT940SDate::operator =(const char *date)
 {
 	m_date = date;
 
 	return *this;
+}
+
+time_t MT940SDate::getTime() const 
+{
+	tm timeinfo;
+	tm *ptm;
+	time_t t;
+
+	// Get the current time for tm_year
+	t = time(NULL);
+	ptm = localtime(&t);
+
+	//Create the tm
+	timeinfo.tm_sec = 0;
+	timeinfo.tm_min = 0;
+	timeinfo.tm_hour = 0;
+	timeinfo.tm_mday = stoi(m_date.substr(4, 1));		// Day of the month
+	timeinfo.tm_mon = stoi(m_date.substr(2,1)) - 1;		// Months since jan
+	timeinfo.tm_year = ptm->tm_year - (ptm->tm_year % 100) + stoi(m_date.substr(0, 1));	// YY converted to this century
+	
+	// Convert to time_t
+	return mktime(&timeinfo); 
+}
+
+MT940SDate::operator time_t() const
+{
+	return getTime();
 }
 
 

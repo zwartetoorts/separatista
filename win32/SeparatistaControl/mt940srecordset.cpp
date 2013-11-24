@@ -82,4 +82,142 @@ STDMETHODIMP CMT940SRecordset::IBANClient(CIBAN **ppIBANClient)
 	return S_OK;
 }
 
+STDMETHODIMP CMT940SRecordset::PreviousBalance(VARIANT *pPreviousBalance)
+{
+	_variant_t v;
+
+	if(!m_pMT940SRecordset)
+		return E_UNEXPECTED;
+
+	v.Attach(*pPreviousBalance);
+	v = _bstr_t((const char*)m_pMT940SRecordset->getPreviousBalance());
+	v.ChangeType(VT_CY);
+
+	return S_OK;
+}
+
+STDMETHODIMP CMT940SRecordset::PreviousBalanceDate(DATE *pPreviousBalanceDate)
+{
+	SYSTEMTIME stime;
+	tm *pti;
+	const Separatista::MT940SDate *pDate;
+	time_t t;
+
+	if(!m_pMT940SRecordset)
+		return E_UNEXPECTED;
+
+	// Check for time set in recordset
+	pDate = m_pMT940SRecordset->getPreviousBalanceDate();
+	if(!pDate)
+		t = time(NULL);
+	else
+		t = pDate->getTime();
+
+	// Convert time_t to tm
+	pti = localtime(&t);
+
+	// Set SYSTEMTIME
+	stime.wYear = pti->tm_year + 1900;
+	stime.wMonth = pti->tm_mon + 1;
+	stime.wDay = pti->tm_mday;
+	stime.wHour = pti->tm_hour;
+	stime.wMinute = pti->tm_min;
+	stime.wSecond = pti->tm_sec;
+	if(SystemTimeToVariantTime(&stime, pPreviousBalanceDate))
+		return S_OK;
+
+	return E_UNEXPECTED;
+}
+
+STDMETHODIMP CMT940SRecordset::CurrentBalance(VARIANT *pCurrentBalance)
+{
+	_variant_t v;
+
+	if(!m_pMT940SRecordset)
+		return E_UNEXPECTED;
+
+	v.Attach(*pCurrentBalance);
+	v = _bstr_t((const char*)m_pMT940SRecordset->getCurrentBalance());
+	v.ChangeType(VT_CY);
+
+	return S_OK;
+}
+
+STDMETHODIMP CMT940SRecordset::CurrentBalanceDate(DATE *pCurrentBalanceDate)
+{
+	SYSTEMTIME stime;
+	tm *pti;
+	const Separatista::MT940SDate *pDate;
+	time_t t;
+
+	if(!m_pMT940SRecordset)
+		return E_UNEXPECTED;
+
+	// Check for time set in recordset
+	pDate = m_pMT940SRecordset->getCurrentBalanceDate();
+	if(!pDate)
+		t = time(NULL);
+	else
+		t = pDate->getTime();
+
+	// Convert time_t to tm
+	pti = localtime(&t);
+
+	// Set SYSTEMTIME
+	stime.wYear = pti->tm_year + 1900;
+	stime.wMonth = pti->tm_mon + 1;
+	stime.wDay = pti->tm_mday;
+	stime.wHour = pti->tm_hour;
+	stime.wMinute = pti->tm_min;
+	stime.wSecond = pti->tm_sec;
+	if(SystemTimeToVariantTime(&stime, pCurrentBalanceDate))
+		return S_OK;
+
+	return E_UNEXPECTED;
+}
+
+STDMETHODIMP CMT940SRecordset::MoveFirst()
+{
+	if(!m_pMT940SRecordset)
+		return E_UNEXPECTED;
+
+	m_transactionIterator = m_pMT940SRecordset->getTransactionBegin();
+
+	return S_OK;
+}
+
+STDMETHODIMP CMT940SRecordset::MoveNext()
+{
+	if(!m_pMT940SRecordset)
+		return E_UNEXPECTED;
+
+	if(m_transactionIterator != m_pMT940SRecordset->getTransactionEnd())
+		++m_transactionIterator;
+	else
+		return S_FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP CMT940SRecordset::FEOF(BOOL *pEOF)
+{
+	if(!m_pMT940SRecordset)
+		return E_UNEXPECTED;
+
+	if(m_transactionIterator == m_pMT940SRecordset->getTransactionEnd())
+		*pEOF = true;
+	else
+		*pEOF = false;
+
+	return S_OK;
+}
+
+HRESULT CMT940SRecordset::VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency)
+{
+
+}
+
+HRESULT CMT940SRecordset::DateTypeFromStdTime(time_t t, DATE *pDate)
+{
+}
 

@@ -145,6 +145,12 @@ STDAPI DllUnregisterServer()
 		TEXT("Separatista.MT940SRecordset.1"),
 		TEXT("Separatista.MT940SRecordset"));
 
+	// Unregister Separatista.IBAN
+	DllUnregisterObject(
+		TEXT("{6DF05A76-0582-415a-9B96-163F76914250}"),
+		TEXT("Separatista.MT940SDocument.1"),
+		TEXT("Separatista.MT940SDocument"));
+
 	return S_OK;
 }
 
@@ -270,6 +276,17 @@ STDAPI DllRegisterServer()
 		TEXT("{343F637E-DA0B-43a4-A802-8F9EF2DCC5DF}"),
 		TEXT("Separatista.MT940SRecordset.1"),
 		TEXT("Separatista.MT940SRecordset"));
+	if(FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
+
+	// Try to register Separatista.IBAN
+	hr = DllRegisterObject(
+		TEXT("{2BD7342E-B12D-45b0-A5D6-ADF118386112}"),
+		TEXT("Separatista.IBAN.1"),
+		TEXT("Separatista.IBAN"));
 	if(FAILED(hr))
 	{
 		DllUnregisterServer();
