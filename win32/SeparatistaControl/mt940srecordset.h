@@ -99,12 +99,12 @@ protected:
 	/**
 		Converts a string to a currency variant.
 	*/
-	static HRESULT VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency);
+	//static HRESULT VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency);
 
 	/**
 		Converts a time_t to a DATE.
 	*/
-	static HRESULT DateTypeFromStdTime(time_t t, DATE *pDate);
+	//static HRESULT DateTypeFromStdTime(time_t t, DATE *pDate);
 
 private:
 	/// Pointer to the MT940SRecordset it represents

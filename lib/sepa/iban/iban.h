@@ -21,18 +21,14 @@
 #ifndef SEPARATISTA_IBAN_H
 #define SEPARATISTA_IBAN_H
 
-#include "separatista.h"
-
 #include <string>
 
-#ifdef IBAN_BUILD
-#define IBAN_EXTERN
-#else
-#	ifdef IBAN_EXPORTS
-#		define IBAN_EXTERN __declspec(dllexport)
-#	else
+#ifdef SEPARATISTA_BUILDINGDLL
+#	define IBAN_EXTERN __declspec(dllexport)
+#elif defined SEPARATISTA_USINGDLL
 #		define IBAN_EXTERN __declspec(dllimport)
-#	endif
+#else
+#	define IBAN_EXTERN
 #endif
 
 #define IBAN_MAX_LENGTH 34

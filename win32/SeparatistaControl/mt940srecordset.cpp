@@ -212,6 +212,7 @@ STDMETHODIMP CMT940SRecordset::FEOF(BOOL *pEOF)
 	return S_OK;
 }
 
+/*
 HRESULT CMT940SRecordset::VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency)
 {
 
@@ -220,4 +221,4 @@ HRESULT CMT940SRecordset::VariantTypeFromCurrency(const char *pCurrency, VARIANT
 HRESULT CMT940SRecordset::DateTypeFromStdTime(time_t t, DATE *pDate)
 {
 }
-
+*/

@@ -28,12 +28,12 @@
 
 #include "iban/iban.h"
 
-#ifdef MT940S_EXPORTS
+#ifdef MT940S_BUILDINGDLL
 #	define MT940S_EXTERN __declspec(dllexport)
-#	define MT940S_EXPIMP 
-#else
+#elif defined MT940S_USINGDLL
 #	define MT940S_EXTERN __declspec(dllimport)
-#	define MT940S_EXPIMP extern
+#else
+#	define MT940S_EXTERN
 #endif
 
 namespace Separatista 
