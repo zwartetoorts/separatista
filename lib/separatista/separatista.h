@@ -17,7 +17,9 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
- 
+
+#include "iban/iban.h"
+
 #ifdef SEPARATISTA_BUILDINGDLL
 #	define SEPARATISTA_EXTERN __declspec(dllexport)
 #elif defined SEPARATISTA_USINGDLL
@@ -25,4 +27,16 @@
 #else
 #	define SEPARATISTA_EXTERN
 #endif
- 
+
+namespace Separatista
+{
+
+class SEPARATISTA_EXTERN Separatista
+{
+public:
+	IBAN m_iban;
+
+};
+
+
+}

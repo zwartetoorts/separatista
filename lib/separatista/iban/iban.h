@@ -23,9 +23,9 @@
 
 #include <string>
 
-#ifdef SEPARATISTA_BUILDINGDLL
+#ifdef SEPARATISTA_IBAN_BUILDINGDLL
 #	define IBAN_EXTERN __declspec(dllexport)
-#elif defined SEPARATISTA_USINGDLL
+#elif defined SEPARATISTA_IBAN_USINGDLL
 #		define IBAN_EXTERN __declspec(dllimport)
 #else
 #	define IBAN_EXTERN
@@ -36,7 +36,7 @@
 namespace Separatista 
 {
 
-class IBAN 
+class IBAN
 {
 public:
 	IBAN_EXTERN IBAN& operator = (const char *iban);

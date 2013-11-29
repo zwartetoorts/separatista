@@ -28,6 +28,7 @@
 library Separatista
 {
 	importlib("stdole.tlb");
+	importlib("stdole2.tlb");
 
 	/**
 		IBAN
