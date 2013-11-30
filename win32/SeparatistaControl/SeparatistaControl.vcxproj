@@ -90,6 +90,7 @@
     <ClInclude Include="mt940sdocument.h" />
     <ClInclude Include="mt940srecordset.h" />
     <ClInclude Include="registrykey.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Separatista.odl" />
@@ -108,6 +109,7 @@
     <ClCompile Include="mt940sdocument.cpp" />
     <ClCompile Include="mt940srecordset.cpp" />
     <ClCompile Include="registrykey.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

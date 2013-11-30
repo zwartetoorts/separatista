@@ -424,7 +424,7 @@ void MT940STransaction::setForeignIBAN(const char *iban)
 	m_foreignIBAN = iban;
 }
 
-const char* MT940STransaction::getDiscription(const char *key)
+const char* MT940STransaction::getDescription(const char *key)
 {
 	return m_descriptionMap[key].c_str();
 }
@@ -434,6 +434,15 @@ void MT940STransaction::addDescription(const char *key, const char *value)
 	m_descriptionMap[key] = value;
 }
 
+const MT940STransaction::DescriptionIterator MT940STransaction::getDescriptionBegin()
+{
+	return m_descriptionMap.begin();
+}
+
+const MT940STransaction::DescriptionIterator MT940STransaction::getDescriptionEnd()
+{
+	return m_descriptionMap.end();
+}
 
 void MT940SCurrency::set(const char dcCode, const char *currency, const char *amount)
 {

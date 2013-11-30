@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 8.00.0603 */
-/* at Fri Nov 29 20:56:38 2013
+/* at Sat Nov 30 21:41:03 2013
  */
 /* Compiler settings for Separatista.odl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.00.0603 
@@ -265,7 +265,7 @@ EXTERN_C const IID IID_IMT940SRecordset;
     {
     public:
         virtual /* [helpstring][propget] */ HRESULT __stdcall get_CurrencyClient( 
-            /* [retval][out] */ BSTR *pCurrencyClient) = 0;
+            /* [retval][out] */ VARIANT *pCurrencyClient) = 0;
         
         virtual /* [helpstring][propget] */ HRESULT __stdcall get_TransactionReference( 
             /* [retval][out] */ BSTR *pTransactionReference) = 0;
@@ -297,6 +297,28 @@ EXTERN_C const IID IID_IMT940SRecordset;
         
         virtual /* [helpstring][propget] */ HRESULT __stdcall get_TransactionDate( 
             /* [retval][out] */ DATE *pTransactionDate) = 0;
+        
+        virtual /* [helpstring][propget] */ HRESULT __stdcall get_RDCCode( 
+            /* [retval][out] */ BSTR *pRDCCode) = 0;
+        
+        virtual /* [helpstring][propget] */ HRESULT __stdcall get_Currency( 
+            /* [retval][out] */ VARIANT *pCurrency) = 0;
+        
+        virtual /* [helpstring][propget] */ HRESULT __stdcall get_TransactionCode( 
+            /* [retval][out] */ BSTR *pTransactionCode) = 0;
+        
+        virtual /* [helpstring][propget] */ HRESULT __stdcall get_TransactionRef( 
+            /* [retval][out] */ BSTR *pTransactionReference) = 0;
+        
+        virtual /* [helpstring][propget] */ HRESULT __stdcall get_ForeignIBAN( 
+            /* [retval][out] */ IIBAN **ppIBAN) = 0;
+        
+        virtual /* [helpstring][id][propget] */ HRESULT __stdcall get_Description( 
+            /* [in] */ VARIANT vKey,
+            /* [retval][out] */ BSTR *pValue) = 0;
+        
+        virtual /* [helpstring][restricted][id][propget] */ HRESULT __stdcall get__NewEnum( 
+            /* [retval][out] */ IUnknown **ppUnk) = 0;
         
     };
     
@@ -358,7 +380,7 @@ EXTERN_C const IID IID_IMT940SRecordset;
         
         /* [helpstring][propget] */ HRESULT ( __stdcall *get_CurrencyClient )( 
             IMT940SRecordset * This,
-            /* [retval][out] */ BSTR *pCurrencyClient);
+            /* [retval][out] */ VARIANT *pCurrencyClient);
         
         /* [helpstring][propget] */ HRESULT ( __stdcall *get_TransactionReference )( 
             IMT940SRecordset * This,
@@ -401,6 +423,35 @@ EXTERN_C const IID IID_IMT940SRecordset;
         /* [helpstring][propget] */ HRESULT ( __stdcall *get_TransactionDate )( 
             IMT940SRecordset * This,
             /* [retval][out] */ DATE *pTransactionDate);
+        
+        /* [helpstring][propget] */ HRESULT ( __stdcall *get_RDCCode )( 
+            IMT940SRecordset * This,
+            /* [retval][out] */ BSTR *pRDCCode);
+        
+        /* [helpstring][propget] */ HRESULT ( __stdcall *get_Currency )( 
+            IMT940SRecordset * This,
+            /* [retval][out] */ VARIANT *pCurrency);
+        
+        /* [helpstring][propget] */ HRESULT ( __stdcall *get_TransactionCode )( 
+            IMT940SRecordset * This,
+            /* [retval][out] */ BSTR *pTransactionCode);
+        
+        /* [helpstring][propget] */ HRESULT ( __stdcall *get_TransactionRef )( 
+            IMT940SRecordset * This,
+            /* [retval][out] */ BSTR *pTransactionReference);
+        
+        /* [helpstring][propget] */ HRESULT ( __stdcall *get_ForeignIBAN )( 
+            IMT940SRecordset * This,
+            /* [retval][out] */ IIBAN **ppIBAN);
+        
+        /* [helpstring][id][propget] */ HRESULT ( __stdcall *get_Description )( 
+            IMT940SRecordset * This,
+            /* [in] */ VARIANT vKey,
+            /* [retval][out] */ BSTR *pValue);
+        
+        /* [helpstring][restricted][id][propget] */ HRESULT ( __stdcall *get__NewEnum )( 
+            IMT940SRecordset * This,
+            /* [retval][out] */ IUnknown **ppUnk);
         
         END_INTERFACE
     } IMT940SRecordsetVtbl;
@@ -473,6 +524,27 @@ EXTERN_C const IID IID_IMT940SRecordset;
 
 #define IMT940SRecordset_get_TransactionDate(This,pTransactionDate)	\
     ( (This)->lpVtbl -> get_TransactionDate(This,pTransactionDate) ) 
+
+#define IMT940SRecordset_get_RDCCode(This,pRDCCode)	\
+    ( (This)->lpVtbl -> get_RDCCode(This,pRDCCode) ) 
+
+#define IMT940SRecordset_get_Currency(This,pCurrency)	\
+    ( (This)->lpVtbl -> get_Currency(This,pCurrency) ) 
+
+#define IMT940SRecordset_get_TransactionCode(This,pTransactionCode)	\
+    ( (This)->lpVtbl -> get_TransactionCode(This,pTransactionCode) ) 
+
+#define IMT940SRecordset_get_TransactionRef(This,pTransactionReference)	\
+    ( (This)->lpVtbl -> get_TransactionRef(This,pTransactionReference) ) 
+
+#define IMT940SRecordset_get_ForeignIBAN(This,ppIBAN)	\
+    ( (This)->lpVtbl -> get_ForeignIBAN(This,ppIBAN) ) 
+
+#define IMT940SRecordset_get_Description(This,vKey,pValue)	\
+    ( (This)->lpVtbl -> get_Description(This,vKey,pValue) ) 
+
+#define IMT940SRecordset_get__NewEnum(This,ppUnk)	\
+    ( (This)->lpVtbl -> get__NewEnum(This,ppUnk) ) 
 
 #endif /* COBJMACROS */
 

@@ -81,7 +81,7 @@ private:
 class MT940STransaction
 {
 public:
-	MT940S_EXTERN MT940STransaction() {};
+	// MT940S_EXTERN MT940STransaction() {};
 
 	MT940S_EXTERN const MT940SDate* getDate() const;
 	MT940S_EXTERN void setDate(const char *date);
@@ -102,8 +102,13 @@ public:
 	MT940S_EXTERN void setForeignIBAN(const char *iban);
 
 	MT940S_EXTERN void addDescription(const char *key, const char *value);
-	MT940S_EXTERN const char* getDiscription(const char *key);
+	MT940S_EXTERN const char* getDescription(const char *key);
 
+	typedef std::map<std::string, std::string>::iterator DescriptionIterator;
+
+	MT940S_EXTERN const DescriptionIterator getDescriptionBegin();
+
+	MT940S_EXTERN const DescriptionIterator getDescriptionEnd();
 private:
 	MT940SDate m_date;
 	std::string m_rdcCode;

@@ -68,7 +68,7 @@ STDMETHODIMP CMT940SDocument::_NewEnum(IUnknown **ppUnk)
 	std::size_t index;
 	MT940SRecordset *pMT940SRecordset;
 	CMT940SRecordset *pCMT940SRecordset;
-
+	
 	// Create new EnumVariant
 	pEnumVariant = new EnumVariant();
 	if(!pEnumVariant)
@@ -90,8 +90,7 @@ STDMETHODIMP CMT940SDocument::_NewEnum(IUnknown **ppUnk)
 		*pCMT940SRecordset = pMT940SRecordset;
 		
 		// Add CMT940SRecordset object to EnumVariant
-		pCMT940SRecordset->AddRef();
-		pEnumVariant->Add(pCMT940SRecordset);
+		pEnumVariant->Add(_variant_t(pCMT940SRecordset));
 	}
 
 	// Set out

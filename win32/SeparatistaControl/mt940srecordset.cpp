@@ -22,6 +22,8 @@
 
 #include "mt940srecordset.h"
 #include "dispatch.cpp"
+#include "util.h"
+#include "enumvariant.h"
 
 CMT940SRecordset::CMT940SRecordset(IDispatch *pParent)
 :SepaControlDispatch<IMT940SRecordset>(pParent)
@@ -36,14 +38,12 @@ CMT940SRecordset& CMT940SRecordset::operator = (Separatista::MT940SRecordset *pM
 	return *this;
 }
 
-STDMETHODIMP CMT940SRecordset::CurrencyClient(BSTR *pCurrencyClient)
+STDMETHODIMP CMT940SRecordset::CurrencyClient(VARIANT *pCurrencyClient)
 {
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	*pCurrencyClient = _bstr_t(m_pMT940SRecordset->getCurrencyClient());
-
-	return S_OK;
+	return ::VariantTypeFromCurrency((const char*)m_pMT940SRecordset->getCurrencyClient(), pCurrencyClient);
 }
 
 STDMETHODIMP CMT940SRecordset::TransactionReference(BSTR *pTransactionReference)
@@ -84,24 +84,16 @@ STDMETHODIMP CMT940SRecordset::IBANClient(CIBAN **ppIBANClient)
 
 STDMETHODIMP CMT940SRecordset::PreviousBalance(VARIANT *pPreviousBalance)
 {
-	_variant_t v;
-
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	v.Attach(*pPreviousBalance);
-	v = _bstr_t((const char*)m_pMT940SRecordset->getPreviousBalance());
-	v.ChangeType(VT_CY);
-
-	return S_OK;
+	return VariantTypeFromCurrency((const char*)m_pMT940SRecordset->getPreviousBalance(), pPreviousBalance);
 }
 
 STDMETHODIMP CMT940SRecordset::PreviousBalanceDate(DATE *pPreviousBalanceDate)
 {
-	SYSTEMTIME stime;
-	tm *pti;
-	const Separatista::MT940SDate *pDate;
 	time_t t;
+	const Separatista::MT940SDate *pDate;
 
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
@@ -113,40 +105,19 @@ STDMETHODIMP CMT940SRecordset::PreviousBalanceDate(DATE *pPreviousBalanceDate)
 	else
 		t = pDate->getTime();
 
-	// Convert time_t to tm
-	pti = localtime(&t);
-
-	// Set SYSTEMTIME
-	stime.wYear = pti->tm_year + 1900;
-	stime.wMonth = pti->tm_mon + 1;
-	stime.wDay = pti->tm_mday;
-	stime.wHour = pti->tm_hour;
-	stime.wMinute = pti->tm_min;
-	stime.wSecond = pti->tm_sec;
-	if(SystemTimeToVariantTime(&stime, pPreviousBalanceDate))
-		return S_OK;
-
-	return E_UNEXPECTED;
+	return DateTypeFromStdTime(t, pPreviousBalanceDate);
 }
 
 STDMETHODIMP CMT940SRecordset::CurrentBalance(VARIANT *pCurrentBalance)
 {
-	_variant_t v;
-
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	v.Attach(*pCurrentBalance);
-	v = _bstr_t((const char*)m_pMT940SRecordset->getCurrentBalance());
-	v.ChangeType(VT_CY);
-
-	return S_OK;
+	return VariantTypeFromCurrency((const char*)m_pMT940SRecordset->getCurrentBalance(), pCurrentBalance);
 }
 
 STDMETHODIMP CMT940SRecordset::CurrentBalanceDate(DATE *pCurrentBalanceDate)
 {
-	SYSTEMTIME stime;
-	tm *pti;
 	const Separatista::MT940SDate *pDate;
 	time_t t;
 
@@ -160,20 +131,7 @@ STDMETHODIMP CMT940SRecordset::CurrentBalanceDate(DATE *pCurrentBalanceDate)
 	else
 		t = pDate->getTime();
 
-	// Convert time_t to tm
-	pti = localtime(&t);
-
-	// Set SYSTEMTIME
-	stime.wYear = pti->tm_year + 1900;
-	stime.wMonth = pti->tm_mon + 1;
-	stime.wDay = pti->tm_mday;
-	stime.wHour = pti->tm_hour;
-	stime.wMinute = pti->tm_min;
-	stime.wSecond = pti->tm_sec;
-	if(SystemTimeToVariantTime(&stime, pCurrentBalanceDate))
-		return S_OK;
-
-	return E_UNEXPECTED;
+	return DateTypeFromStdTime(t, pCurrentBalanceDate);
 }
 
 STDMETHODIMP CMT940SRecordset::MoveFirst()
@@ -212,13 +170,128 @@ STDMETHODIMP CMT940SRecordset::FEOF(BOOL *pEOF)
 	return S_OK;
 }
 
-/*
-HRESULT CMT940SRecordset::VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency)
+STDMETHODIMP CMT940SRecordset::TransactionDate(DATE *pDate)
 {
+	Separatista::MT940STransaction *pTransaction;
 
+	pTransaction = *m_transactionIterator;
+	if (!pTransaction)
+		return E_UNEXPECTED;
+
+	return ::DateTypeFromStdTime((time_t)pTransaction->getDate(), pDate);
 }
 
-HRESULT CMT940SRecordset::DateTypeFromStdTime(time_t t, DATE *pDate)
+STDMETHODIMP CMT940SRecordset::RDCCode(BSTR *pRDCCode)
 {
+	Separatista::MT940STransaction *pTransaction;
+
+	pTransaction = *m_transactionIterator;
+	if (!pTransaction)
+		return E_UNEXPECTED;
+
+	*pRDCCode = _bstr_t(pTransaction->getRDCCode());
+
+	return S_OK;
 }
-*/
+
+STDMETHODIMP CMT940SRecordset::Currency(VARIANT *pCurrency)
+{
+	Separatista::MT940STransaction *pTransaction;
+
+	pTransaction = *m_transactionIterator;
+	if (!pTransaction)
+		return E_UNEXPECTED;
+
+	return ::VariantTypeFromCurrency((const char*)pTransaction->getCurrency(), pCurrency);
+}
+
+STDMETHODIMP CMT940SRecordset::TransactionCode(BSTR *pTransactionCode)
+{
+	Separatista::MT940STransaction *pTransaction;
+
+	pTransaction = *m_transactionIterator;
+	if (!pTransaction)
+		return E_UNEXPECTED;
+
+	*pTransactionCode = _bstr_t(pTransaction->getTransactionCode());
+
+	return S_OK;
+}
+
+STDMETHODIMP CMT940SRecordset::TransactionRef(BSTR *pTransactionReference)
+{
+	Separatista::MT940STransaction *pTransaction;
+
+	pTransaction = *m_transactionIterator;
+	if (!pTransaction)
+		return E_UNEXPECTED;
+
+	*pTransactionReference = _bstr_t(pTransaction->getTransactionReference());
+
+	return S_OK;
+}
+
+STDMETHODIMP CMT940SRecordset::ForeignIBAN(CIBAN **ppIBAN)
+{
+	Separatista::MT940STransaction *pTransaction;
+
+	pTransaction = *m_transactionIterator;
+	if (!pTransaction)
+		return E_UNEXPECTED;
+
+	*ppIBAN = new CIBAN(m_pParent);
+	if (!*ppIBAN)
+		return E_OUTOFMEMORY;
+
+	(*ppIBAN)->AddRef();
+	(**ppIBAN) = (Separatista::IBAN*)pTransaction->getForeignIBAN();
+
+	return S_OK;
+}
+
+STDMETHODIMP CMT940SRecordset::Description(VARIANT vKey, BSTR *pValue)
+{
+	Separatista::MT940STransaction *pTransaction;
+	const char *pv;
+	_variant_t vk(vKey);
+
+	pTransaction = *m_transactionIterator;
+	if (!pTransaction)
+		return E_UNEXPECTED;
+
+	pv = pTransaction->getDescription(_bstr_t(vk));
+
+	*pValue = _bstr_t(pv);
+
+	return S_OK;
+}
+
+STDMETHODIMP CMT940SRecordset::_NewEnum(IUnknown **ppUnk)
+{
+	Separatista::MT940STransaction *pTransaction;
+	Separatista::MT940STransaction::DescriptionIterator it;
+	EnumVariant *pEnumVariant;
+	
+	pTransaction = *m_transactionIterator;
+	if (!pTransaction)
+		return E_UNEXPECTED;
+	
+	// Create new EnumVariant
+	pEnumVariant = new EnumVariant();
+	if (!pEnumVariant)
+		return E_OUTOFMEMORY;
+	pEnumVariant->AddRef();
+
+	// Enum all recordsets in this document
+	for (it = pTransaction->getDescriptionBegin(); it != pTransaction->getDescriptionEnd(); it++)
+	{
+		// Add description to EnumVariant
+		pEnumVariant->Add(_variant_t(it->first.c_str()));
+	}
+
+	// Set out
+	*ppUnk = pEnumVariant;
+
+	return S_OK;
+}
+

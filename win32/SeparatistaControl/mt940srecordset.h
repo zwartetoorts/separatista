@@ -48,7 +48,7 @@ struct IMT940SRecordset : public IDispatch
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
 	
 	// Methods
-	STDMETHOD(CurrencyClient)(BSTR *pCurrencyClient) PURE;
+	STDMETHOD(CurrencyClient)(VARIANT *pCurrencyClient) PURE;
 	STDMETHOD(TransactionReference)(BSTR *pTransactionReference) PURE;
 	STDMETHOD(SerialNumber)(BSTR *pSerialNumber) PURE;
 	STDMETHOD(IBANClient)(CIBAN **ppIBANClient) PURE;
@@ -59,6 +59,14 @@ struct IMT940SRecordset : public IDispatch
 	STDMETHOD(MoveFirst)() PURE;
 	STDMETHOD(MoveNext)() PURE;
 	STDMETHOD(FEOF)(int *pEOF) PURE;
+	STDMETHOD(TransactionDate)(DATE *pTransactionDate) PURE;
+	STDMETHOD(RDCCode)(BSTR *pRDCCode) PURE;
+	STDMETHOD(Currency)(VARIANT *pCurrency) PURE;
+	STDMETHOD(TransactionCode)(BSTR *pTransactionCode) PURE;
+	STDMETHOD(TransactionRef)(BSTR *pTransactionReference) PURE;
+	STDMETHOD(ForeignIBAN)(CIBAN **ppIBAN) PURE;
+	STDMETHOD(Description)(VARIANT vKey, BSTR *pValue) PURE;
+	STDMETHOD(_NewEnum)(IUnknown **ppUNK) PURE;
 };
 
 struct __declspec(uuid("{B61526D3-1B0E-42c0-A276-C0F1DAA94CC8}")) IMT940SRecordset;
@@ -83,7 +91,7 @@ public:
 	CMT940SRecordset& operator = (Separatista::MT940SRecordset *pMT940SRecordset);
 
   	// COM Methods
-	STDMETHOD(CurrencyClient)(BSTR *pCurrencyClient);
+	STDMETHOD(CurrencyClient)(VARIANT *pCurrencyClient);
 	STDMETHOD(TransactionReference)(BSTR *pTransactionReference);
 	STDMETHOD(SerialNumber)(BSTR *pSerialNumber);
 	STDMETHOD(IBANClient)(CIBAN **ppIBANClient);
@@ -94,17 +102,16 @@ public:
 	STDMETHOD(MoveFirst)();
 	STDMETHOD(MoveNext)();
 	STDMETHOD(FEOF)(int *pEOF);
+	STDMETHOD(TransactionDate)(DATE *pTransactionDate);
+	STDMETHOD(RDCCode)(BSTR *pRDCCode);
+	STDMETHOD(Currency)(VARIANT *pCurrency);
+	STDMETHOD(TransactionCode)(BSTR *pTransactionCode);
+	STDMETHOD(TransactionRef)(BSTR *pTransactionReference);
+	STDMETHOD(ForeignIBAN)(CIBAN **ppIBAN);
+	STDMETHOD(Description)(VARIANT vKey, BSTR *pValue);
+	STDMETHOD(_NewEnum)(IUnknown **ppUNK);
 
 protected:
-	/**
-		Converts a string to a currency variant.
-	*/
-	//static HRESULT VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency);
-
-	/**
-		Converts a time_t to a DATE.
-	*/
-	//static HRESULT DateTypeFromStdTime(time_t t, DATE *pDate);
 
 private:
 	/// Pointer to the MT940SRecordset it represents

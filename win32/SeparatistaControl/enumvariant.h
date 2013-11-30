@@ -42,22 +42,21 @@ public:
 
 	// Other methods
 	/**
-		Add COM object to the internal list. Does NOT call AddRef in the object.
-		@param pUnknown Pointer to the COM object
+		Add a variant to the intenal list.
 	*/
-	void Add(IUnknown *pUnknown);
+	void Add(VARIANT &vt);
 
 protected:
 	/**
 		Destructor with protected access. This object has to be freed through Release method
-		since it uses reference counting. Calls Release() on all COM objects in the internal list.
+		since it uses reference counting. Calls VariantClear on all objects in the internal list.
 		@see Release()
 	*/
 	~EnumVariant();
 
 private:
 	ULONG m_uRefCount;
-	std::vector<IUnknown*> m_objects;
+	std::vector<VARIANT> m_objects;
 	std::size_t m_pos;
 
 };

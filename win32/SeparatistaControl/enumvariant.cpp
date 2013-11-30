@@ -33,10 +33,10 @@ EnumVariant::EnumVariant()
 
 EnumVariant::~EnumVariant()
 {
-	std::vector<IUnknown*>::iterator it;
+	std::vector<VARIANT>::iterator it;
 
 	for(it = m_objects.begin(); it != m_objects.end(); it++)
-		(*it)->Release();
+		VariantClear(&(*it));
 }
 
 ULONG EnumVariant::AddRef()
@@ -83,13 +83,8 @@ STDMETHODIMP EnumVariant::Next(unsigned long celt, VARIANT FAR* rgvar, unsigned 
 	pos = m_pos;
 	for(ULONG l = 0; l < celt && pos < m_objects.size(); l++, pos++)
 	{
-		_variant_t value(&rgvar[l]);
-
 		// Copy reference
-		value = m_objects[pos];
-		
-		if(m_objects[pos])
-			m_objects[pos]->AddRef();
+		VariantCopy(&rgvar[l], &m_objects[pos]);
 	}
 
 	m_pos = pos;
@@ -116,7 +111,7 @@ STDMETHODIMP EnumVariant::Reset()
 
 STDMETHODIMP EnumVariant::Clone(IEnumVARIANT FAR* FAR* ppenum)
 {
-	std::vector<IUnknown*>::iterator it;
+	std::vector<VARIANT>::iterator it;
 	
 	if(!ppenum)
 		return E_INVALIDARG;
@@ -127,10 +122,7 @@ STDMETHODIMP EnumVariant::Clone(IEnumVARIANT FAR* FAR* ppenum)
 
 	// Copy and AddRef objects
 	for(it = m_objects.begin(); it != m_objects.end(); it++)
-	{
-		pEnumVariant->m_objects.push_back(*it);
-		(*it)->AddRef();
-	}
+		pEnumVariant->m_objects.push_back(_variant_t(*it));
 
 	*ppenum = pEnumVariant;
 	pEnumVariant->AddRef();
@@ -138,8 +130,9 @@ STDMETHODIMP EnumVariant::Clone(IEnumVARIANT FAR* FAR* ppenum)
 	return S_OK;
 }
 
-void EnumVariant::Add(IUnknown *pUnknown)
+void EnumVariant::Add(VARIANT &vt)
 {
-	m_objects.push_back(pUnknown);
+	m_objects.push_back(vt);
 }
+
 

@@ -67,7 +67,7 @@ library Separatista
 	{
 		[ propget, helpstring("Client Currency") ]
 		HRESULT __stdcall CurrencyClient(
-			[out, retval] BSTR *pCurrencyClient);
+			[out, retval] VARIANT *pCurrencyClient);
 
 		[ propget, helpstring("Transaction Reference") ]
 		HRESULT __stdcall TransactionReference(
@@ -110,6 +110,37 @@ library Separatista
 		[ propget, helpstring("Transaction date") ]
 		HRESULT __stdcall TransactionDate(
 			[out, retval] DATE *pTransactionDate);
+
+		[propget, helpstring("RDC Code")]
+		HRESULT __stdcall RDCCode(
+			[out, retval] BSTR *pRDCCode);
+
+		[propget, helpstring("Currency")]
+		HRESULT __stdcall Currency(
+			[out, retval] VARIANT *pCurrency);
+
+		[propget, helpstring("Transaction code")]
+		HRESULT __stdcall TransactionCode(
+			[out, retval] BSTR *pTransactionCode);
+
+		[propget, helpstring("Transaction Reference")]
+		HRESULT __stdcall TransactionRef(
+			[out, retval] BSTR *pTransactionReference);
+
+		[propget, helpstring("Foreign IBAN")]
+		HRESULT __stdcall ForeignIBAN(
+			[out, retval] IIBAN **ppIBAN);
+
+		[propget, id(DISPID_VALUE),
+			helpstring("Get the description by key")]
+		HRESULT __stdcall Description(
+			[in] VARIANT vKey,
+			[out, retval] BSTR *pValue);
+
+		[propget, id(DISPID_NEWENUM),
+			restricted, helpstring("Get the key enumerator")]
+		HRESULT __stdcall _NewEnum(
+			[out, retval] IUnknown **ppUnk);
 	};
 	[
 		uuid(343F637E-DA0B-43a4-A802-8F9EF2DCC5DF),
