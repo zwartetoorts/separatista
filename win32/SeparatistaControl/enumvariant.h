@@ -20,6 +20,7 @@
 
 #include "windows.h"
 #include <vector>
+#include <array>
 
 #ifndef SEPARATISTA_ENUMVARIANT_H
 #define SEPARATISTA_ENUMVARIANT_H
@@ -44,7 +45,7 @@ public:
 	/**
 		Add a variant to the intenal list.
 	*/
-	void Add(VARIANT &vt);
+	HRESULT Add(const VARIANT &vt);
 
 protected:
 	/**
@@ -54,9 +55,44 @@ protected:
 	*/
 	~EnumVariant();
 
+	/**
+		The count of VARIANT structures in the objects array
+		@see m_objects;
+	*/
+	static const std::size_t VariantBlockSize = 10;
+
+	/**
+		Adds one VARIANT block to the objects list.
+	*/
+	HRESULT Grow();
+
+	/**
+		Get the VARIANT at index
+	*/
+	VARIANT& Get(std::size_t index);
+
+	typedef std::array<VARIANT, VariantBlockSize> VariantBlockType;
+	typedef std::vector<VariantBlockType*> VariantBlockList;
+
 private:
 	ULONG m_uRefCount;
-	std::vector<VARIANT> m_objects;
+
+	/**
+		Vector containing array blocks of VARIANT structures
+	*/
+	VariantBlockList m_objects;
+	/**
+		The current number of variants available
+	*/
+	std::size_t m_size;
+	/**
+		The current insert position
+		@see Add
+	*/
+	std::size_t m_wpos;
+	/**
+		The current read position
+	*/
 	std::size_t m_pos;
 
 };

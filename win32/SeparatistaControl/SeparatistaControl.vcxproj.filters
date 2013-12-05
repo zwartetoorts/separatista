@@ -82,4 +82,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="SeparatestaControl.vbs">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

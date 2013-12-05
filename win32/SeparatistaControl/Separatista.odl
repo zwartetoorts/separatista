@@ -193,6 +193,7 @@ library Separatista
 
 
 	};
+
 	[
 		uuid(6DF05A76-0582-415a-9B96-163F76914250),
 		helpstring("MT940SDocument object")

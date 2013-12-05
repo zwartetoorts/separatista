@@ -111,6 +111,9 @@
     <ClCompile Include="registrykey.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="SeparatestaControl.vbs" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

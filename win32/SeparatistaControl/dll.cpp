@@ -77,7 +77,7 @@ STDAPI DllGetClassObject(REFCLSID rclsid,
 	SepaControlClassFactory *pFactory;
 
 	*ppv = NULL;
-	if(IsEqualIID(rclsid, __uuidof(IMT940SDocument)))
+	if(IsEqualIID(rclsid, __uuidof(CMT940SDocument)))
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<IMT940SDocument>::Create<CMT940SDocument>);
 	else
 		return CLASS_E_CLASSNOTAVAILABLE;
