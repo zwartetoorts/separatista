@@ -39,7 +39,16 @@ namespace Separatista
 class IBAN
 {
 public:
+	/**
+		Constructor
+	*/
+	IBAN_EXTERN IBAN();
+
 	IBAN_EXTERN IBAN& operator = (const char *iban);
+
+	IBAN_EXTERN const char* getIBAN() const;
+
+	IBAN_EXTERN operator const char* () const;
 
 private:
 	std::string m_iban;

@@ -89,14 +89,19 @@ STDMETHODIMP EnumVariant::Next(unsigned long celt, VARIANT FAR* rgvar, unsigned 
 	if(rgvar == NULL)
 		return E_INVALIDARG;
 
-	for(ULONG l = 0; l < celt && m_pos < m_size; l++, m_pos++)
+	for(ULONG l = 0; l < celt && m_pos < m_wpos; l++, m_pos++)
 	{
 		// Init dest VARIANT and copy
 		VariantInit(&rgvar[l]);
 		hr = VariantCopy(&rgvar[l], &Get(m_pos));
 		if (FAILED(hr))
 			return hr;
+		if (pceltFetched)
+			*pceltFetched = l;
 	}
+
+	if (m_pos >= m_wpos)
+		return S_FALSE;
 
 	return S_OK;
 }

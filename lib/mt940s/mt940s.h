@@ -43,6 +43,11 @@ class MT940SCurrency
 {
 public:
 	/**
+		Constructor
+	*/
+	MT940S_EXTERN MT940SCurrency();
+
+	/**
 		Set all values
 		@param dcCode D for Debet or C for Credit
 		@param currency International currencty code
@@ -53,6 +58,7 @@ public:
 	/**
 		Converts to a char array. Will include sign.
 	*/
+	MT940S_EXTERN const char* getCurrency();
 	MT940S_EXTERN operator const char* ();
 
 private:
@@ -65,6 +71,11 @@ private:
 class MT940SDate
 {
 public:
+	/**
+		Constructor
+	*/
+	MT940S_EXTERN MT940SDate();
+
 	/**
 		Set the date
 		@param date Must be in YYMMDD format
@@ -81,7 +92,10 @@ private:
 class MT940STransaction
 {
 public:
-	// MT940S_EXTERN MT940STransaction() {};
+	/**
+		Constructor
+	*/
+	MT940S_EXTERN MT940STransaction();
 
 	MT940S_EXTERN const MT940SDate* getDate() const;
 	MT940S_EXTERN void setDate(const char *date);
@@ -100,15 +114,20 @@ public:
 
 	MT940S_EXTERN const IBAN* getForeignIBAN() const;
 	MT940S_EXTERN void setForeignIBAN(const char *iban);
-
+	
+	/**
+		Adds a description. Will move the internal pointer back to the first description.
+		@see moveFirstDescription
+	*/
 	MT940S_EXTERN void addDescription(const char *key, const char *value);
 	MT940S_EXTERN const char* getDescription(const char *key);
 
-	typedef std::map<std::string, std::string>::iterator DescriptionIterator;
+	MT940S_EXTERN void moveFirstDescription();
+	MT940S_EXTERN bool moveNextDescription();
+	MT940S_EXTERN bool descriptionEOF() const;
+	MT940S_EXTERN const char* getDescriptionKey() const;
+	MT940S_EXTERN const char* getDescriptionValue() const;
 
-	MT940S_EXTERN const DescriptionIterator getDescriptionBegin();
-
-	MT940S_EXTERN const DescriptionIterator getDescriptionEnd();
 private:
 	MT940SDate m_date;
 	std::string m_rdcCode;
@@ -117,6 +136,7 @@ private:
 	std::string m_transactionReference;
 	IBAN m_foreignIBAN;
 	std::map<std::string, std::string> m_descriptionMap;
+	std::map<std::string, std::string>::iterator m_descriptionIterator;
 };
 
 // Forward declaration
@@ -125,6 +145,11 @@ class MT940SRecordset;
 class MT940SDocument
 {
 public:
+	/**
+		Constructor
+	*/
+	MT940S_EXTERN MT940SDocument();
+
 	/**
 		Destructor
 	*/
@@ -178,6 +203,11 @@ class MT940SRecordset
 {
 public:
 	/**
+		Constructor	
+	*/
+	MT940S_EXTERN MT940SRecordset();
+
+	/**
 		Destructor
 	*/
 	MT940S_EXTERN ~MT940SRecordset();
@@ -209,19 +239,18 @@ public:
 
 	MT940S_EXTERN const IBAN* getIBANClient() const;
 
-	MT940S_EXTERN const MT940SCurrency* getPreviousBalance() const;
+	MT940S_EXTERN MT940SCurrency* getPreviousBalance();
 
 	MT940S_EXTERN const MT940SDate* getPreviousBalanceDate() const;
 
-	MT940S_EXTERN const MT940SCurrency* getCurrentBalance() const;
+	MT940S_EXTERN MT940SCurrency* getCurrentBalance();
 
 	MT940S_EXTERN const MT940SDate* getCurrentBalanceDate() const;
 
-	typedef std::vector<MT940STransaction*>::iterator TransactionIterator;
+	MT940S_EXTERN size_t getTransactionCount() const;
 
-	MT940S_EXTERN const TransactionIterator getTransactionBegin(); 
+	MT940S_EXTERN MT940STransaction* getTransaction(size_t index);
 
-	MT940S_EXTERN const TransactionIterator getTransactionEnd();
 	
 protected:
 	

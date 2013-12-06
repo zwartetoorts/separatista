@@ -46,6 +46,7 @@ struct IIBAN : public IDispatch
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
 
 	// IIBAN
+	STDMETHOD(IBAN)(BSTR *pIBAN) PURE;
 };
 
 struct __declspec(uuid("{3CDADD67-109C-49b4-9B1B-5C10B7121EB6}")) IIBAN;
@@ -63,6 +64,9 @@ public:
 		@see SepaControllDispatch
 	*/
 	CIBAN(IDispatch *pParent = NULL);
+
+	// COM methods
+	STDMETHOD(IBAN)(BSTR *pIBAN);
 
 	/**
 		Assignment operator, will set the internal pointer to the recordset

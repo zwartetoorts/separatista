@@ -42,6 +42,9 @@ library Separatista
 	]
 	interface IIBAN : IDispatch
 	{
+		[propget, helpstring("IBAN as text")]
+		HRESULT __stdcall IBAN(
+			[out, retval] BSTR *pIBAN);
 	};
 	[
 		uuid(2BD7342E-B12D-45b0-A5D6-ADF118386112),
@@ -67,7 +70,7 @@ library Separatista
 	{
 		[ propget, helpstring("Client Currency") ]
 		HRESULT __stdcall CurrencyClient(
-			[out, retval] VARIANT *pCurrencyClient);
+			[out, retval] BSTR *pCurrencyClient);
 
 		[ propget, helpstring("Transaction Reference") ]
 		HRESULT __stdcall TransactionReference(

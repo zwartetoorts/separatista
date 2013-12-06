@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <comutil.h>
+
 #include "ciban.h"
 #include "dispatch.cpp"
 
@@ -25,11 +27,18 @@ CIBAN::CIBAN(IDispatch *pParent)
 :SepaControlDispatch<IIBAN>(pParent)
 {
 	m_pIBAN = NULL;
-}
+}	
 
 CIBAN& CIBAN::operator = (Separatista::IBAN *pIBAN)
 {
 	m_pIBAN = pIBAN;
 
 	return *this;
+}
+
+STDMETHODIMP CIBAN::IBAN(BSTR *pIBAN)
+{
+	*pIBAN = _bstr_t(m_pIBAN->getIBAN());
+
+	return S_OK;
 }

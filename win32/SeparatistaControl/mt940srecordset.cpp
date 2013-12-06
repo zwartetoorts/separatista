@@ -29,21 +29,23 @@ CMT940SRecordset::CMT940SRecordset(IDispatch *pParent)
 :SepaControlDispatch<IMT940SRecordset>(pParent)
 {
 	m_pMT940SRecordset = NULL;
+	m_transactionIndex = 0;
 }
 
 CMT940SRecordset& CMT940SRecordset::operator = (Separatista::MT940SRecordset *pMT940SRecordset)
 {
 	m_pMT940SRecordset = pMT940SRecordset;
-
+	
 	return *this;
 }
 
-STDMETHODIMP CMT940SRecordset::CurrencyClient(VARIANT *pCurrencyClient)
+STDMETHODIMP CMT940SRecordset::CurrencyClient(BSTR *pCurrencyClient)
 {
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	return ::VariantTypeFromCurrency((const char*)m_pMT940SRecordset->getCurrencyClient(), pCurrencyClient);
+	*pCurrencyClient = _bstr_t(m_pMT940SRecordset->getCurrencyClient());
+	return S_OK;
 }
 
 STDMETHODIMP CMT940SRecordset::TransactionReference(BSTR *pTransactionReference)
@@ -84,10 +86,16 @@ STDMETHODIMP CMT940SRecordset::IBANClient(CIBAN **ppIBANClient)
 
 STDMETHODIMP CMT940SRecordset::PreviousBalance(VARIANT *pPreviousBalance)
 {
+	HRESULT hr;
+
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	return VariantTypeFromCurrency((const char*)m_pMT940SRecordset->getPreviousBalance(), pPreviousBalance);
+	hr = VariantTypeFromCurrency(m_pMT940SRecordset->getPreviousBalance()->getCurrency(), pPreviousBalance);
+	if (FAILED(hr))
+		return hr;
+
+	return S_OK;
 }
 
 STDMETHODIMP CMT940SRecordset::PreviousBalanceDate(DATE *pPreviousBalanceDate)
@@ -110,10 +118,16 @@ STDMETHODIMP CMT940SRecordset::PreviousBalanceDate(DATE *pPreviousBalanceDate)
 
 STDMETHODIMP CMT940SRecordset::CurrentBalance(VARIANT *pCurrentBalance)
 {
-	if(!m_pMT940SRecordset)
+	HRESULT hr;
+
+	if (!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	return VariantTypeFromCurrency((const char*)m_pMT940SRecordset->getCurrentBalance(), pCurrentBalance);
+	hr = VariantTypeFromCurrency(m_pMT940SRecordset->getCurrentBalance()->getCurrency(), pCurrentBalance);
+	if (FAILED(hr))
+		return hr;
+
+	return S_OK;
 }
 
 STDMETHODIMP CMT940SRecordset::CurrentBalanceDate(DATE *pCurrentBalanceDate)
@@ -139,20 +153,26 @@ STDMETHODIMP CMT940SRecordset::MoveFirst()
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	m_transactionIterator = m_pMT940SRecordset->getTransactionBegin();
+	m_transactionIndex = 0;
 
 	return S_OK;
 }
 
 STDMETHODIMP CMT940SRecordset::MoveNext()
 {
+	BOOL b;
+	HRESULT hr;
+
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	if(m_transactionIterator != m_pMT940SRecordset->getTransactionEnd())
-		++m_transactionIterator;
-	else
-		return S_FALSE;
+	hr = FEOF(&b);
+	if (b)
+		return E_ABORT;
+	if (FAILED(hr))
+		return hr;
+
+	m_transactionIndex++;
 
 	return S_OK;
 }
@@ -162,10 +182,10 @@ STDMETHODIMP CMT940SRecordset::FEOF(BOOL *pEOF)
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	if(m_transactionIterator == m_pMT940SRecordset->getTransactionEnd())
-		*pEOF = true;
-	else
+	if (m_transactionIndex <= m_pMT940SRecordset->getTransactionCount())
 		*pEOF = false;
+	else
+		*pEOF = true;
 
 	return S_OK;
 }
@@ -174,9 +194,12 @@ STDMETHODIMP CMT940SRecordset::TransactionDate(DATE *pDate)
 {
 	Separatista::MT940STransaction *pTransaction;
 
-	pTransaction = *m_transactionIterator;
-	if (!pTransaction)
+	if (!m_pMT940SRecordset)
 		return E_UNEXPECTED;
+
+	pTransaction = m_pMT940SRecordset->getTransaction(m_transactionIndex);
+	if (!pTransaction)
+		return E_ABORT;
 
 	return ::DateTypeFromStdTime((time_t)pTransaction->getDate(), pDate);
 }
@@ -185,9 +208,12 @@ STDMETHODIMP CMT940SRecordset::RDCCode(BSTR *pRDCCode)
 {
 	Separatista::MT940STransaction *pTransaction;
 
-	pTransaction = *m_transactionIterator;
-	if (!pTransaction)
+	if (!m_pMT940SRecordset)
 		return E_UNEXPECTED;
+
+	pTransaction = m_pMT940SRecordset->getTransaction(m_transactionIndex);
+	if (!pTransaction)
+		return E_ABORT;
 
 	*pRDCCode = _bstr_t(pTransaction->getRDCCode());
 
@@ -198,9 +224,12 @@ STDMETHODIMP CMT940SRecordset::Currency(VARIANT *pCurrency)
 {
 	Separatista::MT940STransaction *pTransaction;
 
-	pTransaction = *m_transactionIterator;
-	if (!pTransaction)
+	if (!m_pMT940SRecordset)
 		return E_UNEXPECTED;
+
+	pTransaction = m_pMT940SRecordset->getTransaction(m_transactionIndex);
+	if (!pTransaction)
+		return E_ABORT;
 
 	return ::VariantTypeFromCurrency((const char*)pTransaction->getCurrency(), pCurrency);
 }
@@ -209,9 +238,12 @@ STDMETHODIMP CMT940SRecordset::TransactionCode(BSTR *pTransactionCode)
 {
 	Separatista::MT940STransaction *pTransaction;
 
-	pTransaction = *m_transactionIterator;
-	if (!pTransaction)
+	if (!m_pMT940SRecordset)
 		return E_UNEXPECTED;
+
+	pTransaction = m_pMT940SRecordset->getTransaction(m_transactionIndex);
+	if (!pTransaction)
+		return E_ABORT;
 
 	*pTransactionCode = _bstr_t(pTransaction->getTransactionCode());
 
@@ -222,9 +254,12 @@ STDMETHODIMP CMT940SRecordset::TransactionRef(BSTR *pTransactionReference)
 {
 	Separatista::MT940STransaction *pTransaction;
 
-	pTransaction = *m_transactionIterator;
-	if (!pTransaction)
+	if (!m_pMT940SRecordset)
 		return E_UNEXPECTED;
+
+	pTransaction = m_pMT940SRecordset->getTransaction(m_transactionIndex);
+	if (!pTransaction)
+		return E_ABORT;
 
 	*pTransactionReference = _bstr_t(pTransaction->getTransactionReference());
 
@@ -235,9 +270,12 @@ STDMETHODIMP CMT940SRecordset::ForeignIBAN(CIBAN **ppIBAN)
 {
 	Separatista::MT940STransaction *pTransaction;
 
-	pTransaction = *m_transactionIterator;
-	if (!pTransaction)
+	if (!m_pMT940SRecordset)
 		return E_UNEXPECTED;
+
+	pTransaction = m_pMT940SRecordset->getTransaction(m_transactionIndex);
+	if (!pTransaction)
+		return E_ABORT;
 
 	*ppIBAN = new CIBAN(m_pParent);
 	if (!*ppIBAN)
@@ -255,9 +293,12 @@ STDMETHODIMP CMT940SRecordset::Description(VARIANT vKey, BSTR *pValue)
 	const char *pv;
 	_variant_t vk(vKey);
 
-	pTransaction = *m_transactionIterator;
-	if (!pTransaction)
+	if (!m_pMT940SRecordset)
 		return E_UNEXPECTED;
+
+	pTransaction = m_pMT940SRecordset->getTransaction(m_transactionIndex);
+	if (!pTransaction)
+		return E_ABORT;
 
 	pv = pTransaction->getDescription(_bstr_t(vk));
 
@@ -269,24 +310,26 @@ STDMETHODIMP CMT940SRecordset::Description(VARIANT vKey, BSTR *pValue)
 STDMETHODIMP CMT940SRecordset::_NewEnum(IUnknown **ppUnk)
 {
 	Separatista::MT940STransaction *pTransaction;
-	Separatista::MT940STransaction::DescriptionIterator it;
 	EnumVariant *pEnumVariant;
-	
-	pTransaction = *m_transactionIterator;
-	if (!pTransaction)
+
+	if (!m_pMT940SRecordset)
 		return E_UNEXPECTED;
-	
+
+	pTransaction = m_pMT940SRecordset->getTransaction(m_transactionIndex);
+	if (!pTransaction)
+		return E_ABORT;
+
 	// Create new EnumVariant
 	pEnumVariant = new EnumVariant();
 	if (!pEnumVariant)
 		return E_OUTOFMEMORY;
 	pEnumVariant->AddRef();
 
-	// Enum all recordsets in this document
-	for (it = pTransaction->getDescriptionBegin(); it != pTransaction->getDescriptionEnd(); it++)
+	// Enum all descriptions in this transaction
+	for (pTransaction->moveFirstDescription(); !pTransaction->descriptionEOF(); pTransaction->moveNextDescription())
 	{
-		// Add description to EnumVariant
-		pEnumVariant->Add(_variant_t(it->first.c_str()));
+		// Add description key to EnumVariant
+		pEnumVariant->Add(_variant_t(pTransaction->getDescriptionKey()));
 	}
 
 	// Set out

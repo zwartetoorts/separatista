@@ -28,6 +28,10 @@
 using namespace std;
 using namespace Separatista;
 
+MT940SDocument::MT940SDocument()
+{
+}
+
 MT940SDocument::~MT940SDocument()
 {
 	vector<MT940SRecordset*>::iterator it;
@@ -129,6 +133,10 @@ MT940SDocument::OpenStatus MT940SDocument::ReadRecord940(int line, int rline)
 	return MT940SDocument::OK;
 }
 
+MT940SRecordset::MT940SRecordset()
+{
+}
+
 MT940SDocument::OpenStatus MT940SRecordset::ReadRecord(int line, int rline, std::string &header, std::string &data, MT940SRecordset::ReadInfo *info)
 {
 	// Transaction Reference record
@@ -176,7 +184,7 @@ MT940SDocument::OpenStatus MT940SRecordset::ReadRecord25(int line, int rline, st
 	i = data.find(' ');
 	if(i == string::npos)
 		return MT940SDocument::E_FORMAT;
-	m_ibanClient = data.substr(0, i - 2).c_str();
+	m_ibanClient = data.substr(0, i).c_str();
 	m_currencyClient = data.substr(i + 1);
 	return MT940SDocument::OK;
 }
@@ -334,7 +342,7 @@ const IBAN* MT940SRecordset::getIBANClient() const
 	return &m_ibanClient;
 }
 
-const MT940SCurrency* MT940SRecordset::getPreviousBalance() const
+MT940SCurrency* MT940SRecordset::getPreviousBalance()
 {
 	return &m_previousBalance;
 }
@@ -344,7 +352,7 @@ const MT940SDate* MT940SRecordset::getPreviousBalanceDate() const
 	return &m_previousBalanceDate;
 }
 
-const MT940SCurrency* MT940SRecordset::getCurrentBalance() const
+MT940SCurrency* MT940SRecordset::getCurrentBalance()
 {
 	return &m_currentBalance;
 }
@@ -354,14 +362,21 @@ const MT940SDate* MT940SRecordset::getCurrentBalanceDate() const
 	return &m_currentBalanceDate;
 }
 
-const MT940SRecordset::TransactionIterator MT940SRecordset::getTransactionBegin()
+size_t MT940SRecordset::getTransactionCount() const
 {
-	return m_transactions.begin();
+	return m_transactions.size();
 }
 
-const MT940SRecordset::TransactionIterator MT940SRecordset::getTransactionEnd()
+MT940STransaction* MT940SRecordset::getTransaction(size_t index)
 {
-	return m_transactions.end();
+	if (index >= m_transactions.size())
+		return NULL;
+
+	return m_transactions.at(index);
+}
+
+MT940STransaction::MT940STransaction()
+{
 }
 
 const MT940SDate* MT940STransaction::getDate() const
@@ -432,16 +447,47 @@ const char* MT940STransaction::getDescription(const char *key)
 void MT940STransaction::addDescription(const char *key, const char *value)
 {
 	m_descriptionMap[key] = value;
+	moveFirstDescription();
 }
 
-const MT940STransaction::DescriptionIterator MT940STransaction::getDescriptionBegin()
+void MT940STransaction::moveFirstDescription()
 {
-	return m_descriptionMap.begin();
+	m_descriptionIterator = m_descriptionMap.begin();
 }
 
-const MT940STransaction::DescriptionIterator MT940STransaction::getDescriptionEnd()
+bool MT940STransaction::moveNextDescription()
 {
-	return m_descriptionMap.end();
+	m_descriptionIterator++;
+
+	return descriptionEOF();
+}
+
+bool MT940STransaction::descriptionEOF() const
+{
+	if (m_descriptionIterator == m_descriptionMap.end())
+		return true;
+
+	return false;
+}
+
+const char* MT940STransaction::getDescriptionKey() const
+{
+	if (descriptionEOF())
+		return NULL;
+
+	return (*m_descriptionIterator).first.c_str();
+}
+
+const char* MT940STransaction::getDescriptionValue() const
+{
+	if (descriptionEOF())
+		return NULL;
+
+	return (*m_descriptionIterator).second.c_str();
+}
+
+MT940SCurrency::MT940SCurrency()
+{
 }
 
 void MT940SCurrency::set(const char dcCode, const char *currency, const char *amount)
@@ -451,18 +497,27 @@ void MT940SCurrency::set(const char dcCode, const char *currency, const char *am
 	m_amount = amount;
 }
 
-MT940SCurrency::operator const char* ()
+const char* MT940SCurrency::getCurrency()
 {
 	// dcCode
-	if(m_dcCode == 'D' || m_dcCode == 'd')
+	if (m_dcCode == 'D' || m_dcCode == 'd')
 		m_buffer = "-";
 	else
 		m_buffer.clear();
 
 	// Value
-	m_buffer += m_currency;
+	m_buffer += m_amount;
 
 	return m_buffer.c_str();
+}
+
+MT940SCurrency::operator const char* ()
+{
+	return getCurrency();
+}
+
+MT940SDate::MT940SDate()
+{
 }
 
 MT940SDate& MT940SDate::operator =(const char *date)
@@ -486,9 +541,9 @@ time_t MT940SDate::getTime() const
 	timeinfo.tm_sec = 0;
 	timeinfo.tm_min = 0;
 	timeinfo.tm_hour = 0;
-	timeinfo.tm_mday = stoi(m_date.substr(4, 1));		// Day of the month
-	timeinfo.tm_mon = stoi(m_date.substr(2,1)) - 1;		// Months since jan
-	timeinfo.tm_year = ptm->tm_year - (ptm->tm_year % 100) + stoi(m_date.substr(0, 1));	// YY converted to this century
+	timeinfo.tm_mday = stoi(m_date.substr(4, 2));		// Day of the month
+	timeinfo.tm_mon = stoi(m_date.substr(2,2)) - 1;		// Months since jan
+	timeinfo.tm_year = ptm->tm_year - (ptm->tm_year % 100) + stoi(m_date.substr(0, 2));	// YY converted to this century
 	
 	// Convert to time_t
 	return mktime(&timeinfo); 

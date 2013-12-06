@@ -58,7 +58,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>mt940s.lib;shlwapi.lib;comsuppwd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>separatistaiban.lib;mt940s.lib;shlwapi.lib;comsuppwd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>SeparatistaControl.def</ModuleDefinitionFile>
     </Link>

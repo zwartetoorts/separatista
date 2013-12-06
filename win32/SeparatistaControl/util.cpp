@@ -23,15 +23,10 @@
 
 HRESULT VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency)
 {
-	_variant_t v;
-
 	if (!pCurrency)
 		return E_UNEXPECTED;
 
-	v.Attach(*pvCurrency);
-	v = _bstr_t(pCurrency);
-	v.ChangeType(VT_CY);
-
+	*pvCurrency = _variant_t(pCurrency);
 	return S_OK;
 }
 

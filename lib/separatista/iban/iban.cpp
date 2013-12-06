@@ -22,12 +22,25 @@
 
 #include <string>
 
-using namespace std;
 using namespace Separatista;
+
+IBAN::IBAN()
+{
+}
 
 IBAN& IBAN::operator =(const char *iban)
 {
 	m_iban.assign(iban, IBAN_MAX_LENGTH);
 	return *this;
+}
+
+const char* IBAN::getIBAN() const
+{
+	return m_iban.c_str();
+}
+
+IBAN::operator const char* () const
+{
+	return m_iban.c_str();
 }
 

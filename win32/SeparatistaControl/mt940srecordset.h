@@ -48,7 +48,7 @@ struct IMT940SRecordset : public IDispatch
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
 	
 	// Methods
-	STDMETHOD(CurrencyClient)(VARIANT *pCurrencyClient) PURE;
+	STDMETHOD(CurrencyClient)(BSTR *pCurrencyClient) PURE;
 	STDMETHOD(TransactionReference)(BSTR *pTransactionReference) PURE;
 	STDMETHOD(SerialNumber)(BSTR *pSerialNumber) PURE;
 	STDMETHOD(IBANClient)(CIBAN **ppIBANClient) PURE;
@@ -91,7 +91,7 @@ public:
 	CMT940SRecordset& operator = (Separatista::MT940SRecordset *pMT940SRecordset);
 
   	// COM Methods
-	STDMETHOD(CurrencyClient)(VARIANT *pCurrencyClient);
+	STDMETHOD(CurrencyClient)(BSTR *pCurrencyClient);
 	STDMETHOD(TransactionReference)(BSTR *pTransactionReference);
 	STDMETHOD(SerialNumber)(BSTR *pSerialNumber);
 	STDMETHOD(IBANClient)(CIBAN **ppIBANClient);
@@ -117,9 +117,7 @@ private:
 	/// Pointer to the MT940SRecordset it represents
 	Separatista::MT940SRecordset *m_pMT940SRecordset;
 
-	Separatista::MT940SRecordset::TransactionIterator m_transactionIterator;
-
-
+	size_t m_transactionIndex;
 };
 
 class __declspec(uuid("{343F637E-DA0B-43a4-A802-8F9EF2DCC5DF}")) CMT940SRecordset;
