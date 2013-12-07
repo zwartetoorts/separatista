@@ -379,7 +379,11 @@ MT940STransaction::MT940STransaction()
 {
 }
 
-const MT940SDate* MT940STransaction::getDate() const
+MT940STransaction::~MT940STransaction()
+{
+}
+
+MT940SDate* MT940STransaction::getDate()
 {
 	return &m_date;
 }
@@ -399,7 +403,7 @@ void MT940STransaction::setRDCCode(const char *code)
 	m_rdcCode = code;
 }
 
-const MT940SCurrency* MT940STransaction::getCurrency() const
+MT940SCurrency* MT940STransaction::getCurrency()
 {
 	return &m_currency;
 }

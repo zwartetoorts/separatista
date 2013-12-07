@@ -108,7 +108,7 @@ library Separatista
 
 		[ propget, helpstring("Check for the End-Of-File bit") ]
 		HRESULT __stdcall EOF(
-			[out, retval] BOOL *pEOF);
+			[out, retval] VARIANT_BOOL *pEOF);
 
 		[ propget, helpstring("Transaction date") ]
 		HRESULT __stdcall TransactionDate(

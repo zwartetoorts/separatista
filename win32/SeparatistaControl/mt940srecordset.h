@@ -58,7 +58,7 @@ struct IMT940SRecordset : public IDispatch
 	STDMETHOD(CurrentBalanceDate)(DATE *pCurrentBalanceDate) PURE;
 	STDMETHOD(MoveFirst)() PURE;
 	STDMETHOD(MoveNext)() PURE;
-	STDMETHOD(FEOF)(int *pEOF) PURE;
+	STDMETHOD(FEOF)(VARIANT_BOOL *pEOF) PURE;
 	STDMETHOD(TransactionDate)(DATE *pTransactionDate) PURE;
 	STDMETHOD(RDCCode)(BSTR *pRDCCode) PURE;
 	STDMETHOD(Currency)(VARIANT *pCurrency) PURE;
@@ -101,7 +101,7 @@ public:
 	STDMETHOD(CurrentBalanceDate)(DATE *pCurrentBalanceDate);
 	STDMETHOD(MoveFirst)();
 	STDMETHOD(MoveNext)();
-	STDMETHOD(FEOF)(int *pEOF);
+	STDMETHOD(FEOF)(VARIANT_BOOL *pEOF);
 	STDMETHOD(TransactionDate)(DATE *pTransactionDate);
 	STDMETHOD(RDCCode)(BSTR *pRDCCode);
 	STDMETHOD(Currency)(VARIANT *pCurrency);

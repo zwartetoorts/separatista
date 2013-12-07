@@ -97,13 +97,15 @@ public:
 	*/
 	MT940S_EXTERN MT940STransaction();
 
-	MT940S_EXTERN const MT940SDate* getDate() const;
+	MT940S_EXTERN ~MT940STransaction();
+
+	MT940S_EXTERN MT940SDate* getDate();
 	MT940S_EXTERN void setDate(const char *date);
 
 	MT940S_EXTERN const char* getRDCCode() const;
 	MT940S_EXTERN void setRDCCode(const char *code);
 
-	MT940S_EXTERN const MT940SCurrency* getCurrency() const;
+	MT940S_EXTERN MT940SCurrency* getCurrency();
 	MT940S_EXTERN void setCurrency(const char dcCode, const char *currency, const char *amount);
 
 	MT940S_EXTERN const char* getTransactionCode() const;

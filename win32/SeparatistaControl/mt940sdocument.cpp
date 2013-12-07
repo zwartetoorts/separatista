@@ -54,6 +54,7 @@ STDMETHODIMP CMT940SDocument::Item(VARIANT vIndex, IMT940SRecordset **ppIMT940SR
 	pCMT940SRecordset  = new CMT940SRecordset(this);
 	if(!pCMT940SRecordset)
 		return E_OUTOFMEMORY;
+	pCMT940SRecordset->AddRef();
 	
 	*pCMT940SRecordset = m_MT940SDocument.getRecordset(index);
 
