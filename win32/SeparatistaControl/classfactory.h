@@ -22,6 +22,7 @@
 #define SEPARATISTA_CLASSFACTORY_H
 
 #include <windows.h>
+#include "unknown.cpp"
 
 /**
 	Component creation function, used as an easy way to create an instance
@@ -32,18 +33,13 @@ typedef HRESULT (*FPCREATECOMP)(REFCLSID, void**);
 /**
 	Creates all instances of needed classes
 */
-class SepaControlClassFactory : public IClassFactory
+class SepaControlClassFactory : public SepaControlUnknown<IClassFactory>
 {
 public:
 	/// @param fpCreate Pointer to the Class creation function
 	SepaControlClassFactory(FPCREATECOMP fpCreate);
 	virtual ~SepaControlClassFactory();
 
-	// IUnknown methods
-	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** pvvObject);
-	ULONG STDMETHODCALLTYPE AddRef();
-	ULONG STDMETHODCALLTYPE Release();
-	
 	// IClassFactory methods
 	HRESULT STDMETHODCALLTYPE CreateInstance(IUnknown* pUnkOuter, REFIID riid, void** pvvObject);
 	HRESULT STDMETHODCALLTYPE LockServer(BOOL fLock);

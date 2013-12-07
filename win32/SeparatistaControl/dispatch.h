@@ -23,8 +23,10 @@
 
 #include <windows.h>
 
+#include "unknown.h"
+
 template <class T>
-class SepaControlDispatch : public T
+class SepaControlDispatch : public SepaControlUnknown<T>
 {
 public:
 	/**
@@ -32,14 +34,12 @@ public:
 		It will call AddRef on the parent object and call Release on destruction. This
 		will make sure the parent object isn't destroyed before this child.
 	*/
-	SepaControlDispatch(IDispatch* pParent = NULL);
+	SepaControlDispatch(IUnknown* pParent = NULL);
 
 	template <class C> static HRESULT Create(REFCLSID rclid, void** pvvObject);
 
 	// IUnknown methods
 	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** pvvObject);
-	ULONG STDMETHODCALLTYPE AddRef();
-	ULONG STDMETHODCALLTYPE Release();
 
 	// IDispatch methods
 	HRESULT STDMETHODCALLTYPE GetTypeInfoCount(unsigned int FAR* pctInfo);
@@ -47,19 +47,10 @@ public:
 	HRESULT STDMETHODCALLTYPE GetIDsOfNames(REFIID riid, OLECHAR FAR* FAR* rgszNames, unsigned int cNames, LCID lcid, DISPID FAR* rgDispId);
 	HRESULT STDMETHODCALLTYPE Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr);
 protected:
-	/**
-		Destructor.
-		Calls Release on the parent COM object if set through the constructor.
-		Destructor with protected access. This object has to be freed through Release method
-		since it uses reference counting.
-		@see Release()
-	*/
 	virtual ~SepaControlDispatch();
 
-	ULONG m_uRefCount;
 	ITypeLib* m_pTypeLib;
 	ITypeInfo* m_pTypeInfo;
-	IDispatch *m_pParent;
 };
 
 #endif // !defined SEPARATISTA_DISPATCH_H

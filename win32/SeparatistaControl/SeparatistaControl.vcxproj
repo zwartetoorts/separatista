@@ -90,6 +90,7 @@
     <ClInclude Include="mt940sdocument.h" />
     <ClInclude Include="mt940srecordset.h" />
     <ClInclude Include="registrykey.h" />
+    <ClInclude Include="unknown.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
@@ -103,12 +104,17 @@
   <ItemGroup>
     <ClCompile Include="ciban.cpp" />
     <ClCompile Include="classfactory.cpp" />
-    <ClCompile Include="dispatch.cpp" />
+    <ClCompile Include="dispatch.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="dll.cpp" />
     <ClCompile Include="enumvariant.cpp" />
     <ClCompile Include="mt940sdocument.cpp" />
     <ClCompile Include="mt940srecordset.cpp" />
     <ClCompile Include="registrykey.cpp" />
+    <ClCompile Include="unknown.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>

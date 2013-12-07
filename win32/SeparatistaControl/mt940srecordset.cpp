@@ -21,9 +21,9 @@
 #include <comutil.h>
 
 #include "mt940srecordset.h"
-#include "dispatch.cpp"
 #include "util.h"
 #include "enumvariant.h"
+#include "dispatch.cpp"
 
 CMT940SRecordset::CMT940SRecordset(IDispatch *pParent)
 :SepaControlDispatch<IMT940SRecordset>(pParent)

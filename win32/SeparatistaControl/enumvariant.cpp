@@ -25,6 +25,7 @@
 #include "enumvariant.h"
 
 EnumVariant::EnumVariant()
+:SepaControlUnknown()
 {
 	m_uRefCount = 0;
 	m_pos = 0;
@@ -46,37 +47,6 @@ EnumVariant::~EnumVariant()
 			VariantClear(&a->at(c));
 		delete a;
 	}
-}
-
-ULONG EnumVariant::AddRef()
-{
-	return ++m_uRefCount;
-}
-
-ULONG EnumVariant::Release()
-{
-	ULONG uRet;
-
-	uRet = --m_uRefCount;
-	if(0 == uRet)
-		delete this;
-	return uRet;
-}
-
-HRESULT EnumVariant::QueryInterface(REFIID iid, void** pvvObject)
-{
-	*pvvObject = NULL;
-
- 	if(IsEqualIID(iid, IID_IUnknown) ||
-		IsEqualIID(iid, IID_IEnumVARIANT))
-	{
-		*pvvObject = this;
-		AddRef();
-	}
-	else
-		return E_NOINTERFACE;
-
-	return S_OK;
 }
 
 STDMETHODIMP EnumVariant::Next(unsigned long celt, VARIANT FAR* rgvar, unsigned long FAR* pceltFetched)

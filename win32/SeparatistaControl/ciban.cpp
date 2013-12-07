@@ -23,7 +23,7 @@
 #include "ciban.h"
 #include "dispatch.cpp"
 
-CIBAN::CIBAN(IDispatch *pParent)
+CIBAN::CIBAN(IUnknown *pParent)
 :SepaControlDispatch<IIBAN>(pParent)
 {
 	m_pIBAN = NULL;

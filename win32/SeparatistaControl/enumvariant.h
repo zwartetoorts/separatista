@@ -21,19 +21,15 @@
 #include "windows.h"
 #include <vector>
 #include <array>
+#include "unknown.cpp"
 
 #ifndef SEPARATISTA_ENUMVARIANT_H
 #define SEPARATISTA_ENUMVARIANT_H
 
-class EnumVariant : public IEnumVARIANT
+class EnumVariant : public SepaControlUnknown<IEnumVARIANT>
 {
 public:
 	EnumVariant();
-
-	// IUnknown methods
-	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** pvvObject);
-	ULONG STDMETHODCALLTYPE AddRef();
-	ULONG STDMETHODCALLTYPE Release();
 
 	// IEnumVARIANT methods
 	STDMETHOD(Next)(unsigned long celt, VARIANT FAR* rgvar, unsigned long FAR* pceltFetched);

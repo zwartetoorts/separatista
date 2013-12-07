@@ -22,6 +22,7 @@
 #include "dll.h"
 
 SepaControlClassFactory::SepaControlClassFactory(FPCREATECOMP fpCreate)
+:SepaControlUnknown()
 {
 	m_fpCreateComp = fpCreate;
 	m_uRefCount = 0;
@@ -31,35 +32,6 @@ SepaControlClassFactory::SepaControlClassFactory(FPCREATECOMP fpCreate)
 SepaControlClassFactory::~SepaControlClassFactory()
 {
 	g_uDllRefCount--;
-}
-
-ULONG SepaControlClassFactory::AddRef()
-{
-	return ++m_uRefCount;
-}
-
-ULONG SepaControlClassFactory::Release()
-{
-	ULONG uRet = --m_uRefCount;
-	if(0 == uRet)
-		delete this;
-	return uRet;
-}
-
-HRESULT SepaControlClassFactory::QueryInterface(const IID &iid,
-												void **pvvObject)
-{
-	*pvvObject = NULL;
-	if(IsEqualIID(iid, IID_IUnknown) ||
-		IsEqualIID(iid, IID_IClassFactory))
-	{
-		*pvvObject = this;
-		AddRef();
-	}
-	else
-		return E_NOINTERFACE;
-
-	return S_OK;
 }
 
 HRESULT SepaControlClassFactory::CreateInstance(IUnknown *pUnkOuter,

@@ -63,7 +63,7 @@ public:
 	/**
 		@see SepaControllDispatch
 	*/
-	CIBAN(IDispatch *pParent = NULL);
+	CIBAN(IUnknown *pParent = NULL);
 
 	// COM methods
 	STDMETHOD(IBAN)(BSTR *pIBAN);
