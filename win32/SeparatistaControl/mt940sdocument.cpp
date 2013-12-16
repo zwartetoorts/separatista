@@ -91,7 +91,7 @@ STDMETHODIMP CMT940SDocument::_NewEnum(IUnknown **ppUnk)
 		*pCMT940SRecordset = pMT940SRecordset;
 		
 		// Add CMT940SRecordset object to EnumVariant
-		pEnumVariant->Add(_variant_t(pCMT940SRecordset));
+		pEnumVariant->Add(_variant_t(pCMT940SRecordset).Detach());
 	}
 
 	// Set out

@@ -44,7 +44,7 @@ STDMETHODIMP CMT940SRecordset::CurrencyClient(BSTR *pCurrencyClient)
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	*pCurrencyClient = _bstr_t(m_pMT940SRecordset->getCurrencyClient());
+	*pCurrencyClient = _bstr_t(m_pMT940SRecordset->getCurrencyClient()).Detach();
 	return S_OK;
 }
 
@@ -53,7 +53,7 @@ STDMETHODIMP CMT940SRecordset::TransactionReference(BSTR *pTransactionReference)
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	*pTransactionReference = _bstr_t(m_pMT940SRecordset->getTransactionReference());
+	*pTransactionReference = _bstr_t(m_pMT940SRecordset->getTransactionReference()).Detach();
 
 	return S_OK;
 }
@@ -63,7 +63,7 @@ STDMETHODIMP CMT940SRecordset::SerialNumber(BSTR *pSerialNumber)
 	if(!m_pMT940SRecordset)
 		return E_UNEXPECTED;
 
-	*pSerialNumber = _bstr_t(m_pMT940SRecordset->getSerialNumber());
+	*pSerialNumber = _bstr_t(m_pMT940SRecordset->getSerialNumber()).Detach();
 
 	return S_OK;
 }
@@ -220,8 +220,8 @@ STDMETHODIMP CMT940SRecordset::RDCCode(BSTR *pRDCCode)
 	if (!pTransaction)
 		return S_FALSE;
 
-	*pRDCCode = _bstr_t(pTransaction->getRDCCode());
-
+	*pRDCCode = _bstr_t(pTransaction->getRDCCode()).Detach();
+	
 	return S_OK;
 }
 
@@ -258,7 +258,7 @@ STDMETHODIMP CMT940SRecordset::TransactionCode(BSTR *pTransactionCode)
 	if (!pTransaction)
 		return S_FALSE;
 
-	*pTransactionCode = _bstr_t(pTransaction->getTransactionCode());
+	*pTransactionCode = _bstr_t(pTransaction->getTransactionCode()).Detach();
 
 	return S_OK;
 }
@@ -274,7 +274,7 @@ STDMETHODIMP CMT940SRecordset::TransactionRef(BSTR *pTransactionReference)
 	if (!pTransaction)
 		return S_FALSE;
 
-	*pTransactionReference = _bstr_t(pTransaction->getTransactionReference());
+	*pTransactionReference = _bstr_t(pTransaction->getTransactionReference()).Detach();
 
 	return S_OK;
 }
@@ -315,7 +315,7 @@ STDMETHODIMP CMT940SRecordset::Description(VARIANT vKey, BSTR *pValue)
 
 	pv = pTransaction->getDescription(_bstr_t(vk));
 
-	*pValue = _bstr_t(pv);
+	*pValue = _bstr_t(pv).Detach();
 
 	return S_OK;
 }
@@ -342,7 +342,7 @@ STDMETHODIMP CMT940SRecordset::_NewEnum(IUnknown **ppUnk)
 	for (pTransaction->moveFirstDescription(); !pTransaction->descriptionEOF(); pTransaction->moveNextDescription())
 	{
 		// Add description key to EnumVariant
-		pEnumVariant->Add(_variant_t(pTransaction->getDescriptionKey()));
+		pEnumVariant->Add(_variant_t(pTransaction->getDescriptionKey()).Detach());
 	}
 
 	// Set out

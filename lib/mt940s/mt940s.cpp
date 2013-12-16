@@ -65,7 +65,6 @@ MT940SDocument::OpenStatus MT940SDocument::Open(const char *path)
 	ifstream ifs;
 	string line, header;
 	string::iterator it;
-	MT940SRecordset::ReadInfo info;
 	MT940SRecordset *recordset;
 	int nline, rline;
 	MT940SDocument::OpenStatus status = OK;
@@ -92,7 +91,7 @@ MT940SDocument::OpenStatus MT940SDocument::Open(const char *path)
 				// It's a new record, get the code
 				rline = 0;
 				header.clear();
-				for(++it; *it != ':'; ++it)
+				for(++it; it != line.end() && *it != ':'; ++it)
 					header += *it;
 
 				if(header == "940")
@@ -106,6 +105,8 @@ MT940SDocument::OpenStatus MT940SDocument::Open(const char *path)
 					if(header == "20")
 					{
 						recordset = new MT940SRecordset();
+						if (!recordset)
+							return E_MEMORY;
 						m_recordsets.push_back(recordset);
 					}
 				}
@@ -119,7 +120,7 @@ MT940SDocument::OpenStatus MT940SDocument::Open(const char *path)
 
 			// Check recordset
 			if(recordset != NULL)
-				status = recordset->ReadRecord(nline, rline, header, string(it, line.end()), &info);
+				status = recordset->ReadRecord(nline, rline, header, string(it, line.end()));
 		}
 		nline++;
 	}
@@ -137,46 +138,46 @@ MT940SRecordset::MT940SRecordset()
 {
 }
 
-MT940SDocument::OpenStatus MT940SRecordset::ReadRecord(int line, int rline, std::string &header, std::string &data, MT940SRecordset::ReadInfo *info)
+MT940SDocument::OpenStatus MT940SRecordset::ReadRecord(int line, int rline, std::string &header, std::string &data)
 {
 	// Transaction Reference record
 	if(header == "20")
-		return ReadRecord20(line, rline, data, info);
+		return ReadRecord20(line, rline, data);
 
 	// Account number record
 	if(header == "25")
-		return ReadRecord25(line, rline, data, info);
+		return ReadRecord25(line, rline, data);
 
 	// Serial number record
 	if(header == "28C")
-		return ReadRecord28C(line, rline, data, info);
+		return ReadRecord28C(line, rline, data);
 
 	// Previous balance record
 	if(header == "60F")
-		return ReadRecord60F(line, rline, data, info);
+		return ReadRecord60F(line, rline, data);
 
 	// Transcript record
 	if(header == "61")
-		return ReadRecord61(line, rline, data, info);
+		return ReadRecord61(line, rline, data);
 
 	// Description record
 	if(header == "86")
-		return ReadRecord86(line, rline, data, info);
+		return ReadRecord86(line, rline, data);
 
 	// Current balance record
 	if(header == "62F")
-		return ReadRecord62F(line, rline, data, info);
+		return ReadRecord62F(line, rline, data);
 
 	return MT940SDocument::OK;
 }
 
-MT940SDocument::OpenStatus MT940SRecordset::ReadRecord20(int line, int rline, std::string &data, MT940SRecordset::ReadInfo *info)
+MT940SDocument::OpenStatus MT940SRecordset::ReadRecord20(int line, int rline, std::string &data)
 {
 	m_transactionReference = data;
 	return MT940SDocument::OK;
 }
 
-MT940SDocument::OpenStatus MT940SRecordset::ReadRecord25(int line, int rline, std::string &data, MT940SRecordset::ReadInfo *info)
+MT940SDocument::OpenStatus MT940SRecordset::ReadRecord25(int line, int rline, std::string &data)
 {
 	size_t i;
 
@@ -189,13 +190,13 @@ MT940SDocument::OpenStatus MT940SRecordset::ReadRecord25(int line, int rline, st
 	return MT940SDocument::OK;
 }
 
-MT940SDocument::OpenStatus MT940SRecordset::ReadRecord28C(int line, int rline, std::string &data, MT940SRecordset::ReadInfo *info)
+MT940SDocument::OpenStatus MT940SRecordset::ReadRecord28C(int line, int rline, std::string &data)
 {
 	m_serialNumber = data;
 	return MT940SDocument::OK;
 }
 
-MT940SDocument::OpenStatus MT940SRecordset::ReadRecord60F(int line, int rline, std::string &data, MT940SRecordset::ReadInfo *info)
+MT940SDocument::OpenStatus MT940SRecordset::ReadRecord60F(int line, int rline, std::string &data)
 {
 	// Get the date first
 	m_previousBalanceDate = data.substr(1, 6).c_str();
@@ -204,22 +205,23 @@ MT940SDocument::OpenStatus MT940SRecordset::ReadRecord60F(int line, int rline, s
 	return MT940SDocument::OK;
 }
 
-MT940SDocument::OpenStatus MT940SRecordset::ReadRecord61(int line, int rline, std::string &data, MT940SRecordset::ReadInfo *info)
+MT940SDocument::OpenStatus MT940SRecordset::ReadRecord61(int line, int rline, std::string &data)
 {
 	size_t i;
 	string code;
+	MT940STransaction *pTransaction;
 
 	// Check record line
 	if(rline == 0)
 	{
-		// Initialize ReadInfo
-		info->key.clear();
-
-		// Create new transaction
-		info->transaction = new MT940STransaction;
+		// Create new transaction and push it to the vector
+		pTransaction = new MT940STransaction;
+		if (!pTransaction)
+			return MT940SDocument::E_MEMORY;
+		m_transactions.push_back(pTransaction);
 
 		// Get the transaction date
-		info->transaction->setDate(data.substr(0, 6).c_str());
+		pTransaction->setDate(data.substr(0, 6).c_str());
 
 		// rdc code
 		if(data[6] == 'R')
@@ -234,85 +236,82 @@ MT940SDocument::OpenStatus MT940SRecordset::ReadRecord61(int line, int rline, st
 			i = 0;
 			code = data[6];
 		}
-		info->transaction->setRDCCode(code.c_str());
+		pTransaction->setRDCCode(code.c_str());
 
 		// Currency
-		info->transaction->setCurrency(data[6 + i], m_currencyClient.c_str(), data.substr(7 + i, 15).c_str());
+		pTransaction->setCurrency(data[6 + i], m_currencyClient.c_str(), data.substr(7 + i, 15).c_str());
 
 		// Transaction code
-		info->transaction->setTransactionCode(data.substr(22 + i, 4).c_str());
+		pTransaction->setTransactionCode(data.substr(22 + i, 4).c_str());
 
 		// Transaction reference
-		info->transaction->setTransactionReference(data.substr(26 + i, 16).c_str());
+		pTransaction->setTransactionReference(data.substr(26 + i, 16).c_str());
 	}
 	else
 	{
 		// Check transaction
-		if(!info->transaction)
+		if(m_transactions.empty())
 			return MT940SDocument::E_FORMAT;
+		pTransaction = m_transactions.back();
 
 		// Get current record
-		info->transaction->setForeignIBAN(data.c_str());
-		
-		// Save the record
-		m_transactions.push_back(info->transaction);
+		pTransaction->setForeignIBAN(data.c_str());
 	}
 
 	return MT940SDocument::OK;
 }
 
-MT940SDocument::OpenStatus MT940SRecordset::ReadRecord86(int line, int rline, std::string &data, MT940SRecordset::ReadInfo *info)
+MT940SDocument::OpenStatus MT940SRecordset::ReadRecord86(int line, int rline, std::string &data)
 {
-	string part;
+	MT940STransaction *pTransaction;
 	string::iterator it;
+	string key, value;
+	unsigned int sepcount;
 	
-	if(!info->transaction)
+	// Get current transaction
+	if(m_transactions.empty())
 		return MT940SDocument::E_FORMAT;
+	pTransaction = m_transactions.back();
 
-	it = data.begin();
+	// Clear description on init
+	if (rline == 0)
+		m_description.clear();
 
-	// First run, initialize
-	if(rline == 0 && it != data.end())
+	// Append data to description
+	m_description += data;
+
+	// Split keys and values
+	sepcount = 0;
+	for (it = m_description.begin(); it != m_description.end(); it++)
 	{
-		// Check first /
-		if(*it != '/')
-			return MT940SDocument::E_FORMAT;
-
-		it++;
-		info->isKey = true;
-		info->key.clear();
-	}
-
-	// Split string by / chars
-	for(; it != data.end(); it++)
-	{
-		if(*it != '/')
+		// Test for separator char
+		if (*it != '/')
 		{
-			if(info->isKey)
-				info->key += *it;
+			// Key or value
+			if (sepcount % 2 == 1)
+				key += *it;
 			else
-				info->value += *it;
+				value += *it;
+			// Loop
+			continue;
 		}
-		else
+
+		// It's the separator char, if it's a key no action is required
+		if (++sepcount > 1 && sepcount % 2 == 1)
 		{
-			if(info->isKey)
-			{
-				info->value.clear();
-				info->isKey = false;
-			}
-			else
-			{
-				info->transaction->addDescription(info->key.c_str(), info->value.c_str());
-				info->isKey = true;
-				info->key.clear();
-			}
+			pTransaction->addDescription(key.c_str(), value.c_str());
+			key.clear();
+			value.clear();
 		}
 	}
+	// Don't forget the last key/value pair
+	if (!key.empty() && !value.empty())
+		pTransaction->addDescription(key.c_str(), value.c_str());
 
 	return MT940SDocument::OK;
 }
 
-MT940SDocument::OpenStatus MT940SRecordset::ReadRecord62F(int line, int rline, std::string &data, Separatista::MT940SRecordset::ReadInfo *info)
+MT940SDocument::OpenStatus MT940SRecordset::ReadRecord62F(int line, int rline, std::string &data)
 {
 	// Get the date first
 	m_currentBalanceDate = data.substr(1, 6).c_str();

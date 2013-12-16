@@ -26,7 +26,7 @@ HRESULT VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency)
 	if (!pCurrency)
 		return E_UNEXPECTED;
 
-	*pvCurrency = _variant_t(pCurrency);
+	*pvCurrency = _variant_t(pCurrency).Detach();
 	return S_OK;
 }
 

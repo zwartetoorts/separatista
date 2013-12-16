@@ -38,7 +38,7 @@ CIBAN& CIBAN::operator = (Separatista::IBAN *pIBAN)
 
 STDMETHODIMP CIBAN::IBAN(BSTR *pIBAN)
 {
-	*pIBAN = _bstr_t(m_pIBAN->getIBAN());
+	*pIBAN = _bstr_t(m_pIBAN->getIBAN()).Detach();
 
 	return S_OK;
 }

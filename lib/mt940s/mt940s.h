@@ -23,7 +23,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <ctime>
 
 #include "iban/iban.h"
@@ -137,8 +137,8 @@ private:
 	std::string m_transactionCode;
 	std::string m_transactionReference;
 	IBAN m_foreignIBAN;
-	std::map<std::string, std::string> m_descriptionMap;
-	std::map<std::string, std::string>::iterator m_descriptionIterator;
+	std::unordered_map<std::string, std::string> m_descriptionMap;
+	std::unordered_map<std::string, std::string>::iterator m_descriptionIterator;
 };
 
 // Forward declaration
@@ -167,7 +167,9 @@ public:
 		/// Error opening/reading file
 		E_FILE,
 		/// Error parsing file or not a MT940S file
-		E_FORMAT
+		E_FORMAT,
+		/// No memory available
+		E_MEMORY
 	};
 
 	/**
@@ -216,22 +218,14 @@ public:
 
 	MT940SDocument::OpenStatus MT940S_EXTERN getStatus() const;
 
-	struct ReadInfo
-	{
-		MT940STransaction* transaction;
-		std::string key, value;
-		bool isKey;
-	};
-
 	/**
 		Handles the data according to the header
 		@param line The line number in the document
 		@param rline The line number in the record
 		@param header The record id header, without the semicolons
 		@param data The to be parsed data
-		@param info Parser information needed internally. Should be provided by the caller.
 	*/
-	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord(int line, int rline, std::string& header, std::string& data, ReadInfo *info);
+	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord(int line, int rline, std::string& header, std::string& data);
 
 	MT940S_EXTERN const char* getCurrencyClient() const;
 
@@ -261,70 +255,63 @@ protected:
 		@param line The line number in the document
 		@param rline The line number in the record
 		@param data The to be parsed data
-		@param info Parser information needed internally. Should be provided by the caller.
 		@see ReadRecord
 	*/
-	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord20(int line, int rline, std::string& data, ReadInfo *info);
+	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord20(int line, int rline, std::string& data);
 	
 	/**
 		Handle header 25 Account number record
 		@param line The line number in the document
 		@param rline The line number in the record
 		@param data The to be parsed data
-		@param info Parser information needed internally. Should be provided by the caller.
 		@see ReadRecord
 	*/
-	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord25(int line, int rline, std::string& data, ReadInfo *info);
+	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord25(int line, int rline, std::string& data);
 	
 	/**
 		Handle header 28C Serial number record
 		@param line The line number in the document
 		@param rline The line number in the record
 		@param data The to be parsed data
-		@param info Parser information needed internally. Should be provided by the caller.
 		@see ReadRecord
 	*/
-	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord28C(int line, int rline, std::string& data, ReadInfo *info);
+	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord28C(int line, int rline, std::string& data);
 	
 	/**
 		Handle header 60F Previous balance record
 		@param line The line number in the document
 		@param rline The line number in the record
 		@param data The to be parsed data
-		@param info Parser information needed internally. Should be provided by the caller.
 		@see ReadRecord
 	*/
-	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord60F(int line, int rline, std::string& data, ReadInfo *info);
+	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord60F(int line, int rline, std::string& data);
 	
 	/**
 		Handle header 61 Transcript record
 		@param line The line number in the document
 		@param rline The line number in the record
 		@param data The to be parsed data
-		@param info Parser information needed internally. Should be provided by the caller.
 		@see ReadRecord
 	*/
-	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord61(int line, int rline, std::string& data, ReadInfo *info);
+	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord61(int line, int rline, std::string& data);
 	
 	/**
 		Handle header 86 Description record
 		@param line The line number in the document
 		@param rline The line number in the record
 		@param data The to be parsed data
-		@param info Parser information needed internally. Should be provided by the caller.
 		@see ReadRecord
 	*/
-	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord86(int line, int rline, std::string& data, ReadInfo *info);
+	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord86(int line, int rline, std::string& data);
 	
 	/**
 		Handle header 62F Current balance record
 		@param line The line number in the document
 		@param rline The line number in the record
 		@param data The to be parsed data
-		@param info Parser information needed internally. Should be provided by the caller.
 		@see ReadRecord
 	*/
-	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord62F(int line, int rline, std::string& data, ReadInfo *info);
+	MT940S_EXTERN MT940SDocument::OpenStatus ReadRecord62F(int line, int rline, std::string& data);
 
 private:
 	std::string m_currencyClient;
@@ -337,6 +324,7 @@ private:
 	MT940SDate m_currentBalanceDate;
 	std::vector<MT940STransaction*> m_transactions;
 	std::vector<MT940STransaction*>::iterator m_transactionsIterator;
+	std::string m_description;
 };
 
 }

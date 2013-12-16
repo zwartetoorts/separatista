@@ -19,7 +19,7 @@ If doc.Open("C:\Users\Okkel\Downloads\MT940.swi") = 0 Then
 		do while not rs.EOF 
 			WScript.Echo Chr(9) & "********************************** New Transaction"
 			WScript.Echo Chr(9) & "Transaction Date: " & FormatDateTime(rs.TransactionDate, 1)
-			WScript.Echo Chr(9) & rs.RDCCode
+			WScript.Echo Chr(9) & "RDC Code: " & rs.RDCCode
 			WScript.Echo Chr(9) & "Currency: " & FormatCurrency(rs.Currency)
 			WScript.Echo Chr(9) & "Transaction code: " & rs.TransactionCode
 			WScript.Echo Chr(9) & "Transaction reference:  " & rs.TransactionRef
