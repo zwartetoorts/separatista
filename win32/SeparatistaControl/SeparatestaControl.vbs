@@ -25,8 +25,8 @@ If doc.Open("C:\Users\Okkel\Downloads\MT940.swi") = 0 Then
 			WScript.Echo Chr(9) & "Transaction reference:  " & rs.TransactionRef
 			WScript.Echo Chr(9) & "Foreign IBAN: " & rs.ForeignIBAN.IBAN
 			
+			WScript.Echo Chr(9) & Chr(9) & "********************************** New Description"
 			for each key in rs
-				WScript.Echo Chr(9) & Chr(9) & "********************************** New Description"
 				WScript.Echo Chr(9) & Chr(9) & key & "=>" & rs.Description(key)
 			next
 			

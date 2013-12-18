@@ -264,14 +264,28 @@ MT940SDocument::OpenStatus MT940SRecordset::ReadRecord61(int line, int rline, st
 MT940SDocument::OpenStatus MT940SRecordset::ReadRecord86(int line, int rline, std::string &data)
 {
 	MT940STransaction *pTransaction;
-	string::iterator it;
 	string key, value;
-	unsigned int sepcount;
-	
+	const char* const keys[] = {
+		"MARF",
+		"EREF",
+		"PREF",
+		"RTRN",
+		"ACCW",
+		"BENM",
+		"NAME",
+		"ORDP",
+		"ID",
+		"ADDR",
+		"REMI",
+		"ISDT",
+		"CSID"
+	};
+
 	// Get current transaction
 	if(m_transactions.empty())
 		return MT940SDocument::E_FORMAT;
 	pTransaction = m_transactions.back();
+	size_t offset, end;
 
 	// Clear description on init
 	if (rline == 0)
@@ -280,33 +294,50 @@ MT940SDocument::OpenStatus MT940SRecordset::ReadRecord86(int line, int rline, st
 	// Append data to description
 	m_description += data;
 
-	// Split keys and values
-	sepcount = 0;
-	for (it = m_description.begin(); it != m_description.end(); it++)
+	// Keep checking offset for out-of-bounds or trailing '/'
+	// 
+	offset = 0;
+	bool found = false;
+loop_while:
+	while (offset < m_description.length() && m_description[offset++] == '/')
 	{
-		// Test for separator char
-		if (*it != '/')
+		// Find key
+		for (int i = 0; !found && i < (sizeof(keys) / sizeof(*keys)); i++)
 		{
-			// Key or value
-			if (sepcount % 2 == 1)
-				key += *it;
-			else
-				value += *it;
-			// Loop
-			continue;
+			// Check strlen characters
+			if (m_description.compare(offset, strlen(keys[i]), keys[i]) == 0)
+			{
+				// Match
+				found = true;
+				key = keys[i];
+				offset += strlen(keys[i]);
+				value.clear(); // Important
+				goto loop_while; // Recheck while conditions
+			}
 		}
 
-		// It's the separator char, if it's a key no action is required
-		if (++sepcount > 1 && sepcount % 2 == 1)
+		// Find end as count from offset to next '/' or to end of line
+		end = m_description.find('/', offset);
+		if (end == string::npos)
+			end = m_description.length() - 1;
+
+		// Check found
+		if (!found)
 		{
-			pTransaction->addDescription(key.c_str(), value.c_str());
-			key.clear();
-			value.clear();
+			// If the key wasn't found it's most probably because of a '/' character in the description value			
+			// And replace the value in the map
+			value += m_description.substr(offset, end - offset);
 		}
-	}
-	// Don't forget the last key/value pair
-	if (!key.empty() && !value.empty())
+		else
+		{
+			// If the key was found add it to the maps
+			value = m_description.substr(offset, end - offset);
+		}
+
 		pTransaction->addDescription(key.c_str(), value.c_str());
+		offset = end;
+		found = false;
+	}
 
 	return MT940SDocument::OK;
 }
