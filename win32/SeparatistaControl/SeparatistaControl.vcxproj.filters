@@ -45,7 +45,7 @@
     <ClInclude Include="unknown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="directdebitdocument.h">
+    <ClInclude Include="cdirectdebitdocument.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -88,6 +88,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dispatch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cdirectdebitdocument.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

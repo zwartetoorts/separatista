@@ -27,6 +27,7 @@
 #include "registrykey.h"
 #include "dispatch.cpp"
 #include "separatista/separatista.h"
+#include "cdirectdebitdocument.h"
 
 /**
 	Globals
@@ -79,8 +80,10 @@ STDAPI DllGetClassObject(REFCLSID rclsid,
 	SepaControlClassFactory *pFactory;
 
 	*ppv = NULL;
-	if(IsEqualIID(rclsid, __uuidof(CMT940SDocument)))
+	if (IsEqualIID(rclsid, __uuidof(CMT940SDocument)))
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<IMT940SDocument>::Create<CMT940SDocument>);
+	else if (IsEqualIID(rclsid, __uuidof(CDirectDebitDocument)))
+		pFactory = new SepaControlClassFactory(SepaControlDispatch<IDirectDebitDocument>::Create<CDirectDebitDocument>);
 	else
 		return CLASS_E_CLASSNOTAVAILABLE;
 

@@ -23,8 +23,8 @@
 #include "separatista.h"
 #include "dispatch.h"
 
-#ifndef SEPARATISTA_DIRECTDEBITDOCUMENT_H
-#define SEPARATISTA_DIRECTDEBITDOCUMENT_H
+#ifndef SEPARATISTA_CDIRECTDEBITDOCUMENT_H
+#define SEPARATISTA_CDIRECTDEBITDOCUMENT_H
 
 // {79F9F451-460D-445C-B176-A0F64C347D1D}
 DEFINE_GUID(IID_DIRECTDEBITDOCUMENT ,
@@ -54,20 +54,20 @@ Memory management takes 2 strategies. The CMT940SDocument will persist until all
 Other classes like CMT940SRecordset will come and go on-the-fly and hold only references to the child
 objects in the parent CMT940SDocument.
 */
-class DirectDebitDocument : public SepaControlDispatch<IDirectDebitDocument>
+class CDirectDebitDocument : public SepaControlDispatch<IDirectDebitDocument>
 {
 public:
 	/**
 	@see SepaControllDispatch
 	*/
-	DirectDebitDocument(IUnknown *pParent = NULL);
+	CDirectDebitDocument(IUnknown *pParent = NULL);
 
 private:
 	
 };
 
-class __declspec(uuid("{0274813F-6EF4-44DF-8A1C-38262379519F}")) DirectDebitDocument;
+class __declspec(uuid("{0274813F-6EF4-44DF-8A1C-38262379519F}")) CDirectDebitDocument;
 
 
 
-#endif // SEPARATISTA_DIRECTDEBITDOCUMENT_H
+#endif // SEPARATISTA_CDIRECTDEBITDOCUMENT_H

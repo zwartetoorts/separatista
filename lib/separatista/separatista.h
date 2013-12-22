@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef SEPARATISTA_H
+#define SEPARATISTA_H
+
 #ifdef SEPARATISTA_BUILDINGDLL
 #	define SEPARATISTA_EXTERN __declspec(dllexport)
 #elif defined SEPARATISTA_USINGDLL
@@ -84,5 +87,5 @@ private:
 
 };
 
-
+#endif // !defined SEPARATISTA_H
 
