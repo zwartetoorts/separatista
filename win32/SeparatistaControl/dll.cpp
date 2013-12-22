@@ -26,6 +26,7 @@
 #include "mt940sdocument.h"
 #include "registrykey.h"
 #include "dispatch.cpp"
+#include "separatista/separatista.h"
 
 /**
 	Globals
@@ -58,7 +59,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 			if(!g_lpszDllPath)
 				return E_OUTOFMEMORY;
 			dwPathRet = GetModuleFileName(hinstDll, g_lpszDllPath, dwPathLen);
-		}while(dwPathRet == dwPathLen);
+		}
+		while(dwPathRet == dwPathLen);
 		break;
 	case DLL_PROCESS_DETACH:
 		// Free the Dll path
@@ -148,10 +150,16 @@ STDAPI DllUnregisterServer()
 	// Unregister Separatista.IBAN
 	DllUnregisterObject(
 		TEXT("{6DF05A76-0582-415a-9B96-163F76914250}"),
-		TEXT("Separatista.MT940SDocument.1"),
-		TEXT("Separatista.MT940SDocument"));
+		TEXT("Separatista.IBAN.1"),
+		TEXT("Separatista.IBAN"));
 
-	return S_OK;
+	// Unregister Separatista.DirectDebitDocument
+	DllUnregisterObject(
+		TEXT("{0274813F-6EF4-44DF-8A1C-38262379519F}"),
+		TEXT("Separatista.DirectDebitDocument.1"),
+		TEXT("Separatista.DirectDebitDocument"));
+
+	return S_OK;;
 }
 
 /**
@@ -287,6 +295,12 @@ STDAPI DllRegisterServer()
 		TEXT("{2BD7342E-B12D-45b0-A5D6-ADF118386112}"),
 		TEXT("Separatista.IBAN.1"),
 		TEXT("Separatista.IBAN"));
+
+	// Unregister Separatista.DirectDebitDocument
+	hr = DllRegisterObject(
+		TEXT("{0274813F-6EF4-44DF-8A1C-38262379519F}"),
+		TEXT("Separatista.DirectDebitDocument.1"),
+		TEXT("Separatista.DirectDebitDocument"));
 	if(FAILED(hr))
 	{
 		DllUnregisterServer();

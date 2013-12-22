@@ -51,18 +51,17 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SEPARATISTA_BUILDINGDLL;SEPARATISTA_IBAN_USINGDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SEPARATISTA_BUILDINGDLL;XERCES_STATIC_LIBRARY;SEPARATISTA_IBAN_USINGDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\xerces-c-3.1.1\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>separatistaiban.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>separatistaiban.lib;xerces-c_static_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\xerces-c-3.1.1\Build\Win32\VC10\Static Debug;$(OutDir)</AdditionalLibraryDirectories>
       <ForceFileOutput>
       </ForceFileOutput>
       <ShowProgress>LinkVerboseREF</ShowProgress>
@@ -96,6 +95,7 @@
     <ClInclude Include="..\..\lib\separatista\separatista.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\lib\separatista\directdebitdocument.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

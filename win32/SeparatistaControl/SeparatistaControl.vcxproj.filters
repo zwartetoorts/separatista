@@ -45,6 +45,9 @@
     <ClInclude Include="unknown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="directdebitdocument.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Separatista.odl">

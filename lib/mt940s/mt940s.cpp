@@ -48,6 +48,8 @@ size_t MT940SDocument::getRecordsetCount()
 
 MT940SRecordset* MT940SDocument::getRecordset(size_t i) 
 {
+	if (i >= m_recordsets.size())
+		return NULL;
 	return m_recordsets[i];
 }
 
@@ -140,33 +142,39 @@ MT940SRecordset::MT940SRecordset()
 
 MT940SDocument::OpenStatus MT940SRecordset::ReadRecord(int line, int rline, std::string &header, std::string &data)
 {
-	// Transaction Reference record
-	if(header == "20")
-		return ReadRecord20(line, rline, data);
+	try{
+		// Transaction Reference record
+		if (header == "20")
+			return ReadRecord20(line, rline, data);
 
-	// Account number record
-	if(header == "25")
-		return ReadRecord25(line, rline, data);
+		// Account number record
+		if (header == "25")
+			return ReadRecord25(line, rline, data);
 
-	// Serial number record
-	if(header == "28C")
-		return ReadRecord28C(line, rline, data);
+		// Serial number record
+		if (header == "28C")
+			return ReadRecord28C(line, rline, data);
 
-	// Previous balance record
-	if(header == "60F")
-		return ReadRecord60F(line, rline, data);
+		// Previous balance record
+		if (header == "60F")
+			return ReadRecord60F(line, rline, data);
 
-	// Transcript record
-	if(header == "61")
-		return ReadRecord61(line, rline, data);
+		// Transcript record
+		if (header == "61")
+			return ReadRecord61(line, rline, data);
 
-	// Description record
-	if(header == "86")
-		return ReadRecord86(line, rline, data);
+		// Description record
+		if (header == "86")
+			return ReadRecord86(line, rline, data);
 
-	// Current balance record
-	if(header == "62F")
-		return ReadRecord62F(line, rline, data);
+		// Current balance record
+		if (header == "62F")
+			return ReadRecord62F(line, rline, data);
+	}
+	catch (exception& e)
+	{
+		return MT940SDocument::E_FORMAT;
+	}
 
 	return MT940SDocument::OK;
 }

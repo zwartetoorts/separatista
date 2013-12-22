@@ -18,41 +18,72 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-
-#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 #include <windows.h>
 #include "separatista.h"
 #include "iban/iban.h"
 
 using namespace xercesc;
+using namespace Separatista;
 
-/**
-	DllMain
-*/
-
-BOOL WINAPI DllMain(HINSTANCE hinstDll,
-	DWORD fdwReason,
-	LPVOID lpvReserved)
+DirectDebitDocument::DirectDebitDocument()
 {
-	// Get reason
-	switch (fdwReason)
-	{
-	case DLL_PROCESS_ATTACH:
-		try
-		{
-			XMLPlatformUtils::Initialize();
-		}
-		catch (const XMLException &e)
-		{
-			return FALSE;
-		}
-		break;
-	case DLL_PROCESS_DETACH:
-		XMLPlatformUtils::Terminate();
-	}
-
-	return TRUE;
+	m_pErrorMessage = NULL;
 }
 
+DirectDebitDocument::~DirectDebitDocument()
+{
+	if (m_pErrorMessage)
+		XMLString::release(&m_pErrorMessage);
+}
 
+DirectDebitDocument::OpenStatus DirectDebitDocument::Open(const char *path)
+{
+	XercesDOMParser *parser;
+	DirectDebitDocument::OpenStatus ret = OK;
+	ErrorHandler *handler;
+
+	parser = new XercesDOMParser();
+	if (!parser)
+		return E_MEMORY;
+
+	parser->setValidationScheme(XercesDOMParser::Val_Always);
+	parser->setDoNamespaces(true);
+
+	handler = (ErrorHandler*)new HandlerBase();
+	if (!handler)
+	{
+		delete parser;
+		return E_MEMORY;
+	}
+	parser->setErrorHandler(handler);
+
+	try
+	{
+		parser->parse(path);
+	}
+	catch (const XMLException &e)
+	{
+		m_pErrorMessage = XMLString::transcode(e.getMessage());
+		ret = E_FORMAT;
+	}
+	catch (const DOMException &e)
+	{
+		m_pErrorMessage = XMLString::transcode(e.getMessage());
+		ret = E_FORMAT;
+	}
+	catch (...)
+	{
+		ret = E_FORMAT;
+	}
+	
+	m_pDOMDocument = parser->getDocument();
+	delete parser;
+	delete handler;
+
+	return OK;
+}

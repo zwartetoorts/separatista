@@ -162,7 +162,8 @@ library Separatista
 	{
 		OK,
 		E_FILE,
-		E_FORMAT
+		E_FORMAT,
+		E_MEMORY
 	} MT940SOpenStatus;
 	
 	[
@@ -204,6 +205,42 @@ library Separatista
 	coclass MT940SDocument 
 	{
 		[default] interface IMT940SDocument;
+		interface IDispatch;
+	};
+
+	typedef enum
+	{
+		XML_OK,
+		XML_E_FILE,
+		XML_E_FORMAT,
+		XML_E_MEMORY
+	} XMLOpenStatus;
+
+	/*
+		DirectDebitDocument
+	*/
+	[
+		uuid(79F9F451-460D-445C-B176-A0F64C347D1D),
+		helpstring("IDirectDebitDocument interface"),
+		oleautomation,
+		dual,
+		odl
+	]
+	interface IDirectDebitDocument : IDispatch
+	{
+		[ helpstring("Open a XML document") ]
+		HRESULT __stdcall Open(
+			[in] BSTR path,
+			[out, retval] XMLOpenStatus *pStatus);
+	};
+
+	[
+		uuid(0274813F-6EF4-44DF-8A1C-38262379519F),
+		helpstring("DirectDebitDocument object")
+	]
+	coclass DirectDebitDocument
+	{
+		[default] interface IDirectDebitDocument;
 		interface IDispatch;
 	};
 

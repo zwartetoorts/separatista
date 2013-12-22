@@ -15,15 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\lib\separatista\separatista.h">
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\separatista\iban\iban.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\lib\separatista\dll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\directdebitdocument.cpp">
+    <ClCompile Include="..\..\lib\separatista\iban\iban.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
