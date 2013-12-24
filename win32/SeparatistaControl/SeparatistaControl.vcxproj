@@ -87,6 +87,7 @@
     <ClInclude Include="classfactory.h" />
     <ClInclude Include="dispatch.h" />
     <ClInclude Include="dll.h" />
+    <ClInclude Include="documentreader.h" />
     <ClInclude Include="enumvariant.h" />
     <ClInclude Include="mt940sdocument.h" />
     <ClInclude Include="mt940srecordset.h" />
@@ -110,6 +111,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="dll.cpp" />
+    <ClCompile Include="documentreader.cpp" />
     <ClCompile Include="enumvariant.cpp" />
     <ClCompile Include="mt940sdocument.cpp" />
     <ClCompile Include="mt940srecordset.cpp" />

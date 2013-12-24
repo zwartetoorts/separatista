@@ -18,30 +18,63 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/sax/HandlerBase.hpp>
-#include <xercesc/util/XMLString.hpp>
-
 #include <windows.h>
-#include "separatista.h"
-#include "iban/iban.h"
+#include <oleauto.h>
+#include <comutil.h>
 
-using namespace xercesc;
+#include "documentreader.h"
+#include "dispatch.cpp"
+
 using namespace Separatista;
 
-DirectDebitDocument::DirectDebitDocument()
+DocumentReader::DocumentReader(IUnknown* pUnknown)
+:SepaControlDispatch<IDocumentReader>(pUnknown)
 {
-	m_pErrorMessage = NULL;
+	m_pDocumentReader = new SeparatistaFileReader();
 }
 
-DirectDebitDocument::DirectDebitDocument(xercesc::DOMDocument *pDocument)
+DocumentReader::~DocumentReader()
 {
-	setDOMDocument(pDocument);
+	if (m_pDocumentReader)
+		delete m_pDocumentReader;
 }
 
-DirectDebitDocument::~DirectDebitDocument()
+STDMETHODIMP DocumentReader::ReadDocument(BSTR path, SeparatistaFileReader::DocumentStatus *pStatus)
 {
-	
+	if (!m_pDocumentReader)
+		return E_UNEXPECTED;
+
+	*pStatus = m_pDocumentReader->readDocument(path);
+
+	return S_OK;
 }
 
+STDMETHODIMP DocumentReader::getStatus(SeparatistaFileReader::DocumentStatus *pStatus)
+{
+	if (!m_pDocumentReader)
+		return E_UNEXPECTED;
+
+	*pStatus = m_pDocumentReader->getStatus();
+
+	return S_OK;
+}
+
+STDMETHODIMP DocumentReader::getErrorMessage(BSTR *pErrorMessage)
+{
+	if (!m_pDocumentReader)
+		return E_UNEXPECTED;
+
+	*pErrorMessage = _bstr_t(m_pDocumentReader->getErrorMessage()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP DocumentReader::getPath(BSTR *pPath)
+{
+	if (!m_pDocumentReader)
+		return E_UNEXPECTED;
+
+	*pPath = _bstr_t(m_pDocumentReader->getPath()).Detach();
+
+	return S_OK;
+}

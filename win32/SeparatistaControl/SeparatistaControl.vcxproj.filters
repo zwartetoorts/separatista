@@ -48,6 +48,9 @@
     <ClInclude Include="cdirectdebitdocument.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="documentreader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Separatista.odl">
@@ -91,6 +94,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cdirectdebitdocument.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="documentreader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

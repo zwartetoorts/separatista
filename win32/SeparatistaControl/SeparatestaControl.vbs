@@ -1,3 +1,9 @@
+set reader = CreateObject("Separatista.DocumentReader")
+
+if reader.ReadDocument("C:\Users\Okkel\Documents\Visual Studio 2013\Projects\Separatista\doc\BNG SEPA SDD 008_001_ 02 voorbeeld.XML") = 0 then
+	w = 0
+end if
+
 
 Set doc = CreateObject("Separatista.MT940SDocument")
     
@@ -41,8 +47,3 @@ End If
 if Err.Number <> 0 then
 	WScript.Echo Err.Description
 End if
-
-Do While Not WScript.StdIn.AtEndOfLine
-   Input = WScript.StdIn.Read(1)
-Loop
-WScript.Echo "The script is complete." 

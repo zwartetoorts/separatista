@@ -50,19 +50,78 @@ namespace Separatista
 {
 
 /**
-	
+	Base class for all Separatista documents.
 */
-class DirectDebitDocument
+class SeparatistaDocument
 {
 public:
+	SEPARATISTA_EXTERN SeparatistaDocument();
+	SEPARATISTA_EXTERN virtual ~SeparatistaDocument();
+
+	/// Get error message
+	SEPARATISTA_EXTERN const wchar_t* getErrorMessage() const;
+
+	/// Releases the previous error message
+	SEPARATISTA_EXTERN void setErrorMessage(const wchar_t* pErrorMessage);
+
+	/// Get DOM Document
+	SEPARATISTA_EXTERN xercesc::DOMDocument* getDOMDocument() const;
+	SEPARATISTA_EXTERN void setDOMDocument(xercesc::DOMDocument* pDocument);
+
+	/// Get the file path
+	SEPARATISTA_EXTERN const wchar_t* getPath() const;
+	SEPARATISTA_EXTERN void setPath(const wchar_t *pPath);
+
+	/**
+		Tries to fit a SeparatistaDocument subclass to a given DOMDocument.
+		@return A pointer to the SeparatistaDocument subclass or NULL if not found
+	*/
+	SEPARATISTA_EXTERN static SeparatistaDocument* getByDOMDocument(xercesc::DOMDocument* pDOMDocument);
+protected:
+	/// Error message, protected access for convenience
+	wchar_t *m_pErrorMessage;
+
+private:
+	xercesc::DOMDocument *m_pDOMDocument;
+	wchar_t *m_path;
+};
+
+/**
+	
+*/
+class DirectDebitDocument : public SeparatistaDocument
+{
+public:
+	/**
+		Default contructor for creating an new document
+	*/
 	SEPARATISTA_EXTERN DirectDebitDocument();
+
+	/**
+		Construct a document from a source
+	*/
+	SEPARATISTA_EXTERN DirectDebitDocument(xercesc::DOMDocument *pDocument);
 
 	SEPARATISTA_EXTERN virtual ~DirectDebitDocument();
 
+private:
+};
+
+
+/**
+	Separatista file reader class.
+*/
+class SeparatistaFileReader
+{
+public:
+	SEPARATISTA_EXTERN SeparatistaFileReader();
+
+	SEPARATISTA_EXTERN virtual ~SeparatistaFileReader();
+
 	/**
-		Code indicating success or failure reading a DirectDebitDocument
+		Code indicating success or failure reading a file
 	*/
-	enum OpenStatus
+	enum DocumentStatus
 	{
 		/// Success
 		OK = 0,
@@ -74,16 +133,33 @@ public:
 		E_MEMORY
 	};
 
-	/**
-		Read document
-	*/
-	SEPARATISTA_EXTERN OpenStatus Open(const char *path);
+	/// Returns error message
+	SEPARATISTA_EXTERN const wchar_t* getErrorMessage() const;
+
+	/// Releases the previous error message
+	SEPARATISTA_EXTERN void setErrorMessage(const wchar_t *pErrorMessage);
+
+	/// Get status
+	SEPARATISTA_EXTERN const DocumentStatus getStatus() const;
+
+	SEPARATISTA_EXTERN void setStatus(const DocumentStatus status);
+
+	/// Get document
+	SEPARATISTA_EXTERN SeparatistaDocument* getDocument() const;
+
+	SEPARATISTA_EXTERN void setDocument(SeparatistaDocument *pDocument);
+
+	/// Get path the file was loaded from
+	SEPARATISTA_EXTERN const wchar_t* getPath() const;
+
+	SEPARATISTA_EXTERN const DocumentStatus readDocument(const wchar_t *path);
+
 private:
-	char *m_pErrorMessage;
-	xercesc::DOMDocument *m_pDOMDocument;
+	wchar_t* m_path;
+	DocumentStatus m_status;
+	wchar_t *m_pErrorMessage;
+	SeparatistaDocument *m_pDocument;
 };
-
-
 
 };
 

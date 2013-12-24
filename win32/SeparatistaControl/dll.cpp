@@ -26,7 +26,7 @@
 #include "mt940sdocument.h"
 #include "registrykey.h"
 #include "dispatch.cpp"
-#include "separatista/separatista.h"
+#include "documentreader.h"
 #include "cdirectdebitdocument.h"
 
 /**
@@ -82,6 +82,8 @@ STDAPI DllGetClassObject(REFCLSID rclsid,
 	*ppv = NULL;
 	if (IsEqualIID(rclsid, __uuidof(CMT940SDocument)))
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<IMT940SDocument>::Create<CMT940SDocument>);
+	else if (IsEqualIID(rclsid, __uuidof(DocumentReader)))
+		pFactory = new SepaControlClassFactory(SepaControlDispatch<IDocumentReader>::Create<DocumentReader>);
 	else if (IsEqualIID(rclsid, __uuidof(CDirectDebitDocument)))
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<IDirectDebitDocument>::Create<CDirectDebitDocument>);
 	else
@@ -152,9 +154,15 @@ STDAPI DllUnregisterServer()
 
 	// Unregister Separatista.IBAN
 	DllUnregisterObject(
-		TEXT("{6DF05A76-0582-415a-9B96-163F76914250}"),
+		TEXT("{2BD7342E-B12D-45b0-A5D6-ADF118386112}"),
 		TEXT("Separatista.IBAN.1"),
 		TEXT("Separatista.IBAN"));
+
+	// Unregister Separatista.DocumentReader
+	DllUnregisterObject(
+		TEXT("{3FF1D4F5-2C70-4A78-ADCB-88C218E23C91}"),
+		TEXT("Separatista.DocumentReader.1"),
+		TEXT("Separatista.DocumentReader"));
 
 	// Unregister Separatista.DirectDebitDocument
 	DllUnregisterObject(
@@ -298,8 +306,24 @@ STDAPI DllRegisterServer()
 		TEXT("{2BD7342E-B12D-45b0-A5D6-ADF118386112}"),
 		TEXT("Separatista.IBAN.1"),
 		TEXT("Separatista.IBAN"));
+	if (FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
 
-	// Unregister Separatista.DirectDebitDocument
+	// Try to register Separatista.DocumentReader
+	hr = DllRegisterObject(
+		TEXT("{3FF1D4F5-2C70-4A78-ADCB-88C218E23C91}"),
+		TEXT("Separatista.DocumentReader.1"),
+		TEXT("Separatista.DocumentReader"));
+	if (FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
+
+	// Try to register Separatista.DirectDebitDocument
 	hr = DllRegisterObject(
 		TEXT("{0274813F-6EF4-44DF-8A1C-38262379519F}"),
 		TEXT("Separatista.DirectDebitDocument.1"),

@@ -97,6 +97,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\lib\separatista\directdebitdocument.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
+    <ClCompile Include="..\..\lib\separatista\filereader.cpp" />
+    <ClCompile Include="..\..\lib\separatista\separatistadocument.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
