@@ -100,6 +100,9 @@
     <ClCompile Include="..\..\lib\separatista\filereader.cpp" />
     <ClCompile Include="..\..\lib\separatista\separatistadocument.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Separatista.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

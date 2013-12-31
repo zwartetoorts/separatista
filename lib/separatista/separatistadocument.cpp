@@ -99,7 +99,7 @@ SeparatistaDocument* SeparatistaDocument::getByDOMDocument(xercesc::DOMDocument*
 
 	std::unordered_map<std::wstring, SeparatistaDocumentCreatorFunc> documentCreatorMap(
 	{
-		{ L"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02", SeparatistaDocumentCreator<DirectDebitDocument> }
+		{ DirectDebitDocument::NamespaceURI, SeparatistaDocumentCreator<DirectDebitDocument> }
 	});
 
 	// Get the document root element

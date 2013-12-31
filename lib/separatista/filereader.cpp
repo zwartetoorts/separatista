@@ -36,6 +36,7 @@ SeparatistaFileReader::SeparatistaFileReader()
 	m_pErrorMessage = NULL;
 	m_pDocument = NULL;
 	m_status = E_FILE;
+	m_validate = true;
 }
 
 SeparatistaFileReader::~SeparatistaFileReader()
@@ -84,6 +85,16 @@ const wchar_t* SeparatistaFileReader::getPath() const
 	return m_path;
 }
 
+void SeparatistaFileReader::setValidate(bool validate)
+{
+	m_validate = validate;
+}
+
+bool SeparatistaFileReader::getValidate() const
+{
+	return m_validate;
+}
+
 const SeparatistaFileReader::DocumentStatus SeparatistaFileReader::readDocument(const wchar_t *path)
 {
 	XercesDOMParser *parser;
@@ -118,6 +129,10 @@ const SeparatistaFileReader::DocumentStatus SeparatistaFileReader::readDocument(
 
 	try
 	{
+		// Load grammars
+		if (m_validate && !SeparatistaDocument::loadSchemas(parser))
+			m_validate = false;
+
 		parser->parse(path);
 
 		// Try to convert the document into the right separatista class

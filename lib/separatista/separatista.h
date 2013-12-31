@@ -37,12 +37,14 @@
 #ifdef XERCES_HAS_CPP_NAMESPACE
 XERCES_CPP_NAMESPACE_BEGIN
 class DOMDocument;
+class XercesDOMParser;
 XERCES_CPP_NAMESPACE_END;
 #else
 // Forward declare xerces classes
 namespace xercesc
 {
 	class DOMDocument;
+	class XercesDOMParser;
 };
 #endif
 
@@ -77,7 +79,16 @@ public:
 		@return A pointer to the SeparatistaDocument subclass or NULL if not found
 	*/
 	SEPARATISTA_EXTERN static SeparatistaDocument* getByDOMDocument(xercesc::DOMDocument* pDOMDocument);
+
+	/**
+	Platform specific implementation of loading grammar into xerces. Windows uses resources to ship xsd definitions.
+	@param parser The parser to load the grammar into.
+	@return true on success, false on fail
+	*/
+	SEPARATISTA_EXTERN static bool loadSchemas(xercesc::XercesDOMParser *parser);
+
 protected:
+	
 	/// Error message, protected access for convenience
 	wchar_t *m_pErrorMessage;
 
@@ -104,6 +115,10 @@ public:
 
 	SEPARATISTA_EXTERN virtual ~DirectDebitDocument();
 
+	/**
+	Namespace URI
+	*/
+	SEPARATISTA_EXTERN static const wchar_t *NamespaceURI;
 private:
 };
 
@@ -154,11 +169,17 @@ public:
 
 	SEPARATISTA_EXTERN const DocumentStatus readDocument(const wchar_t *path);
 
+	/// Set schema validation, default is true
+	SEPARATISTA_EXTERN void setValidate(bool validate);
+
+	SEPARATISTA_EXTERN bool getValidate() const;
+
 private:
 	wchar_t* m_path;
 	DocumentStatus m_status;
 	wchar_t *m_pErrorMessage;
 	SeparatistaDocument *m_pDocument;
+	bool m_validate;
 };
 
 };

@@ -23,12 +23,14 @@
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-#include <windows.h>
+
 #include "separatista.h"
 #include "iban/iban.h"
 
 using namespace xercesc;
 using namespace Separatista;
+
+const wchar_t* DirectDebitDocument::NamespaceURI = L"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02";
 
 DirectDebitDocument::DirectDebitDocument()
 {

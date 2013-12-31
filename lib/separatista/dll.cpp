@@ -20,12 +20,20 @@
 
 
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
 
 #include <windows.h>
 #include "separatista.h"
 #include "iban/iban.h"
 
 using namespace xercesc;
+using namespace Separatista;
+
+/**
+	Modules handle
+*/
+HMODULE g_hinstDll = 0;
 
 /**
 	DllMain
@@ -39,6 +47,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 	switch (fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
+		// Store module handle
+		g_hinstDll = hinstDll;
+
+		// Init xerces
 		try
 		{
 			XMLPlatformUtils::Initialize();
@@ -55,4 +67,49 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 	return TRUE;
 }
 
+bool loadSchema(xercesc::XercesDOMParser *parser, const wchar_t *name)
+{
+	HRSRC hResInfo;
+	HGLOBAL hResource;
+	LPVOID lpData;
+	DWORD bytes;
+
+	hResInfo = FindResource(g_hinstDll, name, TEXT("XSD"));
+	if (!hResInfo)
+		return false;
+
+	bytes = SizeofResource(g_hinstDll, hResInfo);
+	if (!bytes)
+		return false;
+
+	hResource = LoadResource(g_hinstDll, hResInfo);
+	if (!hResource)
+		return false;
+
+	lpData = LockResource(hResource);
+	if (!lpData)
+		return false;
+
+	xercesc::MemBufInputSource source((const XMLByte*)lpData, bytes, name);
+	if (parser->loadGrammar(source, Grammar::SchemaGrammarType, true))
+		return true;
+
+	return false;
+}
+
+/**
+	Win32 implementation of SeparatistaDocument::loadSchemas
+*/
+bool SeparatistaDocument::loadSchemas(xercesc::XercesDOMParser *parser)
+{
+	if (!parser)
+		return false;
+
+	if (!loadSchema(parser, TEXT("PAIN_008_001_02_XSD")))
+		return false;
+	if (!loadSchema(parser, TEXT("PAIN_001_001_03_XSD")))
+		return false;
+
+	return true;
+}
 

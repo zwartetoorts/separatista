@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef SEPARATISTA_DLL_H
-#define SEPARATISTA_DLL_H
+#ifndef SEPARATISTACONTROL_DLL_H
+#define SEPARATISTACONTROL_DLL_H
 
 #include <windows.h>
 
@@ -38,4 +38,4 @@ extern "C" UINT g_uLockCount;
 /// The global path to the Dll, stored from DllMain
 extern "C" LPTSTR g_lpszDllPath;
 
-#endif // SEPARATISTA_DLL_H
+#endif // SEPARATISTACONTROL_DLL_H
