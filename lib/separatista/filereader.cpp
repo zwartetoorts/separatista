@@ -26,6 +26,7 @@
 #include <windows.h>
 #include "separatista.h"
 #include "iban/iban.h"
+#include "errorhandler.h"
 
 using namespace xercesc;
 using namespace Separatista;
@@ -98,7 +99,7 @@ bool SeparatistaFileReader::getValidate() const
 const SeparatistaFileReader::DocumentStatus SeparatistaFileReader::readDocument(const wchar_t *path)
 {
 	XercesDOMParser *parser;
-	ErrorHandler *handler;
+	SeparatistaErrorHandler handler;
 	SeparatistaDocument *pDocument;
 	xercesc::DOMDocument *pDOMDocument;
 
@@ -115,22 +116,22 @@ const SeparatistaFileReader::DocumentStatus SeparatistaFileReader::readDocument(
 		return m_status;
 	}
 
-	parser->setValidationScheme(XercesDOMParser::Val_Always);
+	parser->setErrorHandler(&handler);
 	parser->setDoNamespaces(true);
-
-	handler = (ErrorHandler*)new HandlerBase();
-	if (!handler)
-	{
-		delete parser;
-		m_status = E_MEMORY;
-		return m_status;
-	}
-	parser->setErrorHandler(handler);
+	parser->setValidationScheme(XercesDOMParser::Val_Always);
 
 	try
 	{
 		// Load grammars
-		if (m_validate && !SeparatistaDocument::loadSchemas(parser))
+		if (m_validate && SeparatistaDocument::loadSchemas(parser))
+		{
+			parser->useCachedGrammarInParse(true);
+			parser->setLoadSchema(false);
+
+			parser->setDoSchema(true);
+			parser->setValidationConstraintFatal(true);
+		}
+		else
 			m_validate = false;
 
 		parser->parse(path);
@@ -161,7 +162,7 @@ const SeparatistaFileReader::DocumentStatus SeparatistaFileReader::readDocument(
 	}
 	
 	delete parser;
-	delete handler;
+	//delete handler;
 
 	return m_status;
 }
