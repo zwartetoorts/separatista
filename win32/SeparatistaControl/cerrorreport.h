@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,23 +18,24 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "windows.h"
+#include <windows.h>
+#include <comutil.h>
 
 #include "separatista.h"
 #include "dispatch.h"
 
-#ifndef SEPARATISTA_DOCUMENTREADER_H
-#define SEPARATISTA_DOCUMENTREADER_H
+#ifndef SEPARATISTA_CERRORREPORT_H
+#define SEPARATISTA_CERRORREPORT_H
 
-// {6A9512FC-19BF-4F95-83D9-A8A36B1DF018}
-DEFINE_GUID(IID_DocumentReader ,
-	0x6a9512fc, 0x19bf, 0x4f95, 0x83, 0xd9, 0xa8, 0xa3, 0x6b, 0x1d, 0xf0, 0x18);
+// {DD279C98-8CF9-47D4-94BD-D54DDB2E715B}
+DEFINE_GUID(IID_ERRORREPORT ,
+	0xdd279c98, 0x8cf9, 0x47d4, 0x94, 0xbd, 0xd5, 0x4d, 0xdb, 0x2e, 0x71, 0x5b);
 
-// {3FF1D4F5-2C70-4A78-ADCB-88C218E23C91}
-DEFINE_GUID(CLSID_DOCUMENTREADER ,
-	0x3ff1d4f5, 0x2c70, 0x4a78, 0xad, 0xcb, 0x88, 0xc2, 0x18, 0xe2, 0x3c, 0x91);
+// {89F10D64-9F8A-4B07-B749-266158D4407A}
+DEFINE_GUID(CLSID_CERRORREPORT,
+	0x89f10d64, 0x9f8a, 0x4b07, 0xb7, 0x49, 0x26, 0x61, 0x58, 0xd4, 0x40, 0x7a);
 
-struct IDocumentReader : public IDispatch
+struct IErrorReport : public IDispatch
 {
 	// IDispatch
 	STDMETHOD_(ULONG, AddRef)() PURE;
@@ -44,45 +45,42 @@ struct IDocumentReader : public IDispatch
 	STDMETHOD(GetTypeInfo)(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo) PURE;
 	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId) PURE;
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
-	STDMETHOD(ReadDocument)(BSTR path, Separatista::SeparatistaFileReader::DocumentStatus *pStatus) PURE;
-	STDMETHOD(getStatus)(Separatista::SeparatistaFileReader::DocumentStatus *pStatus) PURE;
-	STDMETHOD(getErrorMessage)(BSTR *pErrorMessage) PURE;
-	STDMETHOD(getPath)(BSTR *pPath) PURE;
-	STDMETHOD(getValidate)(VARIANT_BOOL *pValue) PURE;
-	STDMETHOD(setValidate)(VARIANT_BOOL value) PURE;
 
+	// IErrorReport methods
+	STDMETHOD(Count)(long *plCount) PURE;
+	STDMETHOD(Item)(VARIANT vIndex, BSTR *pMessage) PURE;
+	STDMETHOD(_NewEnum)(IUnknown **ppUnk) PURE;
 };
 
-struct __declspec(uuid("{6A9512FC-19BF-4F95-83D9-A8A36B1DF018}")) IDocumentReader;
+struct __declspec(uuid("{DD279C98-8CF9-47D4-94BD-D54DDB2E715B}")) IErrorReport;
 
 /**
-COM representation of an DocumentReader class.
+COM representation of an IBAN class.
 Memory management takes 2 strategies. The CMT940SDocument will persist until all references are released.
 Other classes like CMT940SRecordset will come and go on-the-fly and hold only references to the child
 objects in the parent CMT940SDocument.
 */
-class DocumentReader : public SepaControlDispatch<IDocumentReader>
+class CErrorReport : public SepaControlDispatch<IErrorReport>
 {
 public:
 	/**
 	@see SepaControllDispatch
 	*/
-	DocumentReader(IUnknown *pParent = NULL);
+	CErrorReport(IUnknown *pParent = NULL);
 
-	virtual ~DocumentReader();
+	// COM methods
+	STDMETHOD(Count)(long *plCount);
+	STDMETHOD(Item)(VARIANT vIndex, BSTR *pMessage);
+	STDMETHOD(_NewEnum)(IUnknown **ppUnk);
 
-	STDMETHOD(ReadDocument)(BSTR path, Separatista::SeparatistaFileReader::DocumentStatus *pStatus);
-	STDMETHOD(getStatus)(Separatista::SeparatistaFileReader::DocumentStatus *pStatus);
-	STDMETHOD(getErrorMessage)(BSTR *pErrorMessage);
-	STDMETHOD(getPath)(BSTR *pPath);
-	STDMETHOD(getValidate)(VARIANT_BOOL *pValue);
-	STDMETHOD(setValidate)(VARIANT_BOOL value);
+	CErrorReport& operator =(Separatista::ErrorReport *pErrorReport);
+
+protected:
+	_bstr_t formatErrorMessage();
 private:
-	Separatista::SeparatistaFileReader *m_pDocumentReader;
+	Separatista::ErrorReport *m_pErrorReport;
 };
 
-class __declspec(uuid("{3FF1D4F5-2C70-4A78-ADCB-88C218E23C91}")) DocumentReader;
+class __declspec(uuid("{89F10D64-9F8A-4B07-B749-266158D4407A}")) CErrorReport;
 
-
-
-#endif // SEPARATISTA_DOCUMENTREADER_H
+#endif // !defined SEPARATISTA_CERRORREPORT_H

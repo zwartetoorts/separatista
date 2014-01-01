@@ -78,3 +78,24 @@ STDMETHODIMP DocumentReader::getPath(BSTR *pPath)
 
 	return S_OK;
 }
+
+STDMETHODIMP DocumentReader::getValidate(VARIANT_BOOL *pValue)
+{
+	if (!m_pDocumentReader)
+		return E_UNEXPECTED;
+
+	*pValue = m_pDocumentReader->getValidate();
+
+	return S_OK;
+}
+
+STDMETHODIMP DocumentReader::setValidate(VARIANT_BOOL value)
+{
+	if (!m_pDocumentReader)
+		return E_UNEXPECTED;
+
+	m_pDocumentReader->setValidate(value);
+
+	return S_OK;
+}
+

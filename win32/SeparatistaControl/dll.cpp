@@ -28,6 +28,7 @@
 #include "dispatch.cpp"
 #include "documentreader.h"
 #include "cdirectdebitdocument.h"
+#include "cerrorreport.h"
 
 /**
 	Globals
@@ -169,6 +170,12 @@ STDAPI DllUnregisterServer()
 		TEXT("{0274813F-6EF4-44DF-8A1C-38262379519F}"),
 		TEXT("Separatista.DirectDebitDocument.1"),
 		TEXT("Separatista.DirectDebitDocument"));
+
+	// Unregister Separatista.ErrorReport
+	DllUnregisterObject(
+		TEXT("{89F10D64-9F8A-4B07-B749-266158D4407A}"),
+		TEXT("Separatista.ErrorReport.1"),
+		TEXT("Separatista.ErrorReport"));
 
 	return S_OK;;
 }
@@ -329,6 +336,17 @@ STDAPI DllRegisterServer()
 		TEXT("Separatista.DirectDebitDocument.1"),
 		TEXT("Separatista.DirectDebitDocument"));
 	if(FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
+
+	// Try to register Separatista.ErrorReport
+	hr = DllRegisterObject(
+		TEXT("{89F10D64-9F8A-4B07-B749-266158D4407A}"),
+		TEXT("Separatista.ErrorReport.1"),
+		TEXT("Separatista.ErrorReport"));
+	if (FAILED(hr))
 	{
 		DllUnregisterServer();
 		return hr;

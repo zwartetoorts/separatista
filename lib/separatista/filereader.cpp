@@ -46,6 +46,13 @@ SeparatistaFileReader::~SeparatistaFileReader()
 		XMLString::release(&m_pErrorMessage);
 	if (m_path)
 		XMLString::release(&m_path);
+
+	// Free all messages
+	while (!m_errorMessages.empty())
+	{
+		delete m_errorMessages.back();
+		m_errorMessages.pop_back();
+	}
 }
 
 const wchar_t* SeparatistaFileReader::getErrorMessage() const
@@ -116,6 +123,7 @@ const SeparatistaFileReader::DocumentStatus SeparatistaFileReader::readDocument(
 		return m_status;
 	}
 
+	handler.setErrorList(&m_errorMessages);
 	parser->setErrorHandler(&handler);
 	parser->setDoNamespaces(true);
 	parser->setValidationScheme(XercesDOMParser::Val_Always);
@@ -162,7 +170,13 @@ const SeparatistaFileReader::DocumentStatus SeparatistaFileReader::readDocument(
 	}
 	
 	delete parser;
-	//delete handler;
-
+	
 	return m_status;
 }
+
+ErrorReport& SeparatistaFileReader::getErrorReport()
+{
+	m_errorReport.setErrorList(&m_errorMessages);
+	return m_errorReport;
+}
+

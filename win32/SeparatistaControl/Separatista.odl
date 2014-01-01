@@ -31,6 +31,43 @@ library Separatista
 	importlib("stdole2.tlb");
 
 	/**
+		ErrorReport
+	*/
+	[
+		uuid(DD279C98-8CF9-47D4-94BD-D54DDB2E715B),
+		helpstring("IErrorReport interface"),
+		oleautomation,
+		dual,
+		odl
+	]
+	interface IErrorReport : IDispatch
+	{
+		[propget, helpstring("The number of messages in this report")]
+		HRESULT __stdcall Count(
+			[out, retval] long *plCount);
+
+		[propget, id(DISPID_VALUE),
+			helpstring("Get the message at index")]
+		HRESULT __stdcall Item(
+			[in] VARIANT vIndex,
+			[out, retval] BSTR *pMessage);
+
+		[propget, restricted, id(DISPID_NEWENUM),
+			helpstring("Get the enumerator")]
+		HRESULT __stdcall _NewEnum(
+			[out, retval] IUnknown **ppUnk);
+	};
+	[
+		uuid(89F10D64-9F8A-4B07-B749-266158D4407A),
+		helpstring("ErrorReport object")
+	]
+	coclass ErrorReport
+	{
+		[default] interface IErrorReport;
+		interface IDispatch;
+	};
+
+	/**
 		IBAN
 	*/
 	[
@@ -241,6 +278,12 @@ library Separatista
 		[propget, helpstring("The path of the parsed file")]
 		HRESULT __stdcall Path(
 			[out, retval] BSTR *pPath);
+		[propget, helpstring("Xml schema validation is/was enabled or disabled")]
+		HRESULT __stdcall Validate(
+			[out, retval] VARIANT_BOOL *value);
+		[propput, helpstring("Enable or disable xml schema validation")]
+		HRESULT __stdcall Validate(
+			[in] VARIANT_BOOL value);
 		
 	};
 

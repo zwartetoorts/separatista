@@ -19,6 +19,10 @@
 ***************************************************************************/
 
 #include <xercesc/sax/ErrorHandler.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
+
+#include <vector>
+#include <string>
 
 #ifndef SEPARATISTA_ERRORHANDLER_H
 #define SEPARATISTA_ERRORHANDLER_H
@@ -31,12 +35,21 @@ class SeparatistaErrorHandler : public xercesc::ErrorHandler
 public:
 	SeparatistaErrorHandler();
 
+	/**
+	Set the ErrorList to append messages to.
+	Doesn't own the list, not freed on destruction.
+	*/
+	void setErrorList(std::vector<ErrorMessage*> *pErrorList);
+
 	void warning(const xercesc::SAXParseException &e);
 	void error(const xercesc::SAXParseException &e);
 	void fatalError(const xercesc::SAXParseException &e);
 	void resetErrors();
-private:
+protected:
+	void addErrorMessage(ErrorMessage::ErrorMessageType type, const xercesc::SAXParseException &e);
 
+private:
+	std::vector<ErrorMessage*> *m_pErrorList;
 };
 
 };

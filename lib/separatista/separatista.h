@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <vector>
+
 #ifndef SEPARATISTA_H
 #define SEPARATISTA_H
 
@@ -38,6 +40,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 class DOMDocument;
 class XercesDOMParser;
+class SAXParseException;
 XERCES_CPP_NAMESPACE_END;
 #else
 // Forward declare xerces classes
@@ -45,11 +48,85 @@ namespace xercesc
 {
 	class DOMDocument;
 	class XercesDOMParser;
+	class SAXParseException;
 };
 #endif
 
 namespace Separatista
 {
+
+/**
+	Error message, collects all error messages. Error message mainly come from xerces exceptions or errors and warnings.
+*/
+class ErrorMessage
+{
+public:
+	enum ErrorMessageType
+	{
+		M_WARNING,
+		M_ERROR,
+		M_FATALERROR
+	};
+
+	SEPARATISTA_EXTERN ErrorMessage(ErrorMessageType type);
+	SEPARATISTA_EXTERN ErrorMessage(ErrorMessageType type, const xercesc::SAXParseException &e);
+
+	SEPARATISTA_EXTERN ~ErrorMessage();
+
+	SEPARATISTA_EXTERN ErrorMessageType getType() const;
+	SEPARATISTA_EXTERN void setType(ErrorMessageType type);
+
+	SEPARATISTA_EXTERN const wchar_t* getPublicId() const;
+	SEPARATISTA_EXTERN void setPublicId(const wchar_t *pPublicId);
+
+	SEPARATISTA_EXTERN const wchar_t* getSystemId() const;
+	SEPARATISTA_EXTERN void setSystemId(const wchar_t *pSystemId);
+
+	SEPARATISTA_EXTERN const wchar_t* getErrorMessage() const;
+	SEPARATISTA_EXTERN void setErrorMessage(const wchar_t *pErrorMessage);
+
+	SEPARATISTA_EXTERN size_t getLineNumber() const;
+	SEPARATISTA_EXTERN void setLineNumber(size_t lineNumber);
+	
+	SEPARATISTA_EXTERN size_t getColumnNumber() const;
+	SEPARATISTA_EXTERN void setColumnNumber(size_t columnNumber);
+private:
+	ErrorMessageType m_type;
+	wchar_t *m_pPublicId;
+	wchar_t *m_pSystemId;
+	wchar_t *m_pErrorMessage;
+	size_t m_lineNumber;
+	size_t m_columnNumber;
+};
+	
+/**
+	Error report. Simple class to enumerate the ErrorMessages in a std::vector<ErrorMessage*> list.
+*/
+class ErrorReport
+{
+public:
+	SEPARATISTA_EXTERN ErrorReport();
+	SEPARATISTA_EXTERN ErrorReport(std::vector<ErrorMessage*> *pErrorList);
+
+	SEPARATISTA_EXTERN void setErrorList(std::vector<ErrorMessage*> *pErrorList);
+
+	/// Get the number of errors
+	SEPARATISTA_EXTERN size_t getCount() const;
+
+	/// Get the message at index
+	SEPARATISTA_EXTERN const ErrorMessage* getErrorMessage(size_t index);
+
+	/// Move to first message
+	SEPARATISTA_EXTERN void reset();
+
+	/// Get message and move to next
+	/// @return NULL if there are no more error to report 
+	SEPARATISTA_EXTERN const ErrorMessage* getErrorMessage();
+
+private:
+	std::vector<ErrorMessage*> *m_pErrorList;
+	std::vector<ErrorMessage*>::iterator m_iterator;
+};
 
 /**
 	Base class for all Separatista documents.
@@ -167,6 +244,11 @@ public:
 	/// Get path the file was loaded from
 	SEPARATISTA_EXTERN const wchar_t* getPath() const;
 
+	/**
+	Try to read a xml document. If validation is on, the document is checked with all supported xml formats
+	schemas. 
+	@see setValidate
+	*/
 	SEPARATISTA_EXTERN const DocumentStatus readDocument(const wchar_t *path);
 
 	/// Set schema validation, default is true
@@ -174,12 +256,17 @@ public:
 
 	SEPARATISTA_EXTERN bool getValidate() const;
 
+	/// Get the ErrorReport
+	SEPARATISTA_EXTERN ErrorReport& getErrorReport();
+
 private:
 	wchar_t* m_path;
 	DocumentStatus m_status;
 	wchar_t *m_pErrorMessage;
 	SeparatistaDocument *m_pDocument;
 	bool m_validate;
+	std::vector<ErrorMessage*> m_errorMessages;
+	ErrorReport m_errorReport;
 };
 
 };

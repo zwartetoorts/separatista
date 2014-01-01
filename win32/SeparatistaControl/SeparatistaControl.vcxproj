@@ -83,6 +83,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cdirectdebitdocument.h" />
+    <ClInclude Include="cerrorreport.h" />
     <ClInclude Include="ciban.h" />
     <ClInclude Include="classfactory.h" />
     <ClInclude Include="dispatch.h" />
@@ -105,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cdirectdebitdocument.cpp" />
+    <ClCompile Include="cerrorreport.cpp" />
     <ClCompile Include="ciban.cpp" />
     <ClCompile Include="classfactory.cpp" />
     <ClCompile Include="dispatch.cpp">
