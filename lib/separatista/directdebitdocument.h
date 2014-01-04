@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,28 +18,48 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
+#ifndef SEPARATISTA_DIRECTDEBITDOCUMENT_H
+#define SEPARATISTA_DIRECTDEBITDOCUMENT_H
 
-#include "cdirectdebitdocument.h"
-#include "dispatch.cpp"
+#include "element.h"
 
-CDirectDebitDocument::CDirectDebitDocument(IUnknown* pUnknown)
-:SepaControlDispatch<IDirectDebitDocument>(pUnknown)
+namespace Separatista
 {
-	m_pDocument = new Separatista::DirectDebitDocument();
-}
 
-CDirectDebitDocument::CDirectDebitDocument(Separatista::DirectDebitDocument *pDocument, IUnknown *pUnknown)
-: SepaControlDispatch<IDirectDebitDocument>(pUnknown)
+class GroupHeader39 : public Element
 {
-	*this = pDocument;
-}
+public:
+	static const wchar_t *GrpHdr;
 
-CDirectDebitDocument& CDirectDebitDocument::operator = (Separatista::DirectDebitDocument *pDocument)
+	GroupHeader39(DOMDocument *pDocument, DOMElement *pElement);
+};
+
+typedef GroupHeader39 GroupHeader;
+
+class PaymentInstructionInformation4 : public Element
 {
-	m_pDocument = pDocument;
+public:
+	static const wchar_t *PmtInf;
 
-	return *this;
-}
+	PaymentInstructionInformation4(DOMDocument *pDocument, DOMElement *pElement);
 
+};
 
+typedef PaymentInstructionInformation4 PaymentInstructionInformation;
+
+class CustomerDirectDebitInitiationV02 : public Element
+{
+public:
+	static const wchar_t *CstmrDrctDbtInitn;
+
+	CustomerDirectDebitInitiationV02(DOMDocument *pDocument);
+private:
+	PaymentInstructionInformation m_PmtInf;
+	GroupHeader m_GrpHdr;
+};
+
+typedef CustomerDirectDebitInitiationV02 CustomerDirectDebitInitiation;
+
+};
+
+#endif // !defined SEPARATISTA_DIRECTDEBITDOCUMENT_H

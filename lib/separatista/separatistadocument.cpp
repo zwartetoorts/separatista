@@ -32,6 +32,8 @@
 using namespace xercesc;
 using namespace Separatista;
 
+const wchar_t* SeparatistaDocument::Document = L"Document";
+
 SeparatistaDocument::SeparatistaDocument()
 {
 	m_pDOMDocument = NULL;

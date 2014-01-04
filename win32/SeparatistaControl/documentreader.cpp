@@ -99,3 +99,21 @@ STDMETHODIMP DocumentReader::setValidate(VARIANT_BOOL value)
 	return S_OK;
 }
 
+STDMETHODIMP DocumentReader::getErrorReport(IErrorReport **ppIErrorReport)
+{
+	CErrorReport *pErrorReport;
+
+	if (!m_pDocumentReader)
+		return E_UNEXPECTED;
+
+	pErrorReport = new CErrorReport(this);
+	if (!pErrorReport)
+		return E_OUTOFMEMORY;
+	pErrorReport->AddRef();
+
+	*pErrorReport = &(m_pDocumentReader->getErrorReport());
+
+	*ppIErrorReport = pErrorReport;
+
+	return S_OK;
+}

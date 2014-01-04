@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,28 +18,48 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
+#ifndef SEPARATISTA_ELEMENT_H
+#define SEPARATISTA_ELEMENT_H
 
-#include "cdirectdebitdocument.h"
-#include "dispatch.cpp"
+#include <xercesc/dom/DOM.hpp>
 
-CDirectDebitDocument::CDirectDebitDocument(IUnknown* pUnknown)
-:SepaControlDispatch<IDirectDebitDocument>(pUnknown)
+XERCES_CPP_NAMESPACE_USE;
+
+namespace Separatista
 {
-	m_pDocument = new Separatista::DirectDebitDocument();
-}
 
-CDirectDebitDocument::CDirectDebitDocument(Separatista::DirectDebitDocument *pDocument, IUnknown *pUnknown)
-: SepaControlDispatch<IDirectDebitDocument>(pUnknown)
+class Element
 {
-	*this = pDocument;
-}
+public:
+	Element();
+	/**
+	Custructor setting document and element
+	*/
+	Element(DOMDocument *pDocument, DOMElement *pElement);
+	/**
+	Custructor setting document and getting/creating child element of pElement. Will set the internal DOMElement to the gotten/newly created element.
+	@param pDocument The document
+	@param @pElement The element to get/create the child element for
+	@param pTagName The name of the tag to get
+	@param create Flag to create the element if not found or not
+	*/
+	Element(DOMDocument *pDocument, DOMElement *pElement, const wchar_t *pTagName, bool create = false);
 
-CDirectDebitDocument& CDirectDebitDocument::operator = (Separatista::DirectDebitDocument *pDocument)
-{
-	m_pDocument = pDocument;
+	void setDOMDocument(DOMDocument *pDocument);
 
-	return *this;
-}
+	/**
+	Gets a child element. Creates the child element if requested.
+	*/
+	DOMElement* getChildElement(const wchar_t *pTagName, bool create = false);
+protected:
+	DOMElement* getDOMElement() const;
+	void setDOMElement(DOMElement *pElement);
+private:
+	DOMDocument *m_pDocument;
+	DOMElement *m_pDOMElement;
+};
 
 
+};
+
+#endif // !defined SEPARATISTA_ELEMENT_H

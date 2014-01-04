@@ -55,6 +55,10 @@ namespace xercesc
 namespace Separatista
 {
 
+// Forward decl
+class CustomerDirectDebitInitiationV02;
+typedef CustomerDirectDebitInitiationV02 CustomerDirectDebitInitiation;
+
 /**
 	Error message, collects all error messages. Error message mainly come from xerces exceptions or errors and warnings.
 */
@@ -137,6 +141,13 @@ public:
 	SEPARATISTA_EXTERN SeparatistaDocument();
 	SEPARATISTA_EXTERN virtual ~SeparatistaDocument();
 
+	enum DocumentType
+	{
+		DirectDebitDocumentType
+	};
+
+	SEPARATISTA_EXTERN virtual const DocumentType getDocumentType() const = 0;
+
 	/// Get error message
 	SEPARATISTA_EXTERN const wchar_t* getErrorMessage() const;
 
@@ -164,8 +175,10 @@ public:
 	*/
 	SEPARATISTA_EXTERN static bool loadSchemas(xercesc::XercesDOMParser *parser);
 
+	/// Document element tag name
+	SEPARATISTA_EXTERN static const wchar_t *Document;
+
 protected:
-	
 	/// Error message, protected access for convenience
 	wchar_t *m_pErrorMessage;
 
@@ -181,21 +194,24 @@ class DirectDebitDocument : public SeparatistaDocument
 {
 public:
 	/**
-		Default contructor for creating an new document
+		Default contructor for creating an new document, will create a whole new empty DOMDocument
 	*/
 	SEPARATISTA_EXTERN DirectDebitDocument();
 
 	/**
-		Construct a document from a source
+		Construct a document from a source DOMDocument
 	*/
 	SEPARATISTA_EXTERN DirectDebitDocument(xercesc::DOMDocument *pDocument);
 
-	SEPARATISTA_EXTERN virtual ~DirectDebitDocument();
+	SEPARATISTA_EXTERN ~DirectDebitDocument();
 
-	/**
-	Namespace URI
-	*/
+	SEPARATISTA_EXTERN const SeparatistaDocument::DocumentType getDocumentType() const;
+
+	/// Namespace URI
 	SEPARATISTA_EXTERN static const wchar_t *NamespaceURI;
+
+protected:
+	CustomerDirectDebitInitiation *m_pCstmrDrctDbtInitn;
 private:
 };
 
@@ -245,7 +261,7 @@ public:
 	SEPARATISTA_EXTERN const wchar_t* getPath() const;
 
 	/**
-	Try to read a xml document. If validation is on, the document is checked with all supported xml formats
+	Try to read a xml document. If validation is on, the document is checked with all supported xml format
 	schemas. 
 	@see setValidate
 	*/

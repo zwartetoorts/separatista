@@ -20,6 +20,7 @@
 
 #include "windows.h"
 
+#include "cerrorreport.h"
 #include "separatista.h"
 #include "dispatch.h"
 
@@ -50,7 +51,7 @@ struct IDocumentReader : public IDispatch
 	STDMETHOD(getPath)(BSTR *pPath) PURE;
 	STDMETHOD(getValidate)(VARIANT_BOOL *pValue) PURE;
 	STDMETHOD(setValidate)(VARIANT_BOOL value) PURE;
-
+	STDMETHOD(getErrorReport)(IErrorReport **ppIErrorReport) PURE;
 };
 
 struct __declspec(uuid("{6A9512FC-19BF-4F95-83D9-A8A36B1DF018}")) IDocumentReader;
@@ -77,6 +78,7 @@ public:
 	STDMETHOD(getPath)(BSTR *pPath);
 	STDMETHOD(getValidate)(VARIANT_BOOL *pValue);
 	STDMETHOD(setValidate)(VARIANT_BOOL value);
+	STDMETHOD(getErrorReport)(IErrorReport **ppIErrorReport);
 private:
 	Separatista::SeparatistaFileReader *m_pDocumentReader;
 };

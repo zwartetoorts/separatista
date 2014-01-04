@@ -284,7 +284,9 @@ library Separatista
 		[propput, helpstring("Enable or disable xml schema validation")]
 		HRESULT __stdcall Validate(
 			[in] VARIANT_BOOL value);
-		
+		[propget, helpstring("Get all xml parsing and/or validation errors")]
+		HRESULT __stdcall ErrorReport(
+			[out, retval] IErrorReport **ppIErrorReport);
 	};
 
 	[

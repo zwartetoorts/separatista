@@ -92,12 +92,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\lib\separatista\directdebitdocument.h" />
+    <ClInclude Include="..\..\lib\separatista\element.h" />
     <ClInclude Include="..\..\lib\separatista\errorhandler.h" />
     <ClInclude Include="..\..\lib\separatista\separatista.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\separatista\directdebitdocument.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
+    <ClCompile Include="..\..\lib\separatista\element.cpp" />
     <ClCompile Include="..\..\lib\separatista\errorhandler.cpp" />
     <ClCompile Include="..\..\lib\separatista\filereader.cpp" />
     <ClCompile Include="..\..\lib\separatista\separatistadocument.cpp" />

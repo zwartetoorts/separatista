@@ -62,8 +62,12 @@ public:
 	*/
 	CDirectDebitDocument(IUnknown *pParent = NULL);
 
+	CDirectDebitDocument(Separatista::DirectDebitDocument *pDocument, IUnknown *pParent = NULL);
+
+	CDirectDebitDocument& operator =(Separatista::DirectDebitDocument *pDocument);
+
 private:
-	
+	Separatista::DirectDebitDocument *m_pDocument;
 };
 
 class __declspec(uuid("{0274813F-6EF4-44DF-8A1C-38262379519F}")) CDirectDebitDocument;
