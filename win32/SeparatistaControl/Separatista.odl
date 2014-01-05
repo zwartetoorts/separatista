@@ -311,6 +311,24 @@ library Separatista
 	]
 	interface IDirectDebitDocument : IDispatch
 	{
+		[propget, helpstring("MessageIdentification as text")]
+		HRESULT __stdcall MessageIdentification(
+			[out, retval] BSTR *pMessageIdentification);
+		[propput, helpstring("Set the MessageIdentifcation as text")]
+		HRESULT __stdcall MessageIdentification(
+			[in] BSTR MessageIdentification);
+		[propget, helpstring("Creation date and time")]
+		HRESULT __stdcall CreationDateTime(
+			[out, retval] DATE *pCreationDateTime);
+		[propput, helpstring("Set the creation date and time")]
+		HRESULT __stdcall CreationDateTime(
+			[in] DATE CreationDateTime);
+		[propget, helpstring("Number of transactions")]
+		HRESULT __stdcall NumberOfTransactions(
+			[out, retval] VARIANT *pNumberOfTransactions);
+		[propget, helpstring("Control sum of all transactions")]
+		HRESULT __stdcall ControlSum(
+			[out, retval] VARIANT *pControlSum);
 	};
 
 	[

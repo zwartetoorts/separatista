@@ -28,6 +28,8 @@
 #include "directdebitdocument.h"
 #include "iban/iban.h"
 
+#include <string>
+
 using namespace xercesc;
 using namespace Separatista;
 
@@ -35,17 +37,26 @@ const wchar_t* CustomerDirectDebitInitiationV02::CstmrDrctDbtInitn = L"CstmrDrct
 
 CustomerDirectDebitInitiationV02::CustomerDirectDebitInitiationV02(DOMDocument *pDocument)
 :Element(pDocument, pDocument->getDocumentElement(), CstmrDrctDbtInitn, true),
-m_GrpHdr(pDocument, getChildElement(GroupHeader::GrpHdr, true)),
-m_PmtInf(pDocument, getChildElement(PaymentInstructionInformation::PmtInf, true))
+m_GrpHdr(pDocument, getChildElement(GroupHeader::GrpHdr, true))
 {
 }
 
+GroupHeader& CustomerDirectDebitInitiationV02::getGroupHeader()
+{
+	return m_GrpHdr;
+}
+
 const wchar_t* GroupHeader39::GrpHdr = L"GrpHdr";
+const wchar_t* GroupHeader39::MsgId = L"MsgId";
+const wchar_t* GroupHeader39::CreDtTm = L"CreDtTm";
+const wchar_t* GroupHeader39::NbOfTxs = L"NbOfTxs";
+const wchar_t* GroupHeader39::CtrlSum = L"CtrlSum";
 
 GroupHeader39::GroupHeader39(DOMDocument *pDocument, DOMElement *pElement)
 :Element(pDocument, pElement)
 {
 }
+
 
 const wchar_t* PaymentInstructionInformation4::PmtInf = L"PmtInf";
 
@@ -102,3 +113,96 @@ const SeparatistaDocument::DocumentType DirectDebitDocument::getDocumentType() c
 	return SeparatistaDocument::DirectDebitDocumentType;
 }
 
+const wchar_t* DirectDebitDocument::getGroupHeaderValue(const wchar_t *pTagName)
+{
+	DOMElement *pElement;
+
+	if (!m_pCstmrDrctDbtInitn)
+		return NULL;
+
+	try
+	{
+		GroupHeader grphdr = m_pCstmrDrctDbtInitn->getGroupHeader();
+		pElement = grphdr.getChildElement(pTagName);
+		if (!pElement)
+			return NULL;
+
+		return pElement->getNodeValue();
+	}
+	catch (const DOMException &e)
+	{
+		setErrorMessage(e.getMessage());
+		return NULL;
+	}
+}
+
+
+void DirectDebitDocument::setGroupHeaderValue(const wchar_t *pTagName, const wchar_t *pValue)
+{
+	DOMElement *pElement;
+
+	if (!m_pCstmrDrctDbtInitn)
+		return;
+
+	try
+	{
+		GroupHeader grphdr = m_pCstmrDrctDbtInitn->getGroupHeader();
+		pElement = grphdr.getChildElement(pTagName, true);
+		if (!pElement)
+			return;
+
+		pElement->setNodeValue(pValue);
+	}
+	catch (const DOMException &e)
+	{
+		setErrorMessage(e.getMessage());
+	}
+}
+
+const wchar_t* DirectDebitDocument::getMessageIdentification()
+{
+	return getGroupHeaderValue(GroupHeader::MsgId);
+}
+
+void DirectDebitDocument::setMessageIdentification(const wchar_t *pValue)
+{
+	setGroupHeaderValue(GroupHeader::MsgId, pValue);
+}
+
+time_t DirectDebitDocument::getCreationDateTime()
+{
+	const wchar_t *pDateTime;
+	
+	pDateTime = getGroupHeaderValue(GroupHeader::CreDtTm);
+	if (!pDateTime)
+		return -1;
+
+	return toTime(pDateTime);
+}
+
+void DirectDebitDocument::setCreationDateTime(const wchar_t *pDateTime)
+{
+	setGroupHeaderValue(GroupHeader::CreDtTm, pDateTime);
+}
+
+uint64_t DirectDebitDocument::getNumberOfTransactions()
+{
+	const wchar_t *pValue;
+
+	pValue = getGroupHeaderValue(GroupHeader::NbOfTxs);
+	if (!pValue)
+		return 0;
+
+	return toLong(pValue);
+}
+
+uint64_t DirectDebitDocument::getControlSum()
+{
+	const wchar_t *pValue;
+
+	pValue = getGroupHeaderValue(GroupHeader::CtrlSum);
+	if (!pValue)
+		return 0;
+
+	return toUInt64(pValue);
+}

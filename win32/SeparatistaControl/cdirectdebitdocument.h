@@ -44,6 +44,14 @@ struct IDirectDebitDocument : public IDispatch
 	STDMETHOD(GetTypeInfo)(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo) PURE;
 	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId) PURE;
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
+
+	// COM methods
+	STDMETHOD(getMessageIdentification)(BSTR *pMessageIdentification) PURE;
+	STDMETHOD(setMessageIdentification)(BSTR messageIdentification) PURE;
+	STDMETHOD(getCreationDateTime)(DATE *pCreationDateTime) PURE;
+	STDMETHOD(setCreationDateTime)(DATE creationDate) PURE;
+	STDMETHOD(getNumberOfTransactions)(VARIANT *pNumberOfTransactions) PURE;
+	STDMETHOD(getControlSum)(VARIANT *pControlSum) PURE;
 };
 
 struct __declspec(uuid("{79F9F451-460D-445C-B176-A0F64C347D1D}")) IDirectDebitDocument;
@@ -66,6 +74,13 @@ public:
 
 	CDirectDebitDocument& operator =(Separatista::DirectDebitDocument *pDocument);
 
+	// COM methods
+	STDMETHOD(getMessageIdentification)(BSTR *pMessageIdentification);
+	STDMETHOD(setMessageIdentification)(BSTR messageIdentification);
+	STDMETHOD(getCreationDateTime)(DATE *pCreationDateTime);
+	STDMETHOD(setCreationDateTime)(DATE creationDate);
+	STDMETHOD(getNumberOfTransactions)(VARIANT *pNumberOfTransactions);
+	STDMETHOD(getControlSum)(VARIANT *pControlSum);
 private:
 	Separatista::DirectDebitDocument *m_pDocument;
 };

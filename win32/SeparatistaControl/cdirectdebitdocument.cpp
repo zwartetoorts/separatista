@@ -19,9 +19,11 @@
 ***************************************************************************/
 
 #include <windows.h>
+#include <comutil.h>
 
 #include "cdirectdebitdocument.h"
 #include "dispatch.cpp"
+#include "util.h"
 
 CDirectDebitDocument::CDirectDebitDocument(IUnknown* pUnknown)
 :SepaControlDispatch<IDirectDebitDocument>(pUnknown)
@@ -42,4 +44,66 @@ CDirectDebitDocument& CDirectDebitDocument::operator = (Separatista::DirectDebit
 	return *this;
 }
 
+STDMETHODIMP CDirectDebitDocument::getMessageIdentification(BSTR *pMessageIdentification)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pMessageIdentification = _bstr_t(m_pDocument->getMessageIdentification()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::setMessageIdentification(BSTR messageIdentification)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	m_pDocument->setMessageIdentification(_bstr_t(messageIdentification).Detach());
+
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::getCreationDateTime(DATE *pCreationDateTime)
+{
+	time_t t;
+
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	t = m_pDocument->getCreationDateTime();
+	return DateTypeFromStdTime(t, pCreationDateTime);
+}
+
+STDMETHODIMP CDirectDebitDocument::setCreationDateTime(DATE creationDateTime)
+{
+	_variant_t v(creationDateTime);
+
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	m_pDocument->setCreationDateTime(((_bstr_t)v).Detach());
+
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::getNumberOfTransactions(VARIANT *pNumberOfTransactions)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pNumberOfTransactions = m_pDocument->getNumberOfTransactions();
+
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::getControlSum(VARIANT *pControlSum)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pControlSum = _variant_t(m_pDocument->getControlSum()).Detach();
+
+	return S_OK;
+}
 

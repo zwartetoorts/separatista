@@ -22,6 +22,7 @@
 #define SEPARATISTA_DIRECTDEBITDOCUMENT_H
 
 #include "element.h"
+#include <vector>
 
 namespace Separatista
 {
@@ -30,6 +31,10 @@ class GroupHeader39 : public Element
 {
 public:
 	static const wchar_t *GrpHdr;
+	static const wchar_t *MsgId;
+	static const wchar_t *CreDtTm;
+	static const wchar_t *NbOfTxs;
+	static const wchar_t *CtrlSum;
 
 	GroupHeader39(DOMDocument *pDocument, DOMElement *pElement);
 };
@@ -53,8 +58,12 @@ public:
 	static const wchar_t *CstmrDrctDbtInitn;
 
 	CustomerDirectDebitInitiationV02(DOMDocument *pDocument);
+
+	GroupHeader& getGroupHeader();
+
 private:
-	PaymentInstructionInformation m_PmtInf;
+	std::vector<PaymentInstructionInformation*> m_pPmtInfs;
+	std::vector<PaymentInstructionInformation*>::iterator m_iterator;
 	GroupHeader m_GrpHdr;
 };
 

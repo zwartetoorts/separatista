@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 #include <vector>
+#include <ctime>
+#include <cinttypes>
+
 
 #ifndef SEPARATISTA_H
 #define SEPARATISTA_H
@@ -179,6 +182,15 @@ public:
 	SEPARATISTA_EXTERN static const wchar_t *Document;
 
 protected:
+	/// Convert a XML DateTime to time_t
+	SEPARATISTA_EXTERN time_t toTime(const wchar_t *pValue);
+
+	/// Convert a XML numeber to long
+	SEPARATISTA_EXTERN long toLong(const wchar_t *pValue);
+
+	/// Convert a XML numeber to uint64_t
+	SEPARATISTA_EXTERN uint64_t toUInt64(const wchar_t *pValue);
+
 	/// Error message, protected access for convenience
 	wchar_t *m_pErrorMessage;
 
@@ -195,6 +207,7 @@ class DirectDebitDocument : public SeparatistaDocument
 public:
 	/**
 		Default contructor for creating an new document, will create a whole new empty DOMDocument
+		and initialize the minimal tags
 	*/
 	SEPARATISTA_EXTERN DirectDebitDocument();
 
@@ -210,7 +223,21 @@ public:
 	/// Namespace URI
 	SEPARATISTA_EXTERN static const wchar_t *NamespaceURI;
 
+	SEPARATISTA_EXTERN const wchar_t* getMessageIdentification();
+	SEPARATISTA_EXTERN void setMessageIdentification(const wchar_t *pMsgId);
+
+	SEPARATISTA_EXTERN time_t getCreationDateTime();
+	SEPARATISTA_EXTERN void setCreationDateTime(const wchar_t *pDateTime);
+
+	SEPARATISTA_EXTERN uint64_t getNumberOfTransactions();
+
+	SEPARATISTA_EXTERN uint64_t getControlSum();
+
 protected:
+	SEPARATISTA_EXTERN const wchar_t* getGroupHeaderValue(const wchar_t *pTagName);
+	SEPARATISTA_EXTERN void setGroupHeaderValue(const wchar_t *pTagName, const wchar_t *pValue);
+
+	
 	CustomerDirectDebitInitiation *m_pCstmrDrctDbtInitn;
 private:
 };
