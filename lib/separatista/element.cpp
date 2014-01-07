@@ -92,3 +92,12 @@ DOMElement* Element::getChildElement(const wchar_t *pTagName, bool create)
 	}
 	return pChild;
 }
+
+DOMNodeList* Element::getElementsByTagName(const wchar_t *pTagName)
+{
+	if (!m_pDOMElement)
+		return NULL;
+
+	return m_pDOMElement->getElementsByTagName(pTagName);
+}
+

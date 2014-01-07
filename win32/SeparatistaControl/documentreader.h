@@ -20,6 +20,7 @@
 
 #include "windows.h"
 
+#include "cdirectdebitdocument.h"
 #include "cerrorreport.h"
 #include "separatista.h"
 #include "dispatch.h"
@@ -52,6 +53,8 @@ struct IDocumentReader : public IDispatch
 	STDMETHOD(getValidate)(VARIANT_BOOL *pValue) PURE;
 	STDMETHOD(setValidate)(VARIANT_BOOL value) PURE;
 	STDMETHOD(getErrorReport)(IErrorReport **ppIErrorReport) PURE;
+	STDMETHOD(getDocumentType)(Separatista::SeparatistaDocument::DocumentType *pDocumentType) PURE;
+	STDMETHOD(getDirectDebitDocument)(CDirectDebitDocument **ppDirectDebitDocument) PURE;
 };
 
 struct __declspec(uuid("{6A9512FC-19BF-4F95-83D9-A8A36B1DF018}")) IDocumentReader;
@@ -79,6 +82,8 @@ public:
 	STDMETHOD(getValidate)(VARIANT_BOOL *pValue);
 	STDMETHOD(setValidate)(VARIANT_BOOL value);
 	STDMETHOD(getErrorReport)(IErrorReport **ppIErrorReport);
+	STDMETHOD(getDocumentType)(Separatista::SeparatistaDocument::DocumentType *pDocumentType);
+	STDMETHOD(getDirectDebitDocument)(CDirectDebitDocument **ppDirectDebitDocument);
 private:
 	Separatista::SeparatistaFileReader *m_pDocumentReader;
 };

@@ -72,6 +72,9 @@ STDMETHODIMP CDirectDebitDocument::getCreationDateTime(DATE *pCreationDateTime)
 		return E_UNEXPECTED;
 
 	t = m_pDocument->getCreationDateTime();
+	if (t == -1)
+		return E_FAIL;
+
 	return DateTypeFromStdTime(t, pCreationDateTime);
 }
 
@@ -92,7 +95,7 @@ STDMETHODIMP CDirectDebitDocument::getNumberOfTransactions(VARIANT *pNumberOfTra
 	if (!m_pDocument)
 		return E_UNEXPECTED;
 
-	*pNumberOfTransactions = m_pDocument->getNumberOfTransactions();
+	*pNumberOfTransactions = _variant_t(m_pDocument->getNumberOfTransactions()).Detach();
 
 	return S_OK;
 }

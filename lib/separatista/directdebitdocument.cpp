@@ -39,11 +39,38 @@ CustomerDirectDebitInitiationV02::CustomerDirectDebitInitiationV02(DOMDocument *
 :Element(pDocument, pDocument->getDocumentElement(), CstmrDrctDbtInitn, true),
 m_GrpHdr(pDocument, getChildElement(GroupHeader::GrpHdr, true))
 {
+	// Find all PaymentInformation elements if they exist
+	DOMNodeList *pNodeList;
+
+	pNodeList = getElementsByTagName(PaymentInstructionInformation::PmtInf);
+	if (pNodeList)
+	{
+		for (XMLSize_t i = 0; i < pNodeList->getLength(); i++)
+			addPaymentInstructionInformation(new PaymentInstructionInformation(pDocument, (DOMElement*)pNodeList->item(i)));
+	}
+
+	m_pmtInfIterator = m_pmtInfs.begin();
+}
+
+CustomerDirectDebitInitiationV02::~CustomerDirectDebitInitiationV02()
+{
+	// Delete all PaymentInstructionInformations
+	while (!m_pmtInfs.empty())
+	{
+		delete m_pmtInfs.back();
+		m_pmtInfs.pop_back();
+	}
 }
 
 GroupHeader& CustomerDirectDebitInitiationV02::getGroupHeader()
 {
 	return m_GrpHdr;
+}
+
+void CustomerDirectDebitInitiationV02::addPaymentInstructionInformation(PaymentInstructionInformation *pPmtInf)
+{
+	m_pmtInfs.push_back(pPmtInf);
+	m_pmtInfIterator = m_pmtInfs.begin();
 }
 
 const wchar_t* GroupHeader39::GrpHdr = L"GrpHdr";
@@ -53,10 +80,10 @@ const wchar_t* GroupHeader39::NbOfTxs = L"NbOfTxs";
 const wchar_t* GroupHeader39::CtrlSum = L"CtrlSum";
 
 GroupHeader39::GroupHeader39(DOMDocument *pDocument, DOMElement *pElement)
-:Element(pDocument, pElement)
+:Element(pDocument, pElement),
+m_InitgPty(pDocument, getChildElement(PartyIdentification::InitgPty, true))
 {
 }
-
 
 const wchar_t* PaymentInstructionInformation4::PmtInf = L"PmtInf";
 
@@ -64,6 +91,15 @@ PaymentInstructionInformation4::PaymentInstructionInformation4(DOMDocument *pDoc
 :Element(pDocument, pElement)
 {
 }
+
+const wchar_t* PartyIdentification32::InitgPty = L"InitgPty";
+
+PartyIdentification32::PartyIdentification32(DOMDocument *pDocument, DOMElement *pElement)
+:Element(pDocument, pElement)
+{
+
+}
+
 
 const wchar_t* DirectDebitDocument::NamespaceURI = L"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02";
 
@@ -127,7 +163,7 @@ const wchar_t* DirectDebitDocument::getGroupHeaderValue(const wchar_t *pTagName)
 		if (!pElement)
 			return NULL;
 
-		return pElement->getNodeValue();
+		return pElement->getTextContent();
 	}
 	catch (const DOMException &e)
 	{
@@ -206,3 +242,4 @@ uint64_t DirectDebitDocument::getControlSum()
 
 	return toUInt64(pValue);
 }
+

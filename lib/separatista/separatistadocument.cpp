@@ -138,11 +138,12 @@ time_t SeparatistaDocument::toTime(const wchar_t *pDateTime)
 	if (!pValue || status != XSValue::st_Init)
 		return -1;
 
-	tm.tm_year = pValue->fData.fValue.f_datetime.f_year;
-	tm.tm_mon = pValue->fData.fValue.f_datetime.f_month;
+	tm.tm_year = pValue->fData.fValue.f_datetime.f_year - 1900;
+	tm.tm_mon = pValue->fData.fValue.f_datetime.f_month - 1;
 	tm.tm_mday = pValue->fData.fValue.f_datetime.f_day;
 	tm.tm_hour = pValue->fData.fValue.f_datetime.f_hour;
-	tm.tm_min = pValue->fData.fValue.f_datetime.f_second;
+	tm.tm_min = pValue->fData.fValue.f_datetime.f_min;
+	tm.tm_sec = pValue->fData.fValue.f_datetime.f_milisec / 1000;
 
 	return mktime(&tm);
 }

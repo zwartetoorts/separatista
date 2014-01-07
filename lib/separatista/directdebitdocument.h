@@ -27,6 +27,16 @@
 namespace Separatista
 {
 
+class PartyIdentification32 : public Element
+{	
+public:
+	static const wchar_t *InitgPty;
+
+	PartyIdentification32(DOMDocument *pDocument, DOMElement *pElement);
+};
+
+typedef PartyIdentification32 PartyIdentification;
+
 class GroupHeader39 : public Element
 {
 public:
@@ -37,6 +47,8 @@ public:
 	static const wchar_t *CtrlSum;
 
 	GroupHeader39(DOMDocument *pDocument, DOMElement *pElement);
+private:
+	PartyIdentification m_InitgPty;
 };
 
 typedef GroupHeader39 GroupHeader;
@@ -59,11 +71,18 @@ public:
 
 	CustomerDirectDebitInitiationV02(DOMDocument *pDocument);
 
+	~CustomerDirectDebitInitiationV02();
+
 	GroupHeader& getGroupHeader();
 
+	/**
+	Add PaymentInstructionInformation to the list. Will reset list position to begin.
+	*/
+	void addPaymentInstructionInformation(PaymentInstructionInformation *pPmtInf);
+
 private:
-	std::vector<PaymentInstructionInformation*> m_pPmtInfs;
-	std::vector<PaymentInstructionInformation*>::iterator m_iterator;
+	std::vector<PaymentInstructionInformation*> m_pmtInfs;
+	std::vector<PaymentInstructionInformation*>::iterator m_pmtInfIterator;
 	GroupHeader m_GrpHdr;
 };
 

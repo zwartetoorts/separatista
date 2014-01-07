@@ -117,3 +117,44 @@ STDMETHODIMP DocumentReader::getErrorReport(IErrorReport **ppIErrorReport)
 
 	return S_OK;
 }
+
+STDMETHODIMP DocumentReader::getDocumentType(Separatista::SeparatistaDocument::DocumentType *pDocumentType)
+{
+	Separatista::SeparatistaDocument *pDocument;
+
+	if (!m_pDocumentReader)
+		return E_UNEXPECTED;
+
+	pDocument = m_pDocumentReader->getDocument();
+	if (!pDocument)
+		return E_FAIL;
+
+	*pDocumentType = pDocument->getDocumentType();
+
+	return S_OK;
+}
+
+STDMETHODIMP DocumentReader::getDirectDebitDocument(CDirectDebitDocument **ppDirectDebitDocument)
+{
+	Separatista::SeparatistaDocument *pDocument;
+	CDirectDebitDocument *pCDocument;
+
+	if (!m_pDocumentReader)
+		return E_UNEXPECTED;
+
+	pDocument = m_pDocumentReader->getDocument();
+	if (!pDocument)
+		return E_FAIL;
+
+	if (pDocument->getDocumentType() != Separatista::SeparatistaDocument::DirectDebitDocumentType)
+		return E_FAIL;
+
+	pCDocument = new CDirectDebitDocument((Separatista::DirectDebitDocument*)pDocument);
+	if (!pCDocument)
+		return E_OUTOFMEMORY;
+	pCDocument->AddRef();
+
+	*ppDirectDebitDocument = pCDocument;
+
+	return S_OK;
+}

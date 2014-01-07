@@ -51,6 +51,12 @@ public:
 	Gets a child element. Creates the child element if requested.
 	*/
 	DOMElement* getChildElement(const wchar_t *pTagName, bool create = false);
+
+	/**
+	Gets a DOMNodeList of child elements, just like xerces
+	*/
+	DOMNodeList* getElementsByTagName(const wchar_t *pTagName);
+
 protected:
 	DOMElement* getDOMElement() const;
 	void setDOMElement(DOMElement *pElement);

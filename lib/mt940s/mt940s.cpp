@@ -77,7 +77,7 @@ MT940SDocument::OpenStatus MT940SDocument::Open(const char *path)
 		return MT940SDocument::E_FILE;
 
 	// Read lines from file
-	nline = 0;
+	nline = 0, rline = 0;
 	recordset = NULL;
 	while (ifs.good() && status == OK)
 	{

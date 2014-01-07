@@ -169,7 +169,7 @@ const SeparatistaFileReader::DocumentStatus SeparatistaFileReader::readDocument(
 		m_status = E_FORMAT;
 	}
 	
-	delete parser;
+	//delete parser;
 	
 	return m_status;
 }

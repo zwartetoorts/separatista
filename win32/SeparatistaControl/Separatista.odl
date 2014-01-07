@@ -247,6 +247,53 @@ library Separatista
 
 	typedef enum
 	{
+		DIRECTDEBITDOCUMENT
+	} DocumentType;
+
+	/*
+	DirectDebitDocument
+	*/
+	[
+		uuid(79F9F451-460D-445C-B176-A0F64C347D1D),
+		helpstring("IDirectDebitDocument interface"),
+		oleautomation,
+		dual,
+		odl
+	]
+	interface IDirectDebitDocument : IDispatch
+	{
+		[propget, helpstring("MessageIdentification as text")]
+		HRESULT __stdcall MessageIdentification(
+			[out, retval] BSTR *pMessageIdentification);
+		[propput, helpstring("Set the MessageIdentifcation as text")]
+		HRESULT __stdcall MessageIdentification(
+			[in] BSTR MessageIdentification);
+		[propget, helpstring("Creation date and time")]
+		HRESULT __stdcall CreationDateTime(
+			[out, retval] DATE *pCreationDateTime);
+		[propput, helpstring("Set the creation date and time")]
+		HRESULT __stdcall CreationDateTime(
+			[in] DATE CreationDateTime);
+		[propget, helpstring("Number of transactions")]
+		HRESULT __stdcall NumberOfTransactions(
+			[out, retval] VARIANT *pNumberOfTransactions);
+		[propget, helpstring("Control sum of all transactions")]
+		HRESULT __stdcall ControlSum(
+			[out, retval] VARIANT *pControlSum);
+	};
+
+	[
+		uuid(0274813F-6EF4-44DF-8A1C-38262379519F),
+		helpstring("DirectDebitDocument object")
+	]
+	coclass DirectDebitDocument
+	{
+		[default] interface IDirectDebitDocument;
+		interface IDispatch;
+	};
+
+	typedef enum
+	{
 		DOC_OK,
 		DOC_E_FILE,
 		DOC_E_FORMAT,
@@ -287,6 +334,12 @@ library Separatista
 		[propget, helpstring("Get all xml parsing and/or validation errors")]
 		HRESULT __stdcall ErrorReport(
 			[out, retval] IErrorReport **ppIErrorReport);
+		[propget, helpstring("The type of the document read")]
+		HRESULT __stdcall DocumentType(
+			[out, retval] DocumentType *pDocumentType);
+		[propget, helpstring("In case of a DirectDebitDocument")]
+		HRESULT __stdcall DirectDebitDocument(
+			[out, retval] IDirectDebitDocument **ppDirectDebitDocument);
 	};
 
 	[
@@ -299,46 +352,5 @@ library Separatista
 		interface IDispatch;
 	};
 
-	/*
-		DirectDebitDocument
-	*/
-	[
-		uuid(79F9F451-460D-445C-B176-A0F64C347D1D),
-		helpstring("IDirectDebitDocument interface"),
-		oleautomation,
-		dual,
-		odl
-	]
-	interface IDirectDebitDocument : IDispatch
-	{
-		[propget, helpstring("MessageIdentification as text")]
-		HRESULT __stdcall MessageIdentification(
-			[out, retval] BSTR *pMessageIdentification);
-		[propput, helpstring("Set the MessageIdentifcation as text")]
-		HRESULT __stdcall MessageIdentification(
-			[in] BSTR MessageIdentification);
-		[propget, helpstring("Creation date and time")]
-		HRESULT __stdcall CreationDateTime(
-			[out, retval] DATE *pCreationDateTime);
-		[propput, helpstring("Set the creation date and time")]
-		HRESULT __stdcall CreationDateTime(
-			[in] DATE CreationDateTime);
-		[propget, helpstring("Number of transactions")]
-		HRESULT __stdcall NumberOfTransactions(
-			[out, retval] VARIANT *pNumberOfTransactions);
-		[propget, helpstring("Control sum of all transactions")]
-		HRESULT __stdcall ControlSum(
-			[out, retval] VARIANT *pControlSum);
-	};
-
-	[
-		uuid(0274813F-6EF4-44DF-8A1C-38262379519F),
-		helpstring("DirectDebitDocument object")
-	]
-	coclass DirectDebitDocument
-	{
-		[default] interface IDirectDebitDocument;
-		interface IDispatch;
-	};
 
 }
