@@ -90,6 +90,46 @@ STDMETHODIMP CDirectDebitDocument::setCreationDateTime(DATE creationDateTime)
 	return S_OK;
 }
 
+STDMETHODIMP CDirectDebitDocument::getAuthorisation1(BSTR *pAuthorisation)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pAuthorisation = _bstr_t(m_pDocument->getAuthorisation(0)).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::setAuthorisation1(BSTR authorisation)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	m_pDocument->setAuthorisation(0, _bstr_t(authorisation).Detach());
+
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::getAuthorisation2(BSTR *pAuthorisation)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pAuthorisation = _bstr_t(m_pDocument->getAuthorisation(1)).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::setAuthorisation2(BSTR authorisation)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	m_pDocument->setAuthorisation(1, _bstr_t(authorisation).Detach());
+
+	return S_OK;
+}
+
 STDMETHODIMP CDirectDebitDocument::getNumberOfTransactions(VARIANT *pNumberOfTransactions)
 {
 	if (!m_pDocument)

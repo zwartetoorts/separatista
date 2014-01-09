@@ -48,9 +48,34 @@ public:
 	void setDOMDocument(DOMDocument *pDocument);
 
 	/**
-	Gets a child element. Creates the child element if requested.
+	Gets a child element. Creates the child element if requested and inserts it as sorted by given order.
+	@index The Nth occurance of this element.
+	@see getOrder
 	*/
+	DOMElement* getChildElement(unsigned int index, const wchar_t *pTagName, bool create = false);
+
 	DOMElement* getChildElement(const wchar_t *pTagName, bool create = false);
+
+
+	/**
+	Get the child element text content.
+	*/
+	const wchar_t* getChildElementValue(const wchar_t *pTagName);
+
+	/**
+	Gets the child element at index text content, useful for child elements that can occur more than once
+	*/
+	const wchar_t* getChildElementValue(unsigned int index, const wchar_t* pTagName);
+
+	/**
+	Set the child element text content, creates the element if it doensn't exist.
+	*/
+	void setChildElementValue(const wchar_t *pTagName, const wchar_t *pValue);
+
+	/**
+	Sets the child element at index text content, useful for child elements that can occur more than once
+	*/
+	void setChildElementValue(unsigned int index, const wchar_t* pTagName, const wchar_t *pValue);
 
 	/**
 	Gets a DOMNodeList of child elements, just like xerces
@@ -60,7 +85,18 @@ public:
 protected:
 	DOMElement* getDOMElement() const;
 	void setDOMElement(DOMElement *pElement);
+
+	/**
+	Returns the order of child elements as a NULL terminated array. The default implementation returns NULL.
+	No ordering is applied.
+	*/
+	const wchar_t* const* getOrder();
+
 private:
+	/**
+	Insert a child element for pParent ordering child elements as indicated by getOrder
+	*/
+	void insertChildElement(DOMElement *pElement);
 	DOMDocument *m_pDocument;
 	DOMElement *m_pDOMElement;
 };

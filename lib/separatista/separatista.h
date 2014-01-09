@@ -226,18 +226,33 @@ public:
 	SEPARATISTA_EXTERN const wchar_t* getMessageIdentification();
 	SEPARATISTA_EXTERN void setMessageIdentification(const wchar_t *pMsgId);
 
+	/// Returns -1 on error
 	SEPARATISTA_EXTERN time_t getCreationDateTime();
 	SEPARATISTA_EXTERN void setCreationDateTime(const wchar_t *pDateTime);
+
+	SEPARATISTA_EXTERN const wchar_t* getAuthorisation(unsigned int index);
+	SEPARATISTA_EXTERN void setAuthorisation(unsigned int index, const wchar_t *pValue);
 
 	SEPARATISTA_EXTERN uint64_t getNumberOfTransactions();
 
 	SEPARATISTA_EXTERN uint64_t getControlSum();
 
-protected:
-	SEPARATISTA_EXTERN const wchar_t* getGroupHeaderValue(const wchar_t *pTagName);
-	SEPARATISTA_EXTERN void setGroupHeaderValue(const wchar_t *pTagName, const wchar_t *pValue);
+	SEPARATISTA_EXTERN const wchar_t* getInitiatingPartyName();
+	SEPARATISTA_EXTERN void setInitiatingPartyName(const wchar_t* pName);
 
-	
+	SEPARATISTA_EXTERN const wchar_t* getInitiatingPartyPostalAddress();
+	SEPARATISTA_EXTERN void setInitiatingPartyPostalAddress(const wchar_t *pValue);
+
+	SEPARATISTA_EXTERN const wchar_t* getInitiatingPartyId();
+	SEPARATISTA_EXTERN void setInitiatingPartyId(const wchar_t *pValue);
+
+	SEPARATISTA_EXTERN const wchar_t* getInitiatingPartyCountryOfResidence();
+	SEPARATISTA_EXTERN void setInitiatingPartyCountryOfResidence(const wchar_t *pValue);
+
+	SEPARATISTA_EXTERN const wchar_t* getInitiatingPartyContactDetails();
+	SEPARATISTA_EXTERN void setInitiatingPartyContactDetails(const wchar_t *pValue);
+
+protected:
 	CustomerDirectDebitInitiation *m_pCstmrDrctDbtInitn;
 private:
 };

@@ -31,8 +31,15 @@ class PartyIdentification32 : public Element
 {	
 public:
 	static const wchar_t *InitgPty;
+	static const wchar_t *Nm;
+	static const wchar_t *PstlAdr;
+	static const wchar_t *Id;
+	static const wchar_t *CtryOfRes;
+	static const wchar_t *CtctDtls;
 
 	PartyIdentification32(DOMDocument *pDocument, DOMElement *pElement);
+protected:
+	const wchar_t* const* getOrder();
 };
 
 typedef PartyIdentification32 PartyIdentification;
@@ -43,10 +50,16 @@ public:
 	static const wchar_t *GrpHdr;
 	static const wchar_t *MsgId;
 	static const wchar_t *CreDtTm;
+	static const wchar_t *Authstn;
 	static const wchar_t *NbOfTxs;
 	static const wchar_t *CtrlSum;
 
 	GroupHeader39(DOMDocument *pDocument, DOMElement *pElement);
+
+	PartyIdentification& getInitiatingParty();
+protected:
+	const wchar_t* const* getOrder();
+
 private:
 	PartyIdentification m_InitgPty;
 };
@@ -59,6 +72,8 @@ public:
 	static const wchar_t *PmtInf;
 
 	PaymentInstructionInformation4(DOMDocument *pDocument, DOMElement *pElement);
+protected:
+	const wchar_t* const* getOrder();
 
 };
 
@@ -79,6 +94,8 @@ public:
 	Add PaymentInstructionInformation to the list. Will reset list position to begin.
 	*/
 	void addPaymentInstructionInformation(PaymentInstructionInformation *pPmtInf);
+protected:
+	const wchar_t* const* getOrder();
 
 private:
 	std::vector<PaymentInstructionInformation*> m_pmtInfs;

@@ -62,6 +62,17 @@ CustomerDirectDebitInitiationV02::~CustomerDirectDebitInitiationV02()
 	}
 }
 
+const wchar_t* const* CustomerDirectDebitInitiationV02::getOrder()
+{
+	static const wchar_t* const order[] = {
+		GroupHeader::GrpHdr,
+		PaymentInstructionInformation::PmtInf,
+		NULL
+	};
+
+	return order;
+}
+
 GroupHeader& CustomerDirectDebitInitiationV02::getGroupHeader()
 {
 	return m_GrpHdr;
@@ -76,6 +87,7 @@ void CustomerDirectDebitInitiationV02::addPaymentInstructionInformation(PaymentI
 const wchar_t* GroupHeader39::GrpHdr = L"GrpHdr";
 const wchar_t* GroupHeader39::MsgId = L"MsgId";
 const wchar_t* GroupHeader39::CreDtTm = L"CreDtTm";
+const wchar_t* GroupHeader39::Authstn = L"Authstn";
 const wchar_t* GroupHeader39::NbOfTxs = L"NbOfTxs";
 const wchar_t* GroupHeader39::CtrlSum = L"CtrlSum";
 
@@ -85,6 +97,27 @@ m_InitgPty(pDocument, getChildElement(PartyIdentification::InitgPty, true))
 {
 }
 
+const wchar_t* const* GroupHeader39::getOrder()
+{
+	static const wchar_t* const order[] = {
+		MsgId,
+		CreDtTm,
+		Authstn,
+		NbOfTxs,
+		CtrlSum,
+		NULL
+	};
+
+	return order;
+}
+
+PartyIdentification& GroupHeader39::getInitiatingParty()
+{
+	return m_InitgPty;
+}
+
+
+
 const wchar_t* PaymentInstructionInformation4::PmtInf = L"PmtInf";
 
 PaymentInstructionInformation4::PaymentInstructionInformation4(DOMDocument *pDocument, DOMElement *pElement)
@@ -92,7 +125,22 @@ PaymentInstructionInformation4::PaymentInstructionInformation4(DOMDocument *pDoc
 {
 }
 
+const wchar_t* const* PaymentInstructionInformation4::getOrder()
+{
+	static const wchar_t* const order[] =
+	{
+		NULL
+	};
+
+	return order;
+}
+
 const wchar_t* PartyIdentification32::InitgPty = L"InitgPty";
+const wchar_t* PartyIdentification32::Nm = L"Nm";
+const wchar_t* PartyIdentification32::PstlAdr = L"PstlAdr";
+const wchar_t* PartyIdentification32::Id = L"Id";
+const wchar_t* PartyIdentification32::CtryOfRes = L"CtryOfRes";
+const wchar_t* PartyIdentification32::CtctDtls = L"CtctDtls";
 
 PartyIdentification32::PartyIdentification32(DOMDocument *pDocument, DOMElement *pElement)
 :Element(pDocument, pElement)
@@ -100,6 +148,19 @@ PartyIdentification32::PartyIdentification32(DOMDocument *pDocument, DOMElement 
 
 }
 
+const wchar_t* const* PartyIdentification32::getOrder()
+{
+	static const wchar_t* const order[] = {
+		Nm,
+		PstlAdr,
+		Id,
+		CtryOfRes,
+		CtctDtls,
+		NULL
+	};
+
+	return order;
+}
 
 const wchar_t* DirectDebitDocument::NamespaceURI = L"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02";
 
@@ -149,67 +210,28 @@ const SeparatistaDocument::DocumentType DirectDebitDocument::getDocumentType() c
 	return SeparatistaDocument::DirectDebitDocumentType;
 }
 
-const wchar_t* DirectDebitDocument::getGroupHeaderValue(const wchar_t *pTagName)
-{
-	DOMElement *pElement;
-
-	if (!m_pCstmrDrctDbtInitn)
-		return NULL;
-
-	try
-	{
-		GroupHeader grphdr = m_pCstmrDrctDbtInitn->getGroupHeader();
-		pElement = grphdr.getChildElement(pTagName);
-		if (!pElement)
-			return NULL;
-
-		return pElement->getTextContent();
-	}
-	catch (const DOMException &e)
-	{
-		setErrorMessage(e.getMessage());
-		return NULL;
-	}
-}
-
-
-void DirectDebitDocument::setGroupHeaderValue(const wchar_t *pTagName, const wchar_t *pValue)
-{
-	DOMElement *pElement;
-
-	if (!m_pCstmrDrctDbtInitn)
-		return;
-
-	try
-	{
-		GroupHeader grphdr = m_pCstmrDrctDbtInitn->getGroupHeader();
-		pElement = grphdr.getChildElement(pTagName, true);
-		if (!pElement)
-			return;
-
-		pElement->setNodeValue(pValue);
-	}
-	catch (const DOMException &e)
-	{
-		setErrorMessage(e.getMessage());
-	}
-}
-
 const wchar_t* DirectDebitDocument::getMessageIdentification()
 {
-	return getGroupHeaderValue(GroupHeader::MsgId);
+	if (!m_pCstmrDrctDbtInitn)
+		return NULL;
+
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(GroupHeader::MsgId);
 }
 
 void DirectDebitDocument::setMessageIdentification(const wchar_t *pValue)
 {
-	setGroupHeaderValue(GroupHeader::MsgId, pValue);
+	if (m_pCstmrDrctDbtInitn)
+		m_pCstmrDrctDbtInitn->getGroupHeader().setChildElementValue(GroupHeader::MsgId, pValue);
 }
 
 time_t DirectDebitDocument::getCreationDateTime()
 {
 	const wchar_t *pDateTime;
 	
-	pDateTime = getGroupHeaderValue(GroupHeader::CreDtTm);
+	if (!m_pCstmrDrctDbtInitn)
+		return -1;
+	
+	pDateTime = m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(GroupHeader::CreDtTm);
 	if (!pDateTime)
 		return -1;
 
@@ -218,28 +240,119 @@ time_t DirectDebitDocument::getCreationDateTime()
 
 void DirectDebitDocument::setCreationDateTime(const wchar_t *pDateTime)
 {
-	setGroupHeaderValue(GroupHeader::CreDtTm, pDateTime);
+	if (m_pCstmrDrctDbtInitn)
+		m_pCstmrDrctDbtInitn->getGroupHeader().setChildElementValue(GroupHeader::CreDtTm, pDateTime);
 }
 
 uint64_t DirectDebitDocument::getNumberOfTransactions()
 {
 	const wchar_t *pValue;
 
-	pValue = getGroupHeaderValue(GroupHeader::NbOfTxs);
+	if (!m_pCstmrDrctDbtInitn)
+		return 0;
+
+	pValue = m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(GroupHeader::NbOfTxs);
 	if (!pValue)
 		return 0;
 
 	return toLong(pValue);
 }
 
+const wchar_t* DirectDebitDocument::getAuthorisation(unsigned int index)
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return NULL;
+
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(index, GroupHeader39::Authstn);
+}
+
+void DirectDebitDocument::setAuthorisation(unsigned int index, const wchar_t *pValue)
+{
+	if (m_pCstmrDrctDbtInitn)
+		m_pCstmrDrctDbtInitn->getGroupHeader().setChildElementValue(index, GroupHeader::Authstn, pValue);
+}
+
 uint64_t DirectDebitDocument::getControlSum()
 {
 	const wchar_t *pValue;
 
-	pValue = getGroupHeaderValue(GroupHeader::CtrlSum);
+	if (!m_pCstmrDrctDbtInitn)
+		return 0;
+
+	pValue = m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(GroupHeader::CtrlSum);
 	if (!pValue)
 		return 0;
 
 	return toUInt64(pValue);
+}
+
+const wchar_t* DirectDebitDocument::getInitiatingPartyName()
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return NULL;
+
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().getChildElementValue(PartyIdentification::Nm);
+}
+
+void DirectDebitDocument::setInitiatingPartyName(const wchar_t *pValue)
+{
+	if (m_pCstmrDrctDbtInitn)
+		m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().setChildElementValue(PartyIdentification::Nm, pValue);
+}
+
+const wchar_t* DirectDebitDocument::getInitiatingPartyPostalAddress()
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return NULL;
+
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().getChildElementValue(PartyIdentification::PstlAdr);
+}
+
+void DirectDebitDocument::setInitiatingPartyPostalAddress(const wchar_t *pValue)
+{
+	if (m_pCstmrDrctDbtInitn)
+		m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().setChildElementValue(PartyIdentification::PstlAdr, pValue);
+}
+
+const wchar_t* DirectDebitDocument::getInitiatingPartyId()
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return NULL;
+
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().getChildElementValue(PartyIdentification::Id);
+}
+
+void DirectDebitDocument::setInitiatingPartyId(const wchar_t *pValue)
+{
+	if (m_pCstmrDrctDbtInitn)
+		m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().setChildElementValue(PartyIdentification::Id, pValue);
+}
+
+const wchar_t* DirectDebitDocument::getInitiatingPartyCountryOfResidence()
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return NULL;
+
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().getChildElementValue(PartyIdentification::CtryOfRes);
+}
+
+void DirectDebitDocument::setInitiatingPartyCountryOfResidence(const wchar_t *pValue)
+{
+	if (m_pCstmrDrctDbtInitn)
+		m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().setChildElementValue(PartyIdentification::CtryOfRes, pValue);
+}
+
+const wchar_t* DirectDebitDocument::getInitiatingPartyContactDetails()
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return NULL;
+
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().getChildElementValue(PartyIdentification::CtctDtls);
+}
+
+void DirectDebitDocument::setInitiatingPartyContactDetails(const wchar_t *pValue)
+{
+	if (m_pCstmrDrctDbtInitn)
+		m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().setChildElementValue(PartyIdentification::CtctDtls, pValue);
 }
 

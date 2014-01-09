@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <xercesc/util/XMLString.hpp>
+
 #include "element.h"
 
 using namespace Separatista;
@@ -42,6 +44,11 @@ Element::Element(DOMDocument *pDocument, DOMElement *pElement, const wchar_t *pT
 	m_pDOMElement = getChildElement(pTagName, create);
 }
 
+const wchar_t* const* Element::getOrder()
+{
+	return NULL;
+}
+
 void Element::setDOMDocument(DOMDocument *pDocument)
 {
 	m_pDocument = pDocument;
@@ -57,19 +64,19 @@ void Element::setDOMElement(DOMElement *pElement)
 	m_pDOMElement = pElement;
 }
 
-DOMElement* Element::getChildElement(const wchar_t *pTagName, bool create)
+DOMElement* Element::getChildElement(unsigned int index, const wchar_t *pTagName, bool create)
 {
 	DOMElement *pChild = NULL;
+	DOMNodeList *pNodeList;
 
 	if (!m_pDocument || !m_pDOMElement)
 		return NULL;
-
-	for (pChild = m_pDOMElement->getFirstElementChild(); pChild != NULL; pChild = pChild->getNextElementSibling())
-	{
-		if (XMLString::compareString(pChild->getTagName(), pTagName) == 0)
-			return pChild;
-	}
 	
+	// Check bounds
+	pNodeList = m_pDOMElement->getElementsByTagName(pTagName);
+	if (pNodeList != NULL && index < pNodeList->getLength())
+		return (DOMElement*)pNodeList->item(index);
+
 	// Not found, so try to create and append
 	if (!create)
 		return NULL;
@@ -80,7 +87,7 @@ DOMElement* Element::getChildElement(const wchar_t *pTagName, bool create)
 		if (!pChild)
 			return NULL;
 
-		m_pDOMElement->appendChild(pChild);
+		insertChildElement(pChild);
 	}
 	catch (...)
 	{
@@ -93,11 +100,96 @@ DOMElement* Element::getChildElement(const wchar_t *pTagName, bool create)
 	return pChild;
 }
 
+DOMElement* Element::getChildElement(const wchar_t *pTagName, bool create)
+{
+	return getChildElement(0, pTagName, create);
+}
+
+const wchar_t* Element::getChildElementValue(const wchar_t *pTagName)
+{
+	return getChildElementValue(0, pTagName);
+}
+
+const wchar_t* Element::getChildElementValue(unsigned int index, const wchar_t *pTagName)
+{
+	DOMElement *pElement;
+
+	try
+	{
+		pElement = getChildElement(index, pTagName, false);
+		if (!pElement)
+			return NULL;
+
+		return pElement->getTextContent();
+	}
+	catch (const DOMException &e)
+	{
+		return NULL;
+	}
+
+}
+
+void Element::setChildElementValue(const wchar_t *pTagName, const wchar_t *pValue)
+{
+	setChildElementValue(0, pTagName, pValue);
+}
+
+void Element::setChildElementValue(unsigned int index, const wchar_t *pTagName, const wchar_t *pValue)
+{
+	DOMElement *pElement;
+
+	try
+	{
+		pElement = getChildElement(index, pTagName, true);
+		if (!pElement)
+			return;
+
+		pElement->setTextContent(pValue);
+	}
+	catch (const DOMException &e)
+	{
+		return;
+	}
+}
+
 DOMNodeList* Element::getElementsByTagName(const wchar_t *pTagName)
 {
 	if (!m_pDOMElement)
 		return NULL;
 
 	return m_pDOMElement->getElementsByTagName(pTagName);
+}
+
+void Element::insertChildElement(DOMElement *pElement)
+{
+	const wchar_t* const *ppOrder;
+	const wchar_t *pTagName;
+
+	if (!m_pDOMElement)
+		return;
+
+	pTagName = pElement->getTagName();
+	
+	// Keep searching the order table for pTagName
+	bool bFound = false;
+	for (ppOrder = getOrder(); ppOrder != NULL && *ppOrder != NULL; ppOrder++)
+	{
+		if (!bFound &&  XMLString::compareIString(*ppOrder, pTagName) == 0)
+			bFound = true;
+		else
+		{
+			// We found the next tag in the order table, try to find a child element by this name
+			DOMElement *pSibbling = getChildElement(*ppOrder);
+			if (pSibbling)
+			{
+				m_pDOMElement->insertBefore(pElement, pSibbling);
+				return;
+			}
+			// No sibbling was found by this name, try the next in order
+		}
+	}
+
+	// Not found or no order, so append at end
+	m_pDOMElement->appendChild(pElement);
 }
 

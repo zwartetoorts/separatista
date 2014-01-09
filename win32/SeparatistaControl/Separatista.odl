@@ -274,12 +274,26 @@ library Separatista
 		[propput, helpstring("Set the creation date and time")]
 		HRESULT __stdcall CreationDateTime(
 			[in] DATE CreationDateTime);
+		[propget, helpstring("Get Authorisation 1")]
+		HRESULT __stdcall Authorisation1(
+			[out, retval] BSTR *pAuthorisation1);
+		[propput, helpstring("Set Authorisation 1")]
+		HRESULT __stdcall Authorisation1(
+			[in] BSTR Authorisation1);
+		[propget, helpstring("Get Authorisation 2")]
+		HRESULT __stdcall Authorisation2(
+			[out, retval] BSTR *pAuthorisation2);
+		[propput, helpstring("Set Authorisation 2")]
+		HRESULT __stdcall Authorisation2(
+			[in] BSTR Authorisation2);
 		[propget, helpstring("Number of transactions")]
 		HRESULT __stdcall NumberOfTransactions(
 			[out, retval] VARIANT *pNumberOfTransactions);
 		[propget, helpstring("Control sum of all transactions")]
 		HRESULT __stdcall ControlSum(
 			[out, retval] VARIANT *pControlSum);
+		
+
 	};
 
 	[

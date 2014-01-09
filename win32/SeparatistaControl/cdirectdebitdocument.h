@@ -50,6 +50,10 @@ struct IDirectDebitDocument : public IDispatch
 	STDMETHOD(setMessageIdentification)(BSTR messageIdentification) PURE;
 	STDMETHOD(getCreationDateTime)(DATE *pCreationDateTime) PURE;
 	STDMETHOD(setCreationDateTime)(DATE creationDate) PURE;
+	STDMETHOD(getAuthorisation1)(BSTR *pAuthorisation1) PURE;
+	STDMETHOD(setAuthorisation1)(BSTR Authorisation1) PURE;
+	STDMETHOD(getAuthorisation2)(BSTR *pAuthorisation2) PURE;
+	STDMETHOD(setAuthorisation2)(BSTR Authorisation2) PURE;
 	STDMETHOD(getNumberOfTransactions)(VARIANT *pNumberOfTransactions) PURE;
 	STDMETHOD(getControlSum)(VARIANT *pControlSum) PURE;
 };
@@ -79,6 +83,10 @@ public:
 	STDMETHOD(setMessageIdentification)(BSTR messageIdentification);
 	STDMETHOD(getCreationDateTime)(DATE *pCreationDateTime);
 	STDMETHOD(setCreationDateTime)(DATE creationDate);
+	STDMETHOD(getAuthorisation1)(BSTR *pAuthorisation1);
+	STDMETHOD(setAuthorisation1)(BSTR Authorisation1);
+	STDMETHOD(getAuthorisation2)(BSTR *pAuthorisation2);
+	STDMETHOD(setAuthorisation2)(BSTR Authorisation2);
 	STDMETHOD(getNumberOfTransactions)(VARIANT *pNumberOfTransactions);
 	STDMETHOD(getControlSum)(VARIANT *pControlSum);
 private:
