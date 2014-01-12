@@ -24,84 +24,127 @@
 #include "element.h"
 #include <vector>
 
+#define BEGIN_DECLARE_CLASS(name, tag) \
+	class name : public Element \
+	{ \
+	public: \
+	name(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t* pTagName = NULL); \
+	protected: \
+	const wchar_t* const* getOrder(); \
+	const wchar_t* getTagName() { static const wchar_t* tagName = L#tag; return tagName; };
+
+#define END_DECLARE_CLASS };
+
+#define DECLARE_CHILD(name) \
+	private: \
+	name m_##name; \
+	public: \
+	name& get##name() { return m_##name; };
+
+#define DECLARE_TAG(name) \
+	public: \
+	static const wchar_t* name;
+
 namespace Separatista
 {
+	
+BEGIN_DECLARE_CLASS(ServiceLevel8Choise, SvcLvl)
+DECLARE_TAG(Cd)
+DECLARE_TAG(Prtry)
+END_DECLARE_CLASS
 
-class PartyIdentification32 : public Element
-{	
+typedef ServiceLevel8Choise ServiceLevelChoise;
+
+BEGIN_DECLARE_CLASS(PaymentTypeInformation20, PmtTpInf)
+DECLARE_CHILD(ServiceLevelChoise)
+DECLARE_TAG(InstrPty)
+DECLARE_TAG(SvcLvl)
+DECLARE_TAG(LclInstrm)
+DECLARE_TAG(SeqTp)
+DECLARE_TAG(CtgyPurp)
 public:
-	static const wchar_t *InitgPty;
-	static const wchar_t *Nm;
-	static const wchar_t *PstlAdr;
-	static const wchar_t *Id;
-	static const wchar_t *CtryOfRes;
-	static const wchar_t *CtctDtls;
+	const wchar_t* getInstructionPriority();
+	void setInstructionPriority(const wchar_t *pValue);
+END_DECLARE_CLASS
 
-	PartyIdentification32(DOMDocument *pDocument, DOMElement *pElement);
-protected:
-	const wchar_t* const* getOrder();
-};
+typedef PaymentTypeInformation20 PaymentTypeInformation;
+
+BEGIN_DECLARE_CLASS(PartyIdentification32, InitgPty)
+DECLARE_TAG(Nm)
+DECLARE_TAG(PstlAdr)
+DECLARE_TAG(Id)
+DECLARE_TAG(CtryOfRes)
+DECLARE_TAG(CtctDtls)
+END_DECLARE_CLASS
 
 typedef PartyIdentification32 PartyIdentification;
 
-class GroupHeader39 : public Element
-{
-public:
-	static const wchar_t *GrpHdr;
-	static const wchar_t *MsgId;
-	static const wchar_t *CreDtTm;
-	static const wchar_t *Authstn;
-	static const wchar_t *NbOfTxs;
-	static const wchar_t *CtrlSum;
-
-	GroupHeader39(DOMDocument *pDocument, DOMElement *pElement);
-
-	PartyIdentification& getInitiatingParty();
-protected:
-	const wchar_t* const* getOrder();
-
-private:
-	PartyIdentification m_InitgPty;
-};
+BEGIN_DECLARE_CLASS(GroupHeader39, GrpHdr)
+DECLARE_CHILD(PartyIdentification)
+DECLARE_TAG(MsgId)
+DECLARE_TAG(CreDtTm)
+DECLARE_TAG(Authstn)
+DECLARE_TAG(NbOfTxs)
+DECLARE_TAG(CtrlSum)
+DECLARE_TAG(InitgPty)
+DECLARE_TAG(FwdgAgt)
+END_DECLARE_CLASS
 
 typedef GroupHeader39 GroupHeader;
 
-class PaymentInstructionInformation4 : public Element
-{
+BEGIN_DECLARE_CLASS(PaymentInstructionInformation4, PmtInf)
+DECLARE_CHILD(PaymentTypeInformation)
+DECLARE_TAG(PmtInfId)
+DECLARE_TAG(PmtMtd)
+DECLARE_TAG(BtchBookg)
+DECLARE_TAG(NbOfTxs)
+DECLARE_TAG(CtrlSum)
+DECLARE_TAG(PmtTpInf)
+DECLARE_TAG(ReqdColltnDt)
+DECLARE_TAG(Cdtr)
+DECLARE_TAG(CdtrAcct)
+DECLARE_TAG(CdtrAgt)
+DECLARE_TAG(CdtrAgtAcct)
+DECLARE_TAG(UlmtCdtr)
+DECLARE_TAG(ChrgBr)
+DECLARE_TAG(ChrgsAcct)
+DECLARE_TAG(ChrgsAgtAcct)
+DECLARE_TAG(CdtrSchmeld)
+DECLARE_TAG(DrctDbtTxInf)
 public:
-	static const wchar_t *PmtInf;
+	static const wchar_t *DirectDebit;
 
-	PaymentInstructionInformation4(DOMDocument *pDocument, DOMElement *pElement);
-protected:
-	const wchar_t* const* getOrder();
+	const wchar_t* getPaymentInformationIdentification();
+	void setPaymentInformationIdentification(const wchar_t *pValue);
 
-};
+	const wchar_t* getPaymentMethod();
+	void setPaymentMenthod(const wchar_t *pValue);
+
+	const wchar_t* getBatchBooking();
+	void setBatchBooking(const wchar_t *pValue);
+
+	uint64_t getNumberOfTransactions();
+
+	uint64_t getControlSum();
+
+	PaymentTypeInformation& getPaymentTypeInformation(bool create = false);
+
+END_DECLARE_CLASS
 
 typedef PaymentInstructionInformation4 PaymentInstructionInformation;
 
-class CustomerDirectDebitInitiationV02 : public Element
-{
+BEGIN_DECLARE_CLASS(CustomerDirectDebitInitiationV02, CstmrDrctDbtInitn)
+DECLARE_CHILD(GroupHeader)
+DECLARE_TAG(CstmrDrctDbtInitn)
+DECLARE_TAG(GrpHdr)
+DECLARE_TAG(PmtInf)
 public:
-	static const wchar_t *CstmrDrctDbtInitn;
-
-	CustomerDirectDebitInitiationV02(DOMDocument *pDocument);
-
 	~CustomerDirectDebitInitiationV02();
-
-	GroupHeader& getGroupHeader();
-
-	/**
-	Add PaymentInstructionInformation to the list. Will reset list position to begin.
-	*/
 	void addPaymentInstructionInformation(PaymentInstructionInformation *pPmtInf);
-protected:
-	const wchar_t* const* getOrder();
-
 private:
 	std::vector<PaymentInstructionInformation*> m_pmtInfs;
 	std::vector<PaymentInstructionInformation*>::iterator m_pmtInfIterator;
-	GroupHeader m_GrpHdr;
-};
+END_DECLARE_CLASS
 
 typedef CustomerDirectDebitInitiationV02 CustomerDirectDebitInitiation;
 

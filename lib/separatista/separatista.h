@@ -252,6 +252,9 @@ public:
 	SEPARATISTA_EXTERN const wchar_t* getInitiatingPartyContactDetails();
 	SEPARATISTA_EXTERN void setInitiatingPartyContactDetails(const wchar_t *pValue);
 
+	SEPARATISTA_EXTERN const wchar_t* getForwardingAgent();
+	SEPARATISTA_EXTERN void setForwardingAgent(const wchar_t *pForwardingAgent);
+
 protected:
 	CustomerDirectDebitInitiation *m_pCstmrDrctDbtInitn;
 private:

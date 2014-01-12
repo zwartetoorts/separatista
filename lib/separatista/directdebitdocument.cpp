@@ -33,24 +33,81 @@
 using namespace xercesc;
 using namespace Separatista;
 
-const wchar_t* CustomerDirectDebitInitiationV02::CstmrDrctDbtInitn = L"CstmrDrctDbtInitn";
+#define IMPLEMENT_CONSTRUCTOR(name) \
+	name::name(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t *pTagName) \
+	:Element(pDocument, pParent, pElement, pTagName)
 
-CustomerDirectDebitInitiationV02::CustomerDirectDebitInitiationV02(DOMDocument *pDocument)
-:Element(pDocument, pDocument->getDocumentElement(), CstmrDrctDbtInitn, true),
-m_GrpHdr(pDocument, getChildElement(GroupHeader::GrpHdr, true))
+#define IMPLEMENT_CHILD(child, tag) \
+	,m_##child(pDocument, this, NULL, tag)
+
+#define IMPLEMENT_TAG(name, tag) \
+	const wchar_t* name::tag = L#tag;
+
+#define BEGIN_IMPLEMENT_ORDER(name) \
+	const wchar_t* const* name::getOrder() \
+	{ \
+	static const wchar_t* order[] = { \
+
+#define END_IMPLEMENT_ORDER  \
+	, NULL }; \
+	return order; }
+
+
+IMPLEMENT_TAG(ServiceLevel8Choise, Cd)
+IMPLEMENT_TAG(ServiceLevel8Choise, Prtry)
+
+IMPLEMENT_CONSTRUCTOR(ServiceLevel8Choise)
+{
+}
+
+BEGIN_IMPLEMENT_ORDER(ServiceLevel8Choise)
+		Cd,
+		Prtry
+END_IMPLEMENT_ORDER
+
+IMPLEMENT_TAG(PaymentTypeInformation20, InstrPty)
+IMPLEMENT_TAG(PaymentTypeInformation20, SvcLvl)
+IMPLEMENT_TAG(PaymentTypeInformation20, LclInstrm)
+IMPLEMENT_TAG(PaymentTypeInformation20, SeqTp)
+IMPLEMENT_TAG(PaymentTypeInformation20, CtgyPurp)
+
+IMPLEMENT_CONSTRUCTOR(PaymentTypeInformation20)
+IMPLEMENT_CHILD(ServiceLevelChoise, PaymentTypeInformation::SvcLvl)
+{
+}
+
+BEGIN_IMPLEMENT_ORDER(PaymentTypeInformation20)
+		InstrPty,
+		SvcLvl,
+		LclInstrm,
+		SeqTp,
+		CtgyPurp
+END_IMPLEMENT_ORDER
+
+IMPLEMENT_TAG(CustomerDirectDebitInitiationV02, CstmrDrctDbtInitn)
+IMPLEMENT_TAG(CustomerDirectDebitInitiationV02, GrpHdr)
+IMPLEMENT_TAG(CustomerDirectDebitInitiationV02, PmtInf)
+
+IMPLEMENT_CONSTRUCTOR(CustomerDirectDebitInitiationV02)
+IMPLEMENT_CHILD(GroupHeader, CustomerDirectDebitInitiation::GrpHdr)
 {
 	// Find all PaymentInformation elements if they exist
 	DOMNodeList *pNodeList;
 
-	pNodeList = getElementsByTagName(PaymentInstructionInformation::PmtInf);
+	pNodeList = getElementsByTagName(PmtInf);
 	if (pNodeList)
 	{
 		for (XMLSize_t i = 0; i < pNodeList->getLength(); i++)
-			addPaymentInstructionInformation(new PaymentInstructionInformation(pDocument, (DOMElement*)pNodeList->item(i)));
+			addPaymentInstructionInformation(new PaymentInstructionInformation(pDocument, this, (DOMElement*)pNodeList->item(i)));
 	}
 
 	m_pmtInfIterator = m_pmtInfs.begin();
 }
+
+BEGIN_IMPLEMENT_ORDER(CustomerDirectDebitInitiationV02)
+	GrpHdr,
+	PmtInf
+END_IMPLEMENT_ORDER
 
 CustomerDirectDebitInitiationV02::~CustomerDirectDebitInitiationV02()
 {
@@ -62,21 +119,6 @@ CustomerDirectDebitInitiationV02::~CustomerDirectDebitInitiationV02()
 	}
 }
 
-const wchar_t* const* CustomerDirectDebitInitiationV02::getOrder()
-{
-	static const wchar_t* const order[] = {
-		GroupHeader::GrpHdr,
-		PaymentInstructionInformation::PmtInf,
-		NULL
-	};
-
-	return order;
-}
-
-GroupHeader& CustomerDirectDebitInitiationV02::getGroupHeader()
-{
-	return m_GrpHdr;
-}
 
 void CustomerDirectDebitInitiationV02::addPaymentInstructionInformation(PaymentInstructionInformation *pPmtInf)
 {
@@ -84,89 +126,98 @@ void CustomerDirectDebitInitiationV02::addPaymentInstructionInformation(PaymentI
 	m_pmtInfIterator = m_pmtInfs.begin();
 }
 
-const wchar_t* GroupHeader39::GrpHdr = L"GrpHdr";
-const wchar_t* GroupHeader39::MsgId = L"MsgId";
-const wchar_t* GroupHeader39::CreDtTm = L"CreDtTm";
-const wchar_t* GroupHeader39::Authstn = L"Authstn";
-const wchar_t* GroupHeader39::NbOfTxs = L"NbOfTxs";
-const wchar_t* GroupHeader39::CtrlSum = L"CtrlSum";
+IMPLEMENT_TAG(GroupHeader39, MsgId)
+IMPLEMENT_TAG(GroupHeader39, CreDtTm)
+IMPLEMENT_TAG(GroupHeader39, Authstn)
+IMPLEMENT_TAG(GroupHeader39, NbOfTxs)
+IMPLEMENT_TAG(GroupHeader39, CtrlSum)
+IMPLEMENT_TAG(GroupHeader39, InitgPty)
+IMPLEMENT_TAG(GroupHeader39, FwdgAgt)
 
-GroupHeader39::GroupHeader39(DOMDocument *pDocument, DOMElement *pElement)
-:Element(pDocument, pElement),
-m_InitgPty(pDocument, getChildElement(PartyIdentification::InitgPty, true))
+IMPLEMENT_CONSTRUCTOR(GroupHeader39)
+IMPLEMENT_CHILD(PartyIdentification, GroupHeader::InitgPty)
 {
 }
 
-const wchar_t* const* GroupHeader39::getOrder()
+BEGIN_IMPLEMENT_ORDER(GroupHeader39)
+	MsgId,
+	CreDtTm,
+	Authstn,
+	NbOfTxs,
+	CtrlSum,
+	InitgPty,
+	FwdgAgt
+END_IMPLEMENT_ORDER
+
+IMPLEMENT_TAG(PaymentInstructionInformation4, PmtInfId)
+IMPLEMENT_TAG(PaymentInstructionInformation4, PmtMtd)
+IMPLEMENT_TAG(PaymentInstructionInformation4, BtchBookg)
+IMPLEMENT_TAG(PaymentInstructionInformation4, NbOfTxs)
+IMPLEMENT_TAG(PaymentInstructionInformation4, CtrlSum)
+IMPLEMENT_TAG(PaymentInstructionInformation4, PmtTpInf)
+IMPLEMENT_TAG(PaymentInstructionInformation4, ReqdColltnDt)
+IMPLEMENT_TAG(PaymentInstructionInformation4, Cdtr)
+IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrAcct)
+IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrAgt)
+IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrAgtAcct)
+IMPLEMENT_TAG(PaymentInstructionInformation4, UlmtCdtr)
+IMPLEMENT_TAG(PaymentInstructionInformation4, ChrgBr)
+IMPLEMENT_TAG(PaymentInstructionInformation4, ChrgsAcct)
+IMPLEMENT_TAG(PaymentInstructionInformation4, ChrgsAgtAcct)
+IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrSchmeld)
+IMPLEMENT_TAG(PaymentInstructionInformation4, DrctDbtTxInf)
+
+const wchar_t* PaymentInstructionInformation4::DirectDebit = L"DD";
+
+IMPLEMENT_CONSTRUCTOR(PaymentInstructionInformation4)
+IMPLEMENT_CHILD(PaymentTypeInformation,PaymentInstructionInformation::PmtTpInf)
 {
-	static const wchar_t* const order[] = {
-		MsgId,
-		CreDtTm,
-		Authstn,
+}
+
+BEGIN_IMPLEMENT_ORDER(PaymentInstructionInformation4)
+		PmtInfId,
+		PmtMtd,
+		BtchBookg,
 		NbOfTxs,
 		CtrlSum,
-		NULL
-	};
+		PmtTpInf,
+		ReqdColltnDt,
+		Cdtr,
+		CdtrAcct,
+		CdtrAgt,
+		CdtrAgtAcct,
+		UlmtCdtr,
+		ChrgBr,
+		ChrgsAcct,
+		ChrgsAgtAcct,
+		CdtrSchmeld,
+		DrctDbtTxInf
+END_IMPLEMENT_ORDER
 
-	return order;
+IMPLEMENT_TAG(PartyIdentification32, Nm)
+IMPLEMENT_TAG(PartyIdentification32, PstlAdr)
+IMPLEMENT_TAG(PartyIdentification32, Id)
+IMPLEMENT_TAG(PartyIdentification32, CtryOfRes)
+IMPLEMENT_TAG(PartyIdentification32, CtctDtls)
+
+IMPLEMENT_CONSTRUCTOR(PartyIdentification32)
+{
 }
 
-PartyIdentification& GroupHeader39::getInitiatingParty()
-{
-	return m_InitgPty;
-}
-
-
-
-const wchar_t* PaymentInstructionInformation4::PmtInf = L"PmtInf";
-
-PaymentInstructionInformation4::PaymentInstructionInformation4(DOMDocument *pDocument, DOMElement *pElement)
-:Element(pDocument, pElement)
-{
-}
-
-const wchar_t* const* PaymentInstructionInformation4::getOrder()
-{
-	static const wchar_t* const order[] =
-	{
-		NULL
-	};
-
-	return order;
-}
-
-const wchar_t* PartyIdentification32::InitgPty = L"InitgPty";
-const wchar_t* PartyIdentification32::Nm = L"Nm";
-const wchar_t* PartyIdentification32::PstlAdr = L"PstlAdr";
-const wchar_t* PartyIdentification32::Id = L"Id";
-const wchar_t* PartyIdentification32::CtryOfRes = L"CtryOfRes";
-const wchar_t* PartyIdentification32::CtctDtls = L"CtctDtls";
-
-PartyIdentification32::PartyIdentification32(DOMDocument *pDocument, DOMElement *pElement)
-:Element(pDocument, pElement)
-{
-
-}
-
-const wchar_t* const* PartyIdentification32::getOrder()
-{
-	static const wchar_t* const order[] = {
+BEGIN_IMPLEMENT_ORDER(PartyIdentification32)
 		Nm,
 		PstlAdr,
 		Id,
 		CtryOfRes,
-		CtctDtls,
-		NULL
-	};
-
-	return order;
-}
+		CtctDtls
+END_IMPLEMENT_ORDER
 
 const wchar_t* DirectDebitDocument::NamespaceURI = L"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02";
 
 DirectDebitDocument::DirectDebitDocument()
 {
 	DOMDocument *pDocument;
+	DOMElement *pElement, *pDocumentElement;
 
 	try
 	{
@@ -177,11 +228,18 @@ DirectDebitDocument::DirectDebitDocument()
 		pDocument = impl->createDocument(NamespaceURI, Document, NULL);
 		if (!pDocument)
 			return;
-
 		setDOMDocument(pDocument);
 
-		m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiation(pDocument);
+		pDocumentElement = pDocument->getDocumentElement();
+		if (!pDocumentElement)
+			return;
 
+		pElement = pDocument->createElement(CustomerDirectDebitInitiation::CstmrDrctDbtInitn);
+		if (!pElement)
+			return;
+		pDocumentElement->appendChild(pElement);
+		
+		m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiation(pDocument, NULL, pElement);
 	}
 	catch (const DOMException &e)
 	{
@@ -194,9 +252,20 @@ DirectDebitDocument::DirectDebitDocument()
 
 DirectDebitDocument::DirectDebitDocument(xercesc::DOMDocument *pDocument)
 {
+	DOMElement *pElement;
+
 	setDOMDocument(pDocument);
 
-	m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiation(pDocument);
+	m_pCstmrDrctDbtInitn = NULL;
+
+	pElement = pDocument->getDocumentElement();
+	if (!pElement)
+		return;
+	pElement = pElement->getFirstElementChild();
+	if (XMLString::compareString(pElement->getTagName(), CustomerDirectDebitInitiation::CstmrDrctDbtInitn) != 0)
+		return;
+
+	m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiation(pDocument, NULL, pElement);
 }
 
 DirectDebitDocument::~DirectDebitDocument()
@@ -291,13 +360,13 @@ const wchar_t* DirectDebitDocument::getInitiatingPartyName()
 	if (!m_pCstmrDrctDbtInitn)
 		return NULL;
 
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().getChildElementValue(PartyIdentification::Nm);
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().getChildElementValue(PartyIdentification::Nm);
 }
 
 void DirectDebitDocument::setInitiatingPartyName(const wchar_t *pValue)
 {
 	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().setChildElementValue(PartyIdentification::Nm, pValue);
+		m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().setChildElementValue(PartyIdentification::Nm, pValue);
 }
 
 const wchar_t* DirectDebitDocument::getInitiatingPartyPostalAddress()
@@ -305,13 +374,13 @@ const wchar_t* DirectDebitDocument::getInitiatingPartyPostalAddress()
 	if (!m_pCstmrDrctDbtInitn)
 		return NULL;
 
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().getChildElementValue(PartyIdentification::PstlAdr);
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().getChildElementValue(PartyIdentification::PstlAdr);
 }
 
 void DirectDebitDocument::setInitiatingPartyPostalAddress(const wchar_t *pValue)
 {
 	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().setChildElementValue(PartyIdentification::PstlAdr, pValue);
+		m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().setChildElementValue(PartyIdentification::PstlAdr, pValue);
 }
 
 const wchar_t* DirectDebitDocument::getInitiatingPartyId()
@@ -319,13 +388,13 @@ const wchar_t* DirectDebitDocument::getInitiatingPartyId()
 	if (!m_pCstmrDrctDbtInitn)
 		return NULL;
 
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().getChildElementValue(PartyIdentification::Id);
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().getChildElementValue(PartyIdentification::Id);
 }
 
 void DirectDebitDocument::setInitiatingPartyId(const wchar_t *pValue)
 {
 	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().setChildElementValue(PartyIdentification::Id, pValue);
+		m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().setChildElementValue(PartyIdentification::Id, pValue);
 }
 
 const wchar_t* DirectDebitDocument::getInitiatingPartyCountryOfResidence()
@@ -333,13 +402,13 @@ const wchar_t* DirectDebitDocument::getInitiatingPartyCountryOfResidence()
 	if (!m_pCstmrDrctDbtInitn)
 		return NULL;
 
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().getChildElementValue(PartyIdentification::CtryOfRes);
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().getChildElementValue(PartyIdentification::CtryOfRes);
 }
 
 void DirectDebitDocument::setInitiatingPartyCountryOfResidence(const wchar_t *pValue)
 {
 	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().setChildElementValue(PartyIdentification::CtryOfRes, pValue);
+		m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().setChildElementValue(PartyIdentification::CtryOfRes, pValue);
 }
 
 const wchar_t* DirectDebitDocument::getInitiatingPartyContactDetails()
@@ -347,12 +416,25 @@ const wchar_t* DirectDebitDocument::getInitiatingPartyContactDetails()
 	if (!m_pCstmrDrctDbtInitn)
 		return NULL;
 
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().getChildElementValue(PartyIdentification::CtctDtls);
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().getChildElementValue(PartyIdentification::CtctDtls);
 }
 
 void DirectDebitDocument::setInitiatingPartyContactDetails(const wchar_t *pValue)
 {
 	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().getInitiatingParty().setChildElementValue(PartyIdentification::CtctDtls, pValue);
+		m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().setChildElementValue(PartyIdentification::CtctDtls, pValue);
 }
 
+const wchar_t* DirectDebitDocument::getForwardingAgent()
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return NULL;
+
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(GroupHeader::FwdgAgt);
+}
+
+void DirectDebitDocument::setForwardingAgent(const wchar_t *pValue)
+{
+	if (m_pCstmrDrctDbtInitn)
+		m_pCstmrDrctDbtInitn->getGroupHeader().setChildElementValue(GroupHeader::FwdgAgt, pValue);
+}

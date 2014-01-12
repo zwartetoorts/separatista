@@ -31,21 +31,14 @@ namespace Separatista
 class Element
 {
 public:
-	Element();
 	/**
-	Custructor setting document and element
-	*/
-	Element(DOMDocument *pDocument, DOMElement *pElement);
-	/**
-	Custructor setting document and getting/creating child element of pElement. Will set the internal DOMElement to the gotten/newly created element.
+	Constructor setting document and getting child element of pParent. Will set the internal DOMElement to the found element.
 	@param pDocument The document
-	@param @pElement The element to get/create the child element for
-	@param pTagName The name of the tag to get
-	@param create Flag to create the element if not found or not
+	@param pParent The parent element, can be NULL
+	@param pElement The element to set, can be NULL.
+	@param pTagName If pElement is NULL, pParent->getChildElement(pTagName) is used.
 	*/
-	Element(DOMDocument *pDocument, DOMElement *pElement, const wchar_t *pTagName, bool create = false);
-
-	void setDOMDocument(DOMDocument *pDocument);
+	Element(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t* pTagName = NULL);
 
 	/**
 	Gets a child element. Creates the child element if requested and inserts it as sorted by given order.
@@ -55,7 +48,6 @@ public:
 	DOMElement* getChildElement(unsigned int index, const wchar_t *pTagName, bool create = false);
 
 	DOMElement* getChildElement(const wchar_t *pTagName, bool create = false);
-
 
 	/**
 	Get the child element text content.
@@ -84,20 +76,24 @@ public:
 
 protected:
 	DOMElement* getDOMElement() const;
-	void setDOMElement(DOMElement *pElement);
+	operator DOMElement* ();
 
 	/**
-	Returns the order of child elements as a NULL terminated array. The default implementation returns NULL.
-	No ordering is applied.
+	Returns the order of child elements as a NULL terminated array. If it returns NULL 
+	no ordering is applied.
 	*/
-	const wchar_t* const* getOrder();
+	virtual const wchar_t* const* getOrder() = 0;
+
+	virtual const wchar_t* getTagName() = 0;
 
 private:
 	/**
 	Insert a child element for pParent ordering child elements as indicated by getOrder
 	*/
 	void insertChildElement(DOMElement *pElement);
+
 	DOMDocument *m_pDocument;
+	Element *m_pParent;
 	DOMElement *m_pDOMElement;
 };
 

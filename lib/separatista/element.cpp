@@ -25,33 +25,13 @@
 using namespace Separatista;
 XERCES_CPP_NAMESPACE_USE
 
-Element::Element()
-{
-	m_pDOMElement = NULL;
-	m_pDocument = NULL;
-}
-
-Element::Element(DOMDocument *pDocument, DOMElement *pElement)
+Element::Element(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t *pTagName)
 {
 	m_pDocument = pDocument;
+	m_pParent = pParent;
 	m_pDOMElement = pElement;
-}
-
-Element::Element(DOMDocument *pDocument, DOMElement *pElement, const wchar_t *pTagName, bool create)
-{
-	m_pDocument = pDocument;
-	m_pDOMElement = pElement;
-	m_pDOMElement = getChildElement(pTagName, create);
-}
-
-const wchar_t* const* Element::getOrder()
-{
-	return NULL;
-}
-
-void Element::setDOMDocument(DOMDocument *pDocument)
-{
-	m_pDocument = pDocument;
+	if (!pElement && pTagName && pParent)
+		m_pDOMElement = pParent->getChildElement(pTagName);
 }
 
 DOMElement* Element::getDOMElement() const
@@ -59,19 +39,35 @@ DOMElement* Element::getDOMElement() const
 	return m_pDOMElement;
 }
 
-void Element::setDOMElement(DOMElement *pElement)
-{
-	m_pDOMElement = pElement;
-}
-
 DOMElement* Element::getChildElement(unsigned int index, const wchar_t *pTagName, bool create)
 {
 	DOMElement *pChild = NULL;
 	DOMNodeList *pNodeList;
 
-	if (!m_pDocument || !m_pDOMElement)
+	if (!m_pDocument)
 		return NULL;
 	
+	// Check for our own existance
+	if (!m_pDOMElement)
+	{
+		if (!create)
+			return NULL;
+		try
+		{
+			// Create our element
+			m_pDOMElement = m_pDocument->createElement(getTagName());
+			if (!m_pDOMElement)
+				return NULL;
+
+			if (m_pParent)
+				m_pParent->insertChildElement(m_pDOMElement);
+		}
+		catch (const DOMException &e)
+		{
+			return NULL;
+		}
+	}
+
 	// Check bounds
 	pNodeList = m_pDOMElement->getElementsByTagName(pTagName);
 	if (pNodeList != NULL && index < pNodeList->getLength())
