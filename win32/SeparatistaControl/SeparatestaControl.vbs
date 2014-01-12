@@ -5,6 +5,9 @@ if reader.ReadDocument("C:\Users\Okkel\Documents\Visual Studio 2013\Projects\Sep
 	set ddoc = reader.DirectDebitDocument
 	WScript.Echo ddoc.MessageIdentification
 	WScript.Echo ddoc.CreationDateTime
+	WScript.Echo ddoc.NumberOfTransactions	
+	WScript.Echo ddoc.ControlSum
+	WScript.Echo ddoc.Authorisation1
 end if
 
 

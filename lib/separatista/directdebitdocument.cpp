@@ -52,6 +52,17 @@ using namespace Separatista;
 	, NULL }; \
 	return order; }
 
+IMPLEMENT_TAG(LocalInstrument2Choise, Cd)
+IMPLEMENT_TAG(LocalInstrument2Choise, Prtry)
+
+IMPLEMENT_CONSTRUCTOR(LocalInstrument2Choise)
+{
+}
+
+BEGIN_IMPLEMENT_ORDER(LocalInstrument2Choise)
+	Cd,
+	Prtry
+END_IMPLEMENT_ORDER
 
 IMPLEMENT_TAG(ServiceLevel8Choise, Cd)
 IMPLEMENT_TAG(ServiceLevel8Choise, Prtry)
@@ -279,60 +290,60 @@ const SeparatistaDocument::DocumentType DirectDebitDocument::getDocumentType() c
 	return SeparatistaDocument::DirectDebitDocumentType;
 }
 
-const wchar_t* DirectDebitDocument::getMessageIdentification()
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return NULL;
+#define IMPLEMENT_PROPERTY_SAFE_GET(getter, tag) \
+	(m_pCstmrDrctDbtInitn ? m_pCstmrDrctDbtInitn->##getter.getChildElementValue(tag) : NULL)
 
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(GroupHeader::MsgId);
-}
+#define IMPLEMENT_PROPERTY_SAFE_SET(getter, tag) \
+	(m_pCstmrDrctDbtInitn ? m_pCstmrDrctDbtInitn->##getter.setChildElementValue(tag, pValue) : NULL)
 
-void DirectDebitDocument::setMessageIdentification(const wchar_t *pValue)
-{
-	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().setChildElementValue(GroupHeader::MsgId, pValue);
-}
+#define IMPLEMENT_PROPERTY_GET(cls, name, getter, tag) \
+	const wchar_t* cls::get##name() { return IMPLEMENT_PROPERTY_SAFE_GET(getter, tag); }
 
-time_t DirectDebitDocument::getCreationDateTime()
-{
-	const wchar_t *pDateTime;
-	
-	if (!m_pCstmrDrctDbtInitn)
-		return -1;
-	
-	pDateTime = m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(GroupHeader::CreDtTm);
-	if (!pDateTime)
-		return -1;
+#define IMPLEMENT_PROPERTY_SET(cls, name, getter, tag) \
+	void cls::set##name(const wchar_t *pValue) { IMPLEMENT_PROPERTY_SAFE_SET(getter, tag); }
 
-	return toTime(pDateTime);
-}
+#define IMPLEMENT_PROPERTY(cls, name, getter, tag) \
+	IMPLEMENT_PROPERTY_GET(cls, name, getter, tag) \
+	IMPLEMENT_PROPERTY_SET(cls, name, getter, tag)
 
-void DirectDebitDocument::setCreationDateTime(const wchar_t *pDateTime)
-{
-	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().setChildElementValue(GroupHeader::CreDtTm, pDateTime);
-}
+#define IMPLEMENT_PROPERTY_TIME_GET(cls, name, getter, tag) \
+	time_t cls::get##name() { return toTime(IMPLEMENT_PROPERTY_SAFE_GET(getter, tag)); }
 
-uint64_t DirectDebitDocument::getNumberOfTransactions()
-{
-	const wchar_t *pValue;
+#define IMPLEMENT_PROPERTY_TIME(cls, name, getter, tag) \
+	IMPLEMENT_PROPERTY_TIME_GET(cls, name, getter, tag) \
+	IMPLEMENT_PROPERTY_SET(cls, name, getter, tag)
 
-	if (!m_pCstmrDrctDbtInitn)
-		return 0;
+#define IMPLEMENT_PROPERTY_LONG_GET(cls, name, getter, tag) \
+	long cls::get##name() { return toLong(IMPLEMENT_PROPERTY_SAFE_GET(getter, tag)); }
 
-	pValue = m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(GroupHeader::NbOfTxs);
-	if (!pValue)
-		return 0;
+#define IMPLEMENT_PROPERTY_LONG(cls, name, getter, tag) \
+	IMPLEMENT_PROPERTY_LONG_GET(cls, name, getter, tag) \
+	IMPLEMENT_PROPERTY_SET(cls, name, getter, tag)
 
-	return toLong(pValue);
-}
+#define IMPLEMENT_PROPERTY_UINT64_GET(cls, name, getter, tag) \
+	uint64_t cls::get##name() { return toUInt64(IMPLEMENT_PROPERTY_SAFE_GET(getter, tag)); }
+
+#define IMPLEMENT_PROPERTY_UINT64(cls, name, getter, tag) \
+	IMPLEMENT_PROPERTY_UINT64_GET(cls, name, getter, tag) \
+	IMPLEMENT_PROPERTY_SET(cls, name, getter, tag)
+
+IMPLEMENT_PROPERTY(DirectDebitDocument, MessageIdentification, getGroupHeader(), GroupHeader::MsgId)
+IMPLEMENT_PROPERTY_TIME(DirectDebitDocument, CreationDateTime, getGroupHeader(), GroupHeader::CreDtTm)
+IMPLEMENT_PROPERTY_UINT64_GET(DirectDebitDocument, NumberOfTransactions, getGroupHeader(), GroupHeader::NbOfTxs)
+IMPLEMENT_PROPERTY_UINT64_GET(DirectDebitDocument, ControlSum, getGroupHeader(), GroupHeader::CtrlSum)
+IMPLEMENT_PROPERTY(DirectDebitDocument, InitiatingPartyName, getGroupHeader().getPartyIdentification(), PartyIdentification::Nm)
+IMPLEMENT_PROPERTY(DirectDebitDocument, InitiatingPartyPostalAddress, getGroupHeader().getPartyIdentification(), PartyIdentification::PstlAdr)
+IMPLEMENT_PROPERTY(DirectDebitDocument, InitiatingPartyId, getGroupHeader().getPartyIdentification(), PartyIdentification::Id)
+IMPLEMENT_PROPERTY(DirectDebitDocument, InitiatingPartyCountryOfResidence, getGroupHeader().getPartyIdentification(), PartyIdentification::CtryOfRes)
+IMPLEMENT_PROPERTY(DirectDebitDocument, InitiatingPartyContactDetails, getGroupHeader().getPartyIdentification(), PartyIdentification::CtctDtls)
+IMPLEMENT_PROPERTY(DirectDebitDocument, ForwardingAgent, getGroupHeader(), GroupHeader::FwdgAgt)
 
 const wchar_t* DirectDebitDocument::getAuthorisation(unsigned int index)
 {
 	if (!m_pCstmrDrctDbtInitn)
 		return NULL;
 
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(index, GroupHeader39::Authstn);
+	return m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(index, GroupHeader::Authstn);
 }
 
 void DirectDebitDocument::setAuthorisation(unsigned int index, const wchar_t *pValue)
@@ -341,100 +352,3 @@ void DirectDebitDocument::setAuthorisation(unsigned int index, const wchar_t *pV
 		m_pCstmrDrctDbtInitn->getGroupHeader().setChildElementValue(index, GroupHeader::Authstn, pValue);
 }
 
-uint64_t DirectDebitDocument::getControlSum()
-{
-	const wchar_t *pValue;
-
-	if (!m_pCstmrDrctDbtInitn)
-		return 0;
-
-	pValue = m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(GroupHeader::CtrlSum);
-	if (!pValue)
-		return 0;
-
-	return toUInt64(pValue);
-}
-
-const wchar_t* DirectDebitDocument::getInitiatingPartyName()
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return NULL;
-
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().getChildElementValue(PartyIdentification::Nm);
-}
-
-void DirectDebitDocument::setInitiatingPartyName(const wchar_t *pValue)
-{
-	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().setChildElementValue(PartyIdentification::Nm, pValue);
-}
-
-const wchar_t* DirectDebitDocument::getInitiatingPartyPostalAddress()
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return NULL;
-
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().getChildElementValue(PartyIdentification::PstlAdr);
-}
-
-void DirectDebitDocument::setInitiatingPartyPostalAddress(const wchar_t *pValue)
-{
-	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().setChildElementValue(PartyIdentification::PstlAdr, pValue);
-}
-
-const wchar_t* DirectDebitDocument::getInitiatingPartyId()
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return NULL;
-
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().getChildElementValue(PartyIdentification::Id);
-}
-
-void DirectDebitDocument::setInitiatingPartyId(const wchar_t *pValue)
-{
-	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().setChildElementValue(PartyIdentification::Id, pValue);
-}
-
-const wchar_t* DirectDebitDocument::getInitiatingPartyCountryOfResidence()
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return NULL;
-
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().getChildElementValue(PartyIdentification::CtryOfRes);
-}
-
-void DirectDebitDocument::setInitiatingPartyCountryOfResidence(const wchar_t *pValue)
-{
-	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().setChildElementValue(PartyIdentification::CtryOfRes, pValue);
-}
-
-const wchar_t* DirectDebitDocument::getInitiatingPartyContactDetails()
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return NULL;
-
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().getChildElementValue(PartyIdentification::CtctDtls);
-}
-
-void DirectDebitDocument::setInitiatingPartyContactDetails(const wchar_t *pValue)
-{
-	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().getPartyIdentification().setChildElementValue(PartyIdentification::CtctDtls, pValue);
-}
-
-const wchar_t* DirectDebitDocument::getForwardingAgent()
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return NULL;
-
-	return m_pCstmrDrctDbtInitn->getGroupHeader().getChildElementValue(GroupHeader::FwdgAgt);
-}
-
-void DirectDebitDocument::setForwardingAgent(const wchar_t *pValue)
-{
-	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->getGroupHeader().setChildElementValue(GroupHeader::FwdgAgt, pValue);
-}

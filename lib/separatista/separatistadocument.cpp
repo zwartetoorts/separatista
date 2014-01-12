@@ -134,6 +134,9 @@ time_t SeparatistaDocument::toTime(const wchar_t *pDateTime)
 	XSValue *pValue;
 	std::tm tm;
 
+	if (!pDateTime)
+		return -1;
+
 	pValue = XSValue::getActualValue(pDateTime, XSValue::dt_dateTime, status);
 	if (!pValue || status != XSValue::st_Init)
 		return -1;

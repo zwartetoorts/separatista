@@ -43,11 +43,21 @@
 
 #define DECLARE_TAG(name) \
 	public: \
-	static const wchar_t* name;
+	static const wchar_t* name; \
+	const wchar_t* get##name() { return getChildElementValue(L#name); }; \
+	void set##name(const wchar_t *pValue) { setChildElementValue(L#name, pValue); };
 
 namespace Separatista
 {
-	
+
+/****/
+BEGIN_DECLARE_CLASS(LocalInstrument2Choise, LclInstrm)
+DECLARE_TAG(Cd)
+DECLARE_TAG(Prtry)
+END_DECLARE_CLASS
+
+typedef LocalInstrument2Choise LocalInstrumentChoise;
+
 BEGIN_DECLARE_CLASS(ServiceLevel8Choise, SvcLvl)
 DECLARE_TAG(Cd)
 DECLARE_TAG(Prtry)

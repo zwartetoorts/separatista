@@ -199,6 +199,37 @@ private:
 	wchar_t *m_path;
 };
 
+#define SEPARATISTA_DECLARE_PROPERTY_GET(name) \
+	SEPARATISTA_EXTERN const wchar_t* get##name();
+
+#define SEPARATISTA_DECLARE_PROPERTY_SET(name) \
+	SEPARATISTA_EXTERN void set##name(const wchar_t *pValue);
+
+#define SEPARATISTA_DECLARE_PROPERTY(name) \
+	SEPARATISTA_DECLARE_PROPERTY_GET(name) \
+	SEPARATISTA_DECLARE_PROPERTY_SET(name)
+
+#define SEPARATISTA_DECLARE_PROPERTY_TIME_GET(name) \
+	SEPARATISTA_EXTERN std::time_t get##name();
+
+#define SEPARATISTA_DECLARE_PROPERTY_TIME(name) \
+	SEPARATISTA_DECLARE_PROPERTY_TIME_GET(name) \
+	SEPARATISTA_DECLARE_PROPERTY_SET(name)
+
+#define SEPARATISTA_DECLARE_PROPERTY_LONG_GET(name) \
+	SEPARATISTA_EXTERN long get##name();
+
+#define SEPARATISTA_DECLARE_PROPERTY_LONG(name) \
+	SEPARATISTA_DECLARE_PROPERTY_LONG_GET(name) \
+	SEPARATISTA_DECLATE_PROPERTY_SET(name)
+
+#define SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(name) \
+	SEPARATISTA_EXTERN uint64_t get##name();
+
+#define SEPARATISTA_DECLARE_PROPERTY_UINT64(name) \
+	SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(name) \
+	SEPARATISTA_DECLATE_PROPERTY_SET(name)
+
 /**
 	
 */
@@ -223,34 +254,20 @@ public:
 	/// Namespace URI
 	SEPARATISTA_EXTERN static const wchar_t *NamespaceURI;
 
-	SEPARATISTA_EXTERN const wchar_t* getMessageIdentification();
-	SEPARATISTA_EXTERN void setMessageIdentification(const wchar_t *pMsgId);
+	SEPARATISTA_DECLARE_PROPERTY(MessageIdentification)
 
 	/// Returns -1 on error
-	SEPARATISTA_EXTERN time_t getCreationDateTime();
-	SEPARATISTA_EXTERN void setCreationDateTime(const wchar_t *pDateTime);
-
+	SEPARATISTA_DECLARE_PROPERTY_TIME(CreationDateTime)
 	SEPARATISTA_EXTERN const wchar_t* getAuthorisation(unsigned int index);
 	SEPARATISTA_EXTERN void setAuthorisation(unsigned int index, const wchar_t *pValue);
+	SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(NumberOfTransactions)
+	SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(ControlSum)
 
-	SEPARATISTA_EXTERN uint64_t getNumberOfTransactions();
-
-	SEPARATISTA_EXTERN uint64_t getControlSum();
-
-	SEPARATISTA_EXTERN const wchar_t* getInitiatingPartyName();
-	SEPARATISTA_EXTERN void setInitiatingPartyName(const wchar_t* pName);
-
-	SEPARATISTA_EXTERN const wchar_t* getInitiatingPartyPostalAddress();
-	SEPARATISTA_EXTERN void setInitiatingPartyPostalAddress(const wchar_t *pValue);
-
-	SEPARATISTA_EXTERN const wchar_t* getInitiatingPartyId();
-	SEPARATISTA_EXTERN void setInitiatingPartyId(const wchar_t *pValue);
-
-	SEPARATISTA_EXTERN const wchar_t* getInitiatingPartyCountryOfResidence();
-	SEPARATISTA_EXTERN void setInitiatingPartyCountryOfResidence(const wchar_t *pValue);
-
-	SEPARATISTA_EXTERN const wchar_t* getInitiatingPartyContactDetails();
-	SEPARATISTA_EXTERN void setInitiatingPartyContactDetails(const wchar_t *pValue);
+	SEPARATISTA_DECLARE_PROPERTY(InitiatingPartyName)
+	SEPARATISTA_DECLARE_PROPERTY(InitiatingPartyPostalAddress)
+	SEPARATISTA_DECLARE_PROPERTY(InitiatingPartyId)
+	SEPARATISTA_DECLARE_PROPERTY(InitiatingPartyCountryOfResidence)
+	SEPARATISTA_DECLARE_PROPERTY(InitiatingPartyContactDetails)
 
 	SEPARATISTA_EXTERN const wchar_t* getForwardingAgent();
 	SEPARATISTA_EXTERN void setForwardingAgent(const wchar_t *pForwardingAgent);
