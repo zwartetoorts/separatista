@@ -251,6 +251,59 @@ library Separatista
 	} DocumentType;
 
 	/*
+	PartyIdentification
+	*/
+	[
+		uuid(6A5542FA-C264-4AC0-B82B-7B54AB2FB3CF),
+		helpstring("IPartyIdentification interface"),
+		oleautomation,
+		dual,
+		odl
+	]
+	interface IPartyIdentification : IDispatch
+	{
+		[propget]
+		HRESULT __stdcall Name(
+			[out, retval] BSTR *pName);
+		[propput]
+		HRESULT __stdcall Name(
+			[in] BSTR Name);
+		[propget]
+		HRESULT __stdcall PostalAddress(
+			[out, retval] BSTR *pPostalAddress);
+		[propput]
+		HRESULT __stdcall PostalAddress(
+			[in] BSTR PostalAddress);
+		[propget]
+		HRESULT __stdcall Identification(
+			[out, retval] BSTR *pIdentification);
+		[propput]
+		HRESULT __stdcall Identification(
+			[in] BSTR Identification);
+		[propget]
+		HRESULT __stdcall CountryOfResidence(
+			[out, retval] BSTR *pCountryOfResidence);
+		[propput]
+		HRESULT __stdcall CountryOfResidence(
+			[in] BSTR CountryOfResidence);
+		[propget]
+		HRESULT __stdcall ContactDetails(
+			[out, retval] BSTR *pContactDetails);
+		[propput]
+		HRESULT __stdcall ContactDetails(
+			[in] BSTR ContactDetails);
+	};
+	[
+		uuid(2E1BDA09-1073-4C08-92E2-1ABD88DBD432),
+		helpstring("PartyIdentification object")
+	]
+	coclass PartyIdentification
+	{
+		[default] interface IPartyIdentification;
+		interface IDispatch;
+	};
+
+	/*
 	DirectDebitDocument
 	*/
 	[
@@ -292,8 +345,22 @@ library Separatista
 		[propget, helpstring("Control sum of all transactions")]
 		HRESULT __stdcall ControlSum(
 			[out, retval] VARIANT *pControlSum);
-		
-
+		[propget]
+		HRESULT __stdcall ForwardingAgent(
+			[out, retval] BSTR *pForwardingAgent);
+		[propput]
+		HRESULT __stdcall ForwardingAgent(
+			[in] BSTR ForwardingAgent);
+		[propget]
+		HRESULT __stdcall InitiatingParty(
+			[out, retval] IPartyIdentification **ppPartyIdentification);
+		[propget]
+		HRESULT __stdcall EOF(
+			[out, retval] VARIANT_BOOL *pFEOF);
+		[]
+		HRESULT __stdcall MoveFirst();
+		[]
+		HRESULT __stdcall MoveNext();
 	};
 
 	[

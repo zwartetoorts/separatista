@@ -25,6 +25,102 @@
 #include "dispatch.cpp"
 #include "util.h"
 
+CPartyIdentification::CPartyIdentification(Separatista::PartyIdentification *pPartyIdentification, IUnknown *pParent)
+:SepaControlDispatch<IPartyIdentification>(pParent)
+{
+	m_pPartyIdentification = pPartyIdentification;
+}
+
+STDMETHODIMP CPartyIdentification::getName(BSTR *pName)
+{
+	if (!m_pPartyIdentification)
+		return E_UNEXPECTED;
+
+	*pName = _bstr_t(m_pPartyIdentification->getName()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CPartyIdentification::setName(BSTR Name)
+{
+	if (m_pPartyIdentification)
+		return E_UNEXPECTED;
+
+	m_pPartyIdentification->setName(_bstr_t(Name).Detach());
+	return S_OK;
+}
+
+STDMETHODIMP CPartyIdentification::getPostalAddress(BSTR *pPostalAddress)
+{
+	if (!m_pPartyIdentification)
+		return E_UNEXPECTED;
+
+	*pPostalAddress = _bstr_t(m_pPartyIdentification->getPostalAddress()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CPartyIdentification::setPostalAddress(BSTR PostalAddress)
+{
+	if (m_pPartyIdentification)
+		return E_UNEXPECTED;
+
+	m_pPartyIdentification->setPostalAddress(_bstr_t(PostalAddress).Detach());
+	return S_OK;
+}
+
+STDMETHODIMP CPartyIdentification::getIdentification(BSTR *pIdentification)
+{
+	if (!m_pPartyIdentification)
+		return E_UNEXPECTED;
+
+	*pIdentification = _bstr_t(m_pPartyIdentification->getIdentification()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CPartyIdentification::setIdentification(BSTR Identification)
+{
+	if (m_pPartyIdentification)
+		return E_UNEXPECTED;
+
+	m_pPartyIdentification->setIdentification(_bstr_t(Identification).Detach());
+	return S_OK;
+}
+
+STDMETHODIMP CPartyIdentification::getCountryOfResidence(BSTR *pCountryOfResidence)
+{
+	if (!m_pPartyIdentification)
+		return E_UNEXPECTED;
+
+	*pCountryOfResidence = _bstr_t(m_pPartyIdentification->getCountryOfResidence()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CPartyIdentification::setCountryOfResidence(BSTR CountryOfResidence)
+{
+	if (m_pPartyIdentification)
+		return E_UNEXPECTED;
+
+	m_pPartyIdentification->setCountryOfResidence(_bstr_t(CountryOfResidence).Detach());
+	return S_OK;
+}
+
+STDMETHODIMP CPartyIdentification::getContactDetails(BSTR *pContactDetails)
+{
+	if (!m_pPartyIdentification)
+		return E_UNEXPECTED;
+
+	*pContactDetails = _bstr_t(m_pPartyIdentification->getContactDetails()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CPartyIdentification::setContactDetails(BSTR ContactDetails)
+{
+	if (m_pPartyIdentification)
+		return E_UNEXPECTED;
+
+	m_pPartyIdentification->setContactDetails(_bstr_t(ContactDetails).Detach());
+	return S_OK;
+}
+
 CDirectDebitDocument::CDirectDebitDocument(IUnknown* pUnknown)
 :SepaControlDispatch<IDirectDebitDocument>(pUnknown)
 {
@@ -150,3 +246,72 @@ STDMETHODIMP CDirectDebitDocument::getControlSum(VARIANT *pControlSum)
 	return S_OK;
 }
 
+STDMETHODIMP CDirectDebitDocument::getForwardingAgent(BSTR *pForwardingAgent)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pForwardingAgent = _bstr_t(m_pDocument->getForwardingAgent()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::setForwardingAgent(BSTR ForwardingAgent)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	m_pDocument->setForwardingAgent(_bstr_t(ForwardingAgent).Detach());
+
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::getInitiatingParty(IPartyIdentification **ppPartyIdentification)
+{
+	Separatista::PartyIdentification *pSPId;
+
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	pSPId = m_pDocument->getInitiatingParty();
+	if (!pSPId)
+		*ppPartyIdentification = NULL;
+	else
+	{
+		*ppPartyIdentification = new CPartyIdentification(pSPId, this);
+		if (*ppPartyIdentification == NULL)
+			return E_OUTOFMEMORY;
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::FEOF(VARIANT_BOOL *pFEOF)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	if (m_pDocument->FEOF())
+		*pFEOF = -1;
+	else
+		*pFEOF = 0;
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::moveFirst()
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	m_pDocument->moveFirst();
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::moveNext()
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	m_pDocument->moveNext();
+	return S_OK;
+}

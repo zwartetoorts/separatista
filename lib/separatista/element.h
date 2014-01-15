@@ -25,7 +25,7 @@
 
 XERCES_CPP_NAMESPACE_USE;
 
-namespace Separatista
+namespace SeparatistaPrivate
 {
 
 class Element
@@ -45,8 +45,11 @@ public:
 	@index The Nth occurance of this element.
 	@see getOrder
 	*/
-	DOMElement* getChildElement(unsigned int index, const wchar_t *pTagName, bool create = false);
+	DOMElement* getChildElement(unsigned long index, const wchar_t *pTagName, bool create = false);
 
+	/**
+	Convenience method.
+	*/
 	DOMElement* getChildElement(const wchar_t *pTagName, bool create = false);
 
 	/**
@@ -65,7 +68,8 @@ public:
 	void setChildElementValue(const wchar_t *pTagName, const wchar_t *pValue);
 
 	/**
-	Sets the child element at index text content, useful for child elements that can occur more than once
+	Sets the child element at index text content, useful for child elements that can occur more than once.
+	@param pValue The value or NULL. In case of NULL the element is completely deleted from the document.
 	*/
 	void setChildElementValue(unsigned int index, const wchar_t* pTagName, const wchar_t *pValue);
 
@@ -80,11 +84,20 @@ protected:
 
 	/**
 	Returns the order of child elements as a NULL terminated array. If it returns NULL 
-	no ordering is applied.
+	no ordering is applied. Should be subclassed.
 	*/
 	virtual const wchar_t* const* getOrder() = 0;
 
+	/**
+	Returns the tag name of the element. Should be subclassed.
+	*/
 	virtual const wchar_t* getTagName() = 0;
+
+	/**
+	Removes the element pointed by tagname. If there aren't any subelements in this element, this element is removed too.
+	The removed element is released after being removed.
+	*/
+	void removeChildElement(DOMElement *pChildElement);
 
 private:
 	/**

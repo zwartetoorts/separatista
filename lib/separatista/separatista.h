@@ -55,12 +55,15 @@ namespace xercesc
 };
 #endif
 
+namespace SeparatistaPrivate
+{
+	// Forward decl
+	class CustomerDirectDebitInitiationV02;
+	typedef CustomerDirectDebitInitiationV02 CustomerDirectDebitInitiation;
+};
+
 namespace Separatista
 {
-
-// Forward decl
-class CustomerDirectDebitInitiationV02;
-typedef CustomerDirectDebitInitiationV02 CustomerDirectDebitInitiation;
 
 /**
 	Error message, collects all error messages. Error message mainly come from xerces exceptions or errors and warnings.
@@ -209,6 +212,16 @@ private:
 	SEPARATISTA_DECLARE_PROPERTY_GET(name) \
 	SEPARATISTA_DECLARE_PROPERTY_SET(name)
 
+#define SEPARATISTA_DECLARE_PROPERTY_GET_INDEX(name) \
+	SEPARATISTA_EXTERN const wchar_t* get##name(unsigned long index);
+
+#define SEPARATISTA_DECLARE_PROPERTY_SET_INDEX(name) \
+	SEPARATISTA_EXTERN void set##name(unsigned long index, const wchar_t *pValue);
+
+#define SEPARATISTA_DECLARE_PROPERTY_INDEX(name) \
+	SEPARATISTA_DECLARE_PROPERTY_GET_INDEX(name) \
+	SEPARATISTA_DECLARE_PROPERTY_SET_INDEX(name)
+
 #define SEPARATISTA_DECLARE_PROPERTY_TIME_GET(name) \
 	SEPARATISTA_EXTERN std::time_t get##name();
 
@@ -230,9 +243,52 @@ private:
 	SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(name) \
 	SEPARATISTA_DECLATE_PROPERTY_SET(name)
 
+#define SEPARATISTA_DECLARE_PROPERTY_PURE_GET(name) \
+	virtual const wchar_t* get##name() = 0;
+
+#define SEPARATISTA_DECLARE_PROPERTY_PURE_SET(name) \
+	virtual void set##name(const wchar_t *pValue) = 0;
+
+#define SEPARATISTA_DECLARE_PROPERTY_PURE(name) \
+	SEPARATISTA_DECLARE_PROPERTY_PURE_GET(name) \
+	SEPARATISTA_DECLARE_PROPERTY_PURE_SET(name)
+
+#define SEPARATISTA_DECLARE_PROPERTY_TIME_PURE_GET(name) \
+	virtual std::time_t get##name() = 0;
+
+#define SEPARATISTA_DECLARE_PROPERTY_PURE_TIME(name) \
+	SEPARATISTA_DECLARE_PROPERTY_TIME_PURE_GET(name) \
+	SEPARATISTA_DECLARE_PROPERTY_PURE_SET(name)
+
+#define SEPARATISTA_DECLARE_PROPERTY_LONG_PURE_GET(name) \
+	virtual long get##name() = 0;
+
+#define SEPARATISTA_DECLARE_PROPERTY_PURE_LONG(name) \
+	SEPARATISTA_DECLARE_PROPERTY_LONG_PURE_GET(name) \
+	SEPARATISTA_DECLATE_PROPERTY_PURE_SET(name)
+
+#define SEPARATISTA_DECLARE_PROPERTY_UINT64_PURE_GET(name) \
+	virtual uint64_t get##name() = 0;
+
+#define SEPARATISTA_DECLARE_PROPERTY_PURE_UINT64(name) \
+	SEPARATISTA_DECLARE_PROPERTY_UINT64_PURE_GET(name) \
+	SEPARATISTA_DECLATE_PROPERTY_PURE_SET(name)
+
 /**
 	
 */
+class PartyIdentification32
+{
+public:
+	SEPARATISTA_DECLARE_PROPERTY_PURE(Name)
+	SEPARATISTA_DECLARE_PROPERTY_PURE(PostalAddress)
+	SEPARATISTA_DECLARE_PROPERTY_PURE(Identification)
+	SEPARATISTA_DECLARE_PROPERTY_PURE(CountryOfResidence)
+	SEPARATISTA_DECLARE_PROPERTY_PURE(ContactDetails)
+};
+
+typedef PartyIdentification32 PartyIdentification;
+
 class DirectDebitDocument : public SeparatistaDocument
 {
 public:
@@ -258,22 +314,22 @@ public:
 
 	/// Returns -1 on error
 	SEPARATISTA_DECLARE_PROPERTY_TIME(CreationDateTime)
-	SEPARATISTA_EXTERN const wchar_t* getAuthorisation(unsigned int index);
-	SEPARATISTA_EXTERN void setAuthorisation(unsigned int index, const wchar_t *pValue);
-	SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(NumberOfTransactions)
+	SEPARATISTA_DECLARE_PROPERTY_INDEX(Authorisation)
+	SEPARATISTA_DECLARE_PROPERTY_LONG_GET(NumberOfTransactions)
 	SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(ControlSum)
+	SEPARATISTA_DECLARE_PROPERTY(ForwardingAgent)
 
-	SEPARATISTA_DECLARE_PROPERTY(InitiatingPartyName)
-	SEPARATISTA_DECLARE_PROPERTY(InitiatingPartyPostalAddress)
-	SEPARATISTA_DECLARE_PROPERTY(InitiatingPartyId)
-	SEPARATISTA_DECLARE_PROPERTY(InitiatingPartyCountryOfResidence)
-	SEPARATISTA_DECLARE_PROPERTY(InitiatingPartyContactDetails)
+	SEPARATISTA_EXTERN PartyIdentification* getInitiatingParty();
 
-	SEPARATISTA_EXTERN const wchar_t* getForwardingAgent();
-	SEPARATISTA_EXTERN void setForwardingAgent(const wchar_t *pForwardingAgent);
-
+	// PaymentInformation methods
+	/// True if we are the end of all PaymentInformations
+	SEPARATISTA_EXTERN bool FEOF();
+	/// Resets the internal pointer to the first PaymentInformation
+	SEPARATISTA_EXTERN void moveFirst();
+	/// Moves the internal pointer to the next PaymentInformation
+	SEPARATISTA_EXTERN void moveNext();
 protected:
-	CustomerDirectDebitInitiation *m_pCstmrDrctDbtInitn;
+	SeparatistaPrivate::CustomerDirectDebitInitiation *m_pCstmrDrctDbtInitn;
 private:
 };
 

@@ -22,7 +22,7 @@
 
 #include "element.h"
 
-using namespace Separatista;
+using namespace SeparatistaPrivate;
 XERCES_CPP_NAMESPACE_USE
 
 Element::Element(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t *pTagName)
@@ -39,7 +39,7 @@ DOMElement* Element::getDOMElement() const
 	return m_pDOMElement;
 }
 
-DOMElement* Element::getChildElement(unsigned int index, const wchar_t *pTagName, bool create)
+DOMElement* Element::getChildElement(unsigned long index, const wchar_t *pTagName, bool create)
 {
 	DOMElement *pChild = NULL;
 	DOMNodeList *pNodeList;
@@ -136,11 +136,22 @@ void Element::setChildElementValue(unsigned int index, const wchar_t *pTagName, 
 
 	try
 	{
-		pElement = getChildElement(index, pTagName, true);
-		if (!pElement)
-			return;
+		// Check for delete operation
+		if (!pValue)
+		{
+			pElement = getChildElement(index, pTagName, false);
+			if (pElement)
+				removeChildElement(pElement);
+		}
+		else
+		{
+			// Set the value, create element if needed
+			pElement = getChildElement(index, pTagName, true);
+			if (!pElement)
+				return;
 
-		pElement->setTextContent(pValue);
+			pElement->setTextContent(pValue);
+		}
 	}
 	catch (const DOMException &e)
 	{
@@ -189,3 +200,24 @@ void Element::insertChildElement(DOMElement *pElement)
 	m_pDOMElement->appendChild(pElement);
 }
 
+void Element::removeChildElement(DOMElement *pChildElement)
+{
+	if (!pChildElement || !m_pDOMElement)
+		return;
+
+	try
+	{
+		m_pDOMElement->removeChild(pChildElement);
+		pChildElement->release();
+
+		// Check self
+		if (m_pParent && m_pDOMElement->getChildElementCount() == 0)
+		{
+			m_pParent->removeChildElement(m_pDOMElement);
+			m_pDOMElement = NULL;
+		}
+	}
+	catch (const DOMException &e)
+	{
+	}
+}

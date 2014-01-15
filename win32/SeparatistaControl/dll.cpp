@@ -177,6 +177,12 @@ STDAPI DllUnregisterServer()
 		TEXT("Separatista.ErrorReport.1"),
 		TEXT("Separatista.ErrorReport"));
 
+	// Unregister Separatista.PartyIdentification
+	DllUnregisterObject(
+		TEXT("{2E1BDA09-1073-4C08-92E2-1ABD88DBD432}"),
+		TEXT("Separatista.PartyIdentification.1"),
+		TEXT("Separatista.PartyIdentification"));
+
 	return S_OK;;
 }
 
@@ -346,6 +352,17 @@ STDAPI DllRegisterServer()
 		TEXT("{89F10D64-9F8A-4B07-B749-266158D4407A}"),
 		TEXT("Separatista.ErrorReport.1"),
 		TEXT("Separatista.ErrorReport"));
+	if (FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
+
+	// Try to register Separatista.PartyIdentification
+	hr = DllRegisterObject(
+		TEXT("{2E1BDA09-1073-4C08-92E2-1ABD88DBD432}"),
+		TEXT("Separatista.PartyIdentification.1"),
+		TEXT("Separatista.PartyIdentification"));
 	if (FAILED(hr))
 	{
 		DllUnregisterServer();
