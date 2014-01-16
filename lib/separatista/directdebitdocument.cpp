@@ -137,6 +137,14 @@ void CustomerDirectDebitInitiationV02::addPaymentInstructionInformation(PaymentI
 	moveFirst();
 }
 
+PaymentInstructionInformation* CustomerDirectDebitInitiationV02::getPaymentInstructionInformation()
+{
+	if (m_pmtInfIterator == m_pmtInfs.end())
+		return NULL;
+
+	return *m_pmtInfIterator;
+}
+
 bool CustomerDirectDebitInitiationV02::FEOF()
 {
 	if (m_pmtInfIterator != m_pmtInfs.end())
@@ -144,15 +152,20 @@ bool CustomerDirectDebitInitiationV02::FEOF()
 	return true;
 }
 
-void CustomerDirectDebitInitiation::moveFirst()
+void CustomerDirectDebitInitiationV02::moveFirst()
 {
 	m_pmtInfIterator = m_pmtInfs.begin();
 }
 
-void CustomerDirectDebitInitiation::moveNext()
+void CustomerDirectDebitInitiationV02::moveNext()
 {
 	if (m_pmtInfIterator != m_pmtInfs.end())
 		++m_pmtInfIterator;
+}
+
+size_t CustomerDirectDebitInitiationV02::getCount()
+{
+	return m_pmtInfs.size();
 }
 
 IMPLEMENT_TAG(GroupHeader39, MsgId)
@@ -422,3 +435,86 @@ void DirectDebitDocument::moveFirst()
 	if (m_pCstmrDrctDbtInitn)
 		m_pCstmrDrctDbtInitn->moveFirst();
 }
+
+size_t DirectDebitDocument::getCount()
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return 0;
+
+	return m_pCstmrDrctDbtInitn->getCount();
+}
+
+const wchar_t* DirectDebitDocument::getPaymentInformationIdentification()
+{
+	PaymentInstructionInformation *pInf;
+
+	if (!m_pCstmrDrctDbtInitn || (pInf = m_pCstmrDrctDbtInitn->getPaymentInstructionInformation()) == NULL)
+		return NULL;
+
+	return pInf->getPaymentInformationIdentification();
+}
+
+void DirectDebitDocument::setPaymentInformationIdentification(const wchar_t *pValue)
+{
+	PaymentInstructionInformation *pInf;
+
+	if (m_pCstmrDrctDbtInitn && (pInf = m_pCstmrDrctDbtInitn->getPaymentInstructionInformation()) != NULL)
+		pInf->setPaymentInformationIdentification(pValue);
+}
+
+const wchar_t* DirectDebitDocument::getPaymentMethod()
+{
+	PaymentInstructionInformation *pInf;
+
+	if (!m_pCstmrDrctDbtInitn || (pInf = m_pCstmrDrctDbtInitn->getPaymentInstructionInformation()) == NULL)
+		return NULL;
+
+	return pInf->getPaymentMethod();
+}
+
+void DirectDebitDocument::setPaymentMethod(const wchar_t *pValue)
+{
+	PaymentInstructionInformation *pInf;
+
+	if (m_pCstmrDrctDbtInitn && (pInf = m_pCstmrDrctDbtInitn->getPaymentInstructionInformation()) != NULL)
+		pInf->setPaymentMethod(pValue);
+}
+
+const wchar_t* DirectDebitDocument::getBatchBooking()
+{
+	PaymentInstructionInformation *pInf;
+
+	if (!m_pCstmrDrctDbtInitn || (pInf = m_pCstmrDrctDbtInitn->getPaymentInstructionInformation()) == NULL)
+		return NULL;
+
+	return pInf->getBatchBooking();
+}
+
+void DirectDebitDocument::setBatchBooking(const wchar_t *pValue)
+{
+	PaymentInstructionInformation *pInf;
+
+	if (m_pCstmrDrctDbtInitn && (pInf = m_pCstmrDrctDbtInitn->getPaymentInstructionInformation()) != NULL)
+		pInf->setBatchBooking(pValue);
+}
+
+long DirectDebitDocument::getPaymentInformationNumberOfTransactions()
+{
+	PaymentInstructionInformation *pInf;
+
+	if (!m_pCstmrDrctDbtInitn || (pInf = m_pCstmrDrctDbtInitn->getPaymentInstructionInformation()) == NULL)
+		return 0;
+
+	return toLong(pInf->getNumberOfTransactions());
+}
+
+uint64_t DirectDebitDocument::getPaymentInformationControlSum()
+{
+	PaymentInstructionInformation *pInf;
+
+	if (!m_pCstmrDrctDbtInitn || (pInf = m_pCstmrDrctDbtInitn->getPaymentInstructionInformation()) == NULL)
+		return 0;
+
+	return toUInt64(pInf->getControlSum());
+}
+

@@ -315,3 +315,78 @@ STDMETHODIMP CDirectDebitDocument::moveNext()
 	m_pDocument->moveNext();
 	return S_OK;
 }
+
+STDMETHODIMP CDirectDebitDocument::getCount(int *pCount)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pCount = m_pDocument->getCount();
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::getPaymentInformationIdentification(BSTR *pValue)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pDocument->getPaymentInformationIdentification()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::setPaymentInformationIdentification(BSTR value)
+{
+	if (m_pDocument)
+		m_pDocument->setPaymentInformationIdentification(value);
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::getPaymentMethod(BSTR *pValue)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pDocument->getPaymentMethod()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::setPaymentMethod(BSTR value)
+{
+	if (m_pDocument)
+		m_pDocument->setPaymentMethod(value);
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::getBatchBooking(BSTR *pValue)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pDocument->getBatchBooking()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::setBatchBooking(BSTR value)
+{
+	if (m_pDocument)
+		m_pDocument->setBatchBooking(value);
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::getPaymentInformationNumberOfTransactions(VARIANT *pValue)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pValue = _variant_t(m_pDocument->getPaymentInformationNumberOfTransactions()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CDirectDebitDocument::getPaymentInformationControlSum(VARIANT *pValue)
+{
+	if (!m_pDocument)
+		return E_UNEXPECTED;
+
+	*pValue = _variant_t(m_pDocument->getPaymentInformationControlSum()).Detach();
+	return S_OK;
+}

@@ -113,6 +113,8 @@ END_DECLARE_CLASS
 
 typedef GroupHeader39 GroupHeader;
 
+
+
 BEGIN_DECLARE_CLASS(PaymentInstructionInformation4, PmtInf)
 DECLARE_CHILD(PaymentTypeInformation, PaymentTypeInformation, PmtTpInf)
 DECLARE_TAG(PaymentInformationIdentification, PmtInfId)
@@ -147,6 +149,8 @@ public:
 	~CustomerDirectDebitInitiationV02();
 	void addPaymentInstructionInformation(PaymentInstructionInformation *pPmtInf);
 
+	PaymentInstructionInformation* getPaymentInstructionInformation();
+
 	// PaymentInformation methods
 	/// True if we are the end of all PaymentInformations
 	bool FEOF();
@@ -154,6 +158,9 @@ public:
 	void moveFirst();
 	/// Moves the internal pointer to the next PaymentInformation
 	void moveNext();
+	/// Get the number of PaymentInformations
+	size_t getCount();
+
 private:
 	std::vector<PaymentInstructionInformation*> m_pmtInfs;
 	std::vector<PaymentInstructionInformation*>::iterator m_pmtInfIterator;

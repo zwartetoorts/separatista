@@ -22,6 +22,7 @@
 
 #include "separatista.h"
 #include "dispatch.h"
+#include "macros.h"
 
 #ifndef SEPARATISTA_CDIRECTDEBITDOCUMENT_H
 #define SEPARATISTA_CDIRECTDEBITDOCUMENT_H
@@ -46,16 +47,11 @@ struct IPartyIdentification : public IDispatch
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
 
 	// COM methods
-	STDMETHOD(getName)(BSTR *pName) PURE;
-	STDMETHOD(setName)(BSTR Name) PURE;
-	STDMETHOD(getPostalAddress)(BSTR *pPostalAddress) PURE;
-	STDMETHOD(setPostalAddress)(BSTR PostalAddress) PURE;
-	STDMETHOD(getIdentification)(BSTR *pIdentification) PURE;
-	STDMETHOD(setIdentification)(BSTR Identification) PURE;
-	STDMETHOD(getCountryOfResidence)(BSTR *pCountryOfResidence) PURE;
-	STDMETHOD(setCountryOfResidence)(BSTR CountryOfResidence) PURE;
-	STDMETHOD(getContactDetails)(BSTR *pContactDetails) PURE;
-	STDMETHOD(setContactDetails)(BSTR ContactDetails) PURE;
+	SEPARATISTA_COM_PROPERTY(BSTR, Name, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, PostalAddress, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, Identification, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, CountryOfResidence, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, ContactDetails, PURE)
 };
 
 struct __declspec(uuid("{6A5542FA-C264-4AC0-B82B-7B54AB2FB3CF}")) IPartyIdentification;
@@ -65,16 +61,11 @@ class CPartyIdentification : public SepaControlDispatch<IPartyIdentification>
 public:
 	CPartyIdentification(Separatista::PartyIdentification* pPartyIdentification, IUnknown *pParent = NULL);
 
-	STDMETHOD(getName)(BSTR *pName);
-	STDMETHOD(setName)(BSTR Name);
-	STDMETHOD(getPostalAddress)(BSTR *pPostalAddress);
-	STDMETHOD(setPostalAddress)(BSTR PostalAddress);
-	STDMETHOD(getIdentification)(BSTR *pIdentification);
-	STDMETHOD(setIdentification)(BSTR Identification);
-	STDMETHOD(getCountryOfResidence)(BSTR *pCountryOfResidence);
-	STDMETHOD(setCountryOfResidence)(BSTR CountryOfResidence);
-	STDMETHOD(getContactDetails)(BSTR *pContactDetails);
-	STDMETHOD(setContactDetails)(BSTR ContactDetails);
+	SEPARATISTA_COM_PROPERTY(BSTR, Name, )
+	SEPARATISTA_COM_PROPERTY(BSTR, PostalAddress, )
+	SEPARATISTA_COM_PROPERTY(BSTR, Identification, )
+	SEPARATISTA_COM_PROPERTY(BSTR, CountryOfResidence, )
+	SEPARATISTA_COM_PROPERTY(BSTR, ContactDetails, )
 private:
 	Separatista::PartyIdentification* m_pPartyIdentification;
 };
@@ -101,23 +92,23 @@ struct IDirectDebitDocument : public IDispatch
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
 
 	// COM methods
-	STDMETHOD(getMessageIdentification)(BSTR *pMessageIdentification) PURE;
-	STDMETHOD(setMessageIdentification)(BSTR messageIdentification) PURE;
-	STDMETHOD(getCreationDateTime)(DATE *pCreationDateTime) PURE;
-	STDMETHOD(setCreationDateTime)(DATE creationDate) PURE;
-	STDMETHOD(getAuthorisation1)(BSTR *pAuthorisation1) PURE;
-	STDMETHOD(setAuthorisation1)(BSTR Authorisation1) PURE;
-	STDMETHOD(getAuthorisation2)(BSTR *pAuthorisation2) PURE;
-	STDMETHOD(setAuthorisation2)(BSTR Authorisation2) PURE;
-	STDMETHOD(getNumberOfTransactions)(VARIANT *pNumberOfTransactions) PURE;
-	STDMETHOD(getControlSum)(VARIANT *pControlSum) PURE;
-	STDMETHOD(getForwardingAgent)(BSTR *pForwardingAgent) PURE;
-	STDMETHOD(setForwardingAgent)(BSTR ForwardingAgent) PURE;
+	SEPARATISTA_COM_PROPERTY(BSTR, MessageIdentification, PURE)
+	SEPARATISTA_COM_PROPERTY(DATE, CreationDateTime, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, Authorisation1, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, Authorisation2, PURE)
+	SEPARATISTA_COM_PROPERTY_GET(VARIANT, NumberOfTransactions, PURE)
+	SEPARATISTA_COM_PROPERTY_GET(VARIANT, ControlSum, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, ForwardingAgent, PURE)
 	STDMETHOD(getInitiatingParty)(IPartyIdentification **ppPartyIdentification) PURE;
 	STDMETHOD(FEOF)(VARIANT_BOOL *pFEOF) PURE;
 	STDMETHOD(moveFirst)() PURE;
 	STDMETHOD(moveNext)() PURE;
-
+	STDMETHOD(getCount)(int *pCount) PURE;
+	SEPARATISTA_COM_PROPERTY(BSTR, PaymentInformationIdentification, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, PaymentMethod, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, BatchBooking, PURE)
+	SEPARATISTA_COM_PROPERTY_GET(VARIANT, PaymentInformationNumberOfTransactions, PURE)
+	SEPARATISTA_COM_PROPERTY_GET(VARIANT, PaymentInformationControlSum, PURE)
 };
 
 struct __declspec(uuid("{79F9F451-460D-445C-B176-A0F64C347D1D}")) IDirectDebitDocument;
@@ -141,22 +132,24 @@ public:
 	CDirectDebitDocument& operator =(Separatista::DirectDebitDocument *pDocument);
 
 	// COM methods
-	STDMETHOD(getMessageIdentification)(BSTR *pMessageIdentification);
-	STDMETHOD(setMessageIdentification)(BSTR messageIdentification);
-	STDMETHOD(getCreationDateTime)(DATE *pCreationDateTime);
-	STDMETHOD(setCreationDateTime)(DATE creationDate);
-	STDMETHOD(getAuthorisation1)(BSTR *pAuthorisation1);
-	STDMETHOD(setAuthorisation1)(BSTR Authorisation1);
-	STDMETHOD(getAuthorisation2)(BSTR *pAuthorisation2);
-	STDMETHOD(setAuthorisation2)(BSTR Authorisation2);
-	STDMETHOD(getNumberOfTransactions)(VARIANT *pNumberOfTransactions);
-	STDMETHOD(getControlSum)(VARIANT *pControlSum);
-	STDMETHOD(getForwardingAgent)(BSTR *pForwardingAgent);
-	STDMETHOD(setForwardingAgent)(BSTR ForwardingAgent);
+	SEPARATISTA_COM_PROPERTY(BSTR, MessageIdentification, )
+	SEPARATISTA_COM_PROPERTY(DATE, CreationDateTime, )
+	SEPARATISTA_COM_PROPERTY(BSTR, Authorisation1, )
+	SEPARATISTA_COM_PROPERTY(BSTR, Authorisation2, )
+	SEPARATISTA_COM_PROPERTY_GET(VARIANT, NumberOfTransactions, )
+	SEPARATISTA_COM_PROPERTY_GET(VARIANT, ControlSum, )
+	SEPARATISTA_COM_PROPERTY(BSTR, ForwardingAgent, )
 	STDMETHOD(getInitiatingParty)(IPartyIdentification **ppPartyIdentification);
 	STDMETHOD(FEOF)(VARIANT_BOOL *pFEOF);
 	STDMETHOD(moveFirst)();
 	STDMETHOD(moveNext)();
+	STDMETHOD(getCount)(int *pCount);
+	SEPARATISTA_COM_PROPERTY(BSTR, PaymentInformationIdentification, )
+	SEPARATISTA_COM_PROPERTY(BSTR, PaymentMethod, )
+	SEPARATISTA_COM_PROPERTY(BSTR, BatchBooking, )
+	SEPARATISTA_COM_PROPERTY_GET(VARIANT, PaymentInformationNumberOfTransactions, )
+	SEPARATISTA_COM_PROPERTY_GET(VARIANT, PaymentInformationControlSum, )
+
 private:
 	Separatista::DirectDebitDocument *m_pDocument;
 };

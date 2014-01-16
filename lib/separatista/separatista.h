@@ -328,6 +328,15 @@ public:
 	SEPARATISTA_EXTERN void moveFirst();
 	/// Moves the internal pointer to the next PaymentInformation
 	SEPARATISTA_EXTERN void moveNext();
+	/// Get the count of PaymentInformations
+	SEPARATISTA_EXTERN size_t getCount();
+
+	SEPARATISTA_DECLARE_PROPERTY(PaymentInformationIdentification)
+	SEPARATISTA_DECLARE_PROPERTY(PaymentMethod)
+	SEPARATISTA_DECLARE_PROPERTY(BatchBooking)
+	SEPARATISTA_DECLARE_PROPERTY_LONG_GET(PaymentInformationNumberOfTransactions)
+	SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(PaymentInformationControlSum)
+
 protected:
 	SeparatistaPrivate::CustomerDirectDebitInitiation *m_pCstmrDrctDbtInitn;
 private:

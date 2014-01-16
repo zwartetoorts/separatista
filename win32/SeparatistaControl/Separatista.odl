@@ -18,6 +18,20 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#define SEPARATISTA_PROPERTY_GET(type, name, helpstr) \
+	[propget, helpstring(helpstr)] \
+	HRESULT __stdcall name( \
+	[out, retval] type *p##name);
+
+#define SEPARATISTA_PROPERTY_SET(type, name, helpstr) \
+	[propput, helpstring(helpstr)] \
+	HRESULT __stdcall name( \
+	[in] type name);
+
+#define SEPARATISTA_PROPERTY(type, name, helpstr) \
+	SEPARATISTA_PROPERTY_GET(type, name, helpstr) \
+	SEPARATISTA_PROPERTY_SET(type, name, helpstr)
+
 [
    uuid(6B20C63D-F57B-4755-9D58-11D93D7EC908), 
    helpstring("Separatista 1.0 Type Library."),
@@ -315,52 +329,31 @@ library Separatista
 	]
 	interface IDirectDebitDocument : IDispatch
 	{
-		[propget, helpstring("MessageIdentification as text")]
-		HRESULT __stdcall MessageIdentification(
-			[out, retval] BSTR *pMessageIdentification);
-		[propput, helpstring("Set the MessageIdentifcation as text")]
-		HRESULT __stdcall MessageIdentification(
-			[in] BSTR MessageIdentification);
-		[propget, helpstring("Creation date and time")]
-		HRESULT __stdcall CreationDateTime(
-			[out, retval] DATE *pCreationDateTime);
-		[propput, helpstring("Set the creation date and time")]
-		HRESULT __stdcall CreationDateTime(
-			[in] DATE CreationDateTime);
-		[propget, helpstring("Get Authorisation 1")]
-		HRESULT __stdcall Authorisation1(
-			[out, retval] BSTR *pAuthorisation1);
-		[propput, helpstring("Set Authorisation 1")]
-		HRESULT __stdcall Authorisation1(
-			[in] BSTR Authorisation1);
-		[propget, helpstring("Get Authorisation 2")]
-		HRESULT __stdcall Authorisation2(
-			[out, retval] BSTR *pAuthorisation2);
-		[propput, helpstring("Set Authorisation 2")]
-		HRESULT __stdcall Authorisation2(
-			[in] BSTR Authorisation2);
-		[propget, helpstring("Number of transactions")]
-		HRESULT __stdcall NumberOfTransactions(
-			[out, retval] VARIANT *pNumberOfTransactions);
-		[propget, helpstring("Control sum of all transactions")]
-		HRESULT __stdcall ControlSum(
-			[out, retval] VARIANT *pControlSum);
-		[propget]
-		HRESULT __stdcall ForwardingAgent(
-			[out, retval] BSTR *pForwardingAgent);
-		[propput]
-		HRESULT __stdcall ForwardingAgent(
-			[in] BSTR ForwardingAgent);
-		[propget]
+		SEPARATISTA_PROPERTY(BSTR, MessageIdentification, "Point to point reference, assigned by the instructing party and sent to the next party in the chain, to unambiguously identify the message.")
+		SEPARATISTA_PROPERTY(DATE, CreationDateTime, "Date and time at which a (group of) payment instruction(s) was created by the instructing party.")
+		SEPARATISTA_PROPERTY(BSTR, Authorisation1, "Message Element that is not part of the addendum for the IG SDD Netherlands but is available for future use in a SEPA AOS.")
+		SEPARATISTA_PROPERTY(BSTR, Authorisation2, "Message Element that is not part of the addendum for the IG SDD Netherlands but is available for future use in a SEPA AOS.")
+		SEPARATISTA_PROPERTY_GET(VARIANT, NumberOfTransactions, "Number of individual transactions contained in the message.")
+		SEPARATISTA_PROPERTY_GET(VARIANT, ControlSum, "Total of all individual amounts included in the message.")
+		SEPARATISTA_PROPERTY(BSTR, ForwardingAgent, "Message Element that is not part of the addendum for the IG SDD Netherlands but is available for future use in a SEPA AOS.")
+		[propget, helpstring("Party that initiates the payment.")]
 		HRESULT __stdcall InitiatingParty(
 			[out, retval] IPartyIdentification **ppPartyIdentification);
-		[propget]
+		[propget, helpstring("Check if the is a current PaymentInformationIdentification")]
 		HRESULT __stdcall EOF(
 			[out, retval] VARIANT_BOOL *pFEOF);
-		[]
+		[helpstring("Move to the first PaymentInformationIdentification") ]
 		HRESULT __stdcall MoveFirst();
-		[]
+		[helpstring("Move to the next PaymentInformationIdentification")]
 		HRESULT __stdcall MoveNext();
+		[propget, helpstring("Get the number of PaymentInformationIdentification elements")]
+		HRESULT __stdcall Count(
+			[out, retval] int *pCount);
+		SEPARATISTA_PROPERTY(BSTR, PaymentInformationIdentification, "Unique identification, as assigned by a sending party, to unambiguously identify the payment information group within the message.")
+		SEPARATISTA_PROPERTY(BSTR, PaymentMethod, "Specifies the means of payment that will be used to move the amount of money.")
+		SEPARATISTA_PROPERTY(BSTR, BatchBooking, "Identifies whether a single entry per individual transaction or a batch entry for the sum of the amounts of all transactions within the group of a message is requested.")
+		SEPARATISTA_PROPERTY_GET(VARIANT, PaymentInformationNumberOfTransactions, "Number of individual transactions contained in the payment information group.")
+		SEPARATISTA_PROPERTY_GET(VARIANT, PaymentInformationControlSum, "Total of all individual amounts included in the group.")
 	};
 
 	[

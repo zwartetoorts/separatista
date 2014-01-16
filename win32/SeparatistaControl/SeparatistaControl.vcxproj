@@ -90,6 +90,7 @@
     <ClInclude Include="dll.h" />
     <ClInclude Include="documentreader.h" />
     <ClInclude Include="enumvariant.h" />
+    <ClInclude Include="macros.h" />
     <ClInclude Include="mt940sdocument.h" />
     <ClInclude Include="mt940srecordset.h" />
     <ClInclude Include="registrykey.h" />
