@@ -34,8 +34,8 @@
 	const wchar_t* getTagName() { static const wchar_t* tagName = L#tag; return tagName; };
 
 
-#define BEGIN_DECLARE_CLASS_SUPER(name, tag) \
-class name : public Element, public Separatista::##name \
+#define BEGIN_DECLARE_CLASS_SUPER(type, name, tag) \
+class name : public Element, public Separatista::type \
 	{ \
 	public: \
 	name(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t* pTagName = NULL); \
@@ -64,33 +64,38 @@ class name : public Element, public Separatista::##name \
 namespace SeparatistaPrivate
 {
 
-
-BEGIN_DECLARE_CLASS(LocalInstrument2Choise, LclInstrm)
+BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, CategoryPurpose1Choice, CtgyPurp)
 DECLARE_TAG(Code, Cd)
 DECLARE_TAG(Proprietary, Prtry)
 END_DECLARE_CLASS
 
-typedef LocalInstrument2Choise LocalInstrumentChoise;
+typedef CategoryPurpose1Choice CategoryPurposeChoice;
 
-BEGIN_DECLARE_CLASS(ServiceLevel8Choise, SvcLvl)
+BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, LocalInstrument2Choice, LclInstrm)
 DECLARE_TAG(Code, Cd)
 DECLARE_TAG(Proprietary, Prtry)
 END_DECLARE_CLASS
 
-typedef ServiceLevel8Choise ServiceLevelChoise;
+typedef LocalInstrument2Choice LocalInstrumentChoice;
 
-BEGIN_DECLARE_CLASS(PaymentTypeInformation20, PmtTpInf)
-DECLARE_CHILD(ServiceLevelChoise, ServiceLevel, SvcLvl)
+BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, ServiceLevel8Choice, SvcLvl)
+DECLARE_TAG(Code, Cd)
+DECLARE_TAG(Proprietary, Prtry)
+END_DECLARE_CLASS
+
+typedef ServiceLevel8Choice ServiceLevelChoice;
+
+BEGIN_DECLARE_CLASS_SUPER(PaymentTypeInformation, PaymentTypeInformation20, PmtTpInf)
+DECLARE_CHILD(ServiceLevelChoice, ServiceLevel, SvcLvl)
+DECLARE_CHILD(LocalInstrumentChoice, LocalInstrument, LclInstrm)
+DECLARE_CHILD(CategoryPurposeChoice, CategoryPurpose, CtgyPurp)
 DECLARE_TAG(InstructionPriority, InstrPty)
-//DECLARE_TAG(ServiceLevel, SvcLvl)
-DECLARE_TAG(LocalInstrument, LclInstrm)
 DECLARE_TAG(SequenceType, SeqTp)
-DECLARE_TAG(CategoryPurpose, CtgyPurp)
 END_DECLARE_CLASS
 
 typedef PaymentTypeInformation20 PaymentTypeInformation;
 
-BEGIN_DECLARE_CLASS_SUPER(PartyIdentification32, InitgPty)
+BEGIN_DECLARE_CLASS_SUPER(PartyIdentification, PartyIdentification32, InitgPty)
 DECLARE_TAG(Name, Nm)
 DECLARE_TAG(PostalAddress, PstlAdr)
 DECLARE_TAG(Identification, Id)
@@ -112,8 +117,6 @@ DECLARE_TAG(ForwardingAgent, FwdgAgt)
 END_DECLARE_CLASS
 
 typedef GroupHeader39 GroupHeader;
-
-
 
 BEGIN_DECLARE_CLASS(PaymentInstructionInformation4, PmtInf)
 DECLARE_CHILD(PaymentTypeInformation, PaymentTypeInformation, PmtTpInf)

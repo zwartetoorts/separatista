@@ -53,26 +53,38 @@ using Separatista::DirectDebitDocument;
 	, NULL }; \
 	return order; }
 
-IMPLEMENT_TAG(LocalInstrument2Choise, Cd)
-IMPLEMENT_TAG(LocalInstrument2Choise, Prtry)
+IMPLEMENT_TAG(CategoryPurpose1Choice, Cd)
+IMPLEMENT_TAG(CategoryPurpose1Choice, Prtry)
 
-IMPLEMENT_CONSTRUCTOR(LocalInstrument2Choise)
+IMPLEMENT_CONSTRUCTOR(CategoryPurpose1Choice)
 {
 }
 
-BEGIN_IMPLEMENT_ORDER(LocalInstrument2Choise)
+BEGIN_IMPLEMENT_ORDER(CategoryPurpose1Choice)
 	Cd,
 	Prtry
 END_IMPLEMENT_ORDER
 
-IMPLEMENT_TAG(ServiceLevel8Choise, Cd)
-IMPLEMENT_TAG(ServiceLevel8Choise, Prtry)
+IMPLEMENT_TAG(LocalInstrument2Choice, Cd)
+IMPLEMENT_TAG(LocalInstrument2Choice, Prtry)
 
-IMPLEMENT_CONSTRUCTOR(ServiceLevel8Choise)
+IMPLEMENT_CONSTRUCTOR(LocalInstrument2Choice)
 {
 }
 
-BEGIN_IMPLEMENT_ORDER(ServiceLevel8Choise)
+BEGIN_IMPLEMENT_ORDER(LocalInstrument2Choice)
+	Cd,
+	Prtry
+END_IMPLEMENT_ORDER
+
+IMPLEMENT_TAG(ServiceLevel8Choice, Cd)
+IMPLEMENT_TAG(ServiceLevel8Choice, Prtry)
+
+IMPLEMENT_CONSTRUCTOR(ServiceLevel8Choice)
+{
+}
+
+BEGIN_IMPLEMENT_ORDER(ServiceLevel8Choice)
 		Cd,
 		Prtry
 END_IMPLEMENT_ORDER
@@ -85,6 +97,8 @@ IMPLEMENT_TAG(PaymentTypeInformation20, CtgyPurp)
 
 IMPLEMENT_CONSTRUCTOR(PaymentTypeInformation20)
 IMPLEMENT_CHILD(ServiceLevel, PaymentTypeInformation::SvcLvl)
+IMPLEMENT_CHILD(LocalInstrument, PaymentTypeInformation::LclInstrm)
+IMPLEMENT_CHILD(CategoryPurpose, PaymentTypeInformation::CtgyPurp)
 {
 }
 
@@ -518,3 +532,12 @@ uint64_t DirectDebitDocument::getPaymentInformationControlSum()
 	return toUInt64(pInf->getControlSum());
 }
 
+Separatista::PaymentTypeInformation* DirectDebitDocument::getPaymentTypeInformation()
+{
+	PaymentInstructionInformation *pInf;
+
+	if (!m_pCstmrDrctDbtInitn || (pInf = m_pCstmrDrctDbtInitn->getPaymentInstructionInformation()) == NULL)
+		return NULL;
+
+	return &(pInf->getPaymentTypeInformation());
+}

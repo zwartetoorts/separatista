@@ -21,9 +21,130 @@
 #include <windows.h>
 #include <comutil.h>
 
+#include "separatista.h"
 #include "cdirectdebitdocument.h"
 #include "dispatch.cpp"
 #include "util.h"
+
+CCodeOrProprietary::CCodeOrProprietary(Separatista::CodeOrProprietary *pCodeOrProprietary, IUnknown *pParent)
+:SepaControlDispatch<ICodeOrProprietary>(pParent)
+{
+	m_pCodeOrProprietary = pCodeOrProprietary;
+}
+
+STDMETHODIMP CCodeOrProprietary::getCode(BSTR *pValue)
+{
+	if (!m_pCodeOrProprietary)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pCodeOrProprietary->getCode()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CCodeOrProprietary::setCode(BSTR Value)
+{
+	if (!m_pCodeOrProprietary)
+		return E_UNEXPECTED;
+
+	m_pCodeOrProprietary->setCode(_bstr_t(Value).Detach());
+	return S_OK;
+}
+
+STDMETHODIMP CCodeOrProprietary::getProprietary(BSTR *pValue)
+{
+	if (!m_pCodeOrProprietary)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pCodeOrProprietary->getProprietary()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CCodeOrProprietary::setProprietary(BSTR Value)
+{
+	if (!m_pCodeOrProprietary)
+		return E_UNEXPECTED;
+
+	m_pCodeOrProprietary->setProprietary(_bstr_t(Value).Detach());
+	return S_OK;
+}
+
+CPaymentTypeInformation::CPaymentTypeInformation(Separatista::PaymentTypeInformation* pPaymentTypeInformation, IUnknown *pParent)
+:SepaControlDispatch<IPaymentTypeInformation>(pParent)
+{
+	m_pPaymentTypeInformation = pPaymentTypeInformation;
+}
+
+STDMETHODIMP CPaymentTypeInformation::getInstructionPriority(BSTR *pValue)
+{
+	if (!m_pPaymentTypeInformation)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pPaymentTypeInformation->getInstructionPriority()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CPaymentTypeInformation::setInstructionPriority(BSTR Value)
+{
+	if (!m_pPaymentTypeInformation)
+		return E_UNEXPECTED;
+
+	m_pPaymentTypeInformation->setInstructionPriority(_bstr_t(Value).Detach());
+	return S_OK;
+}
+
+STDMETHODIMP CPaymentTypeInformation::getServiceLevel(ICodeOrProprietary **ppCodeOrProprietary)
+{
+	if (!m_pPaymentTypeInformation)
+		return E_UNEXPECTED;
+
+	*ppCodeOrProprietary = new CCodeOrProprietary(&(m_pPaymentTypeInformation->getServiceLevel()), this);
+	if (!*ppCodeOrProprietary)
+		return E_OUTOFMEMORY;
+
+	return S_OK;
+}
+
+STDMETHODIMP CPaymentTypeInformation::getLocalInstrument(ICodeOrProprietary **ppCodeOrProprietary)
+{
+	if (!m_pPaymentTypeInformation)
+		return E_UNEXPECTED;
+
+	*ppCodeOrProprietary = new CCodeOrProprietary(&(m_pPaymentTypeInformation->getLocalInstrument()), this);
+	if (!*ppCodeOrProprietary)
+		return E_OUTOFMEMORY;
+
+	return S_OK;
+}
+
+STDMETHODIMP CPaymentTypeInformation::getSequenceType(BSTR *pValue)
+{
+	if (!m_pPaymentTypeInformation)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pPaymentTypeInformation->getSequenceType()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CPaymentTypeInformation::setSequenceType(BSTR Value)
+{
+	if (!m_pPaymentTypeInformation)
+		return E_UNEXPECTED;
+
+	m_pPaymentTypeInformation->setSequenceType(_bstr_t(Value).Detach());
+	return S_OK;
+}
+
+STDMETHODIMP CPaymentTypeInformation::getCategoryPurpose(ICodeOrProprietary **ppCodeOrProprietary)
+{
+	if (!m_pPaymentTypeInformation)
+		return E_UNEXPECTED;
+
+	*ppCodeOrProprietary = new CCodeOrProprietary(&(m_pPaymentTypeInformation->getCategoryPurpose()), this);
+	if (!*ppCodeOrProprietary)
+		return E_OUTOFMEMORY;
+
+	return S_OK;
+}
 
 CPartyIdentification::CPartyIdentification(Separatista::PartyIdentification *pPartyIdentification, IUnknown *pParent)
 :SepaControlDispatch<IPartyIdentification>(pParent)
@@ -390,3 +511,4 @@ STDMETHODIMP CDirectDebitDocument::getPaymentInformationControlSum(VARIANT *pVal
 	*pValue = _variant_t(m_pDocument->getPaymentInformationControlSum()).Detach();
 	return S_OK;
 }
+

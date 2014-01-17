@@ -274,9 +274,31 @@ private:
 	SEPARATISTA_DECLARE_PROPERTY_UINT64_PURE_GET(name) \
 	SEPARATISTA_DECLATE_PROPERTY_PURE_SET(name)
 
-/**
-	
-*/
+#define SEPARATISTA_DECLARE_PROPERTY_CLASS_PURE_GET(cls, name) \
+	virtual cls& get##name() = 0;
+
+#define SEPARATISTA_DECLARE_PROPERTY_PURE_CLASS(cls, name) \
+	SEPARATISTA_DECLARE_PROPERTY_CLASS_PURE_GET(cls, name)
+
+class CodeOrProprietary
+{
+public:
+	SEPARATISTA_DECLARE_PROPERTY_PURE(Code);
+	SEPARATISTA_DECLARE_PROPERTY_PURE(Proprietary);
+};
+
+class PaymentTypeInformation20
+{
+public:
+	SEPARATISTA_DECLARE_PROPERTY_PURE(InstructionPriority)
+	SEPARATISTA_DECLARE_PROPERTY_PURE_CLASS(CodeOrProprietary, ServiceLevel)
+	SEPARATISTA_DECLARE_PROPERTY_PURE_CLASS(CodeOrProprietary, LocalInstrument)
+	SEPARATISTA_DECLARE_PROPERTY_PURE(SequenceType)
+	SEPARATISTA_DECLARE_PROPERTY_PURE_CLASS(CodeOrProprietary, CategoryPurpose)
+};
+
+typedef PaymentTypeInformation20 PaymentTypeInformation;
+
 class PartyIdentification32
 {
 public:
@@ -336,6 +358,8 @@ public:
 	SEPARATISTA_DECLARE_PROPERTY(BatchBooking)
 	SEPARATISTA_DECLARE_PROPERTY_LONG_GET(PaymentInformationNumberOfTransactions)
 	SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(PaymentInformationControlSum)
+
+	SEPARATISTA_EXTERN PaymentTypeInformation* getPaymentTypeInformation();
 
 protected:
 	SeparatistaPrivate::CustomerDirectDebitInitiation *m_pCstmrDrctDbtInitn;

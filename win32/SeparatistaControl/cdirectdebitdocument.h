@@ -27,6 +27,89 @@
 #ifndef SEPARATISTA_CDIRECTDEBITDOCUMENT_H
 #define SEPARATISTA_CDIRECTDEBITDOCUMENT_H
 
+// {8E012AAA-F131-4554-9161-568FF888BD7D}
+DEFINE_GUID(IID_ICodeOrProprietary,
+	0x8e012aaa, 0xf131, 0x4554, 0x91, 0x61, 0x56, 0x8f, 0xf8, 0x88, 0xbd, 0x7d);
+
+// {AD7CA45E-E648-4A6C-B86F-DEF5CD56A318}
+DEFINE_GUID(CLSID_CodeOrProprietary,
+	0xad7ca45e, 0xe648, 0x4a6c, 0xb8, 0x6f, 0xde, 0xf5, 0xcd, 0x56, 0xa3, 0x18);
+
+struct ICodeOrProprietary : public IDispatch
+{
+	// IDispatch
+	STDMETHOD_(ULONG, AddRef)() PURE;
+	STDMETHOD_(ULONG, Release)() PURE;
+	STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject) PURE;
+	STDMETHOD(GetTypeInfoCount)(UINT* pctinfo) PURE;
+	STDMETHOD(GetTypeInfo)(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo) PURE;
+	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId) PURE;
+	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
+
+	SEPARATISTA_COM_PROPERTY(BSTR, Code, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, Proprietary, PURE)
+};
+
+struct __declspec(uuid("{8E012AAA-F131-4554-9161-568FF888BD7D}")) ICodeOrProprietary;
+
+class CCodeOrProprietary : public SepaControlDispatch<ICodeOrProprietary>
+{
+public:
+	CCodeOrProprietary(Separatista::CodeOrProprietary *pCodeOrProprietary, IUnknown *pParent = NULL);
+
+	SEPARATISTA_COM_PROPERTY(BSTR, Code, )
+	SEPARATISTA_COM_PROPERTY(BSTR, Proprietary, )
+private:
+	Separatista::CodeOrProprietary *m_pCodeOrProprietary;
+};
+
+class __declspec(uuid("{AD7CA45E-E648-4A6C-B86F-DEF5CD56A318}")) CCodeOrProprietary;
+
+// {204ED0EB-F610-44A0-8709-B43212A409E6}
+DEFINE_GUID(IID_PAYMENTTYPEINFORMATION,
+	0x204ed0eb, 0xf610, 0x44a0, 0x87, 0x9, 0xb4, 0x32, 0x12, 0xa4, 0x9, 0xe6);
+
+// {7AE01D5B-32E2-481E-8A23-06E18F23F556}
+DEFINE_GUID(CLSID_PAYMENTTYPEINFORMATION,
+	0x7ae01d5b, 0x32e2, 0x481e, 0x8a, 0x23, 0x6, 0xe1, 0x8f, 0x23, 0xf5, 0x56);
+
+struct IPaymentTypeInformation : public IDispatch
+{
+	// IDispatch
+	STDMETHOD_(ULONG, AddRef)() PURE;
+	STDMETHOD_(ULONG, Release)() PURE;
+	STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject) PURE;
+	STDMETHOD(GetTypeInfoCount)(UINT* pctinfo) PURE;
+	STDMETHOD(GetTypeInfo)(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo) PURE;
+	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId) PURE;
+	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
+
+	// Methods
+	SEPARATISTA_COM_PROPERTY(BSTR, InstructionPriority, PURE)
+	SEPARATISTA_COM_PROPERTY_GET(ICodeOrProprietary*, ServiceLevel, PURE)
+	SEPARATISTA_COM_PROPERTY_GET(ICodeOrProprietary*, LocalInstrument, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, SequenceType, PURE)
+	SEPARATISTA_COM_PROPERTY_GET(ICodeOrProprietary*, CategoryPurpose, PURE)
+};
+
+struct __declspec(uuid("{204ED0EB-F610-44A0-8709-B43212A409E6}")) IPaymentTypeInformation;
+
+class CPaymentTypeInformation : public SepaControlDispatch<IPaymentTypeInformation>
+{
+public:
+	CPaymentTypeInformation(Separatista::PaymentTypeInformation *pPaymentTypeInformation, IUnknown *pParent = NULL);
+
+	SEPARATISTA_COM_PROPERTY(BSTR, InstructionPriority, )
+	SEPARATISTA_COM_PROPERTY_GET(ICodeOrProprietary*, ServiceLevel, )
+	SEPARATISTA_COM_PROPERTY_GET(ICodeOrProprietary*, LocalInstrument, )
+	SEPARATISTA_COM_PROPERTY(BSTR, SequenceType, )
+	SEPARATISTA_COM_PROPERTY_GET(ICodeOrProprietary*, CategoryPurpose, )
+private:
+	Separatista::PaymentTypeInformation* m_pPaymentTypeInformation;
+};
+
+class __declspec(uuid("{7AE01D5B-32E2-481E-8A23-06E18F23F556}")) CPaymentTypeInformation;
+
 // {6A5542FA-C264-4AC0-B82B-7B54AB2FB3CF}
 DEFINE_GUID(IID_PARTYIDENTIFICATION ,
 	0x6a5542fa, 0xc264, 0x4ac0, 0xb8, 0x2b, 0x7b, 0x54, 0xab, 0x2f, 0xb3, 0xcf);
