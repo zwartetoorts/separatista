@@ -24,24 +24,23 @@
 #include "element.h"
 #include <vector>
 
-#define BEGIN_DECLARE_CLASS(name, tag) \
+#define BEGIN_DECLARE_CLASS(name, dummy) \
 	class name : public Element \
 	{ \
 	public: \
-	name(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t* pTagName = NULL); \
+	name(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t* pTagName); \
 	protected: \
 	const wchar_t* const* getOrder(); \
-	const wchar_t* getTagName() { static const wchar_t* tagName = L#tag; return tagName; };
+//	const wchar_t* getTagName() { static const wchar_t* tagName = L#tag; return tagName; };
 
-
-#define BEGIN_DECLARE_CLASS_SUPER(type, name, tag) \
+#define BEGIN_DECLARE_CLASS_SUPER(type, name, dummy) \
 class name : public Element, public Separatista::type \
 	{ \
 	public: \
 	name(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t* pTagName = NULL); \
 	protected: \
 	const wchar_t* const* getOrder(); \
-	const wchar_t* getTagName() { static const wchar_t* tagName = L#tag; return tagName; };
+//	const wchar_t* getTagName() { static const wchar_t* tagName = L#tag; return tagName; };
 
 #define END_DECLARE_CLASS };
 
@@ -64,6 +63,22 @@ class name : public Element, public Separatista::type \
 namespace SeparatistaPrivate
 {
 
+BEGIN_DECLARE_CLASS(BranchAndFinancialInstitutionIdentification4, CdtrAgt)
+DECLARE_TAG(FinancialInstitutionIdentification, FinInstnId)
+DECLARE_TAG(BranchIdentification, BrnchId)
+END_DECLARE_CLASS
+
+typedef BranchAndFinancialInstitutionIdentification4 BranchAndFinancialInstitutionIdentifcation;
+
+BEGIN_DECLARE_CLASS_SUPER(CashAccount, CashAccount16, CdtrAcct)
+DECLARE_TAG(Identification, Id)
+DECLARE_TAG(Type, Tp)
+DECLARE_TAG(Currency, Ccy)
+DECLARE_TAG(Name, Nm)
+END_DECLARE_CLASS
+
+typedef CashAccount16 CashAccount;
+
 BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, CategoryPurpose1Choice, CtgyPurp)
 DECLARE_TAG(Code, Cd)
 DECLARE_TAG(Proprietary, Prtry)
@@ -85,16 +100,6 @@ END_DECLARE_CLASS
 
 typedef ServiceLevel8Choice ServiceLevelChoice;
 
-BEGIN_DECLARE_CLASS_SUPER(PaymentTypeInformation, PaymentTypeInformation20, PmtTpInf)
-DECLARE_CHILD(ServiceLevelChoice, ServiceLevel, SvcLvl)
-DECLARE_CHILD(LocalInstrumentChoice, LocalInstrument, LclInstrm)
-DECLARE_CHILD(CategoryPurposeChoice, CategoryPurpose, CtgyPurp)
-DECLARE_TAG(InstructionPriority, InstrPty)
-DECLARE_TAG(SequenceType, SeqTp)
-END_DECLARE_CLASS
-
-typedef PaymentTypeInformation20 PaymentTypeInformation;
-
 BEGIN_DECLARE_CLASS_SUPER(PartyIdentification, PartyIdentification32, InitgPty)
 DECLARE_TAG(Name, Nm)
 DECLARE_TAG(PostalAddress, PstlAdr)
@@ -105,6 +110,16 @@ END_DECLARE_CLASS
 
 typedef PartyIdentification32 PartyIdentification;
 
+BEGIN_DECLARE_CLASS_SUPER(PaymentTypeInformation, PaymentTypeInformation20, PmtTpInf)
+DECLARE_CHILD(ServiceLevelChoice, ServiceLevel, SvcLvl)
+DECLARE_CHILD(LocalInstrumentChoice, LocalInstrument, LclInstrm)
+DECLARE_CHILD(CategoryPurposeChoice, CategoryPurpose, CtgyPurp)
+DECLARE_TAG(InstructionPriority, InstrPty)
+DECLARE_TAG(SequenceType, SeqTp)
+END_DECLARE_CLASS
+
+typedef PaymentTypeInformation20 PaymentTypeInformation;
+
 BEGIN_DECLARE_CLASS(GroupHeader39, GrpHdr)
 DECLARE_CHILD(PartyIdentification, InitiatingParty, InitgPty)
 DECLARE_TAG(MessageIdentification, MsgId)
@@ -112,7 +127,6 @@ DECLARE_TAG(CreationDateTime, CreDtTm)
 DECLARE_TAG(Authorisation, Authstn)
 DECLARE_TAG_GET(NumberOfTransactions, NbOfTxs)
 DECLARE_TAG_GET(ControlSum, CtrlSum)
-//DECLARE_TAG(InitgPty)
 DECLARE_TAG(ForwardingAgent, FwdgAgt)
 END_DECLARE_CLASS
 
@@ -120,22 +134,21 @@ typedef GroupHeader39 GroupHeader;
 
 BEGIN_DECLARE_CLASS(PaymentInstructionInformation4, PmtInf)
 DECLARE_CHILD(PaymentTypeInformation, PaymentTypeInformation, PmtTpInf)
+DECLARE_CHILD(PartyIdentification, Creditor, Cdtr)
+DECLARE_CHILD(CashAccount, CreditorAccount, CdtrAcct)
+DECLARE_CHILD(BranchAndFinancialInstitutionIdentifcation, CreditorAgent, CdtrAgt)
+DECLARE_CHILD(PartyIdentification, UltimateCreditor, UltmtCdtr)
+DECLARE_CHILD(PartyIdentification, CreditorSchemeIdentification, CdtrSchmeId)
 DECLARE_TAG(PaymentInformationIdentification, PmtInfId)
 DECLARE_TAG(PaymentMethod, PmtMtd)
 DECLARE_TAG(BatchBooking, BtchBookg)
 DECLARE_TAG_GET(NumberOfTransactions, NbOfTxs)
 DECLARE_TAG_GET(ControlSum, CtrlSum)
-//DECLARE_TAG(PmtTpInf)
 DECLARE_TAG(RequestedCollectionDate, ReqdColltnDt)
-DECLARE_TAG(Creditor, Cdtr)
-DECLARE_TAG(CreditorAccount, CdtrAcct)
-DECLARE_TAG(CreditorAgent, CdtrAgt)
 DECLARE_TAG(CreditorAgentAccount, CdtrAgtAcct)
-DECLARE_TAG(UltimateCreditor, UlmtCdtr)
 DECLARE_TAG(ChargeBearer, ChrgBr)
 DECLARE_TAG(ChargesAccount, ChrgsAcct)
-DECLARE_TAG(ChargesAccountAgent, ChrgsAgtAcct)
-DECLARE_TAG(CreditorSchemeIdentification, CdtrSchmeId)
+DECLARE_TAG(ChargesAccountAgent, ChrgsAcctAgt)
 DECLARE_TAG(DirectDebitTransactionInformation, DrctDbtTxInf)
 public:
 	static const wchar_t *DirectDebit;

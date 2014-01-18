@@ -38,7 +38,7 @@ public:
 	@param pElement The element to set, can be NULL.
 	@param pTagName If pElement is NULL, pParent->getChildElement(pTagName) is used.
 	*/
-	Element(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t* pTagName = NULL);
+	Element(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t* pTagName);
 
 	/**
 	Gets a child element. Creates the child element if requested and inserts it as sorted by given order.
@@ -89,9 +89,11 @@ protected:
 	virtual const wchar_t* const* getOrder() = 0;
 
 	/**
-	Returns the tag name of the element. Should be subclassed.
+	Returns the tag name of the element. Set in the constructor.
 	*/
-	virtual const wchar_t* getTagName() = 0;
+	virtual const wchar_t* getTagName() final;
+
+	virtual void setTagName(const wchar_t *pTagName);
 
 	/**
 	Removes the element pointed by tagname. If there aren't any subelements in this element, this element is removed too.
@@ -108,6 +110,7 @@ private:
 	DOMDocument *m_pDocument;
 	Element *m_pParent;
 	DOMElement *m_pDOMElement;
+	const wchar_t *m_pTagName;
 };
 
 

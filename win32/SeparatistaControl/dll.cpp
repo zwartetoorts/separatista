@@ -369,6 +369,28 @@ STDAPI DllRegisterServer()
 		return hr;
 	}
 
+	// Try to register Separatista.CodeOrProprietary
+	hr = DllRegisterObject(
+		TEXT("{AD7CA45E-E648-4A6C-B86F-DEF5CD56A318}"),
+		TEXT("Separatista.CodeOrProprietary.1"),
+		TEXT("Separatista.CodeOrProprietary"));
+	if (FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
+
+	// Try to register Separatista.PaymentTypeInformation
+	hr = DllRegisterObject(
+		TEXT("{7AE01D5B-32E2-481E-8A23-06E18F23F556}"),
+		TEXT("Separatista.PaymentTypeInformation.1"),
+		TEXT("Separatista.PaymentTypeInformation"));
+	if (FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
+
 	return hr;
 }
 

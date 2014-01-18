@@ -265,6 +265,61 @@ library Separatista
 	} DocumentType;
 
 	/*
+	CodeOrProprietary
+	*/
+	[
+		uuid(8E012AAA-F131-4554-9161-568FF888BD7D),
+		helpstring("ICodeOrProprietary interface"),
+		oleautomation,
+		dual,
+		odl
+	]
+	interface ICodeOrProprietary : IDispatch
+	{
+		SEPARATISTA_PROPERTY(BSTR, Code, "Parent specific code.")
+		SEPARATISTA_PROPERTY(BSTR, Proprietary, "Used when code is not applicable.")
+	}
+
+	[
+		uuid(AD7CA45E-E648-4A6C-B86F-DEF5CD56A318),
+		helpstring("CodeOrProprietary object")
+	]
+	coclass CodeOrProrietary
+	{
+		[default] interface ICodeOrProprietary;
+		interface IDispatch;
+	};
+
+	/*
+	PaymentTypeInformation
+	*/
+	[
+		uuid(204ED0EB-F610-44A0-8709-B43212A409E6),
+		helpstring("IPaymentTypeInformation interface"),
+		oleautomation,
+		dual,
+		odl
+	]
+	interface IPaymentTypeInformation : IDispatch
+	{
+		SEPARATISTA_PROPERTY(BSTR, InstructionPriority, "Message Element that is not part of the addendum for the IG SDD Netherlands but is available for FUTURE use in a SEPA AOS.")
+		SEPARATISTA_PROPERTY_GET(ICodeOrProprietary*, ServiceLevel, "Agreement under which or rules under which the transaction should be processed.")
+		SEPARATISTA_PROPERTY_GET(ICodeOrProprietary*, LocalInstructment, "User community specific instrument.")
+		SEPARATISTA_PROPERTY(BSTR, SequenceType, "Identifies the direct debit sequence, such as first, recurrent, final or one-off.")
+		SEPARATISTA_PROPERTY_GET(ICodeOrProprietary*, CategoryPurpose, "Specifies the high level purpose of the instruction based on a set of pre-defined categories.")
+	}
+
+	[
+		uuid(7AE01D5B-32E2-481E-8A23-06E18F23F556),
+		helpstring("PaymentTypeInformation object")
+	]
+	coclass PaymentTypeInformation
+	{
+		[default] interface IPaymentTypeInformation;
+		interface IDispatch;
+	};
+
+	/*
 	PartyIdentification
 	*/
 	[

@@ -280,6 +280,16 @@ private:
 #define SEPARATISTA_DECLARE_PROPERTY_PURE_CLASS(cls, name) \
 	SEPARATISTA_DECLARE_PROPERTY_CLASS_PURE_GET(cls, name)
 
+class CashAccount16
+{
+	SEPARATISTA_DECLARE_PROPERTY_PURE(Identification);
+	SEPARATISTA_DECLARE_PROPERTY_PURE(Type);
+	SEPARATISTA_DECLARE_PROPERTY_PURE(Currency);
+	SEPARATISTA_DECLARE_PROPERTY_PURE(Name);
+};
+
+typedef CashAccount16 CashAccount;
+
 class CodeOrProprietary
 {
 public:

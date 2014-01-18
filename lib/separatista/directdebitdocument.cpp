@@ -53,6 +53,35 @@ using Separatista::DirectDebitDocument;
 	, NULL }; \
 	return order; }
 
+IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification4, FinInstnId)
+IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification4, BrnchId)
+
+IMPLEMENT_CONSTRUCTOR(BranchAndFinancialInstitutionIdentification4)
+{
+}
+
+BEGIN_IMPLEMENT_ORDER(BranchAndFinancialInstitutionIdentification4)
+FinInstnId,
+BrnchId
+END_IMPLEMENT_ORDER
+
+IMPLEMENT_TAG(CashAccount16, Id)
+IMPLEMENT_TAG(CashAccount16, Tp)
+IMPLEMENT_TAG(CashAccount16, Ccy)
+IMPLEMENT_TAG(CashAccount16, Nm)
+
+IMPLEMENT_CONSTRUCTOR(CashAccount16)
+{
+}
+
+BEGIN_IMPLEMENT_ORDER(CashAccount16)
+	Id,
+	Tp,
+	Ccy,
+	Nm
+END_IMPLEMENT_ORDER
+
+
 IMPLEMENT_TAG(CategoryPurpose1Choice, Cd)
 IMPLEMENT_TAG(CategoryPurpose1Choice, Prtry)
 
@@ -124,7 +153,7 @@ IMPLEMENT_CHILD(GroupHeader, CustomerDirectDebitInitiation::GrpHdr)
 	if (pNodeList)
 	{
 		for (XMLSize_t i = 0; i < pNodeList->getLength(); i++)
-			addPaymentInstructionInformation(new PaymentInstructionInformation(pDocument, this, (DOMElement*)pNodeList->item(i)));
+			addPaymentInstructionInformation(new PaymentInstructionInformation(pDocument, this, (DOMElement*)pNodeList->item(i), PmtInf));
 	}
 
 	moveFirst();
@@ -216,10 +245,10 @@ IMPLEMENT_TAG(PaymentInstructionInformation4, Cdtr)
 IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrAcct)
 IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrAgt)
 IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrAgtAcct)
-IMPLEMENT_TAG(PaymentInstructionInformation4, UlmtCdtr)
+IMPLEMENT_TAG(PaymentInstructionInformation4, UltmtCdtr)
 IMPLEMENT_TAG(PaymentInstructionInformation4, ChrgBr)
 IMPLEMENT_TAG(PaymentInstructionInformation4, ChrgsAcct)
-IMPLEMENT_TAG(PaymentInstructionInformation4, ChrgsAgtAcct)
+IMPLEMENT_TAG(PaymentInstructionInformation4, ChrgsAcctAgt)
 IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrSchmeId)
 IMPLEMENT_TAG(PaymentInstructionInformation4, DrctDbtTxInf)
 
@@ -227,6 +256,11 @@ const wchar_t* PaymentInstructionInformation4::DirectDebit = L"DD";
 
 IMPLEMENT_CONSTRUCTOR(PaymentInstructionInformation4)
 IMPLEMENT_CHILD(PaymentTypeInformation,PaymentInstructionInformation::PmtTpInf)
+IMPLEMENT_CHILD(Creditor, PaymentInstructionInformation::Cdtr)
+IMPLEMENT_CHILD(CreditorAccount, PaymentInstructionInformation::CdtrAcct)
+IMPLEMENT_CHILD(CreditorAgent, PaymentInstructionInformation::CdtrAgt)
+IMPLEMENT_CHILD(UltimateCreditor, PaymentInstructionInformation::UltmtCdtr)
+IMPLEMENT_CHILD(CreditorSchemeIdentification, PaymentInstructionInformation::CdtrSchmeId)
 {
 }
 
@@ -242,10 +276,10 @@ BEGIN_IMPLEMENT_ORDER(PaymentInstructionInformation4)
 		CdtrAcct,
 		CdtrAgt,
 		CdtrAgtAcct,
-		UlmtCdtr,
+		UltmtCdtr,
 		ChrgBr,
 		ChrgsAcct,
-		ChrgsAgtAcct,
+		ChrgsAcctAgt,
 		CdtrSchmeId,
 		DrctDbtTxInf
 END_IMPLEMENT_ORDER
@@ -295,7 +329,7 @@ DirectDebitDocument::DirectDebitDocument()
 			return;
 		pDocumentElement->appendChild(pElement);
 		
-		m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiation(pDocument, NULL, pElement);
+		m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiation(pDocument, NULL, pElement, CustomerDirectDebitInitiationV02::CstmrDrctDbtInitn);
 	}
 	catch (const DOMException &e)
 	{
@@ -321,7 +355,7 @@ DirectDebitDocument::DirectDebitDocument(xercesc::DOMDocument *pDocument)
 	if (XMLString::compareString(pElement->getTagName(), CustomerDirectDebitInitiation::CstmrDrctDbtInitn) != 0)
 		return;
 
-	m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiation(pDocument, NULL, pElement);
+	m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiation(pDocument, NULL, pElement, CustomerDirectDebitInitiation::CstmrDrctDbtInitn);
 }
 
 DirectDebitDocument::~DirectDebitDocument()

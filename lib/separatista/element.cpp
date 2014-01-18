@@ -32,11 +32,22 @@ Element::Element(DOMDocument *pDocument, Element *pParent, DOMElement *pElement,
 	m_pDOMElement = pElement;
 	if (!pElement && pTagName && pParent)
 		m_pDOMElement = pParent->getChildElement(pTagName);
+	setTagName(pTagName);
 }
 
 DOMElement* Element::getDOMElement() const
 {
 	return m_pDOMElement;
+}
+
+const wchar_t* Element::getTagName()
+{
+	return m_pTagName;
+}
+
+void Element::setTagName(const wchar_t *pTagName)
+{
+	m_pTagName = pTagName;
 }
 
 DOMElement* Element::getChildElement(unsigned long index, const wchar_t *pTagName, bool create)
