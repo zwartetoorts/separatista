@@ -391,6 +391,17 @@ STDAPI DllRegisterServer()
 		return hr;
 	}
 
+	// Try to register Separatista.CashAccount
+	hr = DllRegisterObject(
+		TEXT("{C05C2FD2-6A95-4843-B2C8-31A375DFA282}"),
+		TEXT("Separatista.CashAccount.1"),
+		TEXT("Separatista.CashAccount"));
+	if (FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
+
 	return hr;
 }
 

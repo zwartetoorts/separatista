@@ -18,42 +18,41 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_DIRECTDEBITDOCUMENT_H
-#define SEPARATISTA_DIRECTDEBITDOCUMENT_H
+#include "codeorproprietary.h"
 
-#include <vector>
-#include "element.h"
-#include "macro.h"
-#include "paymentinstructioninformation.h"
-#include "groupheader.h"
+IMPLEMENT_TAG(CategoryPurpose1Choice, Cd)
+IMPLEMENT_TAG(CategoryPurpose1Choice, Prtry)
 
-namespace SeparatistaPrivate
+IMPLEMENT_CONSTRUCTOR(CategoryPurpose1Choice)
 {
-	BEGIN_DECLARE_CLASS(CustomerDirectDebitInitiationV02)
-	DECLARE_CHILD(GroupHeader39, GroupHeader, GrpHdr)
-	DECLARE_TAG(CustomerDirectDebitInitiation, CstmrDrctDbtInitn)
-	DECLARE_TAG(PaymentInformation, PmtInf)
-	public:
-		~CustomerDirectDebitInitiationV02();
-		void addPaymentInstructionInformation(PaymentInstructionInformation4 *pPmtInf);
+}
 
-		PaymentInstructionInformation4* getPaymentInstructionInformation();
+BEGIN_IMPLEMENT_ORDER(CategoryPurpose1Choice)
+	Cd,
+	Prtry
+END_IMPLEMENT_ORDER
 
-		// PaymentInformation methods
-		/// True if we are the end of all PaymentInformations
-		bool FEOF();
-		/// Resets the internal pointer to the first PaymentInformation
-		void moveFirst();
-		/// Moves the internal pointer to the next PaymentInformation
-		void moveNext();
-		/// Get the number of PaymentInformations
-		size_t getCount();
+IMPLEMENT_TAG(LocalInstrument2Choice, Cd)
+IMPLEMENT_TAG(LocalInstrument2Choice, Prtry)
 
-	private:
-		std::vector<PaymentInstructionInformation4*> m_pmtInfs;
-		std::vector<PaymentInstructionInformation4*>::iterator m_pmtInfIterator;
-	END_DECLARE_CLASS
+IMPLEMENT_CONSTRUCTOR(LocalInstrument2Choice)
+{
+}
 
-};
+BEGIN_IMPLEMENT_ORDER(LocalInstrument2Choice)
+	Cd,
+	Prtry
+END_IMPLEMENT_ORDER
 
-#endif // !defined SEPARATISTA_DIRECTDEBITDOCUMENT_H
+IMPLEMENT_TAG(ServiceLevel8Choice, Cd)
+IMPLEMENT_TAG(ServiceLevel8Choice, Prtry)
+
+IMPLEMENT_CONSTRUCTOR(ServiceLevel8Choice)
+{
+}
+
+BEGIN_IMPLEMENT_ORDER(ServiceLevel8Choice)
+	Cd,
+	Prtry
+END_IMPLEMENT_ORDER
+

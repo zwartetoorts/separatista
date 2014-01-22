@@ -23,6 +23,10 @@
 
 #include <xercesc/dom/DOM.hpp>
 
+#include <cstdlib>
+#include <ctime>
+#include <cstdint>
+
 XERCES_CPP_NAMESPACE_USE;
 
 namespace SeparatistaPrivate
@@ -100,6 +104,15 @@ protected:
 	The removed element is released after being removed.
 	*/
 	void removeChildElement(DOMElement *pChildElement);
+
+	/// Convert a XML DateTime to time_t
+	time_t toTime(const wchar_t *pValue);
+
+	/// Convert a XML numeber to long
+	long toLong(const wchar_t *pValue);
+
+	/// Convert a XML number to uint64_t
+	uint64_t toUInt64(const wchar_t *pValue);
 
 private:
 	/**

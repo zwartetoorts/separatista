@@ -27,6 +27,48 @@
 #ifndef SEPARATISTA_CDIRECTDEBITDOCUMENT_H
 #define SEPARATISTA_CDIRECTDEBITDOCUMENT_H
 
+// {D5E53F81-A97F-4303-9353-1EB1A5BB9EC3}
+DEFINE_GUID(IID_ICashAccount,
+	0xd5e53f81, 0xa97f, 0x4303, 0x93, 0x53, 0x1e, 0xb1, 0xa5, 0xbb, 0x9e, 0xc3);
+
+// {C05C2FD2-6A95-4843-B2C8-31A375DFA282}
+DEFINE_GUID(CLSID_CASHACCOUNT,
+	0xc05c2fd2, 0x6a95, 0x4843, 0xb2, 0xc8, 0x31, 0xa3, 0x75, 0xdf, 0xa2, 0x82);
+
+struct ICashAccount : public IDispatch
+{
+	// IDispatch
+	STDMETHOD_(ULONG, AddRef)() PURE;
+	STDMETHOD_(ULONG, Release)() PURE;
+	STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject) PURE;
+	STDMETHOD(GetTypeInfoCount)(UINT* pctinfo) PURE;
+	STDMETHOD(GetTypeInfo)(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo) PURE;
+	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId) PURE;
+	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
+
+	SEPARATISTA_COM_PROPERTY(BSTR, Identification, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, Type, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, Currency, PURE)
+	SEPARATISTA_COM_PROPERTY(BSTR, Name, PURE)
+};
+
+struct __declspec(uuid("{D5E53F81-A97F-4303-9353-1EB1A5BB9EC3}")) ICashAccount;
+
+class CCashAccount : public SepaControlDispatch<ICashAccount>
+{
+public:
+	CCashAccount(Separatista::CashAccount *pCashAccount, IUnknown *pParent = NULL);
+
+	SEPARATISTA_COM_PROPERTY(BSTR, Identification, )
+	SEPARATISTA_COM_PROPERTY(BSTR, Type, )
+	SEPARATISTA_COM_PROPERTY(BSTR, Currency, )
+	SEPARATISTA_COM_PROPERTY(BSTR, Name, )
+private:
+	Separatista::CashAccount *m_pCashAccount;
+};
+
+class __declspec(uuid("{C05C2FD2-6A95-4843-B2C8-31A375DFA282}")) CCashAccount;
+
 // {8E012AAA-F131-4554-9161-568FF888BD7D}
 DEFINE_GUID(IID_ICodeOrProprietary,
 	0x8e012aaa, 0xf131, 0x4554, 0x91, 0x61, 0x56, 0x8f, 0xf8, 0x88, 0xbd, 0x7d);

@@ -18,42 +18,30 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_DIRECTDEBITDOCUMENT_H
-#define SEPARATISTA_DIRECTDEBITDOCUMENT_H
+#ifndef SEPARATISTA_CODEORPROPRIETARY_H
+#define SEPARATISTA_CODEORPROPRIETARY_H
 
-#include <vector>
-#include "element.h"
 #include "macro.h"
-#include "paymentinstructioninformation.h"
-#include "groupheader.h"
+#include "element.h"
+#include "separatista.h"
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS(CustomerDirectDebitInitiationV02)
-	DECLARE_CHILD(GroupHeader39, GroupHeader, GrpHdr)
-	DECLARE_TAG(CustomerDirectDebitInitiation, CstmrDrctDbtInitn)
-	DECLARE_TAG(PaymentInformation, PmtInf)
-	public:
-		~CustomerDirectDebitInitiationV02();
-		void addPaymentInstructionInformation(PaymentInstructionInformation4 *pPmtInf);
-
-		PaymentInstructionInformation4* getPaymentInstructionInformation();
-
-		// PaymentInformation methods
-		/// True if we are the end of all PaymentInformations
-		bool FEOF();
-		/// Resets the internal pointer to the first PaymentInformation
-		void moveFirst();
-		/// Moves the internal pointer to the next PaymentInformation
-		void moveNext();
-		/// Get the number of PaymentInformations
-		size_t getCount();
-
-	private:
-		std::vector<PaymentInstructionInformation4*> m_pmtInfs;
-		std::vector<PaymentInstructionInformation4*>::iterator m_pmtInfIterator;
+	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, CategoryPurpose1Choice)
+	DECLARE_TAG(Code, Cd)
+	DECLARE_TAG(Proprietary, Prtry)
 	END_DECLARE_CLASS
 
-};
+	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, LocalInstrument2Choice)
+	DECLARE_TAG(Code, Cd)
+	DECLARE_TAG(Proprietary, Prtry)
+	END_DECLARE_CLASS
 
-#endif // !defined SEPARATISTA_DIRECTDEBITDOCUMENT_H
+	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, ServiceLevel8Choice)
+	DECLARE_TAG(Code, Cd)
+	DECLARE_TAG(Proprietary, Prtry)
+	END_DECLARE_CLASS
+
+}
+
+#endif // !defined SEPARATISTA_CODEORPROPRIETARY_H

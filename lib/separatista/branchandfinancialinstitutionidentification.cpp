@@ -18,42 +18,16 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_DIRECTDEBITDOCUMENT_H
-#define SEPARATISTA_DIRECTDEBITDOCUMENT_H
+#include "branchandfinancialinstitutionidentification.h"
 
-#include <vector>
-#include "element.h"
-#include "macro.h"
-#include "paymentinstructioninformation.h"
-#include "groupheader.h"
+IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification4, FinInstnId)
+IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification4, BrnchId)
 
-namespace SeparatistaPrivate
+IMPLEMENT_CONSTRUCTOR(BranchAndFinancialInstitutionIdentification4)
 {
-	BEGIN_DECLARE_CLASS(CustomerDirectDebitInitiationV02)
-	DECLARE_CHILD(GroupHeader39, GroupHeader, GrpHdr)
-	DECLARE_TAG(CustomerDirectDebitInitiation, CstmrDrctDbtInitn)
-	DECLARE_TAG(PaymentInformation, PmtInf)
-	public:
-		~CustomerDirectDebitInitiationV02();
-		void addPaymentInstructionInformation(PaymentInstructionInformation4 *pPmtInf);
+}
 
-		PaymentInstructionInformation4* getPaymentInstructionInformation();
-
-		// PaymentInformation methods
-		/// True if we are the end of all PaymentInformations
-		bool FEOF();
-		/// Resets the internal pointer to the first PaymentInformation
-		void moveFirst();
-		/// Moves the internal pointer to the next PaymentInformation
-		void moveNext();
-		/// Get the number of PaymentInformations
-		size_t getCount();
-
-	private:
-		std::vector<PaymentInstructionInformation4*> m_pmtInfs;
-		std::vector<PaymentInstructionInformation4*>::iterator m_pmtInfIterator;
-	END_DECLARE_CLASS
-
-};
-
-#endif // !defined SEPARATISTA_DIRECTDEBITDOCUMENT_H
+BEGIN_IMPLEMENT_ORDER(BranchAndFinancialInstitutionIdentification4)
+FinInstnId,
+BrnchId
+END_IMPLEMENT_ORDER

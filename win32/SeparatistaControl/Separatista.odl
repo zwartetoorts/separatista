@@ -265,6 +265,35 @@ library Separatista
 	} DocumentType;
 
 	/*
+	CashAccount
+	*/
+	[
+		uuid(D5E53F81-A97F-4303-9353-1EB1A5BB9EC3),
+		helpstring("ICashAccount interface"),
+		oleautomation,
+		dual,
+		odl
+	]
+	interface ICashAccount : IDispatch
+	{
+		SEPARATISTA_PROPERTY(BSTR, Identification, "IBAN")
+		SEPARATISTA_PROPERTY(BSTR, Type, "")
+		SEPARATISTA_PROPERTY(BSTR, Currency, "")
+		SEPARATISTA_PROPERTY(BSTR, Name, "")
+
+	}
+
+	[
+		uuid(C05C2FD2-6A95-4843-B2C8-31A375DFA282),
+		helpstring("CashAccount object")
+	]
+	coclass CashAccount
+	{
+		[default] interface ICashAccount;
+		interface IDispatch;
+	};
+
+	/*
 	CodeOrProprietary
 	*/
 	[
@@ -409,7 +438,21 @@ library Separatista
 		SEPARATISTA_PROPERTY(BSTR, BatchBooking, "Identifies whether a single entry per individual transaction or a batch entry for the sum of the amounts of all transactions within the group of a message is requested.")
 		SEPARATISTA_PROPERTY_GET(VARIANT, PaymentInformationNumberOfTransactions, "Number of individual transactions contained in the payment information group.")
 		SEPARATISTA_PROPERTY_GET(VARIANT, PaymentInformationControlSum, "Total of all individual amounts included in the group.")
-	};
+
+		SEPARATISTA_PROPERTY_GET(IPaymentTypeInformation*, PaymentTypeInformation, "Set of elements used to further specify the type of transaction.")
+		SEPARATISTA_PROPERTY(DATE, RequestedCollectionDate, "Date and time at which the creditor requests that the amount of money is to be collected from the debtor.")
+		SEPARATISTA_PROPERTY_GET(IPartyIdentification*, Creditor, "Party to which an amount of money is due.")
+		SEPARATISTA_PROPERTY_GET(ICashAccount*, CreditorAccount, "Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction.")
+		SEPARATISTA_PROPERTY(BSTR, CreditorAgentFinancialInstitutionIdentification, "Financial institution servicing an account for the creditor.")
+		SEPARATISTA_PROPERTY(BSTR, CreditorAgentBranchIdentification, "Financial institution servicing an account for the creditor.")
+		SEPARATISTA_PROPERTY(BSTR, CreditorAgentAccount, Message Element that is not part of the addendum for the IG SDD Netherlands but is available for future use in a SEPA AOS."")
+		SEPARATISTA_PROPERTY_GET(IPartyIdentification*, UltimateCreditor, "Ultimate party to which an amount of money is due.")
+		SEPARATISTA_PROPERTY(BSTR, ChargeBearer, "Specifies which party/parties will bear the charges associated with the processing of the payment transaction.")
+		SEPARATISTA_PROPERTY(BSTR, ChargesAccount, "Message Element that is not part of the addendum for the IG SDD Netherlands but is available for future use in a SEPA AOS.")
+		SEPARATISTA_PROPERTY(BSTR, ChargesAccountAgent, "Message Element that is not part of the addendum for the IG SDD Netherlands but is available for future use in a SEPA AOS.")
+		SEPARATISTA_PROPERTY_GET(IPartyIdentification*, CreditorSchemeIdentification, "Credit party that signs the mandate.")
+
+};
 
 	[
 		uuid(0274813F-6EF4-44DF-8A1C-38262379519F),

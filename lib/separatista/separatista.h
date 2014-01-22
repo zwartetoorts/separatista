@@ -185,15 +185,6 @@ public:
 	SEPARATISTA_EXTERN static const wchar_t *Document;
 
 protected:
-	/// Convert a XML DateTime to time_t
-	SEPARATISTA_EXTERN time_t toTime(const wchar_t *pValue);
-
-	/// Convert a XML numeber to long
-	SEPARATISTA_EXTERN long toLong(const wchar_t *pValue);
-
-	/// Convert a XML numeber to uint64_t
-	SEPARATISTA_EXTERN uint64_t toUInt64(const wchar_t *pValue);
-
 	/// Error message, protected access for convenience
 	wchar_t *m_pErrorMessage;
 
@@ -202,124 +193,152 @@ private:
 	wchar_t *m_path;
 };
 
-#define SEPARATISTA_DECLARE_PROPERTY_GET(name) \
-	SEPARATISTA_EXTERN const wchar_t* get##name();
-
-#define SEPARATISTA_DECLARE_PROPERTY_SET(name) \
-	SEPARATISTA_EXTERN void set##name(const wchar_t *pValue);
-
-#define SEPARATISTA_DECLARE_PROPERTY(name) \
-	SEPARATISTA_DECLARE_PROPERTY_GET(name) \
-	SEPARATISTA_DECLARE_PROPERTY_SET(name)
-
-#define SEPARATISTA_DECLARE_PROPERTY_GET_INDEX(name) \
-	SEPARATISTA_EXTERN const wchar_t* get##name(unsigned long index);
-
-#define SEPARATISTA_DECLARE_PROPERTY_SET_INDEX(name) \
-	SEPARATISTA_EXTERN void set##name(unsigned long index, const wchar_t *pValue);
-
-#define SEPARATISTA_DECLARE_PROPERTY_INDEX(name) \
-	SEPARATISTA_DECLARE_PROPERTY_GET_INDEX(name) \
-	SEPARATISTA_DECLARE_PROPERTY_SET_INDEX(name)
-
-#define SEPARATISTA_DECLARE_PROPERTY_TIME_GET(name) \
-	SEPARATISTA_EXTERN std::time_t get##name();
-
-#define SEPARATISTA_DECLARE_PROPERTY_TIME(name) \
-	SEPARATISTA_DECLARE_PROPERTY_TIME_GET(name) \
-	SEPARATISTA_DECLARE_PROPERTY_SET(name)
-
-#define SEPARATISTA_DECLARE_PROPERTY_LONG_GET(name) \
-	SEPARATISTA_EXTERN long get##name();
-
-#define SEPARATISTA_DECLARE_PROPERTY_LONG(name) \
-	SEPARATISTA_DECLARE_PROPERTY_LONG_GET(name) \
-	SEPARATISTA_DECLATE_PROPERTY_SET(name)
-
-#define SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(name) \
-	SEPARATISTA_EXTERN uint64_t get##name();
-
-#define SEPARATISTA_DECLARE_PROPERTY_UINT64(name) \
-	SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(name) \
-	SEPARATISTA_DECLATE_PROPERTY_SET(name)
-
-#define SEPARATISTA_DECLARE_PROPERTY_PURE_GET(name) \
+#define SEPARATISTA_DECLARE_TAG_GET(name) \
 	virtual const wchar_t* get##name() = 0;
 
-#define SEPARATISTA_DECLARE_PROPERTY_PURE_SET(name) \
+#define SEPARATISTA_DECLARE_TAG_SET(name) \
 	virtual void set##name(const wchar_t *pValue) = 0;
 
-#define SEPARATISTA_DECLARE_PROPERTY_PURE(name) \
-	SEPARATISTA_DECLARE_PROPERTY_PURE_GET(name) \
-	SEPARATISTA_DECLARE_PROPERTY_PURE_SET(name)
+#define SEPARATISTA_DECLARE_TAG(name) \
+	SEPARATISTA_DECLARE_TAG_GET(name) \
+	SEPARATISTA_DECLARE_TAG_SET(name)
 
-#define SEPARATISTA_DECLARE_PROPERTY_TIME_PURE_GET(name) \
+#define SEPARATISTA_DECLARE_TAG_TIME_GET(name) \
 	virtual std::time_t get##name() = 0;
 
-#define SEPARATISTA_DECLARE_PROPERTY_PURE_TIME(name) \
-	SEPARATISTA_DECLARE_PROPERTY_TIME_PURE_GET(name) \
-	SEPARATISTA_DECLARE_PROPERTY_PURE_SET(name)
+#define SEPARATISTA_DECLARE_TAG_TIME(name) \
+	SEPARATISTA_DECLARE_TAG_TIME_GET(name) \
+	SEPARATISTA_DECLARE_TAG_SET(name)
 
-#define SEPARATISTA_DECLARE_PROPERTY_LONG_PURE_GET(name) \
+#define SEPARATISTA_DECLARE_TAG_LONG_GET(name) \
 	virtual long get##name() = 0;
 
-#define SEPARATISTA_DECLARE_PROPERTY_PURE_LONG(name) \
-	SEPARATISTA_DECLARE_PROPERTY_LONG_PURE_GET(name) \
-	SEPARATISTA_DECLATE_PROPERTY_PURE_SET(name)
+#define SEPARATISTA_DECLARE_TAG_LONG(name) \
+	SEPARATISTA_DECLARE_TAG_LONG_GET(name) \
+	SEPARATISTA_DECLARE_TAG_SET(name)
 
-#define SEPARATISTA_DECLARE_PROPERTY_UINT64_PURE_GET(name) \
+#define SEPARATISTA_DECLARE_TAG_UINT64_GET(name) \
 	virtual uint64_t get##name() = 0;
 
-#define SEPARATISTA_DECLARE_PROPERTY_PURE_UINT64(name) \
-	SEPARATISTA_DECLARE_PROPERTY_UINT64_PURE_GET(name) \
-	SEPARATISTA_DECLATE_PROPERTY_PURE_SET(name)
+#define SEPARATISTA_DECLARE_TAG_UINT64(name) \
+	SEPARATISTA_DECLARE_TAG_UINT64_GET(name) \
+	SEPARATISTA_DECLARE_TAG_SET(name)
 
-#define SEPARATISTA_DECLARE_PROPERTY_CLASS_PURE_GET(cls, name) \
+#define SEPARATISTA_DECLARE_TAG_CLASS_GET(cls, name) \
 	virtual cls& get##name() = 0;
 
-#define SEPARATISTA_DECLARE_PROPERTY_PURE_CLASS(cls, name) \
-	SEPARATISTA_DECLARE_PROPERTY_CLASS_PURE_GET(cls, name)
+#define SEPARATISTA_DECLARE_TAG_CLASS(cls, name) \
+	SEPARATISTA_DECLARE_TAG_CLASS_GET(cls, name)
+
+#define SEPARATISTA_DECLARE_TAG_TYPE_GET(type, name) \
+	virtual type get##name() = 0;
+
+#define SEPARATISTA_DECLARE_TAG_TYPE(type, name) \
+	SEPARATISTA_DECLARE_TAG_TYPE_GET(type, name) \
+	virtual void set##name(type val) = 0;
+
+#define SEPARATISTA_DECLARE_CHILD(type, name) \
+	SEPARATISTA_DECLARE_TAG_CLASS_GET(type, name)
 
 class CashAccount16
 {
-	SEPARATISTA_DECLARE_PROPERTY_PURE(Identification);
-	SEPARATISTA_DECLARE_PROPERTY_PURE(Type);
-	SEPARATISTA_DECLARE_PROPERTY_PURE(Currency);
-	SEPARATISTA_DECLARE_PROPERTY_PURE(Name);
+public:
+	SEPARATISTA_DECLARE_TAG(Identification);
+	SEPARATISTA_DECLARE_TAG(Type);
+	SEPARATISTA_DECLARE_TAG(Currency);
+	SEPARATISTA_DECLARE_TAG(Name);
 };
-
-typedef CashAccount16 CashAccount;
 
 class CodeOrProprietary
 {
 public:
-	SEPARATISTA_DECLARE_PROPERTY_PURE(Code);
-	SEPARATISTA_DECLARE_PROPERTY_PURE(Proprietary);
+	SEPARATISTA_DECLARE_TAG(Code);
+	SEPARATISTA_DECLARE_TAG(Proprietary);
+};
+
+class BranchAndFinancialInstitutionIdentification4
+{
+	SEPARATISTA_DECLARE_TAG(FinancialInstitutionIdentification)
+	SEPARATISTA_DECLARE_TAG(BranchIdentification)
 };
 
 class PaymentTypeInformation20
 {
 public:
-	SEPARATISTA_DECLARE_PROPERTY_PURE(InstructionPriority)
-	SEPARATISTA_DECLARE_PROPERTY_PURE_CLASS(CodeOrProprietary, ServiceLevel)
-	SEPARATISTA_DECLARE_PROPERTY_PURE_CLASS(CodeOrProprietary, LocalInstrument)
-	SEPARATISTA_DECLARE_PROPERTY_PURE(SequenceType)
-	SEPARATISTA_DECLARE_PROPERTY_PURE_CLASS(CodeOrProprietary, CategoryPurpose)
+	SEPARATISTA_DECLARE_TAG(InstructionPriority)
+	SEPARATISTA_DECLARE_TAG_CLASS(CodeOrProprietary, ServiceLevel)
+	SEPARATISTA_DECLARE_TAG_CLASS(CodeOrProprietary, LocalInstrument)
+	SEPARATISTA_DECLARE_TAG(SequenceType)
+	SEPARATISTA_DECLARE_TAG_CLASS(CodeOrProprietary, CategoryPurpose)
 };
 
-typedef PaymentTypeInformation20 PaymentTypeInformation;
+enum AddressType2Code 
+{
+	Postal,
+	POBox,
+	Residential,
+	Business,
+	MailTo,
+	DeliveryTo
+};
+
+class PostalAddress6
+{
+public:
+	SEPARATISTA_DECLARE_TAG_TYPE(AddressType2Code, AddressType)
+	SEPARATISTA_DECLARE_TAG(Department)
+	SEPARATISTA_DECLARE_TAG(SubDepartment)
+	SEPARATISTA_DECLARE_TAG(StreetName)
+	SEPARATISTA_DECLARE_TAG(BuildingNumber)
+	SEPARATISTA_DECLARE_TAG(PostCode)
+	SEPARATISTA_DECLARE_TAG(TownName)
+	SEPARATISTA_DECLARE_TAG(CountrySubDivision)
+	SEPARATISTA_DECLARE_TAG(Country)
+	SEPARATISTA_DECLARE_TAG(AddressLine)
+};
 
 class PartyIdentification32
 {
 public:
-	SEPARATISTA_DECLARE_PROPERTY_PURE(Name)
-	SEPARATISTA_DECLARE_PROPERTY_PURE(PostalAddress)
-	SEPARATISTA_DECLARE_PROPERTY_PURE(Identification)
-	SEPARATISTA_DECLARE_PROPERTY_PURE(CountryOfResidence)
-	SEPARATISTA_DECLARE_PROPERTY_PURE(ContactDetails)
+	SEPARATISTA_DECLARE_TAG(Name)
+	SEPARATISTA_DECLARE_TAG_CLASS(PostalAddress6, PostalAddress)
+	SEPARATISTA_DECLARE_TAG(Identification)
+	SEPARATISTA_DECLARE_TAG(CountryOfResidence)
+	SEPARATISTA_DECLARE_TAG(ContactDetails)
 };
 
-typedef PartyIdentification32 PartyIdentification;
+class PaymentInstructionInformation4
+{
+	SEPARATISTA_DECLARE_CHILD(PaymentTypeInformation20, PaymentTypeInformation)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification32, Creditor)
+	SEPARATISTA_DECLARE_CHILD(CashAccount16, CreditorAccount)
+	SEPARATISTA_DECLARE_CHILD(BranchAndFinancialInstitutionIdentification4, CreditorAgent)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification32, UltimateCreditor)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification32, CreditorSchemeIdentification)
+	SEPARATISTA_DECLARE_TAG(PaymentInformationIdentification)
+	SEPARATISTA_DECLARE_TAG(PaymentMethod)
+	SEPARATISTA_DECLARE_TAG(BatchBooking)
+	SEPARATISTA_DECLARE_TAG_GET(NumberOfTransactions)
+	SEPARATISTA_DECLARE_TAG_GET(ControlSum)
+	SEPARATISTA_DECLARE_TAG(RequestedCollectionDate)
+	SEPARATISTA_DECLARE_TAG(CreditorAgentAccount)
+	SEPARATISTA_DECLARE_TAG(ChargeBearer)
+	SEPARATISTA_DECLARE_TAG(ChargesAccount)
+	SEPARATISTA_DECLARE_TAG(ChargesAccountAgent)
+public:
+	static const wchar_t *DirectDebit;
+};
+
+class GroupHeader39
+{
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification32, InitiatingParty)
+	SEPARATISTA_DECLARE_TAG(MessageIdentification)
+	SEPARATISTA_DECLARE_TAG_TIME(CreationDateTime)
+	SEPARATISTA_DECLARE_TAG(Authorisation)
+	SEPARATISTA_DECLARE_TAG_GET(NumberOfTransactions)
+	SEPARATISTA_DECLARE_TAG_GET(ControlSum)
+	SEPARATISTA_DECLARE_TAG(ForwardingAgent)
+};
 
 class DirectDebitDocument : public SeparatistaDocument
 {
@@ -335,25 +354,18 @@ public:
 	*/
 	SEPARATISTA_EXTERN DirectDebitDocument(xercesc::DOMDocument *pDocument);
 
+	/// Destructor
 	SEPARATISTA_EXTERN ~DirectDebitDocument();
 
 	SEPARATISTA_EXTERN const SeparatistaDocument::DocumentType getDocumentType() const;
 
 	/// Namespace URI
 	SEPARATISTA_EXTERN static const wchar_t *NamespaceURI;
+	
+	/// Get the GroupHeader for this document
+	SEPARATISTA_EXTERN GroupHeader39* getGroupHeader();
 
-	SEPARATISTA_DECLARE_PROPERTY(MessageIdentification)
-
-	/// Returns -1 on error
-	SEPARATISTA_DECLARE_PROPERTY_TIME(CreationDateTime)
-	SEPARATISTA_DECLARE_PROPERTY_INDEX(Authorisation)
-	SEPARATISTA_DECLARE_PROPERTY_LONG_GET(NumberOfTransactions)
-	SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(ControlSum)
-	SEPARATISTA_DECLARE_PROPERTY(ForwardingAgent)
-
-	SEPARATISTA_EXTERN PartyIdentification* getInitiatingParty();
-
-	// PaymentInformation methods
+	// PaymentInstructionInformation methods
 	/// True if we are the end of all PaymentInformations
 	SEPARATISTA_EXTERN bool FEOF();
 	/// Resets the internal pointer to the first PaymentInformation
@@ -362,14 +374,8 @@ public:
 	SEPARATISTA_EXTERN void moveNext();
 	/// Get the count of PaymentInformations
 	SEPARATISTA_EXTERN size_t getCount();
-
-	SEPARATISTA_DECLARE_PROPERTY(PaymentInformationIdentification)
-	SEPARATISTA_DECLARE_PROPERTY(PaymentMethod)
-	SEPARATISTA_DECLARE_PROPERTY(BatchBooking)
-	SEPARATISTA_DECLARE_PROPERTY_LONG_GET(PaymentInformationNumberOfTransactions)
-	SEPARATISTA_DECLARE_PROPERTY_UINT64_GET(PaymentInformationControlSum)
-
-	SEPARATISTA_EXTERN PaymentTypeInformation* getPaymentTypeInformation();
+	/// Get the current PaymentInformation
+	SEPARATISTA_EXTERN PaymentInstructionInformation4* getPaymentInstructionInformation();
 
 protected:
 	SeparatistaPrivate::CustomerDirectDebitInitiation *m_pCstmrDrctDbtInitn;

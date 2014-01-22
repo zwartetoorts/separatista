@@ -18,42 +18,25 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_DIRECTDEBITDOCUMENT_H
-#define SEPARATISTA_DIRECTDEBITDOCUMENT_H
+#include "paymenttypeinformation.h"
 
-#include <vector>
-#include "element.h"
-#include "macro.h"
-#include "paymentinstructioninformation.h"
-#include "groupheader.h"
+IMPLEMENT_TAG(PaymentTypeInformation20, InstrPty)
+IMPLEMENT_TAG(PaymentTypeInformation20, SvcLvl)
+IMPLEMENT_TAG(PaymentTypeInformation20, LclInstrm)
+IMPLEMENT_TAG(PaymentTypeInformation20, SeqTp)
+IMPLEMENT_TAG(PaymentTypeInformation20, CtgyPurp)
 
-namespace SeparatistaPrivate
+IMPLEMENT_CONSTRUCTOR(PaymentTypeInformation20)
+IMPLEMENT_CHILD(ServiceLevel, SvcLvl)
+IMPLEMENT_CHILD(LocalInstrument, LclInstrm)
+IMPLEMENT_CHILD(CategoryPurpose, CtgyPurp)
 {
-	BEGIN_DECLARE_CLASS(CustomerDirectDebitInitiationV02)
-	DECLARE_CHILD(GroupHeader39, GroupHeader, GrpHdr)
-	DECLARE_TAG(CustomerDirectDebitInitiation, CstmrDrctDbtInitn)
-	DECLARE_TAG(PaymentInformation, PmtInf)
-	public:
-		~CustomerDirectDebitInitiationV02();
-		void addPaymentInstructionInformation(PaymentInstructionInformation4 *pPmtInf);
+}
 
-		PaymentInstructionInformation4* getPaymentInstructionInformation();
-
-		// PaymentInformation methods
-		/// True if we are the end of all PaymentInformations
-		bool FEOF();
-		/// Resets the internal pointer to the first PaymentInformation
-		void moveFirst();
-		/// Moves the internal pointer to the next PaymentInformation
-		void moveNext();
-		/// Get the number of PaymentInformations
-		size_t getCount();
-
-	private:
-		std::vector<PaymentInstructionInformation4*> m_pmtInfs;
-		std::vector<PaymentInstructionInformation4*>::iterator m_pmtInfIterator;
-	END_DECLARE_CLASS
-
-};
-
-#endif // !defined SEPARATISTA_DIRECTDEBITDOCUMENT_H
+BEGIN_IMPLEMENT_ORDER(PaymentTypeInformation20)
+	InstrPty,
+	SvcLvl,
+	LclInstrm,
+	SeqTp,
+	CtgyPurp
+END_IMPLEMENT_ORDER

@@ -18,42 +18,32 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_DIRECTDEBITDOCUMENT_H
-#define SEPARATISTA_DIRECTDEBITDOCUMENT_H
+#include "postaladdress.h"
 
-#include <vector>
-#include "element.h"
-#include "macro.h"
-#include "paymentinstructioninformation.h"
-#include "groupheader.h"
+IMPLEMENT_TAG(PostalAddress6, AdrTp)
+IMPLEMENT_TAG(PostalAddress6, Dept)
+IMPLEMENT_TAG(PostalAddress6, SubDept)
+IMPLEMENT_TAG(PostalAddress6, StrtNm)
+IMPLEMENT_TAG(PostalAddress6, BldgNb)
+IMPLEMENT_TAG(PostalAddress6, PstCd)
+IMPLEMENT_TAG(PostalAddress6, TwnNm)
+IMPLEMENT_TAG(PostalAddress6, CtrySubDvsn)
+IMPLEMENT_TAG(PostalAddress6, Ctry)
+IMPLEMENT_TAG(PostalAddress6, AdrLine)
 
-namespace SeparatistaPrivate
+IMPLEMENT_CONSTRUCTOR(PostalAddress6)
 {
-	BEGIN_DECLARE_CLASS(CustomerDirectDebitInitiationV02)
-	DECLARE_CHILD(GroupHeader39, GroupHeader, GrpHdr)
-	DECLARE_TAG(CustomerDirectDebitInitiation, CstmrDrctDbtInitn)
-	DECLARE_TAG(PaymentInformation, PmtInf)
-	public:
-		~CustomerDirectDebitInitiationV02();
-		void addPaymentInstructionInformation(PaymentInstructionInformation4 *pPmtInf);
+}
 
-		PaymentInstructionInformation4* getPaymentInstructionInformation();
+BEGIN_IMPLEMENT_ORDER(PostalAddress6)
+	AdrTp,
+	Dept,
+	SubDept,
+	StrtNm,
+	BldgNb,
+	PstCd,
+	TwnNm,
+	CtrySubDvsn,
+	Ctry
+END_IMPLEMENT_ORDER
 
-		// PaymentInformation methods
-		/// True if we are the end of all PaymentInformations
-		bool FEOF();
-		/// Resets the internal pointer to the first PaymentInformation
-		void moveFirst();
-		/// Moves the internal pointer to the next PaymentInformation
-		void moveNext();
-		/// Get the number of PaymentInformations
-		size_t getCount();
-
-	private:
-		std::vector<PaymentInstructionInformation4*> m_pmtInfs;
-		std::vector<PaymentInstructionInformation4*>::iterator m_pmtInfIterator;
-	END_DECLARE_CLASS
-
-};
-
-#endif // !defined SEPARATISTA_DIRECTDEBITDOCUMENT_H

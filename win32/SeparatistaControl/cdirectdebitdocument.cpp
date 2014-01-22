@@ -26,6 +26,84 @@
 #include "dispatch.cpp"
 #include "util.h"
 
+CCashAccount::CCashAccount(Separatista::CashAccount* pCashAccount, IUnknown *pParent)
+:SepaControlDispatch<ICashAccount>(pParent)
+{
+	m_pCashAccount = pCashAccount;
+}
+
+STDMETHODIMP CCashAccount::getIdentification(BSTR *pValue)
+{
+	if (!m_pCashAccount)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pCashAccount->getIdentification()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CCashAccount::setIdentification(BSTR Value)
+{
+	if (!m_pCashAccount)
+		return E_UNEXPECTED;
+
+	m_pCashAccount->setIdentification(_bstr_t(Value).Detach());
+	return S_OK;
+}
+
+STDMETHODIMP CCashAccount::getType(BSTR *pValue)
+{
+	if (!m_pCashAccount)
+		return E_UNEXPECTED;
+	
+	*pValue = _bstr_t(m_pCashAccount->getType()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CCashAccount::setType(BSTR Value)
+{
+	if (!m_pCashAccount)
+		return E_UNEXPECTED;
+
+	m_pCashAccount->setType(_bstr_t(Value).Detach());
+	return S_OK;
+}
+
+STDMETHODIMP CCashAccount::getCurrency(BSTR *pValue)
+{
+	if (!m_pCashAccount)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pCashAccount->getCurrency()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CCashAccount::setCurrency(BSTR Value)
+{
+	if (!m_pCashAccount)
+		return E_UNEXPECTED;
+
+	m_pCashAccount->setCurrency(_bstr_t(Value).Detach());
+	return S_OK;
+}
+
+STDMETHODIMP CCashAccount::getName(BSTR *pValue)
+{
+	if (!m_pCashAccount)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pCashAccount->getName()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CCashAccount::setName(BSTR Value)
+{
+	if (!m_pCashAccount)
+		return E_UNEXPECTED;
+
+	m_pCashAccount->setName(_bstr_t(Value).Detach());
+	return S_OK;
+}
+
 CCodeOrProprietary::CCodeOrProprietary(Separatista::CodeOrProprietary *pCodeOrProprietary, IUnknown *pParent)
 :SepaControlDispatch<ICodeOrProprietary>(pParent)
 {
