@@ -85,7 +85,7 @@ class name : public Element, public Separatista::type \
 
 #define DECLARE_TAG_ENUM_GET(type, name, count, tag) \
 	public: \
-	static const struct name##Table { type m_code; const wchar_t* m_value; } m_##name##Table[count]; \
+	static const struct name##Table { type m_code; const wchar_t* m_value; } m_##name##Table[count + 1]; \
 	public: \
 	static const wchar_t* tag; \
 	type get##name();
@@ -161,7 +161,7 @@ class name : public Element, public Separatista::type \
 		if(std::wcscmp(m_##name##Table[i].m_value, pValue) == 0) \
 		return m_##name##Table[i].m_code; \
 		} \
-		return type::Error; \
+		return (type)0; \
 	} \
 	void cls::set##name(type value) \
 	{ \
@@ -178,7 +178,7 @@ class name : public Element, public Separatista::type \
 	{ code, L#value },
 
 #define END_IMPLEMENT_TAG_ENUM \
-	}
+	};
 
 #define BEGIN_IMPLEMENT_ORDER(name) \
 	const wchar_t* const* SeparatistaPrivate::name::getOrder() \

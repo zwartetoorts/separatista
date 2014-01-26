@@ -18,34 +18,17 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_CODEORPROPRIETARY_H
-#define SEPARATISTA_CODEORPROPRIETARY_H
+#include "partychoice.h"
 
-#include "macro.h"
-#include "element.h"
-#include "separatista.h"
+IMPLEMENT_TAG(Party11Choice, OrgId)
+IMPLEMENT_TAG(Party11Choice, PrvtId)
 
-namespace SeparatistaPrivate
-{
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, CategoryPurpose1Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
+IMPLEMENT_CONSTRUCTOR(Party11Choice)
+IMPLEMENT_CHILD(OrganisationIdentification, OrgId)
+IMPLEMENT_CHILD(PrivateIdentification, PrvtId)
+{}
 
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, LocalInstrument2Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, ServiceLevel8Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, SchemeName)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-}
-
-#endif // !defined SEPARATISTA_CODEORPROPRIETARY_H
+BEGIN_IMPLEMENT_ORDER(Party11Choice)
+OrgId,
+PrvtId
+END_IMPLEMENT_ORDER

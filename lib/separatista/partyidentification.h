@@ -25,15 +25,17 @@
 #include "element.h"
 #include "separatista.h"
 #include "postaladdress.h"
+#include "partychoice.h"
+#include "contactdetails.h"
 
 namespace SeparatistaPrivate
 {
 	BEGIN_DECLARE_CLASS_SUPER(PartyIdentification43, PartyIdentification43)
 	DECLARE_TAG(Name, Nm)
 	DECLARE_CHILD(PostalAddress6, PostalAddress, PstlAdr)
-	DECLARE_TAG(Identification, Id)
+	DECLARE_CHILD(Party11Choice, Identification, Id)
 	DECLARE_TAG(CountryOfResidence, CtryOfRes)
-	DECLARE_TAG(ContactDetails, CtctDtls)
+	DECLARE_CHILD(ContactDetails2, ContactDetails, CtctDtls)
 	END_DECLARE_CLASS
 
 }

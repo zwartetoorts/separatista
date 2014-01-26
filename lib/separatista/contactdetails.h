@@ -18,8 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_CODEORPROPRIETARY_H
-#define SEPARATISTA_CODEORPROPRIETARY_H
+#ifndef SEPARATISTA_CONTACTDETAILS_H
+#define SEPARATISTA_CONTACTDETAILS_H
 
 #include "macro.h"
 #include "element.h"
@@ -27,25 +27,15 @@
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, CategoryPurpose1Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, LocalInstrument2Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, ServiceLevel8Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, SchemeName)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
+	BEGIN_DECLARE_CLASS_SUPER(ContactDetails2, ContactDetails2)
+	DECLARE_TAG_ENUM(Separatista::NamePrefix1Code, NamePrefix, 4, NmPrfx)
+	DECLARE_TAG(Name, Nm)
+	DECLARE_TAG(PhoneNumber, PhneNb)
+	DECLARE_TAG(MobileNumber, MobNb)
+	DECLARE_TAG(FaxNumber, FaxNb)
+	DECLARE_TAG(EmailAddress, EmailAdr)
+	DECLARE_TAG(Other, Othr)
 	END_DECLARE_CLASS
 }
 
-#endif // !defined SEPARATISTA_CODEORPROPRIETARY_H
+#endif

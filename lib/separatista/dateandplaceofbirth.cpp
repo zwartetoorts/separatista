@@ -18,34 +18,22 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_CODEORPROPRIETARY_H
-#define SEPARATISTA_CODEORPROPRIETARY_H
+#include "dateandplaceofbirth.h"
 
-#include "macro.h"
-#include "element.h"
-#include "separatista.h"
+IMPLEMENT_TAG(DateAndPlaceOfBirth, BirthDt)
+IMPLEMENT_TAG(DateAndPlaceOfBirth, PrvcOfBirth)
+IMPLEMENT_TAG(DateAndPlaceOfBirth, CityOfBirth)
+IMPLEMENT_TAG(DateAndPlaceOfBirth, CtryOfBirth)
 
-namespace SeparatistaPrivate
+IMPLEMENT_CONSTRUCTOR(DateAndPlaceOfBirth)
 {
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, CategoryPurpose1Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, LocalInstrument2Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, ServiceLevel8Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, SchemeName)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
 }
 
-#endif // !defined SEPARATISTA_CODEORPROPRIETARY_H
+BEGIN_IMPLEMENT_ORDER(DateAndPlaceOfBirth)
+BirthDt,
+PrvcOfBirth,
+CityOfBirth,
+CtryOfBirth
+END_IMPLEMENT_ORDER
+
+

@@ -18,34 +18,34 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_CODEORPROPRIETARY_H
-#define SEPARATISTA_CODEORPROPRIETARY_H
+#include "contactdetails.h"
 
-#include "macro.h"
-#include "element.h"
-#include "separatista.h"
+using SeparatistaPrivate::ContactDetails2;
 
-namespace SeparatistaPrivate
-{
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, CategoryPurpose1Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
+IMPLEMENT_TAG(ContactDetails2, NmPrfx)
+IMPLEMENT_TAG(ContactDetails2, Nm)
+IMPLEMENT_TAG(ContactDetails2, PhneNb)
+IMPLEMENT_TAG(ContactDetails2, MobNb)
+IMPLEMENT_TAG(ContactDetails2, FaxNb)
+IMPLEMENT_TAG(ContactDetails2, EmailAdr)
+IMPLEMENT_TAG(ContactDetails2, Othr)
 
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, LocalInstrument2Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
+IMPLEMENT_CONSTRUCTOR(ContactDetails2)
+{}
 
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, ServiceLevel8Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
+BEGIN_IMPLEMENT_TAG_ENUM(ContactDetails2, Separatista::NamePrefix1Code, NamePrefix, NmPrfx)
+IMPLEMENT_TAG_ENUM(Separatista::NamePrefix1Code::Doctor, DOCT)
+IMPLEMENT_TAG_ENUM(Separatista::NamePrefix1Code::Mister, MIST)
+IMPLEMENT_TAG_ENUM(Separatista::NamePrefix1Code::Miss, MISS)
+IMPLEMENT_TAG_ENUM(Separatista::NamePrefix1Code::Madam, MADM)
+END_IMPLEMENT_TAG_ENUM
 
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, SchemeName)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-}
-
-#endif // !defined SEPARATISTA_CODEORPROPRIETARY_H
+BEGIN_IMPLEMENT_ORDER(ContactDetails2)
+NmPrfx,
+Nm,
+PhneNb,
+MobNb,
+FaxNb,
+EmailAdr,
+Othr
+END_IMPLEMENT_ORDER

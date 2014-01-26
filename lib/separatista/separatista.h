@@ -281,9 +281,48 @@ public:
 	SEPARATISTA_DECLARE_TAG_CLASS(CodeOrProprietary, CategoryPurpose)
 };
 
-enum AddressType2Code 
+class GenericOrganisationIdentification1
 {
-	Error = 0,
+public:
+	SEPARATISTA_DECLARE_TAG(Identification)
+	SEPARATISTA_DECLARE_CHILD(CodeOrProprietary, SchemeName)
+	SEPARATISTA_DECLARE_TAG(Issuer)
+};
+
+class OrganisationIdentification8
+{
+public:
+	SEPARATISTA_DECLARE_TAG(AnyBIC)
+	SEPARATISTA_DECLARE_CHILD(GenericOrganisationIdentification1, Other)
+};
+
+class DateAndPlaceOfBirth
+{
+public:
+	SEPARATISTA_DECLARE_TAG_TIME(BirthDate)
+	SEPARATISTA_DECLARE_TAG(ProvinceOfBirth)
+	SEPARATISTA_DECLARE_TAG(CityOfBirth)
+	SEPARATISTA_DECLARE_TAG(CountryOfBirth)
+};
+
+class PersonIdentification5
+{
+public:
+	SEPARATISTA_DECLARE_CHILD(DateAndPlaceOfBirth, DateAndPlaceOfBirth)
+	SEPARATISTA_DECLARE_CHILD(GenericOrganisationIdentification1, Other)
+};
+
+class Party11Choice
+{
+public:
+	SEPARATISTA_DECLARE_CHILD(OrganisationIdentification8, OrganisationIdentification)
+	SEPARATISTA_DECLARE_CHILD(PersonIdentification5, PrivateIdentification)
+
+};
+
+enum AddressType2Code
+{
+	AddressType2CodeError = 0,
 	Postal,
 	POBox,
 	Residential,
@@ -307,14 +346,35 @@ public:
 	SEPARATISTA_DECLARE_TAG_MULTI(AddressLine)
 };
 
+enum NamePrefix1Code
+{
+	NamePrefix1CodeError = 0,
+	Doctor,
+	Mister,
+	Miss,
+	Madam
+};
+
+class ContactDetails2
+{
+public:
+	SEPARATISTA_DECLARE_TAG_ENUM(Separatista::NamePrefix1Code, NamePrefix)
+	SEPARATISTA_DECLARE_TAG(Name)
+	SEPARATISTA_DECLARE_TAG(PhoneNumber)
+	SEPARATISTA_DECLARE_TAG(MobileNumber)
+	SEPARATISTA_DECLARE_TAG(FaxNumber)
+	SEPARATISTA_DECLARE_TAG(EmailAddress)
+	SEPARATISTA_DECLARE_TAG(Other)
+};
+
 class PartyIdentification43
 {
 public:
 	SEPARATISTA_DECLARE_TAG(Name)
 	SEPARATISTA_DECLARE_TAG_CLASS(PostalAddress6, PostalAddress)
-	SEPARATISTA_DECLARE_TAG(Identification)
+	SEPARATISTA_DECLARE_CHILD(Party11Choice, Identification)
 	SEPARATISTA_DECLARE_TAG(CountryOfResidence)
-	SEPARATISTA_DECLARE_TAG(ContactDetails)
+	SEPARATISTA_DECLARE_CHILD(ContactDetails2, ContactDetails)
 };
 
 class PaymentInstructionInformation4

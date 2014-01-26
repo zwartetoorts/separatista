@@ -28,6 +28,8 @@ IMPLEMENT_TAG(PartyIdentification43, CtctDtls)
 
 IMPLEMENT_CONSTRUCTOR(PartyIdentification43)
 IMPLEMENT_CHILD(PostalAddress, PstlAdr)
+IMPLEMENT_CHILD(Identification, Id)
+IMPLEMENT_CHILD(ContactDetails, CtctDtls)
 {
 }
 

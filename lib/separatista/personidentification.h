@@ -18,34 +18,21 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_CODEORPROPRIETARY_H
-#define SEPARATISTA_CODEORPROPRIETARY_H
+#ifndef SEPARATISTA_PERSONIDENTIFICATION_H
+#define SEPARATISTA_PERSONIDENTIFICATION_H
 
 #include "macro.h"
 #include "element.h"
 #include "separatista.h"
+#include "dateandplaceofbirth.h"
+#include "genericorganisationidentification.h"
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, CategoryPurpose1Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, LocalInstrument2Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, ServiceLevel8Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, SchemeName)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
+	BEGIN_DECLARE_CLASS_SUPER(PersonIdentification5, PersonIdentification5)
+	DECLARE_CHILD(DateAndPlaceOfBirth, DateAndPlaceOfBirth, DtAndPlcOfBirth)
+	DECLARE_CHILD(GenericOrganisationIdentification1, Other, Othr)
 	END_DECLARE_CLASS
 }
 
-#endif // !defined SEPARATISTA_CODEORPROPRIETARY_H
+#endif

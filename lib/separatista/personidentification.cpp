@@ -18,34 +18,17 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_CODEORPROPRIETARY_H
-#define SEPARATISTA_CODEORPROPRIETARY_H
+#include "personidentification.h"
 
-#include "macro.h"
-#include "element.h"
-#include "separatista.h"
+IMPLEMENT_TAG(PersonIdentification5, DtAndPlcOfBirth)
+IMPLEMENT_TAG(PersonIdentification5, Othr)
 
-namespace SeparatistaPrivate
-{
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, CategoryPurpose1Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
+IMPLEMENT_CONSTRUCTOR(PersonIdentification5)
+IMPLEMENT_CHILD(DateAndPlaceOfBirth, DtAndPlcOfBirth)
+IMPLEMENT_CHILD(Other, Othr)
+{}
 
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, LocalInstrument2Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, ServiceLevel8Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, SchemeName)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-}
-
-#endif // !defined SEPARATISTA_CODEORPROPRIETARY_H
+BEGIN_IMPLEMENT_ORDER(PersonIdentification5)
+DtAndPlcOfBirth,
+Othr
+END_IMPLEMENT_ORDER
