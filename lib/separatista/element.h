@@ -83,6 +83,10 @@ public:
 	DOMNodeList* getElementsByTagName(const wchar_t *pTagName);
 
 protected:
+	DOMDocument* getDocument() const;
+
+	Element* getParent() const;
+
 	DOMElement* getDOMElement() const;
 	operator DOMElement* ();
 

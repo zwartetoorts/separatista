@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <array>
+
 #ifndef SEPARATISTA_MACRO_H
 #define SEPARATISTA_MACRO_H
 
@@ -33,7 +35,7 @@ class name : public Element \
 class name : public Element, public Separatista::type \
 	{ \
 	public: \
-	name(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t* pTagName = NULL); \
+	name(DOMDocument *pDocument, Element *pParent, DOMElement *pElement, const wchar_t* pTagName); \
 	protected: \
 	const wchar_t* const* getOrder(); \
 	
@@ -45,6 +47,20 @@ class name : public Element, public Separatista::type \
 	public: \
 	static const wchar_t* tag; \
 	type& get##name() { return m_##name; };
+
+#define DECLARE_CHILD_MULTI(type, name, tag, size) \
+	private: \
+	std::array<type, size> m_##name##s; \
+	public: \
+	static const wchar_t *tag; \
+	type& get##name(size_t index) { return m_##name##s[index]; };
+
+#define DECLARE_TAG_MULTI(name, tag, size) \
+	private: \
+	std::array<const wchar_t*, size> m_##name##s; \
+	public: \
+	static const wchar_t *tag; \
+	const wchar_t* get##name(size_t index) { return m_##name##s[index]; };
 
 #define DECLARE_TAG_GET(name, tag) \
 	public: \
@@ -65,6 +81,17 @@ class name : public Element, public Separatista::type \
 
 #define DECLARE_TAG_TYPE(type, name, tag) \
 	DECLARE_TAG_TYPE_GET(type, name, tag) \
+	void set##name(type value);
+
+#define DECLARE_TAG_ENUM_GET(type, name, count, tag) \
+	public: \
+	static const struct name##Table { type m_code; const wchar_t* m_value; } m_##name##Table[count]; \
+	public: \
+	static const wchar_t* tag; \
+	type get##name();
+
+#define DECLARE_TAG_ENUM(type, name, count, tag) \
+	DECLARE_TAG_ENUM_GET(type, name, count, tag) \
 	void set##name(type value);
 
 #define DECLARE_TAG_TIME_GET(name, tag) \
@@ -106,6 +133,52 @@ class name : public Element, public Separatista::type \
 
 #define IMPLEMENT_TAG(name, tag) \
 	const wchar_t* SeparatistaPrivate::name::tag = L#tag;
+
+#define BEGIN_IMPLEMENT_CHILD_MULTI(type, child, tag, size) \
+	, m_##child##s(std::array<type, size>{ {
+
+#define IMPLEMENT_CHILD_MULTI(type, index, tag) \
+	type(pDocument, pParent, pParent->getChildElement(index, tag), tag),
+
+#define END_IMPLEMENT_CHILD_MULTI \
+	}})
+
+#define BEGIN_IMPLEMENT_TAG_MULTI(name, tag, size) \
+	, m_##name##s(std::array<const wchar_t*, size> { {
+
+#define IMPLEMENT_TAG_MULTI(index, tag) \
+	getChildElementValue(index, tag),
+
+#define END_IMPLEMENT_TAG_MULTI \
+	}})
+
+#define BEGIN_IMPLEMENT_TAG_ENUM(cls, type, name, tag) \
+	type cls::get##name() \
+	{ \
+	const wchar_t *pValue = getChildElementValue(tag); \
+	for(int i = 0; i < sizeof(m_##name##Table) / sizeof(m_##name##Table[0]); i++) \
+		{ \
+		if(std::wcscmp(m_##name##Table[i].m_value, pValue) == 0) \
+		return m_##name##Table[i].m_code; \
+		} \
+		return type::Error; \
+	} \
+	void cls::set##name(type value) \
+	{ \
+	for(int i = 0; i < sizeof(m_##name##Table) / sizeof(m_##name##Table[0]); i++) \
+		{ \
+		if(m_##name##Table[i].m_code == value) \
+			{\
+			setChildElementValue(tag, m_##name##Table[i].m_value); \
+			return; \
+	} } } \
+	const cls::##name##Table cls::m_##name##Table[] = {
+
+#define IMPLEMENT_TAG_ENUM(code, value) \
+	{ code, L#value },
+
+#define END_IMPLEMENT_TAG_ENUM \
+	}
 
 #define BEGIN_IMPLEMENT_ORDER(name) \
 	const wchar_t* const* SeparatistaPrivate::name::getOrder() \

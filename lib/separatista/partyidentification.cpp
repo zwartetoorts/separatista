@@ -20,18 +20,18 @@
 
 #include "partyidentification.h"
 
-IMPLEMENT_TAG(PartyIdentification32, Nm)
-IMPLEMENT_TAG(PartyIdentification32, PstlAdr)
-IMPLEMENT_TAG(PartyIdentification32, Id)
-IMPLEMENT_TAG(PartyIdentification32, CtryOfRes)
-IMPLEMENT_TAG(PartyIdentification32, CtctDtls)
+IMPLEMENT_TAG(PartyIdentification43, Nm)
+IMPLEMENT_TAG(PartyIdentification43, PstlAdr)
+IMPLEMENT_TAG(PartyIdentification43, Id)
+IMPLEMENT_TAG(PartyIdentification43, CtryOfRes)
+IMPLEMENT_TAG(PartyIdentification43, CtctDtls)
 
-IMPLEMENT_CONSTRUCTOR(PartyIdentification32)
+IMPLEMENT_CONSTRUCTOR(PartyIdentification43)
 IMPLEMENT_CHILD(PostalAddress, PstlAdr)
 {
 }
 
-BEGIN_IMPLEMENT_ORDER(PartyIdentification32)
+BEGIN_IMPLEMENT_ORDER(PartyIdentification43)
 	Nm,
 	PstlAdr,
 	Id,

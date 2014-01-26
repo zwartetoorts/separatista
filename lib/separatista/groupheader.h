@@ -25,14 +25,20 @@
 #include "element.h"
 #include "separatista.h"
 #include "partyidentification.h"
+#include "codeorproprietary.h"
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(GroupHeader39, GroupHeader39)
-	DECLARE_CHILD(PartyIdentification32, InitiatingParty, InitgPty)
+	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, Authorisation)
+	DECLARE_TAG(Code, Cd)
+	DECLARE_TAG(Proprietary, Prtry)
+	END_DECLARE_CLASS
+	
+	BEGIN_DECLARE_CLASS_SUPER(GroupHeader55, GroupHeader55)
+	DECLARE_CHILD(PartyIdentification43, InitiatingParty, InitgPty)
 	DECLARE_TAG(MessageIdentification, MsgId)
 	DECLARE_TAG_TIME(CreationDateTime, CreDtTm)
-	DECLARE_TAG(Authorisation, Authstn)
+	DECLARE_CHILD_MULTI(Authorisation, Authorisation, Authstn, 2)
 	DECLARE_TAG_GET(NumberOfTransactions, NbOfTxs)
 	DECLARE_TAG_GET(ControlSum, CtrlSum)
 	DECLARE_TAG(ForwardingAgent, FwdgAgt)

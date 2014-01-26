@@ -20,20 +20,36 @@
 
 #include "groupheader.h"
 
-IMPLEMENT_TAG(GroupHeader39, MsgId)
-IMPLEMENT_TAG(GroupHeader39, CreDtTm)
-IMPLEMENT_TAG(GroupHeader39, Authstn)
-IMPLEMENT_TAG(GroupHeader39, NbOfTxs)
-IMPLEMENT_TAG(GroupHeader39, CtrlSum)
-IMPLEMENT_TAG(GroupHeader39, InitgPty)
-IMPLEMENT_TAG(GroupHeader39, FwdgAgt)
+IMPLEMENT_TAG(Authorisation, Cd)
+IMPLEMENT_TAG(Authorisation, Prtry)
 
-IMPLEMENT_CONSTRUCTOR(GroupHeader39)
-IMPLEMENT_CHILD(InitiatingParty, InitgPty)
+IMPLEMENT_CONSTRUCTOR(Authorisation)
 {
 }
 
-BEGIN_IMPLEMENT_ORDER(GroupHeader39)
+BEGIN_IMPLEMENT_ORDER(Authorisation)
+	Cd,
+	Prtry
+END_IMPLEMENT_ORDER
+
+IMPLEMENT_TAG(GroupHeader55, MsgId)
+IMPLEMENT_TAG(GroupHeader55, CreDtTm)
+IMPLEMENT_TAG(GroupHeader55, Authstn)
+IMPLEMENT_TAG(GroupHeader55, NbOfTxs)
+IMPLEMENT_TAG(GroupHeader55, CtrlSum)
+IMPLEMENT_TAG(GroupHeader55, InitgPty)
+IMPLEMENT_TAG(GroupHeader55, FwdgAgt)
+
+IMPLEMENT_CONSTRUCTOR(GroupHeader55)
+IMPLEMENT_CHILD(InitiatingParty, InitgPty)
+BEGIN_IMPLEMENT_CHILD_MULTI(Authorisation, Authorisation, Authstn, 2)
+IMPLEMENT_CHILD_MULTI(Authorisation, 0, Authstn)
+IMPLEMENT_CHILD_MULTI(Authorisation, 1, Authstn)
+END_IMPLEMENT_CHILD_MULTI
+{
+}
+
+BEGIN_IMPLEMENT_ORDER(GroupHeader55)
 	MsgId,
 	CreDtTm,
 	Authstn,

@@ -240,6 +240,15 @@ private:
 #define SEPARATISTA_DECLARE_CHILD(type, name) \
 	SEPARATISTA_DECLARE_TAG_CLASS_GET(type, name)
 
+#define SEPARATISTA_DECLARE_CHILD_MULTI(type, name) \
+	virtual type& get##name(size_t index) = 0;
+
+#define SEPARATISTA_DECLARE_TAG_MULTI(name) \
+	virtual const wchar_t* get##name(size_t index) = 0;
+
+#define SEPARATISTA_DECLARE_TAG_ENUM(type, name) \
+	SEPARATISTA_DECLARE_TAG_TYPE(type, name)
+
 class CashAccount16
 {
 public:
@@ -274,6 +283,7 @@ public:
 
 enum AddressType2Code 
 {
+	Error = 0,
 	Postal,
 	POBox,
 	Residential,
@@ -285,7 +295,7 @@ enum AddressType2Code
 class PostalAddress6
 {
 public:
-	SEPARATISTA_DECLARE_TAG_TYPE(AddressType2Code, AddressType)
+	SEPARATISTA_DECLARE_TAG_ENUM(AddressType2Code, AddressType)
 	SEPARATISTA_DECLARE_TAG(Department)
 	SEPARATISTA_DECLARE_TAG(SubDepartment)
 	SEPARATISTA_DECLARE_TAG(StreetName)
@@ -294,10 +304,10 @@ public:
 	SEPARATISTA_DECLARE_TAG(TownName)
 	SEPARATISTA_DECLARE_TAG(CountrySubDivision)
 	SEPARATISTA_DECLARE_TAG(Country)
-	SEPARATISTA_DECLARE_TAG(AddressLine)
+	SEPARATISTA_DECLARE_TAG_MULTI(AddressLine)
 };
 
-class PartyIdentification32
+class PartyIdentification43
 {
 public:
 	SEPARATISTA_DECLARE_TAG(Name)
@@ -310,11 +320,11 @@ public:
 class PaymentInstructionInformation4
 {
 	SEPARATISTA_DECLARE_CHILD(PaymentTypeInformation20, PaymentTypeInformation)
-	SEPARATISTA_DECLARE_CHILD(PartyIdentification32, Creditor)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, Creditor)
 	SEPARATISTA_DECLARE_CHILD(CashAccount16, CreditorAccount)
 	SEPARATISTA_DECLARE_CHILD(BranchAndFinancialInstitutionIdentification4, CreditorAgent)
-	SEPARATISTA_DECLARE_CHILD(PartyIdentification32, UltimateCreditor)
-	SEPARATISTA_DECLARE_CHILD(PartyIdentification32, CreditorSchemeIdentification)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, UltimateCreditor)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, CreditorSchemeIdentification)
 	SEPARATISTA_DECLARE_TAG(PaymentInformationIdentification)
 	SEPARATISTA_DECLARE_TAG(PaymentMethod)
 	SEPARATISTA_DECLARE_TAG(BatchBooking)
@@ -329,12 +339,12 @@ public:
 	static const wchar_t *DirectDebit;
 };
 
-class GroupHeader39
+class GroupHeader55
 {
-	SEPARATISTA_DECLARE_CHILD(PartyIdentification32, InitiatingParty)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, InitiatingParty)
 	SEPARATISTA_DECLARE_TAG(MessageIdentification)
 	SEPARATISTA_DECLARE_TAG_TIME(CreationDateTime)
-	SEPARATISTA_DECLARE_TAG(Authorisation)
+	SEPARATISTA_DECLARE_CHILD_MULTI(CodeOrProprietary, Authorisation)
 	SEPARATISTA_DECLARE_TAG_GET(NumberOfTransactions)
 	SEPARATISTA_DECLARE_TAG_GET(ControlSum)
 	SEPARATISTA_DECLARE_TAG(ForwardingAgent)
@@ -363,7 +373,7 @@ public:
 	SEPARATISTA_EXTERN static const wchar_t *NamespaceURI;
 	
 	/// Get the GroupHeader for this document
-	SEPARATISTA_EXTERN GroupHeader39* getGroupHeader();
+	SEPARATISTA_EXTERN GroupHeader55* getGroupHeader();
 
 	// PaymentInstructionInformation methods
 	/// True if we are the end of all PaymentInformations

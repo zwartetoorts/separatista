@@ -30,7 +30,7 @@
 namespace SeparatistaPrivate
 {
 	BEGIN_DECLARE_CLASS(CustomerDirectDebitInitiationV02)
-	DECLARE_CHILD(GroupHeader39, GroupHeader, GrpHdr)
+	DECLARE_CHILD(GroupHeader55, GroupHeader, GrpHdr)
 	DECLARE_TAG(CustomerDirectDebitInitiation, CstmrDrctDbtInitn)
 	DECLARE_TAG(PaymentInformation, PmtInf)
 	public:

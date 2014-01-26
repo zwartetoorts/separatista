@@ -28,7 +28,7 @@
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(PartyIdentification32, PartyIdentification32)
+	BEGIN_DECLARE_CLASS_SUPER(PartyIdentification43, PartyIdentification43)
 	DECLARE_TAG(Name, Nm)
 	DECLARE_CHILD(PostalAddress6, PostalAddress, PstlAdr)
 	DECLARE_TAG(Identification, Id)

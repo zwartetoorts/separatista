@@ -29,7 +29,7 @@
 namespace SeparatistaPrivate
 {
 	BEGIN_DECLARE_CLASS_SUPER(PostalAddress6, PostalAddress6)
-	DECLARE_TAG_TYPE(Separatista::AddressType2Code, AddressType, AdrTp)
+	DECLARE_TAG_ENUM(Separatista::AddressType2Code, AddressType, 6, AdrTp)
 	DECLARE_TAG(Department, Dept)
 	DECLARE_TAG(SubDepartment, SubDept)
 	DECLARE_TAG(StreetName, StrtNm)
@@ -38,7 +38,7 @@ namespace SeparatistaPrivate
 	DECLARE_TAG(TownName, TwnNm)
 	DECLARE_TAG(CountrySubDivision, CtrySubDvsn)
 	DECLARE_TAG(Country, Ctry)
-	DECLARE_TAG(AddressLine, AdrLine)
+	DECLARE_TAG_MULTI(AddressLine, AdrLine, 7)
 	END_DECLARE_CLASS
 }
 

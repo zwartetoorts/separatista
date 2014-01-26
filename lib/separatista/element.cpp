@@ -36,6 +36,16 @@ Element::Element(DOMDocument *pDocument, Element *pParent, DOMElement *pElement,
 	setTagName(pTagName);
 }
 
+DOMDocument* Element::getDocument() const
+{
+	return m_pDocument;
+}
+
+Element* Element::getParent() const
+{
+	return m_pParent;
+}
+
 DOMElement* Element::getDOMElement() const
 {
 	return m_pDOMElement;
