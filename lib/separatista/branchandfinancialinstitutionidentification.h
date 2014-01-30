@@ -27,8 +27,8 @@
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(BranchAndFinancialInstitutionIdentification4, BranchAndFinancialInstitutionIdentification4)
-	DECLARE_TAG(FinancialInstitutionIdentification, FinInstnId)
+	BEGIN_DECLARE_CLASS_SUPER(BranchAndFinancialInstitutionIdentification5, BranchAndFinancialInstitutionIdentification5)
+	DECLARE_CHILD(FinancialInstitutionIdentification, FinancialInstitutionIdentification, FinInstnId)
 	DECLARE_TAG(BranchIdentification, BrnchId)
 	END_DECLARE_CLASS
 }

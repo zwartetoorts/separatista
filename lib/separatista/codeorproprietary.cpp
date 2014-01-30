@@ -20,51 +20,14 @@
 
 #include "codeorproprietary.h"
 
-IMPLEMENT_TAG(CategoryPurpose1Choice, Cd)
-IMPLEMENT_TAG(CategoryPurpose1Choice, Prtry)
+IMPLEMENT_TAG(CodeOrProprietary, Cd)
+IMPLEMENT_TAG(CodeOrProprietary, Prtry)
 
-IMPLEMENT_CONSTRUCTOR(CategoryPurpose1Choice)
+IMPLEMENT_CONSTRUCTOR(CodeOrProprietary)
 {
 }
 
-BEGIN_IMPLEMENT_ORDER(CategoryPurpose1Choice)
+BEGIN_IMPLEMENT_ORDER(CodeOrProprietary)
 	Cd,
 	Prtry
 END_IMPLEMENT_ORDER
-
-IMPLEMENT_TAG(LocalInstrument2Choice, Cd)
-IMPLEMENT_TAG(LocalInstrument2Choice, Prtry)
-
-IMPLEMENT_CONSTRUCTOR(LocalInstrument2Choice)
-{
-}
-
-BEGIN_IMPLEMENT_ORDER(LocalInstrument2Choice)
-	Cd,
-	Prtry
-END_IMPLEMENT_ORDER
-
-IMPLEMENT_TAG(ServiceLevel8Choice, Cd)
-IMPLEMENT_TAG(ServiceLevel8Choice, Prtry)
-
-IMPLEMENT_CONSTRUCTOR(ServiceLevel8Choice)
-{
-}
-
-BEGIN_IMPLEMENT_ORDER(ServiceLevel8Choice)
-	Cd,
-	Prtry
-END_IMPLEMENT_ORDER
-
-IMPLEMENT_TAG(SchemeName, Cd)
-IMPLEMENT_TAG(SchemeName, Prtry)
-
-IMPLEMENT_CONSTRUCTOR(SchemeName)
-{
-}
-
-BEGIN_IMPLEMENT_ORDER(SchemeName)
-Cd,
-Prtry
-END_IMPLEMENT_ORDER
-

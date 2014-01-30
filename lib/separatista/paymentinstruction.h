@@ -30,10 +30,10 @@
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(PaymentInstructionInformation4, PaymentInstructionInformation4)
-	DECLARE_CHILD(PaymentTypeInformation20, PaymentTypeInformation, PmtTpInf)
+	BEGIN_DECLARE_CLASS_SUPER(PaymentInstruction10, PaymentInstruction10)
+	DECLARE_CHILD(PaymentTypeInformation24, PaymentTypeInformation, PmtTpInf)
 	DECLARE_CHILD(PartyIdentification43, Creditor, Cdtr)
-	DECLARE_CHILD(CashAccount16, CreditorAccount, CdtrAcct)
+	DECLARE_CHILD(CashAccount24, CreditorAccount, CdtrAcct)
 	DECLARE_CHILD(BranchAndFinancialInstitutionIdentification4, CreditorAgent, CdtrAgt)
 	DECLARE_CHILD(PartyIdentification43, UltimateCreditor, UltmtCdtr)
 	DECLARE_CHILD(PartyIdentification43, CreditorSchemeIdentification, CdtrSchmeId)

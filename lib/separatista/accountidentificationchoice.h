@@ -18,8 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_PAYMENTTYPEINFORMATION_H
-#define SEPARATISTA_PAYMENTTYPEINFORMATION_H
+#ifndef SEPARATISTA_ACCOUNTIDENTIFICATIONCHOICE_H
+#define SEPARATISTA_ACCOUNTIDENTIFICATIONCHOICE_H
 
 #include "macro.h"
 #include "element.h"
@@ -28,14 +28,16 @@
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(PaymentTypeInformation24, PaymentTypeInformation24)
-	DECLARE_CHILD(ServiceLevel8Choice, ServiceLevel, SvcLvl)
-	DECLARE_CHILD(LocalInstrument2Choice, LocalInstrument, LclInstrm)
-	DECLARE_CHILD(CategoryPurpose1Choice, CategoryPurpose, CtgyPurp)
-	DECLARE_TAG_ENUM(Separatista::Priority2Code, InstructionPriority, 2, InstrPty)
-	DECLARE_TAG_ENUM(Separatista::SequenceType3Code, SequenceType, 4, SeqTp)
+	BEGIN_DECLARE_CLASS_SUPER(GenericAccountIdentification1, GenericAccountIdentification1)
+	DECLARE_TAG(Identification, Id)
+	DECLARE_CHILD(SchemeName, SchemeName, SchmeNm)
+	DECLARE_TAG(Issuer, Issr)
 	END_DECLARE_CLASS
 
+	BEGIN_DECLARE_CLASS_SUPER(AccountIdentification4Choice, AccountIdentification4Choice)
+	DECLARE_TAG(IBAN, IBAN)
+	DECLARE_CHILD(GenericAccountIdentification1, Other, Othr)
+	END_DECLARE_CLASS
 }
 
-#endif // !defined SEPARATISTA_PAYMENTTYPEINFORMATION_H
+#endif

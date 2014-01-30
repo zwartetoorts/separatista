@@ -24,7 +24,7 @@
 #include <vector>
 #include "element.h"
 #include "macro.h"
-#include "paymentinstructioninformation.h"
+#include "paymentinstruction.h"
 #include "groupheader.h"
 
 namespace SeparatistaPrivate
@@ -35,9 +35,9 @@ namespace SeparatistaPrivate
 	DECLARE_TAG(PaymentInformation, PmtInf)
 	public:
 		~CustomerDirectDebitInitiationV02();
-		void addPaymentInstructionInformation(PaymentInstructionInformation4 *pPmtInf);
+		void addPaymentInstructionInformation(PaymentInstruction10 *pPmtInf);
 
-		PaymentInstructionInformation4* getPaymentInstructionInformation();
+		PaymentInstruction10* getPaymentInstructionInformation();
 
 		// PaymentInformation methods
 		/// True if we are the end of all PaymentInformations
@@ -50,8 +50,8 @@ namespace SeparatistaPrivate
 		size_t getCount();
 
 	private:
-		std::vector<PaymentInstructionInformation4*> m_pmtInfs;
-		std::vector<PaymentInstructionInformation4*>::iterator m_pmtInfIterator;
+		std::vector<PaymentInstruction10*> m_pmtInfs;
+		std::vector<PaymentInstruction10*>::iterator m_pmtInfIterator;
 	END_DECLARE_CLASS
 
 };

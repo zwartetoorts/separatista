@@ -20,20 +20,34 @@
 
 #include "paymenttypeinformation.h"
 
-IMPLEMENT_TAG(PaymentTypeInformation20, InstrPty)
-IMPLEMENT_TAG(PaymentTypeInformation20, SvcLvl)
-IMPLEMENT_TAG(PaymentTypeInformation20, LclInstrm)
-IMPLEMENT_TAG(PaymentTypeInformation20, SeqTp)
-IMPLEMENT_TAG(PaymentTypeInformation20, CtgyPurp)
+using SeparatistaPrivate::PaymentTypeInformation24;
 
-IMPLEMENT_CONSTRUCTOR(PaymentTypeInformation20)
+IMPLEMENT_TAG(PaymentTypeInformation24, InstrPty)
+IMPLEMENT_TAG(PaymentTypeInformation24, SvcLvl)
+IMPLEMENT_TAG(PaymentTypeInformation24, LclInstrm)
+IMPLEMENT_TAG(PaymentTypeInformation24, SeqTp)
+IMPLEMENT_TAG(PaymentTypeInformation24, CtgyPurp)
+
+IMPLEMENT_CONSTRUCTOR(PaymentTypeInformation24)
 IMPLEMENT_CHILD(ServiceLevel, SvcLvl)
 IMPLEMENT_CHILD(LocalInstrument, LclInstrm)
 IMPLEMENT_CHILD(CategoryPurpose, CtgyPurp)
 {
 }
 
-BEGIN_IMPLEMENT_ORDER(PaymentTypeInformation20)
+BEGIN_IMPLEMENT_TAG_ENUM(PaymentTypeInformation24, Separatista::Priority2Code, InstructionPriority, InstrPty)
+IMPLEMENT_TAG_ENUM(Separatista::Priority2Code::High, HIGH)
+IMPLEMENT_TAG_ENUM(Separatista::Priority2Code::Normal, NORMAL)
+END_IMPLEMENT_TAG_ENUM
+
+BEGIN_IMPLEMENT_TAG_ENUM(PaymentTypeInformation24, Separatista::SequenceType3Code, SequenceType, SeqTp)
+IMPLEMENT_TAG_ENUM(Separatista::SequenceType3Code::First, FRST)
+IMPLEMENT_TAG_ENUM(Separatista::SequenceType3Code::Recurring, RCUR)
+IMPLEMENT_TAG_ENUM(Separatista::SequenceType3Code::Final, FNAL)
+IMPLEMENT_TAG_ENUM(Separatista::SequenceType3Code::OneOff, OOFF)
+END_IMPLEMENT_TAG_ENUM
+
+BEGIN_IMPLEMENT_ORDER(PaymentTypeInformation24)
 	InstrPty,
 	SvcLvl,
 	LclInstrm,

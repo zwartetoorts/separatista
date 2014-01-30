@@ -18,24 +18,34 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_PAYMENTTYPEINFORMATION_H
-#define SEPARATISTA_PAYMENTTYPEINFORMATION_H
+#ifndef SEPARATISTA_FINANCIALINSTITUTIONIDENTIFICATION_H
+#define SEPARATISTA_FINANCIALINSTITUTIONIDENTIFICATION_H
 
 #include "macro.h"
 #include "element.h"
 #include "separatista.h"
 #include "codeorproprietary.h"
+#include "postaladdress.h"
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(PaymentTypeInformation24, PaymentTypeInformation24)
-	DECLARE_CHILD(ServiceLevel8Choice, ServiceLevel, SvcLvl)
-	DECLARE_CHILD(LocalInstrument2Choice, LocalInstrument, LclInstrm)
-	DECLARE_CHILD(CategoryPurpose1Choice, CategoryPurpose, CtgyPurp)
-	DECLARE_TAG_ENUM(Separatista::Priority2Code, InstructionPriority, 2, InstrPty)
-	DECLARE_TAG_ENUM(Separatista::SequenceType3Code, SequenceType, 4, SeqTp)
+	BEGIN_DECLARE_CLASS_SUPER(ClearingSystemMemberIdentification2, ClearingSystemMemberIdentification2)
+	DECLARE_CHILD(ClearingSystemIdentification2Choice, ClearingSystemIdentification, ClrSysId)
+	DECLARE_TAG(MemberIdentification, MmbId)
 	END_DECLARE_CLASS
 
+	BEGIN_DECLARE_CLASS_SUPER(GenericFinancialIdentification1, GenericFinancialIdentification1)
+	DECLARE_TAG(Identification, Id)
+	DECLARE_CHILD(SchemeName, SchemeName, SchmeNm)
+	DECLARE_TAG(Issuer, Issr)
+	END_DECLARE_CLASS
+
+	BEGIN_DECLARE_CLASS_SUPER(FinancialInstitutionIdentification8, FinancialInstitutionIdentification8)
+	DECLARE_TAG(BICFI, BICFI)
+	DECLARE_CHILD(ClearingSystemMemberIdentification2, ClearingSystemMemberIdentification, ClrSysMmbId)
+	DECLARE_CHILD(PostalAddress6, PostalAddress, PstlAddr)
+	DECLARE_CHILD(GenericFinancialIdentification1, Other, Othr)
+	END_DECLARE_CLASS
 }
 
-#endif // !defined SEPARATISTA_PAYMENTTYPEINFORMATION_H
+#endif

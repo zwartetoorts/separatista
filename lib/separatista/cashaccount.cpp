@@ -20,16 +20,18 @@
 
 #include "cashaccount.h"
 
-IMPLEMENT_TAG(CashAccount16, Id)
-IMPLEMENT_TAG(CashAccount16, Tp)
-IMPLEMENT_TAG(CashAccount16, Ccy)
-IMPLEMENT_TAG(CashAccount16, Nm)
+IMPLEMENT_TAG(CashAccount24, Id)
+IMPLEMENT_TAG(CashAccount24, Tp)
+IMPLEMENT_TAG(CashAccount24, Ccy)
+IMPLEMENT_TAG(CashAccount24, Nm)
 
-IMPLEMENT_CONSTRUCTOR(CashAccount16)
+IMPLEMENT_CONSTRUCTOR(CashAccount24)
+IMPLEMENT_CHILD(Identification, Id)
+IMPLEMENT_CHILD(Type, Tp)
 {
 }
 
-BEGIN_IMPLEMENT_ORDER(CashAccount16)
+BEGIN_IMPLEMENT_ORDER(CashAccount24)
 	Id,
 	Tp,
 	Ccy,

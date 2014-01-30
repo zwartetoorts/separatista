@@ -48,7 +48,7 @@ IMPLEMENT_CHILD(GroupHeader, CustomerDirectDebitInitiation::GrpHdr)
 	if (pNodeList)
 	{
 		for (XMLSize_t i = 0; i < pNodeList->getLength(); i++)
-			addPaymentInstructionInformation(new PaymentInstructionInformation4(pDocument, this, (DOMElement*)pNodeList->item(i), PmtInf));
+			addPaymentInstructionInformation(new PaymentInstruction10(pDocument, this, (DOMElement*)pNodeList->item(i), PmtInf));
 	}
 
 	moveFirst();
@@ -69,13 +69,13 @@ CustomerDirectDebitInitiationV02::~CustomerDirectDebitInitiationV02()
 	}
 }
 
-void CustomerDirectDebitInitiationV02::addPaymentInstructionInformation(PaymentInstructionInformation4 *pPmtInf)
+void CustomerDirectDebitInitiationV02::addPaymentInstructionInformation(PaymentInstruction10 *pPmtInf)
 {
 	m_pmtInfs.push_back(pPmtInf);
 	moveFirst();
 }
 
-PaymentInstructionInformation4* CustomerDirectDebitInitiationV02::getPaymentInstructionInformation()
+PaymentInstruction10* CustomerDirectDebitInitiationV02::getPaymentInstructionInformation()
 {
 	if (m_pmtInfIterator == m_pmtInfs.end())
 		return NULL;

@@ -24,12 +24,14 @@
 #include "macro.h"
 #include "element.h"
 #include "separatista.h"
+#include "accountidentificationchoice.h"
+#include "codeorproprietary.h"
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(CashAccount16, CashAccount16)
-	DECLARE_TAG(Identification, Id)
-	DECLARE_TAG(Type, Tp)
+	BEGIN_DECLARE_CLASS_SUPER(CashAccount24, CashAccount24)
+	DECLARE_CHILD(AccountIdentification4Choice, Identification, Id)
+	DECLARE_CHILD(CashAccountType2Choice, Type, Tp)
 	DECLARE_TAG(Currency, Ccy)
 	DECLARE_TAG(Name, Nm)
 	END_DECLARE_CLASS

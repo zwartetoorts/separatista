@@ -20,16 +20,24 @@
 
 #include "groupheader.h"
 
+using SeparatistaPrivate::Authorisation;
+
 IMPLEMENT_TAG(Authorisation, Cd)
 IMPLEMENT_TAG(Authorisation, Prtry)
 
 IMPLEMENT_CONSTRUCTOR(Authorisation)
-{
-}
+{}
+
+BEGIN_IMPLEMENT_TAG_ENUM(Authorisation, Separatista::Authorisation1Code, Code, Cd)
+IMPLEMENT_TAG_ENUM(Separatista::Authorisation1Code::PreAuthorisedFile, AUTH)
+IMPLEMENT_TAG_ENUM(Separatista::Authorisation1Code::FileLevelAuthorisationDetails, FDET)
+IMPLEMENT_TAG_ENUM(Separatista::Authorisation1Code::FileLevelAuthorisationSummary, FSUM)
+IMPLEMENT_TAG_ENUM(Separatista::Authorisation1Code::InstructionLevelAuthorisation, ILEV)
+END_IMPLEMENT_TAG_ENUM
 
 BEGIN_IMPLEMENT_ORDER(Authorisation)
-	Cd,
-	Prtry
+Cd,
+Prtry
 END_IMPLEMENT_ORDER
 
 IMPLEMENT_TAG(GroupHeader55, MsgId)

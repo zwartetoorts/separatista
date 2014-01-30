@@ -27,25 +27,17 @@
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, CategoryPurpose1Choice)
-	DECLARE_TAG(Code, Cd)
+	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, CodeOrProprietary)
+		DECLARE_TAG(Code, Cd)
 	DECLARE_TAG(Proprietary, Prtry)
 	END_DECLARE_CLASS
 
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, LocalInstrument2Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, ServiceLevel8Choice)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
-
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, SchemeName)
-	DECLARE_TAG(Code, Cd)
-	DECLARE_TAG(Proprietary, Prtry)
-	END_DECLARE_CLASS
+	typedef CodeOrProprietary ServiceLevel8Choice;
+	typedef CodeOrProprietary CategoryPurpose1Choice;
+	typedef CodeOrProprietary LocalInstrument2Choice;
+	typedef CodeOrProprietary SchemeName;
+	typedef CodeOrProprietary CashAccountType2Choice;
+	typedef CodeOrProprietary ClearingSystemIdentification2Choice;
 }
 
 #endif // !defined SEPARATISTA_CODEORPROPRIETARY_H

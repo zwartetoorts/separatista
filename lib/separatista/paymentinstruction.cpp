@@ -18,29 +18,29 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "paymentinstructioninformation.h"
+#include "paymentinstruction.h"
 
-IMPLEMENT_TAG(PaymentInstructionInformation4, PmtInfId)
-IMPLEMENT_TAG(PaymentInstructionInformation4, PmtMtd)
-IMPLEMENT_TAG(PaymentInstructionInformation4, BtchBookg)
-IMPLEMENT_TAG(PaymentInstructionInformation4, NbOfTxs)
-IMPLEMENT_TAG(PaymentInstructionInformation4, CtrlSum)
-IMPLEMENT_TAG(PaymentInstructionInformation4, PmtTpInf)
-IMPLEMENT_TAG(PaymentInstructionInformation4, ReqdColltnDt)
-IMPLEMENT_TAG(PaymentInstructionInformation4, Cdtr)
-IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrAcct)
-IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrAgt)
-IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrAgtAcct)
-IMPLEMENT_TAG(PaymentInstructionInformation4, UltmtCdtr)
-IMPLEMENT_TAG(PaymentInstructionInformation4, ChrgBr)
-IMPLEMENT_TAG(PaymentInstructionInformation4, ChrgsAcct)
-IMPLEMENT_TAG(PaymentInstructionInformation4, ChrgsAcctAgt)
-IMPLEMENT_TAG(PaymentInstructionInformation4, CdtrSchmeId)
-IMPLEMENT_TAG(PaymentInstructionInformation4, DrctDbtTxInf)
+IMPLEMENT_TAG(PaymentInstruction10, PmtInfId)
+IMPLEMENT_TAG(PaymentInstruction10, PmtMtd)
+IMPLEMENT_TAG(PaymentInstruction10, BtchBookg)
+IMPLEMENT_TAG(PaymentInstruction10, NbOfTxs)
+IMPLEMENT_TAG(PaymentInstruction10, CtrlSum)
+IMPLEMENT_TAG(PaymentInstruction10, PmtTpInf)
+IMPLEMENT_TAG(PaymentInstruction10, ReqdColltnDt)
+IMPLEMENT_TAG(PaymentInstruction10, Cdtr)
+IMPLEMENT_TAG(PaymentInstruction10, CdtrAcct)
+IMPLEMENT_TAG(PaymentInstruction10, CdtrAgt)
+IMPLEMENT_TAG(PaymentInstruction10, CdtrAgtAcct)
+IMPLEMENT_TAG(PaymentInstruction10, UltmtCdtr)
+IMPLEMENT_TAG(PaymentInstruction10, ChrgBr)
+IMPLEMENT_TAG(PaymentInstruction10, ChrgsAcct)
+IMPLEMENT_TAG(PaymentInstruction10, ChrgsAcctAgt)
+IMPLEMENT_TAG(PaymentInstruction10, CdtrSchmeId)
+IMPLEMENT_TAG(PaymentInstruction10, DrctDbtTxInf)
 
-const wchar_t* Separatista::PaymentInstructionInformation4::DirectDebit = L"DD";
+const wchar_t* Separatista::PaymentInstruction10::DirectDebit = L"DD";
 
-IMPLEMENT_CONSTRUCTOR(PaymentInstructionInformation4)
+IMPLEMENT_CONSTRUCTOR(PaymentInstruction10)
 IMPLEMENT_CHILD(PaymentTypeInformation, PmtTpInf)
 IMPLEMENT_CHILD(Creditor, Cdtr)
 IMPLEMENT_CHILD(CreditorAccount, CdtrAcct)
@@ -50,7 +50,7 @@ IMPLEMENT_CHILD(CreditorSchemeIdentification, CdtrSchmeId)
 {
 }
 
-BEGIN_IMPLEMENT_ORDER(PaymentInstructionInformation4)
+BEGIN_IMPLEMENT_ORDER(PaymentInstruction10)
 	PmtInfId,
 	PmtMtd,
 	BtchBookg,

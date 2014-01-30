@@ -18,24 +18,30 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_PAYMENTTYPEINFORMATION_H
-#define SEPARATISTA_PAYMENTTYPEINFORMATION_H
+#include "accountidentificationchoice.h"
 
-#include "macro.h"
-#include "element.h"
-#include "separatista.h"
-#include "codeorproprietary.h"
+IMPLEMENT_TAG(GenericAccountIdentification1, Id)
+IMPLEMENT_TAG(GenericAccountIdentification1, SchmeNm)
+IMPLEMENT_TAG(GenericAccountIdentification1, Issr)
 
-namespace SeparatistaPrivate
-{
-	BEGIN_DECLARE_CLASS_SUPER(PaymentTypeInformation24, PaymentTypeInformation24)
-	DECLARE_CHILD(ServiceLevel8Choice, ServiceLevel, SvcLvl)
-	DECLARE_CHILD(LocalInstrument2Choice, LocalInstrument, LclInstrm)
-	DECLARE_CHILD(CategoryPurpose1Choice, CategoryPurpose, CtgyPurp)
-	DECLARE_TAG_ENUM(Separatista::Priority2Code, InstructionPriority, 2, InstrPty)
-	DECLARE_TAG_ENUM(Separatista::SequenceType3Code, SequenceType, 4, SeqTp)
-	END_DECLARE_CLASS
+IMPLEMENT_CONSTRUCTOR(GenericAccountIdentification1)
+IMPLEMENT_CHILD(SchemeName, SchmeNm)
+{}
 
-}
+BEGIN_IMPLEMENT_ORDER(GenericAccountIdentification1)
+Id,
+SchmeNm,
+Issr
+END_IMPLEMENT_ORDER
 
-#endif // !defined SEPARATISTA_PAYMENTTYPEINFORMATION_H
+IMPLEMENT_TAG(AccountIdentification4Choice, IBAN)
+IMPLEMENT_TAG(AccountIdentification4Choice, Othr)
+
+IMPLEMENT_CONSTRUCTOR(AccountIdentification4Choice)
+IMPLEMENT_CHILD(Other, Othr)
+{}
+
+BEGIN_IMPLEMENT_ORDER(AccountIdentification4Choice)
+IBAN,
+Othr
+END_IMPLEMENT_ORDER

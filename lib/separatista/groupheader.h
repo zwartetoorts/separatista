@@ -29,11 +29,11 @@
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(CodeOrProprietary, Authorisation)
-	DECLARE_TAG(Code, Cd)
+	BEGIN_DECLARE_CLASS_SUPER(Authorisation, Authorisation)
+	DECLARE_TAG_ENUM(Separatista::Authorisation1Code, Code, 4, Cd)
 	DECLARE_TAG(Proprietary, Prtry)
 	END_DECLARE_CLASS
-	
+
 	BEGIN_DECLARE_CLASS_SUPER(GroupHeader55, GroupHeader55)
 	DECLARE_CHILD(PartyIdentification43, InitiatingParty, InitgPty)
 	DECLARE_TAG(MessageIdentification, MsgId)

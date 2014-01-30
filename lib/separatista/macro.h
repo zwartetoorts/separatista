@@ -85,7 +85,7 @@ class name : public Element, public Separatista::type \
 
 #define DECLARE_TAG_ENUM_GET(type, name, count, tag) \
 	public: \
-	static const struct name##Table { type m_code; const wchar_t* m_value; } m_##name##Table[count + 1]; \
+	static const struct name##Table { type m_code; const wchar_t* m_value; } m_##name##Table[count]; \
 	public: \
 	static const wchar_t* tag; \
 	type get##name();

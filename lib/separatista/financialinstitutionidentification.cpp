@@ -18,24 +18,48 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_PAYMENTTYPEINFORMATION_H
-#define SEPARATISTA_PAYMENTTYPEINFORMATION_H
+#include "financialinstitutionidentification.h"
 
-#include "macro.h"
-#include "element.h"
-#include "separatista.h"
-#include "codeorproprietary.h"
+IMPLEMENT_TAG(ClearingSystemMemberIdentification2, ClrSysId)
+IMPLEMENT_TAG(ClearingSystemMemberIdentification2, MmbId)
 
-namespace SeparatistaPrivate
-{
-	BEGIN_DECLARE_CLASS_SUPER(PaymentTypeInformation24, PaymentTypeInformation24)
-	DECLARE_CHILD(ServiceLevel8Choice, ServiceLevel, SvcLvl)
-	DECLARE_CHILD(LocalInstrument2Choice, LocalInstrument, LclInstrm)
-	DECLARE_CHILD(CategoryPurpose1Choice, CategoryPurpose, CtgyPurp)
-	DECLARE_TAG_ENUM(Separatista::Priority2Code, InstructionPriority, 2, InstrPty)
-	DECLARE_TAG_ENUM(Separatista::SequenceType3Code, SequenceType, 4, SeqTp)
-	END_DECLARE_CLASS
+IMPLEMENT_CONSTRUCTOR(ClearingSystemMemberIdentification2)
+IMPLEMENT_CHILD(ClearingSystemIdentification, ClrSysId)
+{}
 
-}
+BEGIN_IMPLEMENT_ORDER(ClearingSystemMemberIdentification2)
+ClrSysId,
+MmbId
+END_IMPLEMENT_ORDER
 
-#endif // !defined SEPARATISTA_PAYMENTTYPEINFORMATION_H
+IMPLEMENT_TAG(GenericFinancialIdentification1, Id)
+IMPLEMENT_TAG(GenericFinancialIdentification1, SchmeNm)
+IMPLEMENT_TAG(GenericFinancialIdentification1, Issr)
+
+IMPLEMENT_CONSTRUCTOR(GenericFinancialIdentification1)
+IMPLEMENT_CHILD(SchemeName, SchmeNm)
+{}
+
+BEGIN_IMPLEMENT_ORDER(GenericFinancialIdentification1)
+Id,
+SchmeNm,
+Issr
+END_IMPLEMENT_ORDER
+
+IMPLEMENT_TAG(FinancialInstitutionIdentification8, BICFI)
+IMPLEMENT_TAG(FinancialInstitutionIdentification8, ClrSysMmbId)
+IMPLEMENT_TAG(FinancialInstitutionIdentification8, PstlAddr)
+IMPLEMENT_TAG(FinancialInstitutionIdentification8, Othr)
+
+IMPLEMENT_CONSTRUCTOR(FinancialInstitutionIdentification8)
+IMPLEMENT_CHILD(ClearingSystemMemberIdentification, ClrSysMmbId)
+IMPLEMENT_CHILD(PostalAddress, PstlAddr)
+IMPLEMENT_CHILD(Other, Othr)
+{}
+
+BEGIN_IMPLEMENT_ORDER(FinancialInstitutionIdentification8)
+BICFI,
+ClrSysMmbId,
+PstlAddr,
+Othr
+END_IMPLEMENT_ORDER

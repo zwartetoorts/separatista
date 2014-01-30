@@ -249,15 +249,6 @@ private:
 #define SEPARATISTA_DECLARE_TAG_ENUM(type, name) \
 	SEPARATISTA_DECLARE_TAG_TYPE(type, name)
 
-class CashAccount16
-{
-public:
-	SEPARATISTA_DECLARE_TAG(Identification);
-	SEPARATISTA_DECLARE_TAG(Type);
-	SEPARATISTA_DECLARE_TAG(Currency);
-	SEPARATISTA_DECLARE_TAG(Name);
-};
-
 class CodeOrProprietary
 {
 public:
@@ -265,19 +256,106 @@ public:
 	SEPARATISTA_DECLARE_TAG(Proprietary);
 };
 
-class BranchAndFinancialInstitutionIdentification4
+class GenericAccountIdentification1
 {
-	SEPARATISTA_DECLARE_TAG(FinancialInstitutionIdentification)
+public:
+	SEPARATISTA_DECLARE_TAG(Identification)
+	SEPARATISTA_DECLARE_CHILD(CodeOrProprietary, SchemeName)
+	SEPARATISTA_DECLARE_TAG(Issuer)
+};
+
+class AccountIdentification4Choice
+{
+public:
+	SEPARATISTA_DECLARE_TAG(IBAN)
+	SEPARATISTA_DECLARE_CHILD(GenericAccountIdentification1, Other)
+};
+
+class CashAccount24
+{
+public:
+	SEPARATISTA_DECLARE_CHILD(AccountIdentification4Choice, Identification);
+	SEPARATISTA_DECLARE_CHILD(CodeOrProprietary, Type);
+	SEPARATISTA_DECLARE_TAG(Currency);
+	SEPARATISTA_DECLARE_TAG(Name);
+};
+
+class ClearingSystemMemberIdentification2
+{
+	SEPARATISTA_DECLARE_CHILD(CodeOrProprietary, ClearingSystemIdentification)
+	SEPARATISTA_DECLARE_TAG(MemberIdentification)
+};
+
+class GenericFinancialIdentification1
+{
+	SEPARATISTA_DECLARE_TAG(Identification)
+	SEPARATISTA_DECLARE_CHILD(CodeOrProprietary, SchemeName)
+	SEPARATISTA_DECLARE_TAG(Issuer)
+};
+
+enum AddressType2Code
+{
+	AddressType2CodeError = 0,
+	Postal,
+	POBox,
+	Residential,
+	Business,
+	MailTo,
+	DeliveryTo
+};
+
+class PostalAddress6
+{
+public:
+	SEPARATISTA_DECLARE_TAG_ENUM(AddressType2Code, AddressType)
+		SEPARATISTA_DECLARE_TAG(Department)
+		SEPARATISTA_DECLARE_TAG(SubDepartment)
+		SEPARATISTA_DECLARE_TAG(StreetName)
+		SEPARATISTA_DECLARE_TAG(BuildingNumber)
+		SEPARATISTA_DECLARE_TAG(PostCode)
+		SEPARATISTA_DECLARE_TAG(TownName)
+		SEPARATISTA_DECLARE_TAG(CountrySubDivision)
+		SEPARATISTA_DECLARE_TAG(Country)
+		SEPARATISTA_DECLARE_TAG_MULTI(AddressLine)
+};
+
+class FinancialInstitutionIdentification8
+{
+	SEPARATISTA_DECLARE_TAG(BICFI)
+	SEPARATISTA_DECLARE_CHILD(ClearingSystemMemberIdentification2, ClearingSystemMemberIdentification)
+	SEPARATISTA_DECLARE_CHILD(PostalAddress6, PostalAddress)
+	SEPARATISTA_DECLARE_CHILD(GenericFinancialIdentification1, Other)
+};
+
+class BranchAndFinancialInstitutionIdentification5
+{
+	SEPARATISTA_DECLARE_CHILD(FinancialInstitutionIdentification8, FinancialInstitutionIdentification)
 	SEPARATISTA_DECLARE_TAG(BranchIdentification)
 };
 
-class PaymentTypeInformation20
+enum Priority2Code
+{
+	Priority2CodeError,
+	High,
+	Normal
+};
+
+enum SequenceType3Code
+{
+	SequenceType3CodeError,
+	First,
+	Recurring,
+	Final,
+	OneOff
+};
+
+class PaymentTypeInformation24
 {
 public:
-	SEPARATISTA_DECLARE_TAG(InstructionPriority)
+	SEPARATISTA_DECLARE_TAG_ENUM(Priority2Code, InstructionPriority)
 	SEPARATISTA_DECLARE_TAG_CLASS(CodeOrProprietary, ServiceLevel)
 	SEPARATISTA_DECLARE_TAG_CLASS(CodeOrProprietary, LocalInstrument)
-	SEPARATISTA_DECLARE_TAG(SequenceType)
+	SEPARATISTA_DECLARE_TAG_ENUM(SequenceType3Code, SequenceType)
 	SEPARATISTA_DECLARE_TAG_CLASS(CodeOrProprietary, CategoryPurpose)
 };
 
@@ -320,32 +398,6 @@ public:
 
 };
 
-enum AddressType2Code
-{
-	AddressType2CodeError = 0,
-	Postal,
-	POBox,
-	Residential,
-	Business,
-	MailTo,
-	DeliveryTo
-};
-
-class PostalAddress6
-{
-public:
-	SEPARATISTA_DECLARE_TAG_ENUM(AddressType2Code, AddressType)
-	SEPARATISTA_DECLARE_TAG(Department)
-	SEPARATISTA_DECLARE_TAG(SubDepartment)
-	SEPARATISTA_DECLARE_TAG(StreetName)
-	SEPARATISTA_DECLARE_TAG(BuildingNumber)
-	SEPARATISTA_DECLARE_TAG(PostCode)
-	SEPARATISTA_DECLARE_TAG(TownName)
-	SEPARATISTA_DECLARE_TAG(CountrySubDivision)
-	SEPARATISTA_DECLARE_TAG(Country)
-	SEPARATISTA_DECLARE_TAG_MULTI(AddressLine)
-};
-
 enum NamePrefix1Code
 {
 	NamePrefix1CodeError = 0,
@@ -377,12 +429,12 @@ public:
 	SEPARATISTA_DECLARE_CHILD(ContactDetails2, ContactDetails)
 };
 
-class PaymentInstructionInformation4
+class PaymentInstruction10
 {
-	SEPARATISTA_DECLARE_CHILD(PaymentTypeInformation20, PaymentTypeInformation)
+	SEPARATISTA_DECLARE_CHILD(PaymentTypeInformation24, PaymentTypeInformation)
 	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, Creditor)
-	SEPARATISTA_DECLARE_CHILD(CashAccount16, CreditorAccount)
-	SEPARATISTA_DECLARE_CHILD(BranchAndFinancialInstitutionIdentification4, CreditorAgent)
+	SEPARATISTA_DECLARE_CHILD(CashAccount24, CreditorAccount)
+	SEPARATISTA_DECLARE_CHILD(BranchAndFinancialInstitutionIdentification5, CreditorAgent)
 	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, UltimateCreditor)
 	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, CreditorSchemeIdentification)
 	SEPARATISTA_DECLARE_TAG(PaymentInformationIdentification)
@@ -399,16 +451,33 @@ public:
 	static const wchar_t *DirectDebit;
 };
 
+enum Authorisation1Code
+{
+	Authorisation1CodeError,
+	PreAuthorisedFile,
+	FileLevelAuthorisationDetails,
+	FileLevelAuthorisationSummary,
+	InstructionLevelAuthorisation
+};
+
+class Authorisation
+{
+	SEPARATISTA_DECLARE_TAG_ENUM(Separatista::Authorisation1Code, Code)
+	SEPARATISTA_DECLARE_TAG(Proprietary)
+};
+
 class GroupHeader55
 {
 	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, InitiatingParty)
 	SEPARATISTA_DECLARE_TAG(MessageIdentification)
 	SEPARATISTA_DECLARE_TAG_TIME(CreationDateTime)
-	SEPARATISTA_DECLARE_CHILD_MULTI(CodeOrProprietary, Authorisation)
+	SEPARATISTA_DECLARE_CHILD_MULTI(Authorisation, Authorisation)
 	SEPARATISTA_DECLARE_TAG_GET(NumberOfTransactions)
 	SEPARATISTA_DECLARE_TAG_GET(ControlSum)
 	SEPARATISTA_DECLARE_TAG(ForwardingAgent)
 };
+
+
 
 class DirectDebitDocument : public SeparatistaDocument
 {
@@ -445,7 +514,7 @@ public:
 	/// Get the count of PaymentInformations
 	SEPARATISTA_EXTERN size_t getCount();
 	/// Get the current PaymentInformation
-	SEPARATISTA_EXTERN PaymentInstructionInformation4* getPaymentInstructionInformation();
+	SEPARATISTA_EXTERN PaymentInstruction10* getPaymentInstructionInformation();
 
 protected:
 	SeparatistaPrivate::CustomerDirectDebitInitiation *m_pCstmrDrctDbtInitn;
