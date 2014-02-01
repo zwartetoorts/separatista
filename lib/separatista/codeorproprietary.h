@@ -38,6 +38,7 @@ namespace SeparatistaPrivate
 	typedef CodeOrProprietary SchemeName;
 	typedef CodeOrProprietary CashAccountType2Choice;
 	typedef CodeOrProprietary ClearingSystemIdentification2Choice;
+	typedef CodeOrProprietary Purpose2Choice;
 }
 
 #endif // !defined SEPARATISTA_CODEORPROPRIETARY_H

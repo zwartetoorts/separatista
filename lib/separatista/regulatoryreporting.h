@@ -18,18 +18,26 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "branchandfinancialinstitutionidentification.h"
+#ifndef SEPARATISTA_REGULATORYREPORTING_H
+#define SEPARATISTA_REGULATORYREPORTING_H
 
-IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification5, FinInstnId)
-IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification5, BrnchId)
+#include "element.h"
+#include "macro.h"
+#include "separatista.h"
 
-IMPLEMENT_CONSTRUCTOR(BranchAndFinancialInstitutionIdentification5)
-IMPLEMENT_CHILD(FinancialInstitutionIdentification, FinInstnId)
-IMPLEMENT_CHILD(BranchIdentification, BrnchId)
+
+namespace SeparatistaPrivate
 {
+	BEGIN_DECLARE_CLASS_SUPER(RegulatoryAuthority2, RegulatoryAuthority2)
+	DECLARE_TAG(Name, Nm)
+	DECLARE_TAG(Country, Ctry)
+	END_DECLARE_CLASS
+
+	BEGIN_DECLARE_CLASS_SUPER(RegulatoryReporting3, RegulatoryReporting3)
+	DECLARE_TAG_ENUM(Separatista::RegulatoryReportingType1Code, DebitCreditReportingIndicator, 3, DbtCdtRptgInd)
+	DECLARE_CHILD(RegulatoryAuthority2, Authority, Authrty)
+	// Details not implemented yet
+	END_DECLARE_CLASS
 }
 
-BEGIN_IMPLEMENT_ORDER(BranchAndFinancialInstitutionIdentification5)
-FinInstnId,
-BrnchId
-END_IMPLEMENT_ORDER
+#endif

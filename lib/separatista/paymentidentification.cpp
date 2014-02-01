@@ -18,18 +18,15 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "branchandfinancialinstitutionidentification.h"
+#include "paymentidentification.h"
 
-IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification5, FinInstnId)
-IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification5, BrnchId)
+IMPLEMENT_TAG(PaymentIdentification1, InstrId)
+IMPLEMENT_TAG(PaymentIdentification1, EndToEndId)
 
-IMPLEMENT_CONSTRUCTOR(BranchAndFinancialInstitutionIdentification5)
-IMPLEMENT_CHILD(FinancialInstitutionIdentification, FinInstnId)
-IMPLEMENT_CHILD(BranchIdentification, BrnchId)
-{
-}
+IMPLEMENT_CONSTRUCTOR(PaymentIdentification1)
+{}
 
-BEGIN_IMPLEMENT_ORDER(BranchAndFinancialInstitutionIdentification5)
-FinInstnId,
-BrnchId
+BEGIN_IMPLEMENT_ORDER(PaymentIdentification1)
+InstrId,
+EndToEndId
 END_IMPLEMENT_ORDER

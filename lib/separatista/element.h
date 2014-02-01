@@ -82,6 +82,17 @@ public:
 	*/
 	DOMNodeList* getElementsByTagName(const wchar_t *pTagName);
 
+	/**
+	Gets the value of an attribute
+	*/
+	const wchar_t* getChildElementAttributeValue(const wchar_t *pTagName, const wchar_t* pAttrName);
+
+	/**
+	Sets the value of an attribute
+	*/
+	void setChildElementAttributeValue(const wchar_t *pTagName, const wchar_t *pAttrName, const wchar_t *pValue);
+
+
 protected:
 	DOMDocument* getDocument() const;
 

@@ -24,12 +24,14 @@
 #include "macro.h"
 #include "element.h"
 #include "separatista.h"
+#include "financialinstitutionidentification.h"
+#include "branchdata.h"
 
 namespace SeparatistaPrivate
 {
 	BEGIN_DECLARE_CLASS_SUPER(BranchAndFinancialInstitutionIdentification5, BranchAndFinancialInstitutionIdentification5)
-	DECLARE_CHILD(FinancialInstitutionIdentification, FinancialInstitutionIdentification, FinInstnId)
-	DECLARE_TAG(BranchIdentification, BrnchId)
+	DECLARE_CHILD(FinancialInstitutionIdentification8, FinancialInstitutionIdentification, FinInstnId)
+	DECLARE_CHILD(BranchData5, BranchIdentification, BrnchId)
 	END_DECLARE_CLASS
 }
 

@@ -18,18 +18,23 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "branchandfinancialinstitutionidentification.h"
+#ifndef SEPARATISTA_DIRECTDEBITTRANSACTION_H
+#define SEPARATISTA_DIRECTDEBITTRANSACTION_H
 
-IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification5, FinInstnId)
-IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification5, BrnchId)
+#include "element.h"
+#include "macro.h"
+#include "separatista.h"
+#include "mandaterelatedinformation.h"
+#include "partyidentification.h"
 
-IMPLEMENT_CONSTRUCTOR(BranchAndFinancialInstitutionIdentification5)
-IMPLEMENT_CHILD(FinancialInstitutionIdentification, FinInstnId)
-IMPLEMENT_CHILD(BranchIdentification, BrnchId)
+namespace SeparatistaPrivate
 {
+	BEGIN_DECLARE_CLASS_SUPER(DirectDebitTransaction7, DirectDebitTransaction7)
+	DECLARE_CHILD(MandateRelatedInformation8, MandateRelatedInformation, MndtRltdInf)
+	DECLARE_CHILD(PartyIdentification43, CreditorSchemeId, CdtrSchmeId)
+	DECLARE_TAG(PreNotificationIdentification, PreNtfctnId)
+	DECLARE_TAG_TIME(PreNotificationDate, PreNtfctnDt)
+	END_DECLARE_CLASS
 }
 
-BEGIN_IMPLEMENT_ORDER(BranchAndFinancialInstitutionIdentification5)
-FinInstnId,
-BrnchId
-END_IMPLEMENT_ORDER
+#endif

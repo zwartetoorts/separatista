@@ -20,6 +20,8 @@
 
 #include "paymentinstruction.h"
 
+using SeparatistaPrivate::PaymentInstruction10;
+
 IMPLEMENT_TAG(PaymentInstruction10, PmtInfId)
 IMPLEMENT_TAG(PaymentInstruction10, PmtMtd)
 IMPLEMENT_TAG(PaymentInstruction10, BtchBookg)
@@ -49,6 +51,13 @@ IMPLEMENT_CHILD(UltimateCreditor, UltmtCdtr)
 IMPLEMENT_CHILD(CreditorSchemeIdentification, CdtrSchmeId)
 {
 }
+
+BEGIN_IMPLEMENT_TAG_ENUM(PaymentInstruction10, Separatista::ChargeBearerType1Code, ChargeBearer, ChrgBr)
+IMPLEMENT_TAG_ENUM(Separatista::ChargeBearerType1Code::BorneByDebtor, DEBT)
+IMPLEMENT_TAG_ENUM(Separatista::ChargeBearerType1Code::BorneByCreditor, CRED)
+IMPLEMENT_TAG_ENUM(Separatista::ChargeBearerType1Code::Shared, SHARED)
+IMPLEMENT_TAG_ENUM(Separatista::ChargeBearerType1Code::FollowingServiceLevel, SLEV)
+END_IMPLEMENT_TAG_ENUM
 
 BEGIN_IMPLEMENT_ORDER(PaymentInstruction10)
 	PmtInfId,

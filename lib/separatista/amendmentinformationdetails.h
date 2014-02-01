@@ -18,18 +18,31 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#ifndef SEPARATISTA_AMENDMENTINFORMATIONDETAILS_H
+#define SEPARATISTA_AMENDMENTINFORMATIONDETAILS_H
+
+#include "element.h"
+#include "macro.h"
+#include "separatista.h"
+#include "partyidentification.h"
 #include "branchandfinancialinstitutionidentification.h"
+#include "cashaccount.h"
+#include "codeorproprietary.h"
 
-IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification5, FinInstnId)
-IMPLEMENT_TAG(BranchAndFinancialInstitutionIdentification5, BrnchId)
-
-IMPLEMENT_CONSTRUCTOR(BranchAndFinancialInstitutionIdentification5)
-IMPLEMENT_CHILD(FinancialInstitutionIdentification, FinInstnId)
-IMPLEMENT_CHILD(BranchIdentification, BrnchId)
+namespace SeparatistaPrivate
 {
+	BEGIN_DECLARE_CLASS_SUPER(AmendmentInformationDetails8, AmendmentInformationDetails8)
+	DECLARE_TAG(OriginalMandateIdentification, OrgnlMndtId)
+	DECLARE_CHILD(PartyIdentification43, OriginalCreditorSchemeIdentification, OrgnlCdtrSchmeId)
+	DECLARE_CHILD(BranchAndFinancialInstitutionIdentification5, OriginalCreditorAgent, OrgnlCdtrAgt)
+	DECLARE_CHILD(CashAccount24, OriginalCreditorAgentAccount, OrgnlCdtrAgtAcct)
+	DECLARE_CHILD(PartyIdentification43, OriginalDebtor, OrgnlDbtr)
+	DECLARE_CHILD(CashAccount24, OriginalDebtorAccount, OrgnlDbtrAcct)
+	DECLARE_CHILD(BranchAndFinancialInstitutionIdentification5, OriginalDebtorAccountAgent, OrgnlDbtrAcctAgt)
+	DECLARE_CHILD(CashAccount24, OriginalDebtorAgentAccount, OrgnlDbtrAgtAcct)
+	DECLARE_TAG_TIME(OriginalFinalCollectionDate, OrgnlFnlColltnDt)
+	DECLARE_TAG_ENUM(Separatista::Frequency6Code, OriginalFrequency, 9, OrgnlFrqcy)
+	END_DECLARE_CLASS
 }
 
-BEGIN_IMPLEMENT_ORDER(BranchAndFinancialInstitutionIdentification5)
-FinInstnId,
-BrnchId
-END_IMPLEMENT_ORDER
+#endif

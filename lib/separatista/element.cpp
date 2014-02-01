@@ -243,6 +243,62 @@ void Element::removeChildElement(DOMElement *pChildElement)
 	{
 	}
 }
+const wchar_t* Element::getChildElementAttributeValue(const wchar_t *pTagName, const wchar_t *pAttrName)
+{
+	DOMElement *pElement;
+	const wchar_t *pValue;
+
+	// Check if the element exists
+	if (!m_pDOMElement)
+		return NULL;
+	try
+	{
+		pElement = getChildElement(0, pTagName, false);
+		if (!pElement)
+			return NULL;
+
+		// Element exists, return attribute value
+		pValue = pElement->getAttribute(pAttrName);
+		if (XMLString::stringLen(pValue) == 0)
+			return NULL;
+		else
+			return pValue;
+	}
+	catch (const DOMException &e)
+	{
+		return NULL;
+	}
+}
+
+void Element::setChildElementAttributeValue(const wchar_t *pTagName, const wchar_t *pAttrName, const wchar_t *pValue)
+{
+	DOMElement *pElement;
+
+	// Check if the element exitst
+	if (!m_pDOMElement)
+		return;
+	try
+	{
+		pElement = getChildElement(0, pTagName, true);
+		if (!pElement)
+			return;
+
+		// Check for attribute removal (NULL value)
+		if (!pValue)
+		{
+			pElement->removeAttribute(pAttrName);
+			return;
+		}
+		else
+		{
+			pElement->setAttribute(pAttrName, pValue);
+			return;
+		}
+	}
+	catch (const DOMException &e)
+	{
+	}
+}
 
 time_t Element::toTime(const wchar_t *pDateTime)
 {

@@ -58,8 +58,7 @@ namespace xercesc
 namespace SeparatistaPrivate
 {
 	// Forward decl
-	class CustomerDirectDebitInitiationV02;
-	typedef CustomerDirectDebitInitiationV02 CustomerDirectDebitInitiation;
+	class CustomerDirectDebitInitiationV04;
 };
 
 namespace Separatista
@@ -203,6 +202,16 @@ private:
 	SEPARATISTA_DECLARE_TAG_GET(name) \
 	SEPARATISTA_DECLARE_TAG_SET(name)
 
+#define SEPARATISTA_DECLARE_TAG_ATTRIBUTE_GET(name, attr) \
+	virtual const wchar_t* get##name##attr() = 0;
+
+#define SEPARATISTA_DECLARE_TAG_ATTRIBUTE_SET(name, attr) \
+	virtual void set##name##attr(const wchar_t *pValue) = 0;
+
+#define SEPARATISTA_DECLARE_TAG_ATTRIBUTE(name, attr) \
+	SEPARATISTA_DECLARE_TAG_ATTRIBUTE_GET(name, attr) \
+	SEPARATISTA_DECLARE_TAG_ATTRIBUTE_SET(name, attr)
+
 #define SEPARATISTA_DECLARE_TAG_TIME_GET(name) \
 	virtual std::time_t get##name() = 0;
 
@@ -282,12 +291,14 @@ public:
 
 class ClearingSystemMemberIdentification2
 {
+public:
 	SEPARATISTA_DECLARE_CHILD(CodeOrProprietary, ClearingSystemIdentification)
 	SEPARATISTA_DECLARE_TAG(MemberIdentification)
 };
 
 class GenericFinancialIdentification1
 {
+public:
 	SEPARATISTA_DECLARE_TAG(Identification)
 	SEPARATISTA_DECLARE_CHILD(CodeOrProprietary, SchemeName)
 	SEPARATISTA_DECLARE_TAG(Issuer)
@@ -308,29 +319,39 @@ class PostalAddress6
 {
 public:
 	SEPARATISTA_DECLARE_TAG_ENUM(AddressType2Code, AddressType)
-		SEPARATISTA_DECLARE_TAG(Department)
-		SEPARATISTA_DECLARE_TAG(SubDepartment)
-		SEPARATISTA_DECLARE_TAG(StreetName)
-		SEPARATISTA_DECLARE_TAG(BuildingNumber)
-		SEPARATISTA_DECLARE_TAG(PostCode)
-		SEPARATISTA_DECLARE_TAG(TownName)
-		SEPARATISTA_DECLARE_TAG(CountrySubDivision)
-		SEPARATISTA_DECLARE_TAG(Country)
-		SEPARATISTA_DECLARE_TAG_MULTI(AddressLine)
+	SEPARATISTA_DECLARE_TAG(Department)
+	SEPARATISTA_DECLARE_TAG(SubDepartment)
+	SEPARATISTA_DECLARE_TAG(StreetName)
+	SEPARATISTA_DECLARE_TAG(BuildingNumber)
+	SEPARATISTA_DECLARE_TAG(PostCode)
+	SEPARATISTA_DECLARE_TAG(TownName)
+	SEPARATISTA_DECLARE_TAG(CountrySubDivision)
+	SEPARATISTA_DECLARE_TAG(Country)
+	SEPARATISTA_DECLARE_TAG_MULTI(AddressLine)
 };
 
 class FinancialInstitutionIdentification8
 {
+public:
 	SEPARATISTA_DECLARE_TAG(BICFI)
 	SEPARATISTA_DECLARE_CHILD(ClearingSystemMemberIdentification2, ClearingSystemMemberIdentification)
 	SEPARATISTA_DECLARE_CHILD(PostalAddress6, PostalAddress)
 	SEPARATISTA_DECLARE_CHILD(GenericFinancialIdentification1, Other)
 };
 
+class BranchData5
+{
+public:
+	SEPARATISTA_DECLARE_TAG(Identification)
+	SEPARATISTA_DECLARE_TAG(Name)
+	SEPARATISTA_DECLARE_CHILD(PostalAddress6, PostalAddress)
+};
+
 class BranchAndFinancialInstitutionIdentification5
 {
+public:
 	SEPARATISTA_DECLARE_CHILD(FinancialInstitutionIdentification8, FinancialInstitutionIdentification)
-	SEPARATISTA_DECLARE_TAG(BranchIdentification)
+	SEPARATISTA_DECLARE_CHILD(BranchData5, BranchIdentification)
 };
 
 enum Priority2Code
@@ -429,8 +450,118 @@ public:
 	SEPARATISTA_DECLARE_CHILD(ContactDetails2, ContactDetails)
 };
 
+enum ChargeBearerType1Code {
+	ChargeBearerType1CodeError,
+	BorneByDebtor,
+	BorneByCreditor,
+	Shared,
+	FollowingServiceLevel
+};
+
+class PaymentIdentification1
+{
+public:
+	SEPARATISTA_DECLARE_TAG(InstructionIdentification)
+	SEPARATISTA_DECLARE_TAG(EndToEndIdentification)
+};
+
+class RegulatoryAuthority2
+{
+public:
+	SEPARATISTA_DECLARE_TAG(Name)
+	SEPARATISTA_DECLARE_TAG(Country)
+};
+
+enum RegulatoryReportingType1Code
+{
+	RegulatoryReportingType1CodeError,
+	Credit,
+	Debit,
+	Both
+};
+
+class RegulatoryReporting3
+{
+public:
+	SEPARATISTA_DECLARE_TAG_ENUM(Separatista::RegulatoryReportingType1Code, DebitCreditReportingIndicator)
+	SEPARATISTA_DECLARE_CHILD(RegulatoryAuthority2, Authority)
+	// Details not implemented yet
+};
+
+enum Frequency6Code
+{
+	Frequency6CodeError,
+	Annual,
+	Monthly,
+	Quarterly,
+	SemiAnnual,
+	Weekly,
+	Daily,
+	Adhoc,
+	IntraDay,
+	Fortnightly
+};
+
+class AmendmentInformationDetails8
+{
+public:
+	SEPARATISTA_DECLARE_TAG(OriginalMandateIdentification)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, OriginalCreditorSchemeIdentification)
+	SEPARATISTA_DECLARE_CHILD(BranchAndFinancialInstitutionIdentification5, OriginalCreditorAgent)
+	SEPARATISTA_DECLARE_CHILD(CashAccount24, OriginalCreditorAgentAccount)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, OriginalDebtor)
+	SEPARATISTA_DECLARE_CHILD(CashAccount24, OriginalDebtorAccount)
+	SEPARATISTA_DECLARE_CHILD(BranchAndFinancialInstitutionIdentification5, OriginalDebtorAccountAgent)
+	SEPARATISTA_DECLARE_CHILD(CashAccount24, OriginalDebtorAgentAccounT)
+	SEPARATISTA_DECLARE_TAG_TIME(OriginalFinalCollectionDate)
+	SEPARATISTA_DECLARE_TAG_ENUM(Separatista::Frequency6Code, OriginalFrequency)
+};
+
+class MandateRelatedInformation8
+{
+public:
+	SEPARATISTA_DECLARE_TAG(MandateIdentification)
+	SEPARATISTA_DECLARE_TAG_TIME(DateOfSignature)
+	SEPARATISTA_DECLARE_TAG(AmendmentIndicator)
+	SEPARATISTA_DECLARE_TAG(ElectronicSignature)
+	SEPARATISTA_DECLARE_TAG_TIME(FirstCollectionDate)
+	SEPARATISTA_DECLARE_TAG_TIME(FinalCollectionDate)
+	SEPARATISTA_DECLARE_TAG_ENUM(Separatista::Frequency6Code, Frequency)
+};
+
+class DirectDebitTransaction7
+{
+public:
+	SEPARATISTA_DECLARE_CHILD(MandateRelatedInformation8, MandateRelatedInformation)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, CreditorSchemeId)
+	SEPARATISTA_DECLARE_TAG(PreNotificationIdentification)
+	SEPARATISTA_DECLARE_TAG_TIME(PreNotificationDate)
+};
+
+class DirectDebitTransactionInformation13
+{
+public:
+	SEPARATISTA_DECLARE_CHILD(PaymentIdentification1, PaymentIdentification)
+	SEPARATISTA_DECLARE_CHILD(PaymentTypeInformation24, PaymentTypeInformation)
+	SEPARATISTA_DECLARE_TAG(InstructedAmount)
+	SEPARATISTA_DECLARE_TAG_ATTRIBUTE(InstructedAmount, Ccy)
+	SEPARATISTA_DECLARE_TAG_ENUM(Separatista::ChargeBearerType1Code, ChargeBearer)
+	SEPARATISTA_DECLARE_CHILD(DirectDebitTransaction7, DirectDebitTransaction)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, UltimateCreditor)
+	SEPARATISTA_DECLARE_CHILD(BranchAndFinancialInstitutionIdentification5, DebtorAgent)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, DebtorAgentAccount)
+	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, Debtor)
+	SEPARATISTA_DECLARE_CHILD(CashAccount24, DebtorAccount)
+	SEPARATISTA_DECLARE_CHILD(CashAccount24, UltimateDebtor)
+	SEPARATISTA_DECLARE_TAG(InstructionForCreditorAgent)
+	SEPARATISTA_DECLARE_CHILD(CodeOrProprietary, Purpose)
+	SEPARATISTA_DECLARE_CHILD_MULTI(RegulatoryAuthority2, RegulatoryReporting)
+	// Tax not yet implemented
+};
+
 class PaymentInstruction10
 {
+public:
 	SEPARATISTA_DECLARE_CHILD(PaymentTypeInformation24, PaymentTypeInformation)
 	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, Creditor)
 	SEPARATISTA_DECLARE_CHILD(CashAccount24, CreditorAccount)
@@ -444,7 +575,7 @@ class PaymentInstruction10
 	SEPARATISTA_DECLARE_TAG_GET(ControlSum)
 	SEPARATISTA_DECLARE_TAG(RequestedCollectionDate)
 	SEPARATISTA_DECLARE_TAG(CreditorAgentAccount)
-	SEPARATISTA_DECLARE_TAG(ChargeBearer)
+	SEPARATISTA_DECLARE_TAG_ENUM(ChargeBearerType1Code, ChargeBearer)
 	SEPARATISTA_DECLARE_TAG(ChargesAccount)
 	SEPARATISTA_DECLARE_TAG(ChargesAccountAgent)
 public:
@@ -462,12 +593,14 @@ enum Authorisation1Code
 
 class Authorisation
 {
+public:
 	SEPARATISTA_DECLARE_TAG_ENUM(Separatista::Authorisation1Code, Code)
 	SEPARATISTA_DECLARE_TAG(Proprietary)
 };
 
 class GroupHeader55
 {
+public:
 	SEPARATISTA_DECLARE_CHILD(PartyIdentification43, InitiatingParty)
 	SEPARATISTA_DECLARE_TAG(MessageIdentification)
 	SEPARATISTA_DECLARE_TAG_TIME(CreationDateTime)
@@ -476,8 +609,6 @@ class GroupHeader55
 	SEPARATISTA_DECLARE_TAG_GET(ControlSum)
 	SEPARATISTA_DECLARE_TAG(ForwardingAgent)
 };
-
-
 
 class DirectDebitDocument : public SeparatistaDocument
 {
@@ -517,7 +648,7 @@ public:
 	SEPARATISTA_EXTERN PaymentInstruction10* getPaymentInstructionInformation();
 
 protected:
-	SeparatistaPrivate::CustomerDirectDebitInitiation *m_pCstmrDrctDbtInitn;
+	SeparatistaPrivate::CustomerDirectDebitInitiationV04 *m_pCstmrDrctDbtInitn;
 private:
 };
 

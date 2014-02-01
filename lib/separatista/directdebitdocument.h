@@ -29,12 +29,12 @@
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS(CustomerDirectDebitInitiationV02)
+	BEGIN_DECLARE_CLASS(CustomerDirectDebitInitiationV04)
 	DECLARE_CHILD(GroupHeader55, GroupHeader, GrpHdr)
 	DECLARE_TAG(CustomerDirectDebitInitiation, CstmrDrctDbtInitn)
 	DECLARE_TAG(PaymentInformation, PmtInf)
 	public:
-		~CustomerDirectDebitInitiationV02();
+		~CustomerDirectDebitInitiationV04();
 		void addPaymentInstructionInformation(PaymentInstruction10 *pPmtInf);
 
 		PaymentInstruction10* getPaymentInstructionInformation();

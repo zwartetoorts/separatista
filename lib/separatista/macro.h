@@ -74,6 +74,13 @@ class name : public Element, public Separatista::type \
 	DECLARE_TAG_GET(name, tag) \
 	DECLARE_TAG_SET(name, tag)
 
+#define DECLARE_TAG_ATTRIBUTE_GET(name, tag, attr) \
+	const wchar_t* get##name##attr() { return getChildElementAttributeValue(tag, L#attr); };
+
+#define DECLARE_TAG_ATTRIBUTE(name, tag, attr) \
+	DECLARE_TAG_ATTRIBUTE_GET(name, tag, attr) \
+	void set##name##attr(const wchar_t* pValue) { setChildElementAttributeValue(tag, L#attr, pValue); };
+
 #define DECLARE_TAG_TYPE_GET(type, name, tag) \
 	public: \
 	static const wchar_t* tag; \

@@ -34,12 +34,12 @@ using namespace xercesc;
 using namespace SeparatistaPrivate;
 using Separatista::DirectDebitDocument;
 
-IMPLEMENT_TAG(CustomerDirectDebitInitiationV02, CstmrDrctDbtInitn)
-IMPLEMENT_TAG(CustomerDirectDebitInitiationV02, GrpHdr)
-IMPLEMENT_TAG(CustomerDirectDebitInitiationV02, PmtInf)
+IMPLEMENT_TAG(CustomerDirectDebitInitiationV04, CstmrDrctDbtInitn)
+IMPLEMENT_TAG(CustomerDirectDebitInitiationV04, GrpHdr)
+IMPLEMENT_TAG(CustomerDirectDebitInitiationV04, PmtInf)
 
-IMPLEMENT_CONSTRUCTOR(CustomerDirectDebitInitiationV02)
-IMPLEMENT_CHILD(GroupHeader, CustomerDirectDebitInitiation::GrpHdr)
+IMPLEMENT_CONSTRUCTOR(CustomerDirectDebitInitiationV04)
+IMPLEMENT_CHILD(GroupHeader, CustomerDirectDebitInitiationV04::GrpHdr)
 {
 	// Find all PaymentInformation elements if they exist
 	DOMNodeList *pNodeList;
@@ -54,12 +54,12 @@ IMPLEMENT_CHILD(GroupHeader, CustomerDirectDebitInitiation::GrpHdr)
 	moveFirst();
 }
 
-BEGIN_IMPLEMENT_ORDER(CustomerDirectDebitInitiationV02)
+BEGIN_IMPLEMENT_ORDER(CustomerDirectDebitInitiationV04)
 	GrpHdr,
 	PmtInf
 END_IMPLEMENT_ORDER
 
-CustomerDirectDebitInitiationV02::~CustomerDirectDebitInitiationV02()
+CustomerDirectDebitInitiationV04::~CustomerDirectDebitInitiationV04()
 {
 	// Delete all PaymentInstructionInformations
 	while (!m_pmtInfs.empty())
@@ -69,13 +69,13 @@ CustomerDirectDebitInitiationV02::~CustomerDirectDebitInitiationV02()
 	}
 }
 
-void CustomerDirectDebitInitiationV02::addPaymentInstructionInformation(PaymentInstruction10 *pPmtInf)
+void CustomerDirectDebitInitiationV04::addPaymentInstructionInformation(PaymentInstruction10 *pPmtInf)
 {
 	m_pmtInfs.push_back(pPmtInf);
 	moveFirst();
 }
 
-PaymentInstruction10* CustomerDirectDebitInitiationV02::getPaymentInstructionInformation()
+PaymentInstruction10* CustomerDirectDebitInitiationV04::getPaymentInstructionInformation()
 {
 	if (m_pmtInfIterator == m_pmtInfs.end())
 		return NULL;
@@ -83,25 +83,25 @@ PaymentInstruction10* CustomerDirectDebitInitiationV02::getPaymentInstructionInf
 	return *m_pmtInfIterator;
 }
 
-bool CustomerDirectDebitInitiationV02::FEOF()
+bool CustomerDirectDebitInitiationV04::FEOF()
 {
 	if (m_pmtInfIterator != m_pmtInfs.end())
 		return false;
 	return true;
 }
 
-void CustomerDirectDebitInitiationV02::moveFirst()
+void CustomerDirectDebitInitiationV04::moveFirst()
 {
 	m_pmtInfIterator = m_pmtInfs.begin();
 }
 
-void CustomerDirectDebitInitiationV02::moveNext()
+void CustomerDirectDebitInitiationV04::moveNext()
 {
 	if (m_pmtInfIterator != m_pmtInfs.end())
 		++m_pmtInfIterator;
 }
 
-size_t CustomerDirectDebitInitiationV02::getCount()
+size_t CustomerDirectDebitInitiationV04::getCount()
 {
 	return m_pmtInfs.size();
 }
@@ -129,12 +129,12 @@ DirectDebitDocument::DirectDebitDocument()
 		if (!pDocumentElement)
 			return;
 
-		pElement = pDocument->createElement(CustomerDirectDebitInitiation::CstmrDrctDbtInitn);
+		pElement = pDocument->createElement(CustomerDirectDebitInitiationV04::CstmrDrctDbtInitn);
 		if (!pElement)
 			return;
 		pDocumentElement->appendChild(pElement);
 		
-		m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiation(pDocument, NULL, pElement, CustomerDirectDebitInitiationV02::CstmrDrctDbtInitn);
+		m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiationV04(pDocument, NULL, pElement, CustomerDirectDebitInitiationV04::CstmrDrctDbtInitn);
 	}
 	catch (const DOMException &e)
 	{
@@ -157,10 +157,10 @@ DirectDebitDocument::DirectDebitDocument(xercesc::DOMDocument *pDocument)
 	if (!pElement)
 		return;
 	pElement = pElement->getFirstElementChild();
-	if (XMLString::compareString(pElement->getTagName(), CustomerDirectDebitInitiation::CstmrDrctDbtInitn) != 0)
+	if (XMLString::compareString(pElement->getTagName(), CustomerDirectDebitInitiationV04::CstmrDrctDbtInitn) != 0)
 		return;
 
-	m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiation(pDocument, NULL, pElement, CustomerDirectDebitInitiation::CstmrDrctDbtInitn);
+	m_pCstmrDrctDbtInitn = new CustomerDirectDebitInitiationV04(pDocument, NULL, pElement, CustomerDirectDebitInitiationV04::CstmrDrctDbtInitn);
 }
 
 DirectDebitDocument::~DirectDebitDocument()

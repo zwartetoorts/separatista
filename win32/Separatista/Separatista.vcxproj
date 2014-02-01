@@ -93,35 +93,44 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\separatista\accountidentificationchoice.h" />
+    <ClInclude Include="..\..\lib\separatista\amendmentinformationdetails.h" />
     <ClInclude Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.h" />
+    <ClInclude Include="..\..\lib\separatista\branchdata.h" />
     <ClInclude Include="..\..\lib\separatista\cashaccount.h" />
     <ClInclude Include="..\..\lib\separatista\codeorproprietary.h" />
     <ClInclude Include="..\..\lib\separatista\contactdetails.h" />
     <ClInclude Include="..\..\lib\separatista\dateandplaceofbirth.h" />
     <ClInclude Include="..\..\lib\separatista\directdebitdocument.h" />
+    <ClInclude Include="..\..\lib\separatista\directdebittransaction.h" />
+    <ClInclude Include="..\..\lib\separatista\directdebittransactioninformation.h" />
     <ClInclude Include="..\..\lib\separatista\element.h" />
     <ClInclude Include="..\..\lib\separatista\errorhandler.h" />
     <ClInclude Include="..\..\lib\separatista\financialinstitutionidentification.h" />
     <ClInclude Include="..\..\lib\separatista\genericorganisationidentification.h" />
     <ClInclude Include="..\..\lib\separatista\groupheader.h" />
     <ClInclude Include="..\..\lib\separatista\macro.h" />
+    <ClInclude Include="..\..\lib\separatista\mandaterelatedinformation.h" />
     <ClInclude Include="..\..\lib\separatista\organisationidentification.h" />
     <ClInclude Include="..\..\lib\separatista\partychoice.h" />
     <ClInclude Include="..\..\lib\separatista\partyidentification.h" />
+    <ClInclude Include="..\..\lib\separatista\paymentidentification.h" />
     <ClInclude Include="..\..\lib\separatista\paymentinstruction.h" />
     <ClInclude Include="..\..\lib\separatista\paymenttypeinformation.h" />
     <ClInclude Include="..\..\lib\separatista\personidentification.h" />
     <ClInclude Include="..\..\lib\separatista\postaladdress.h" />
+    <ClInclude Include="..\..\lib\separatista\regulatoryreporting.h" />
     <ClInclude Include="..\..\lib\separatista\separatista.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\separatista\accountidentificationchoice.cpp" />
     <ClCompile Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.cpp" />
+    <ClCompile Include="..\..\lib\separatista\branchdata.cpp" />
     <ClCompile Include="..\..\lib\separatista\cashaccount.cpp" />
     <ClCompile Include="..\..\lib\separatista\codeorproprietary.cpp" />
     <ClCompile Include="..\..\lib\separatista\contactdetails.cpp" />
     <ClCompile Include="..\..\lib\separatista\dateandplaceofbirth.cpp" />
     <ClCompile Include="..\..\lib\separatista\directdebitdocument.cpp" />
+    <ClCompile Include="..\..\lib\separatista\directdebittransactioninformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
     <ClCompile Include="..\..\lib\separatista\element.cpp" />
     <ClCompile Include="..\..\lib\separatista\errorhandler.cpp" />
@@ -129,9 +138,11 @@
     <ClCompile Include="..\..\lib\separatista\financialinstitutionidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\genericorganisationidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\groupheader.cpp" />
+    <ClCompile Include="..\..\lib\separatista\mandaterelatedinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\organisationidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\partychoice.cpp" />
     <ClCompile Include="..\..\lib\separatista\partyidentification.cpp" />
+    <ClCompile Include="..\..\lib\separatista\paymentidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\paymentinstruction.cpp" />
     <ClCompile Include="..\..\lib\separatista\paymenttypeinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\personidentification.cpp" />

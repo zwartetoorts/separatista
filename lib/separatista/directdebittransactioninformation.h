@@ -18,45 +18,42 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_PAYMENTINSTRUCTIONINFORMATION_H
-#define SEPARATISTA_PAYMENTINSTRUCTIONINFORMATION_H
+#ifndef SEPARATISTA_DIRECTDEBITTRANSACTIONINFORMATION_H
+#define SEPARATISTA_DIRECTDEBITTRANSACTIONINFORMATION_H
 
-#include "macro.h"
+#include <vector>
 #include "element.h"
+#include "macro.h"
+#include "separatista.h"
+#include "paymentidentification.h"
 #include "paymenttypeinformation.h"
+#include "directdebittransaction.h"
 #include "partyidentification.h"
 #include "cashaccount.h"
 #include "branchandfinancialinstitutionidentification.h"
-#include "directdebittransactioninformation.h"
+#include "regulatoryreporting.h"
 
 namespace SeparatistaPrivate
 {
-	BEGIN_DECLARE_CLASS_SUPER(PaymentInstruction10, PaymentInstruction10)
+	BEGIN_DECLARE_CLASS_SUPER(DirectDebitTransactionInformation13, DirectDebitTransactionInformation13)
+	DECLARE_CHILD(PaymentIdentification1, PaymentIdentification, PmtId)
 	DECLARE_CHILD(PaymentTypeInformation24, PaymentTypeInformation, PmtTpInf)
-	DECLARE_CHILD(PartyIdentification43, Creditor, Cdtr)
-	DECLARE_CHILD(CashAccount24, CreditorAccount, CdtrAcct)
-	DECLARE_CHILD(BranchAndFinancialInstitutionIdentification5, CreditorAgent, CdtrAgt)
-	DECLARE_CHILD(PartyIdentification43, UltimateCreditor, UltmtCdtr)
-	DECLARE_CHILD(PartyIdentification43, CreditorSchemeIdentification, CdtrSchmeId)
-	DECLARE_TAG(PaymentInformationIdentification, PmtInfId)
-	DECLARE_TAG(PaymentMethod, PmtMtd)
-	DECLARE_TAG(BatchBooking, BtchBookg)
-	DECLARE_TAG_GET(NumberOfTransactions, NbOfTxs)
-	DECLARE_TAG_GET(ControlSum, CtrlSum)
-	DECLARE_TAG(RequestedCollectionDate, ReqdColltnDt)
-	DECLARE_TAG(CreditorAgentAccount, CdtrAgtAcct)
+	DECLARE_TAG(InstructedAmount, InstAmd)
+	DECLARE_TAG_ATTRIBUTE(InstructedAmount, InstAmd, Ccy)
 	DECLARE_TAG_ENUM(Separatista::ChargeBearerType1Code, ChargeBearer, 4, ChrgBr)
-	DECLARE_TAG(ChargesAccount, ChrgsAcct)
-	DECLARE_TAG(ChargesAccountAgent, ChrgsAcctAgt)
-
-public:
-	static const wchar_t* DrctDbtTxInf;
-
-private:
-	std::vector<DirectDebitTransactionInformation13*> m_ddtInfs;
-	std::vector<DirectDebitTransactionInformation13*>::iterator m_ddtInfsIterator;
+	DECLARE_CHILD(DirectDebitTransaction7, DirectDebitTransaction, DrctDbtTx)
+	DECLARE_CHILD(PartyIdentification43, UltimateCreditor, UltmtCdtr)
+	DECLARE_CHILD(BranchAndFinancialInstitutionIdentification5, DebtorAgent, DbtrAgt)
+	DECLARE_CHILD(PartyIdentification43, DebtorAgentAccount, DbtrAgtAcct)
+	DECLARE_CHILD(PartyIdentification43, Debtor, Dbtr)
+	DECLARE_CHILD(CashAccount24, DebtorAccount, DbtrAcct)
+	DECLARE_CHILD(CashAccount24, UltimateDebtor, UltmtDbtr)
+	DECLARE_TAG(InstructionForCreditorAgent, InstrForCdtrAgt)
+	DECLARE_CHILD(Purpose2Choice, Purpose, Purp)
+	DECLARE_CHILD_MULTI(RegulatoryAuthority2, RegulatoryReporting, RgltryRptg, 10)
+	// Tax not yet implemented
 
 	END_DECLARE_CLASS
 }
 
-#endif // !defined SEPARATISTA_PAYMENTINSTRUCTIONINFORMATION_H
+#endif
