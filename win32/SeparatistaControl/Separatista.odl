@@ -445,7 +445,7 @@ library Separatista
 		SEPARATISTA_PROPERTY_GET(ICashAccount*, CreditorAccount, "Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction.")
 		SEPARATISTA_PROPERTY(BSTR, CreditorAgentFinancialInstitutionIdentification, "Financial institution servicing an account for the creditor.")
 		SEPARATISTA_PROPERTY(BSTR, CreditorAgentBranchIdentification, "Financial institution servicing an account for the creditor.")
-		SEPARATISTA_PROPERTY(BSTR, CreditorAgentAccount, Message Element that is not part of the addendum for the IG SDD Netherlands but is available for future use in a SEPA AOS."")
+		SEPARATISTA_PROPERTY(BSTR, CreditorAgentAccount, "Message Element that is not part of the addendum for the IG SDD Netherlands but is available for future use in a SEPA AOS.")
 		SEPARATISTA_PROPERTY_GET(IPartyIdentification*, UltimateCreditor, "Ultimate party to which an amount of money is due.")
 		SEPARATISTA_PROPERTY(BSTR, ChargeBearer, "Specifies which party/parties will bear the charges associated with the processing of the payment transaction.")
 		SEPARATISTA_PROPERTY(BSTR, ChargesAccount, "Message Element that is not part of the addendum for the IG SDD Netherlands but is available for future use in a SEPA AOS.")

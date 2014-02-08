@@ -99,6 +99,9 @@
     <ClInclude Include="..\..\lib\separatista\regulatoryreporting.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\lib\separatista\taxinformation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\separatista\dll.cpp">
@@ -177,6 +180,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\separatista\mandaterelatedinformation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\separatista\regulatoryreporting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\separatista\directdebittransaction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\separatista\taxinformation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

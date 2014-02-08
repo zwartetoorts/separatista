@@ -120,6 +120,7 @@
     <ClInclude Include="..\..\lib\separatista\postaladdress.h" />
     <ClInclude Include="..\..\lib\separatista\regulatoryreporting.h" />
     <ClInclude Include="..\..\lib\separatista\separatista.h" />
+    <ClInclude Include="..\..\lib\separatista\taxinformation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\separatista\accountidentificationchoice.cpp" />
@@ -130,6 +131,7 @@
     <ClCompile Include="..\..\lib\separatista\contactdetails.cpp" />
     <ClCompile Include="..\..\lib\separatista\dateandplaceofbirth.cpp" />
     <ClCompile Include="..\..\lib\separatista\directdebitdocument.cpp" />
+    <ClCompile Include="..\..\lib\separatista\directdebittransaction.cpp" />
     <ClCompile Include="..\..\lib\separatista\directdebittransactioninformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
     <ClCompile Include="..\..\lib\separatista\element.cpp" />
@@ -147,7 +149,9 @@
     <ClCompile Include="..\..\lib\separatista\paymenttypeinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\personidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\postaladdress.cpp" />
+    <ClCompile Include="..\..\lib\separatista\regulatoryreporting.cpp" />
     <ClCompile Include="..\..\lib\separatista\separatistadocument.cpp" />
+    <ClCompile Include="..\..\lib\separatista\taxinformation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Separatista.rc" />

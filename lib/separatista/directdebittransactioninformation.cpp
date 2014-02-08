@@ -36,6 +36,7 @@ IMPLEMENT_TAG(DirectDebitTransactionInformation13, UltmtDbtr)
 IMPLEMENT_TAG(DirectDebitTransactionInformation13, InstrForCdtrAgt)
 IMPLEMENT_TAG(DirectDebitTransactionInformation13, Purp)
 IMPLEMENT_TAG(DirectDebitTransactionInformation13, RgltryRptg)
+IMPLEMENT_TAG(DirectDebitTransactionInformation13, Tax)
 
 IMPLEMENT_CONSTRUCTOR(DirectDebitTransactionInformation13)
 IMPLEMENT_CHILD(PaymentIdentification, PmtId)
@@ -60,6 +61,7 @@ IMPLEMENT_CHILD_MULTI(RegulatoryAuthority2, 7, RgltryRptg)
 IMPLEMENT_CHILD_MULTI(RegulatoryAuthority2, 8, RgltryRptg)
 IMPLEMENT_CHILD_MULTI(RegulatoryAuthority2, 9, RgltryRptg)
 END_IMPLEMENT_CHILD_MULTI
+IMPLEMENT_CHILD(Tax, Tax)
 {}
 
 BEGIN_IMPLEMENT_TAG_ENUM(DirectDebitTransactionInformation13, Separatista::ChargeBearerType1Code, ChargeBearer, ChrgBr)
@@ -83,5 +85,6 @@ DbtrAcct,
 UltmtDbtr,
 InstrForCdtrAgt,
 Purp,
-RgltryRptg
+RgltryRptg,
+Tax
 END_IMPLEMENT_ORDER

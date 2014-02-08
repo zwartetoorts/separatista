@@ -450,6 +450,44 @@ public:
 	SEPARATISTA_DECLARE_CHILD(ContactDetails2, ContactDetails)
 };
 
+class TaxParty1
+{
+public:
+	SEPARATISTA_DECLARE_TAG(TaxIdentification)
+	SEPARATISTA_DECLARE_TAG(RegistrationIdentification)
+	SEPARATISTA_DECLARE_TAG(TaxType)
+};
+
+class TaxAuthorisation1
+{
+public:
+	SEPARATISTA_DECLARE_TAG(Title)
+	SEPARATISTA_DECLARE_TAG(Name)
+};
+
+class TaxParty2 : public TaxParty1
+{
+public:
+	SEPARATISTA_DECLARE_CHILD(TaxAuthorisation1, Authorisation)
+};
+
+class TaxInformation3
+{
+public:
+	SEPARATISTA_DECLARE_CHILD(TaxParty1, Creditor)
+	SEPARATISTA_DECLARE_CHILD(TaxParty2, Debtor)
+	SEPARATISTA_DECLARE_TAG(AdministrationZone)
+	SEPARATISTA_DECLARE_TAG(ReferenceNumber)
+	SEPARATISTA_DECLARE_TAG(Method)
+	SEPARATISTA_DECLARE_TAG(TotalTaxableBaseAmount)
+	SEPARATISTA_DECLARE_TAG_ATTRIBUTE(TotalTaxableBaseAmount, Ccy)
+	SEPARATISTA_DECLARE_TAG(TotalTaxAmount)
+	SEPARATISTA_DECLARE_TAG_ATTRIBUTE(TotalTaxAmount, Ccy)
+	SEPARATISTA_DECLARE_TAG_TIME(Date)
+	SEPARATISTA_DECLARE_TAG(SequenceNumber)
+	// Record not implemented yet
+};
+
 enum ChargeBearerType1Code {
 	ChargeBearerType1CodeError,
 	BorneByDebtor,

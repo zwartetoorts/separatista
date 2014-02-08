@@ -38,20 +38,20 @@ IMPLEMENT_TAG(CustomerDirectDebitInitiationV04, CstmrDrctDbtInitn)
 IMPLEMENT_TAG(CustomerDirectDebitInitiationV04, GrpHdr)
 IMPLEMENT_TAG(CustomerDirectDebitInitiationV04, PmtInf)
 
+#define IMPLEMENT_INFINITE(type, name, tag) \
+	DOMNodeList *pNodeList; \
+	pNodeList = getElementsByTagName(tag); \
+	if(pNodeList) \
+	{ \
+		for(XMLSize_t i = 0; i < pNodeList->getLength(); i++) \
+			add##name(new type(pDocument, this, (DOMElement*)pNodeList->item(i), tag)); \
+		moveFirst##name(); \
+	}
+
 IMPLEMENT_CONSTRUCTOR(CustomerDirectDebitInitiationV04)
 IMPLEMENT_CHILD(GroupHeader, CustomerDirectDebitInitiationV04::GrpHdr)
 {
-	// Find all PaymentInformation elements if they exist
-	DOMNodeList *pNodeList;
-
-	pNodeList = getElementsByTagName(PmtInf);
-	if (pNodeList)
-	{
-		for (XMLSize_t i = 0; i < pNodeList->getLength(); i++)
-			addPaymentInstructionInformation(new PaymentInstruction10(pDocument, this, (DOMElement*)pNodeList->item(i), PmtInf));
-	}
-
-	moveFirst();
+	IMPLEMENT_INFINITE(PaymentInstruction10, PaymentInstruction, PmtInf)
 }
 
 BEGIN_IMPLEMENT_ORDER(CustomerDirectDebitInitiationV04)
@@ -59,53 +59,7 @@ BEGIN_IMPLEMENT_ORDER(CustomerDirectDebitInitiationV04)
 	PmtInf
 END_IMPLEMENT_ORDER
 
-CustomerDirectDebitInitiationV04::~CustomerDirectDebitInitiationV04()
-{
-	// Delete all PaymentInstructionInformations
-	while (!m_pmtInfs.empty())
-	{
-		delete m_pmtInfs.back();
-		m_pmtInfs.pop_back();
-	}
-}
-
-void CustomerDirectDebitInitiationV04::addPaymentInstructionInformation(PaymentInstruction10 *pPmtInf)
-{
-	m_pmtInfs.push_back(pPmtInf);
-	moveFirst();
-}
-
-PaymentInstruction10* CustomerDirectDebitInitiationV04::getPaymentInstructionInformation()
-{
-	if (m_pmtInfIterator == m_pmtInfs.end())
-		return NULL;
-
-	return *m_pmtInfIterator;
-}
-
-bool CustomerDirectDebitInitiationV04::FEOF()
-{
-	if (m_pmtInfIterator != m_pmtInfs.end())
-		return false;
-	return true;
-}
-
-void CustomerDirectDebitInitiationV04::moveFirst()
-{
-	m_pmtInfIterator = m_pmtInfs.begin();
-}
-
-void CustomerDirectDebitInitiationV04::moveNext()
-{
-	if (m_pmtInfIterator != m_pmtInfs.end())
-		++m_pmtInfIterator;
-}
-
-size_t CustomerDirectDebitInitiationV04::getCount()
-{
-	return m_pmtInfs.size();
-}
-
+IMPLEMENT_CHILD_INFINITE(CustomerDirectDebitInitiationV04, PaymentInstruction10, PaymentInstruction, PmtInf)
 
 const wchar_t* DirectDebitDocument::NamespaceURI = L"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02";
 
@@ -179,19 +133,19 @@ bool DirectDebitDocument::FEOF()
 	if (!m_pCstmrDrctDbtInitn)
 		return true;
 
-	return m_pCstmrDrctDbtInitn->FEOF();
+	return m_pCstmrDrctDbtInitn->EOFPaymentInstruction();
 }
 
 void DirectDebitDocument::moveNext()
 {
 	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->moveNext();
+		m_pCstmrDrctDbtInitn->moveNextPaymentInstruction();
 }
 
 void DirectDebitDocument::moveFirst()
 {
 	if (m_pCstmrDrctDbtInitn)
-		m_pCstmrDrctDbtInitn->moveFirst();
+		m_pCstmrDrctDbtInitn->moveFirstPaymentInstruction();
 }
 
 size_t DirectDebitDocument::getCount()
@@ -199,6 +153,6 @@ size_t DirectDebitDocument::getCount()
 	if (!m_pCstmrDrctDbtInitn)
 		return 0;
 
-	return m_pCstmrDrctDbtInitn->getCount();
+	return m_pCstmrDrctDbtInitn->getCountOfPaymentInstruction();
 }
 

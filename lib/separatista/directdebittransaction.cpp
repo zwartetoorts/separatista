@@ -18,37 +18,21 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "mandaterelatedinformation.h"
+#include "directdebittransaction.h"
 
-IMPLEMENT_TAG(MandateRelatedInformation8, MndtId)
-IMPLEMENT_TAG(MandateRelatedInformation8, DtOfSgntr)
-IMPLEMENT_TAG(MandateRelatedInformation8, AmdmntInd)
-IMPLEMENT_TAG(MandateRelatedInformation8, ElctrncSgntr)
-IMPLEMENT_TAG(MandateRelatedInformation8, FrstColltnDt)
-IMPLEMENT_TAG(MandateRelatedInformation8, FnlColltnDt)
-IMPLEMENT_TAG(MandateRelatedInformation8, Frqcy)
+IMPLEMENT_TAG(DirectDebitTransaction7, MndtRltdInf)
+IMPLEMENT_TAG(DirectDebitTransaction7, CdtrSchmeId)
+IMPLEMENT_TAG(DirectDebitTransaction7, PreNtfctnId)
+IMPLEMENT_TAG(DirectDebitTransaction7, PreNtfctnDt)
 
-IMPLEMENT_CONSTRUCTOR(MandateRelatedInformation8)
+IMPLEMENT_CONSTRUCTOR(DirectDebitTransaction7)
+IMPLEMENT_CHILD(MandateRelatedInformation, MndtRltdInf)
+IMPLEMENT_CHILD(CreditorSchemeId, CdtrSchmeId)
 {}
 
-BEGIN_IMPLEMENT_TAG_ENUM(MandateRelatedInformation8, Separatista::Frequency6Code, Frequency, Frqcy)
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Annual, "YEAR")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Monthly, "MNTH")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Quarterly, "QURT")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::SemiAnnual, "MIAN")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Weekly, "WEEK")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Daily, "DAIL")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Adhoc, "ADHO")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::IntraDay, "INDA")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Fortnightly, "FRTN")
-END_IMPLEMENT_TAG_ENUM
-
-BEGIN_IMPLEMENT_ORDER(MandateRelatedInformation8)
-MndtId,
-DtOfSgntr,
-AmdmntInd,
-ElctrncSgntr,
-FrstColltnDt,
-FnlColltnDt,
-Frqcy
+BEGIN_IMPLEMENT_ORDER(DirectDebitTransaction7)
+MndtRltdInf,
+CdtrSchmeId,
+PreNtfctnId,
+PreNtfctnDt
 END_IMPLEMENT_ORDER

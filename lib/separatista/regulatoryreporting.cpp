@@ -18,37 +18,34 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "mandaterelatedinformation.h"
+#include "regulatoryreporting.h"
 
-IMPLEMENT_TAG(MandateRelatedInformation8, MndtId)
-IMPLEMENT_TAG(MandateRelatedInformation8, DtOfSgntr)
-IMPLEMENT_TAG(MandateRelatedInformation8, AmdmntInd)
-IMPLEMENT_TAG(MandateRelatedInformation8, ElctrncSgntr)
-IMPLEMENT_TAG(MandateRelatedInformation8, FrstColltnDt)
-IMPLEMENT_TAG(MandateRelatedInformation8, FnlColltnDt)
-IMPLEMENT_TAG(MandateRelatedInformation8, Frqcy)
+IMPLEMENT_TAG(RegulatoryAuthority2, Nm)
+IMPLEMENT_TAG(RegulatoryAuthority2, Ctry)
 
-IMPLEMENT_CONSTRUCTOR(MandateRelatedInformation8)
+IMPLEMENT_CONSTRUCTOR(RegulatoryAuthority2)
 {}
 
-BEGIN_IMPLEMENT_TAG_ENUM(MandateRelatedInformation8, Separatista::Frequency6Code, Frequency, Frqcy)
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Annual, "YEAR")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Monthly, "MNTH")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Quarterly, "QURT")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::SemiAnnual, "MIAN")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Weekly, "WEEK")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Daily, "DAIL")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Adhoc, "ADHO")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::IntraDay, "INDA")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Fortnightly, "FRTN")
+BEGIN_IMPLEMENT_ORDER(RegulatoryAuthority2)
+Nm,
+Ctry
+END_IMPLEMENT_ORDER
+
+IMPLEMENT_TAG(RegulatoryReporting3, DbtCdtRptgInd)
+IMPLEMENT_TAG(RegulatoryReporting3, Authrty)
+
+IMPLEMENT_CONSTRUCTOR(RegulatoryReporting3)
+IMPLEMENT_CHILD(Authority, Authrty)
+{}
+
+BEGIN_IMPLEMENT_TAG_ENUM(RegulatoryReporting3, Separatista::RegulatoryReportingType1Code, DebitCreditReportingIndicator, DbtCdtRptgInd)
+IMPLEMENT_TAG_ENUM(Separatista::RegulatoryReportingType1Code::Credit, "CRED")
+IMPLEMENT_TAG_ENUM(Separatista::RegulatoryReportingType1Code::Debit, "DEBT")
+IMPLEMENT_TAG_ENUM(Separatista::RegulatoryReportingType1Code::Both, "BOTH")
 END_IMPLEMENT_TAG_ENUM
 
-BEGIN_IMPLEMENT_ORDER(MandateRelatedInformation8)
-MndtId,
-DtOfSgntr,
-AmdmntInd,
-ElctrncSgntr,
-FrstColltnDt,
-FnlColltnDt,
-Frqcy
+BEGIN_IMPLEMENT_ORDER(RegulatoryReporting3)
+DbtCdtRptgInd,
+Authrty
 END_IMPLEMENT_ORDER
+

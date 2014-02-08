@@ -18,37 +18,71 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "mandaterelatedinformation.h"
+#include "taxinformation.h"
 
-IMPLEMENT_TAG(MandateRelatedInformation8, MndtId)
-IMPLEMENT_TAG(MandateRelatedInformation8, DtOfSgntr)
-IMPLEMENT_TAG(MandateRelatedInformation8, AmdmntInd)
-IMPLEMENT_TAG(MandateRelatedInformation8, ElctrncSgntr)
-IMPLEMENT_TAG(MandateRelatedInformation8, FrstColltnDt)
-IMPLEMENT_TAG(MandateRelatedInformation8, FnlColltnDt)
-IMPLEMENT_TAG(MandateRelatedInformation8, Frqcy)
+IMPLEMENT_TAG(TaxParty1, TaxId)
+IMPLEMENT_TAG(TaxParty1, RegnId)
+IMPLEMENT_TAG(TaxParty1, TaxTp)
 
-IMPLEMENT_CONSTRUCTOR(MandateRelatedInformation8)
+IMPLEMENT_CONSTRUCTOR(TaxParty1)
 {}
 
-BEGIN_IMPLEMENT_TAG_ENUM(MandateRelatedInformation8, Separatista::Frequency6Code, Frequency, Frqcy)
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Annual, "YEAR")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Monthly, "MNTH")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Quarterly, "QURT")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::SemiAnnual, "MIAN")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Weekly, "WEEK")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Daily, "DAIL")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Adhoc, "ADHO")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::IntraDay, "INDA")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Fortnightly, "FRTN")
-END_IMPLEMENT_TAG_ENUM
+BEGIN_IMPLEMENT_ORDER(TaxParty1)
+TaxId,
+RegnId,
+TaxTp
+END_IMPLEMENT_ORDER
 
-BEGIN_IMPLEMENT_ORDER(MandateRelatedInformation8)
-MndtId,
-DtOfSgntr,
-AmdmntInd,
-ElctrncSgntr,
-FrstColltnDt,
-FnlColltnDt,
-Frqcy
+IMPLEMENT_TAG(TaxAuthorisation1, Titl)
+IMPLEMENT_TAG(TaxAuthorisation1, Nm)
+
+IMPLEMENT_CONSTRUCTOR(TaxAuthorisation1)
+{}
+
+BEGIN_IMPLEMENT_ORDER(TaxAuthorisation1)
+Titl,
+Nm
+END_IMPLEMENT_ORDER
+
+IMPLEMENT_TAG(TaxParty2, TaxId)
+IMPLEMENT_TAG(TaxParty2, RegnId)
+IMPLEMENT_TAG(TaxParty2, TaxTp)
+IMPLEMENT_TAG(TaxParty2, Authstn)
+
+IMPLEMENT_CONSTRUCTOR(TaxParty2)
+IMPLEMENT_CHILD(Authorisation, Authstn)
+{}
+
+BEGIN_IMPLEMENT_ORDER(TaxParty2)
+TaxId,
+RegnId,
+TaxTp,
+Authstn
+END_IMPLEMENT_ORDER
+
+IMPLEMENT_TAG(TaxInformation3, Cdtr)
+IMPLEMENT_TAG(TaxInformation3, Dbtr)
+IMPLEMENT_TAG(TaxInformation3, AdmstnZn)
+IMPLEMENT_TAG(TaxInformation3, RefNb)
+IMPLEMENT_TAG(TaxInformation3, Mtd)
+IMPLEMENT_TAG(TaxInformation3, TtlTaxblBaseAmt)
+IMPLEMENT_TAG(TaxInformation3, TtlTaxAmt)
+IMPLEMENT_TAG(TaxInformation3, Dt)
+IMPLEMENT_TAG(TaxInformation3, SeqNb)
+
+IMPLEMENT_CONSTRUCTOR(TaxInformation3)
+IMPLEMENT_CHILD(Creditor, Cdtr)
+IMPLEMENT_CHILD(Debtor, Dbtr)
+{}
+
+BEGIN_IMPLEMENT_ORDER(TaxInformation3)
+Cdtr,
+Dbtr,
+AdmstnZn,
+RefNb,
+Mtd,
+TtlTaxblBaseAmt,
+TtlTaxAmt,
+Dt,
+SeqNb
 END_IMPLEMENT_ORDER

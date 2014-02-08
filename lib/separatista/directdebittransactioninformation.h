@@ -32,6 +32,7 @@
 #include "cashaccount.h"
 #include "branchandfinancialinstitutionidentification.h"
 #include "regulatoryreporting.h"
+#include "taxinformation.h"
 
 namespace SeparatistaPrivate
 {
@@ -51,7 +52,7 @@ namespace SeparatistaPrivate
 	DECLARE_TAG(InstructionForCreditorAgent, InstrForCdtrAgt)
 	DECLARE_CHILD(Purpose2Choice, Purpose, Purp)
 	DECLARE_CHILD_MULTI(RegulatoryAuthority2, RegulatoryReporting, RgltryRptg, 10)
-	// Tax not yet implemented
+	DECLARE_CHILD(TaxInformation3, Tax, Tax)
 
 	END_DECLARE_CLASS
 }

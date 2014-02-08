@@ -19,6 +19,7 @@
 ***************************************************************************/
 
 #include <array>
+#include <vector>
 
 #ifndef SEPARATISTA_MACRO_H
 #define SEPARATISTA_MACRO_H
@@ -40,6 +41,20 @@ class name : public Element, public Separatista::type \
 	const wchar_t* const* getOrder(); \
 	
 #define END_DECLARE_CLASS };
+
+#define DECLARE_CHILD_INFINITE(type, name, tag) \
+	private: \
+	std::vector<type*> m_##name##s; \
+	std::vector<type*>::iterator m_##name##sIterator; \
+	public: \
+	static const wchar_t* tag; \
+	Separatista::type* get##name(); \
+	bool EOF##name() const; \
+	void moveFirst##name(); \
+	void moveNext##name(); \
+	size_t getCountOf##name() const; \
+	void add##name(type* p##name); \
+	void remove##name();
 
 #define DECLARE_CHILD(type, name, tag) \
 	private: \
@@ -138,6 +153,49 @@ class name : public Element, public Separatista::type \
 #define IMPLEMENT_CHILD(child, tag) \
 	, m_##child(pDocument, this, NULL, tag)
 
+#define IMPLEMENT_CHILD_INFINITE(cls, type, name, tag) \
+	Separatista::type* SeparatistaPrivate::cls::get##name() \
+	{ \
+		if(m_##name##sIterator == m_##name##s.end()) \
+			return NULL; \
+		return *m_##name##sIterator; \
+	} \
+	bool SeparatistaPrivate::cls::EOF##name() const \
+	{ \
+		return (m_##name##sIterator == m_##name##s.end()); \
+	} \
+	void SeparatistaPrivate::cls::moveFirst##name() \
+	{ \
+		m_##name##sIterator = m_##name##s.begin(); \
+	} \
+	void SeparatistaPrivate::cls::moveNext##name() \
+	{ \
+		if(!EOF##name()) \
+			m_##name##sIterator++; \
+	} \
+	size_t SeparatistaPrivate::cls::getCountOf##name() const \
+	{ \
+		return m_##name##s.size(); \
+	} \
+	void SeparatistaPrivate::cls::add##name(type* pValue) \
+	{ \
+		m_##name##s.push_back(pValue); \
+	} \
+	void SeparatistaPrivate::cls::remove##name() \
+	{ \
+		if(EOF##name()) \
+			return; \
+		std::vector<type*>::iterator it = m_##name##sIterator + 1; \
+		m_##name##s.erase(m_##name##sIterator); \
+		m_##name##sIterator = it; \
+	} \
+	SeparatistaPrivate::cls::~cls() \
+	{ \
+		moveFirst##name(); \
+		while(!EOF##name()) \
+			remove##name(); \
+	}
+
 #define IMPLEMENT_TAG(name, tag) \
 	const wchar_t* SeparatistaPrivate::name::tag = L#tag;
 
@@ -160,7 +218,7 @@ class name : public Element, public Separatista::type \
 	}})
 
 #define BEGIN_IMPLEMENT_TAG_ENUM(cls, type, name, tag) \
-	type cls::get##name() \
+	type SeparatistaPrivate::cls::get##name() \
 	{ \
 	const wchar_t *pValue = getChildElementValue(tag); \
 	for(int i = 0; i < sizeof(m_##name##Table) / sizeof(m_##name##Table[0]); i++) \
@@ -170,7 +228,7 @@ class name : public Element, public Separatista::type \
 		} \
 		return (type)0; \
 	} \
-	void cls::set##name(type value) \
+	void SeparatistaPrivate::cls::set##name(type value) \
 	{ \
 	for(int i = 0; i < sizeof(m_##name##Table) / sizeof(m_##name##Table[0]); i++) \
 		{ \
@@ -179,7 +237,7 @@ class name : public Element, public Separatista::type \
 			setChildElementValue(tag, m_##name##Table[i].m_value); \
 			return; \
 	} } } \
-	const cls::##name##Table cls::m_##name##Table[] = {
+	const SeparatistaPrivate::cls::##name##Table SeparatistaPrivate::cls::m_##name##Table[] = {
 
 #define IMPLEMENT_TAG_ENUM(code, value) \
 	{ code, L#value },

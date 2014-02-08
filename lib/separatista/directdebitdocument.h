@@ -32,7 +32,11 @@ namespace SeparatistaPrivate
 	BEGIN_DECLARE_CLASS(CustomerDirectDebitInitiationV04)
 	DECLARE_CHILD(GroupHeader55, GroupHeader, GrpHdr)
 	DECLARE_TAG(CustomerDirectDebitInitiation, CstmrDrctDbtInitn)
-	DECLARE_TAG(PaymentInformation, PmtInf)
+	DECLARE_CHILD_INFINITE(PaymentInstruction10, PaymentInstruction, PmtInf)
+public:
+	~CustomerDirectDebitInitiationV04();
+
+	/*	DECLARE_TAG(PaymentInformation, PmtInf)
 	public:
 		~CustomerDirectDebitInitiationV04();
 		void addPaymentInstructionInformation(PaymentInstruction10 *pPmtInf);
@@ -52,6 +56,7 @@ namespace SeparatistaPrivate
 	private:
 		std::vector<PaymentInstruction10*> m_pmtInfs;
 		std::vector<PaymentInstruction10*>::iterator m_pmtInfIterator;
+*/
 	END_DECLARE_CLASS
 
 };

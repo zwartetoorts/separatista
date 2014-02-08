@@ -18,37 +18,48 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "mandaterelatedinformation.h"
+#ifndef SEPARATISTA_TAXINFORMATION_H
+#define SEPARATISTA_TAXINFORMATION_H
 
-IMPLEMENT_TAG(MandateRelatedInformation8, MndtId)
-IMPLEMENT_TAG(MandateRelatedInformation8, DtOfSgntr)
-IMPLEMENT_TAG(MandateRelatedInformation8, AmdmntInd)
-IMPLEMENT_TAG(MandateRelatedInformation8, ElctrncSgntr)
-IMPLEMENT_TAG(MandateRelatedInformation8, FrstColltnDt)
-IMPLEMENT_TAG(MandateRelatedInformation8, FnlColltnDt)
-IMPLEMENT_TAG(MandateRelatedInformation8, Frqcy)
+#include "element.h"
+#include "macro.h"
+#include "separatista.h"
 
-IMPLEMENT_CONSTRUCTOR(MandateRelatedInformation8)
-{}
+namespace SeparatistaPrivate
+{
+	BEGIN_DECLARE_CLASS_SUPER(TaxParty1, TaxParty1)
+	DECLARE_TAG(TaxIdentification, TaxId)
+	DECLARE_TAG(RegistrationIdentification, RegnId)
+	DECLARE_TAG(TaxType, TaxTp)
+	END_DECLARE_CLASS
 
-BEGIN_IMPLEMENT_TAG_ENUM(MandateRelatedInformation8, Separatista::Frequency6Code, Frequency, Frqcy)
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Annual, "YEAR")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Monthly, "MNTH")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Quarterly, "QURT")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::SemiAnnual, "MIAN")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Weekly, "WEEK")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Daily, "DAIL")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Adhoc, "ADHO")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::IntraDay, "INDA")
-IMPLEMENT_TAG_ENUM(Separatista::Frequency6Code::Fortnightly, "FRTN")
-END_IMPLEMENT_TAG_ENUM
+	BEGIN_DECLARE_CLASS_SUPER(TaxAuthorisation1, TaxAuthorisation1)
+	DECLARE_TAG(Title, Titl)
+	DECLARE_TAG(Name, Nm)
+	END_DECLARE_CLASS
 
-BEGIN_IMPLEMENT_ORDER(MandateRelatedInformation8)
-MndtId,
-DtOfSgntr,
-AmdmntInd,
-ElctrncSgntr,
-FrstColltnDt,
-FnlColltnDt,
-Frqcy
-END_IMPLEMENT_ORDER
+	BEGIN_DECLARE_CLASS_SUPER(TaxParty2, TaxParty2)
+	DECLARE_TAG(TaxIdentification, TaxId)
+	DECLARE_TAG(RegistrationIdentification, RegnId)
+	DECLARE_TAG(TaxType, TaxTp)
+	DECLARE_CHILD(TaxAuthorisation1, Authorisation, Authstn)
+	END_DECLARE_CLASS
+
+	BEGIN_DECLARE_CLASS_SUPER(TaxInformation3, TaxInformation3)
+	DECLARE_CHILD(TaxParty1, Creditor, Cdtr)
+	DECLARE_CHILD(TaxParty2, Debtor, Dbtr)
+	DECLARE_TAG(AdministrationZone, AdmstnZn)
+	DECLARE_TAG(ReferenceNumber, RefNb)
+	DECLARE_TAG(Method, Mtd)
+	DECLARE_TAG(TotalTaxableBaseAmount, TtlTaxblBaseAmt)
+	DECLARE_TAG_ATTRIBUTE(TotalTaxableBaseAmount, TtlTaxblBaseAmt, Ccy)
+	DECLARE_TAG(TotalTaxAmount, TtlTaxAmt)
+	DECLARE_TAG_ATTRIBUTE(TotalTaxAmount, TtlTaxAmt, Ccy)
+	DECLARE_TAG_TIME(Date, Dt)
+	DECLARE_TAG(SequenceNumber, SeqNb)
+	// Record not implemented yet
+	END_DECLARE_CLASS
+
+}
+
+#endif
