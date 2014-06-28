@@ -50,7 +50,10 @@ IMPLEMENT_CHILD(CreditorAgent, CdtrAgt)
 IMPLEMENT_CHILD(UltimateCreditor, UltmtCdtr)
 IMPLEMENT_CHILD(CreditorSchemeIdentification, CdtrSchmeId)
 {
+	IMPLEMENT_INFINITE(DirectDebitTransactionInformation13, DirectDebitTransactionInformation,DrctDbtTxInf)
 }
+
+IMPLEMENT_CHILD_INFINITE(PaymentInstruction10, DirectDebitTransactionInformation13, DirectDebitTransactionInformation, DrctDbtTxInf)
 
 BEGIN_IMPLEMENT_TAG_ENUM(PaymentInstruction10, Separatista::ChargeBearerType1Code, ChargeBearer, ChrgBr)
 IMPLEMENT_TAG_ENUM(Separatista::ChargeBearerType1Code::BorneByDebtor, DEBT)

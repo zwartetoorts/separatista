@@ -31,7 +31,9 @@ namespace SeparatistaPrivate
 {
 	BEGIN_DECLARE_CLASS_SUPER(PersonIdentification5, PersonIdentification5)
 	DECLARE_CHILD(DateAndPlaceOfBirth, DateAndPlaceOfBirth, DtAndPlcOfBirth)
-	DECLARE_CHILD(GenericOrganisationIdentification1, Other, Othr)
+	DECLARE_CHILD_INFINITE(GenericOrganisationIdentification1, Other, Othr)
+public:
+	~PersonIdentification5();
 	END_DECLARE_CLASS
 }
 

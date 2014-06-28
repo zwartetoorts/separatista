@@ -72,9 +72,6 @@
     <ClInclude Include="..\..\lib\separatista\paymentinstruction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\accountidentificationchoice.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\lib\separatista\financialinstitutionidentification.h">
       <Filter>Header Files</Filter>
     </ClInclude>

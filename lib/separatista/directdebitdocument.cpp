@@ -38,16 +38,6 @@ IMPLEMENT_TAG(CustomerDirectDebitInitiationV04, CstmrDrctDbtInitn)
 IMPLEMENT_TAG(CustomerDirectDebitInitiationV04, GrpHdr)
 IMPLEMENT_TAG(CustomerDirectDebitInitiationV04, PmtInf)
 
-#define IMPLEMENT_INFINITE(type, name, tag) \
-	DOMNodeList *pNodeList; \
-	pNodeList = getElementsByTagName(tag); \
-	if(pNodeList) \
-	{ \
-		for(XMLSize_t i = 0; i < pNodeList->getLength(); i++) \
-			add##name(new type(pDocument, this, (DOMElement*)pNodeList->item(i), tag)); \
-		moveFirst##name(); \
-	}
-
 IMPLEMENT_CONSTRUCTOR(CustomerDirectDebitInitiationV04)
 IMPLEMENT_CHILD(GroupHeader, CustomerDirectDebitInitiationV04::GrpHdr)
 {

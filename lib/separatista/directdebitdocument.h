@@ -36,27 +36,6 @@ namespace SeparatistaPrivate
 public:
 	~CustomerDirectDebitInitiationV04();
 
-	/*	DECLARE_TAG(PaymentInformation, PmtInf)
-	public:
-		~CustomerDirectDebitInitiationV04();
-		void addPaymentInstructionInformation(PaymentInstruction10 *pPmtInf);
-
-		PaymentInstruction10* getPaymentInstructionInformation();
-
-		// PaymentInformation methods
-		/// True if we are the end of all PaymentInformations
-		bool FEOF();
-		/// Resets the internal pointer to the first PaymentInformation
-		void moveFirst();
-		/// Moves the internal pointer to the next PaymentInformation
-		void moveNext();
-		/// Get the number of PaymentInformations
-		size_t getCount();
-
-	private:
-		std::vector<PaymentInstruction10*> m_pmtInfs;
-		std::vector<PaymentInstruction10*>::iterator m_pmtInfIterator;
-*/
 	END_DECLARE_CLASS
 
 };

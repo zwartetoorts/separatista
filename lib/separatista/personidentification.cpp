@@ -25,8 +25,11 @@ IMPLEMENT_TAG(PersonIdentification5, Othr)
 
 IMPLEMENT_CONSTRUCTOR(PersonIdentification5)
 IMPLEMENT_CHILD(DateAndPlaceOfBirth, DtAndPlcOfBirth)
-IMPLEMENT_CHILD(Other, Othr)
-{}
+{
+	IMPLEMENT_INFINITE(GenericOrganisationIdentification1, Other, Othr)
+}
+
+IMPLEMENT_CHILD_INFINITE(PersonIdentification5, GenericOrganisationIdentification1, Other, Othr)
 
 BEGIN_IMPLEMENT_ORDER(PersonIdentification5)
 DtAndPlcOfBirth,

@@ -92,7 +92,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\lib\separatista\accountidentificationchoice.h" />
     <ClInclude Include="..\..\lib\separatista\amendmentinformationdetails.h" />
     <ClInclude Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.h" />
     <ClInclude Include="..\..\lib\separatista\branchdata.h" />

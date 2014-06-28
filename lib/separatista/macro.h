@@ -44,8 +44,8 @@ class name : public Element, public Separatista::type \
 
 #define DECLARE_CHILD_INFINITE(type, name, tag) \
 	private: \
-	std::vector<type*> m_##name##s; \
-	std::vector<type*>::iterator m_##name##sIterator; \
+	std::vector<Separatista::type*> m_##name##s; \
+	std::vector<Separatista::type*>::iterator m_##name##sIterator; \
 	public: \
 	static const wchar_t* tag; \
 	Separatista::type* get##name(); \
@@ -53,7 +53,7 @@ class name : public Element, public Separatista::type \
 	void moveFirst##name(); \
 	void moveNext##name(); \
 	size_t getCountOf##name() const; \
-	void add##name(type* p##name); \
+	void add##name(Separatista::type* p##name); \
 	void remove##name();
 
 #define DECLARE_CHILD(type, name, tag) \
@@ -153,6 +153,16 @@ class name : public Element, public Separatista::type \
 #define IMPLEMENT_CHILD(child, tag) \
 	, m_##child(pDocument, this, NULL, tag)
 
+#define IMPLEMENT_INFINITE(type, name, tag) \
+	DOMNodeList *pNodeList; \
+	pNodeList = getElementsByTagName(tag); \
+	if(pNodeList) \
+	{ \
+		for(XMLSize_t i = 0; i < pNodeList->getLength(); i++) \
+			add##name(new type(pDocument, this, (DOMElement*)pNodeList->item(i), tag)); \
+	} \
+	moveFirst##name();
+
 #define IMPLEMENT_CHILD_INFINITE(cls, type, name, tag) \
 	Separatista::type* SeparatistaPrivate::cls::get##name() \
 	{ \
@@ -177,7 +187,7 @@ class name : public Element, public Separatista::type \
 	{ \
 		return m_##name##s.size(); \
 	} \
-	void SeparatistaPrivate::cls::add##name(type* pValue) \
+	void SeparatistaPrivate::cls::add##name(Separatista::type* pValue) \
 	{ \
 		m_##name##s.push_back(pValue); \
 	} \
@@ -185,7 +195,7 @@ class name : public Element, public Separatista::type \
 	{ \
 		if(EOF##name()) \
 			return; \
-		std::vector<type*>::iterator it = m_##name##sIterator + 1; \
+		std::vector<Separatista::type*>::iterator it = m_##name##sIterator + 1; \
 		m_##name##s.erase(m_##name##sIterator); \
 		m_##name##sIterator = it; \
 	} \

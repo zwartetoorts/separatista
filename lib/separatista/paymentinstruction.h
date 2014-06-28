@@ -48,13 +48,9 @@ namespace SeparatistaPrivate
 	DECLARE_TAG_ENUM(Separatista::ChargeBearerType1Code, ChargeBearer, 4, ChrgBr)
 	DECLARE_TAG(ChargesAccount, ChrgsAcct)
 	DECLARE_TAG(ChargesAccountAgent, ChrgsAcctAgt)
-
+	DECLARE_CHILD_INFINITE(DirectDebitTransactionInformation13, DirectDebitTransactionInformation, DrctDbtTxInf)
 public:
-	static const wchar_t* DrctDbtTxInf;
-
-private:
-	std::vector<DirectDebitTransactionInformation13*> m_ddtInfs;
-	std::vector<DirectDebitTransactionInformation13*>::iterator m_ddtInfsIterator;
+	~PaymentInstruction10();
 
 	END_DECLARE_CLASS
 }

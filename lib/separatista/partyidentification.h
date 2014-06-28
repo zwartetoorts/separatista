@@ -36,6 +36,7 @@ namespace SeparatistaPrivate
 	DECLARE_CHILD(Party11Choice, Identification, Id)
 	DECLARE_TAG(CountryOfResidence, CtryOfRes)
 	DECLARE_CHILD(ContactDetails2, ContactDetails, CtctDtls)
+
 	END_DECLARE_CLASS
 
 }

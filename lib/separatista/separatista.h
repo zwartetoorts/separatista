@@ -252,6 +252,15 @@ private:
 #define SEPARATISTA_DECLARE_CHILD_MULTI(type, name) \
 	virtual type& get##name(size_t index) = 0;
 
+#define SEPARATISTA_DECLARE_CHILD_INFINITE(type, name) \
+	virtual Separatista::type* get##name() = 0;\
+	virtual bool EOF##name() const = 0; \
+	virtual void moveFirst##name() = 0; \
+	virtual void moveNext##name() = 0; \
+	virtual size_t getCountOf##name() const = 0; \
+	virtual void add##name(type* p##name) = 0; \
+	virtual void remove##name() = 0;
+
 #define SEPARATISTA_DECLARE_TAG_MULTI(name) \
 	virtual const wchar_t* get##name(size_t index) = 0;
 
@@ -408,7 +417,7 @@ class PersonIdentification5
 {
 public:
 	SEPARATISTA_DECLARE_CHILD(DateAndPlaceOfBirth, DateAndPlaceOfBirth)
-	SEPARATISTA_DECLARE_CHILD(GenericOrganisationIdentification1, Other)
+	SEPARATISTA_DECLARE_CHILD_INFINITE(GenericOrganisationIdentification1, Other)
 };
 
 class Party11Choice
@@ -616,6 +625,7 @@ public:
 	SEPARATISTA_DECLARE_TAG_ENUM(ChargeBearerType1Code, ChargeBearer)
 	SEPARATISTA_DECLARE_TAG(ChargesAccount)
 	SEPARATISTA_DECLARE_TAG(ChargesAccountAgent)
+	SEPARATISTA_DECLARE_CHILD_INFINITE(DirectDebitTransactionInformation13, DirectDebitTransactionInformation)
 public:
 	static const wchar_t *DirectDebit;
 };
