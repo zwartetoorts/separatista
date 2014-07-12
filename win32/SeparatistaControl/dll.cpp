@@ -26,9 +26,6 @@
 #include "mt940sdocument.h"
 #include "registrykey.h"
 #include "dispatch.cpp"
-#include "documentreader.h"
-#include "cdirectdebitdocument.h"
-#include "cerrorreport.h"
 
 /**
 	Globals
@@ -83,10 +80,6 @@ STDAPI DllGetClassObject(REFCLSID rclsid,
 	*ppv = NULL;
 	if (IsEqualIID(rclsid, __uuidof(CMT940SDocument)))
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<IMT940SDocument>::Create<CMT940SDocument>);
-	else if (IsEqualIID(rclsid, __uuidof(DocumentReader)))
-		pFactory = new SepaControlClassFactory(SepaControlDispatch<IDocumentReader>::Create<DocumentReader>);
-	else if (IsEqualIID(rclsid, __uuidof(CDirectDebitDocument)))
-		pFactory = new SepaControlClassFactory(SepaControlDispatch<IDirectDebitDocument>::Create<CDirectDebitDocument>);
 	else
 		return CLASS_E_CLASSNOTAVAILABLE;
 
@@ -158,30 +151,6 @@ STDAPI DllUnregisterServer()
 		TEXT("{2BD7342E-B12D-45b0-A5D6-ADF118386112}"),
 		TEXT("Separatista.IBAN.1"),
 		TEXT("Separatista.IBAN"));
-
-	// Unregister Separatista.DocumentReader
-	DllUnregisterObject(
-		TEXT("{3FF1D4F5-2C70-4A78-ADCB-88C218E23C91}"),
-		TEXT("Separatista.DocumentReader.1"),
-		TEXT("Separatista.DocumentReader"));
-
-	// Unregister Separatista.DirectDebitDocument
-	DllUnregisterObject(
-		TEXT("{0274813F-6EF4-44DF-8A1C-38262379519F}"),
-		TEXT("Separatista.DirectDebitDocument.1"),
-		TEXT("Separatista.DirectDebitDocument"));
-
-	// Unregister Separatista.ErrorReport
-	DllUnregisterObject(
-		TEXT("{89F10D64-9F8A-4B07-B749-266158D4407A}"),
-		TEXT("Separatista.ErrorReport.1"),
-		TEXT("Separatista.ErrorReport"));
-
-	// Unregister Separatista.PartyIdentification
-	DllUnregisterObject(
-		TEXT("{2E1BDA09-1073-4C08-92E2-1ABD88DBD432}"),
-		TEXT("Separatista.PartyIdentification.1"),
-		TEXT("Separatista.PartyIdentification"));
 
 	return S_OK;;
 }
@@ -319,83 +288,6 @@ STDAPI DllRegisterServer()
 		TEXT("{2BD7342E-B12D-45b0-A5D6-ADF118386112}"),
 		TEXT("Separatista.IBAN.1"),
 		TEXT("Separatista.IBAN"));
-	if (FAILED(hr))
-	{
-		DllUnregisterServer();
-		return hr;
-	}
-
-	// Try to register Separatista.DocumentReader
-	hr = DllRegisterObject(
-		TEXT("{3FF1D4F5-2C70-4A78-ADCB-88C218E23C91}"),
-		TEXT("Separatista.DocumentReader.1"),
-		TEXT("Separatista.DocumentReader"));
-	if (FAILED(hr))
-	{
-		DllUnregisterServer();
-		return hr;
-	}
-
-	// Try to register Separatista.DirectDebitDocument
-	hr = DllRegisterObject(
-		TEXT("{0274813F-6EF4-44DF-8A1C-38262379519F}"),
-		TEXT("Separatista.DirectDebitDocument.1"),
-		TEXT("Separatista.DirectDebitDocument"));
-	if(FAILED(hr))
-	{
-		DllUnregisterServer();
-		return hr;
-	}
-
-	// Try to register Separatista.ErrorReport
-	hr = DllRegisterObject(
-		TEXT("{89F10D64-9F8A-4B07-B749-266158D4407A}"),
-		TEXT("Separatista.ErrorReport.1"),
-		TEXT("Separatista.ErrorReport"));
-	if (FAILED(hr))
-	{
-		DllUnregisterServer();
-		return hr;
-	}
-
-	// Try to register Separatista.PartyIdentification
-	hr = DllRegisterObject(
-		TEXT("{2E1BDA09-1073-4C08-92E2-1ABD88DBD432}"),
-		TEXT("Separatista.PartyIdentification.1"),
-		TEXT("Separatista.PartyIdentification"));
-	if (FAILED(hr))
-	{
-		DllUnregisterServer();
-		return hr;
-	}
-
-	// Try to register Separatista.CodeOrProprietary
-	hr = DllRegisterObject(
-		TEXT("{AD7CA45E-E648-4A6C-B86F-DEF5CD56A318}"),
-		TEXT("Separatista.CodeOrProprietary.1"),
-		TEXT("Separatista.CodeOrProprietary"));
-	if (FAILED(hr))
-	{
-		DllUnregisterServer();
-		return hr;
-	}
-
-	// Try to register Separatista.PaymentTypeInformation
-	hr = DllRegisterObject(
-		TEXT("{7AE01D5B-32E2-481E-8A23-06E18F23F556}"),
-		TEXT("Separatista.PaymentTypeInformation.1"),
-		TEXT("Separatista.PaymentTypeInformation"));
-	if (FAILED(hr))
-	{
-		DllUnregisterServer();
-		return hr;
-	}
-
-	// Try to register Separatista.CashAccount
-	hr = DllRegisterObject(
-		TEXT("{C05C2FD2-6A95-4843-B2C8-31A375DFA282}"),
-		TEXT("Separatista.CashAccount.1"),
-		TEXT("Separatista.CashAccount"));
 	if (FAILED(hr))
 	{
 		DllUnregisterServer();

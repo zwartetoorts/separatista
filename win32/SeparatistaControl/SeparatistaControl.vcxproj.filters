@@ -45,18 +45,6 @@
     <ClInclude Include="unknown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cdirectdebitdocument.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="documentreader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cerrorreport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="macros.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Separatista.odl">
@@ -97,15 +85,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dispatch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cdirectdebitdocument.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="documentreader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cerrorreport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

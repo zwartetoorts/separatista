@@ -20,8 +20,8 @@
 
 #include "windows.h"
 
-#include "iban/iban.h"
 #include "dispatch.h"
+#include "iban/iban.h"
 
 #ifndef SEPARATISTA_CIBAN_H
 #define SEPARATISTA_CIBAN_H

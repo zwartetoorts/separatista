@@ -58,7 +58,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>separatista.lib;separatistaiban.lib;mt940s.lib;shlwapi.lib;comsuppwd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>separatistaiban.lib;mt940s.lib;shlwapi.lib;comsuppwd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>SeparatistaControl.def</ModuleDefinitionFile>
     </Link>
@@ -82,15 +82,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="cdirectdebitdocument.h" />
-    <ClInclude Include="cerrorreport.h" />
     <ClInclude Include="ciban.h" />
     <ClInclude Include="classfactory.h" />
     <ClInclude Include="dispatch.h" />
     <ClInclude Include="dll.h" />
-    <ClInclude Include="documentreader.h" />
     <ClInclude Include="enumvariant.h" />
-    <ClInclude Include="macros.h" />
     <ClInclude Include="mt940sdocument.h" />
     <ClInclude Include="mt940srecordset.h" />
     <ClInclude Include="registrykey.h" />
@@ -106,15 +102,12 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cdirectdebitdocument.cpp" />
-    <ClCompile Include="cerrorreport.cpp" />
     <ClCompile Include="ciban.cpp" />
     <ClCompile Include="classfactory.cpp" />
     <ClCompile Include="dispatch.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="dll.cpp" />
-    <ClCompile Include="documentreader.cpp" />
     <ClCompile Include="enumvariant.cpp" />
     <ClCompile Include="mt940sdocument.cpp" />
     <ClCompile Include="mt940srecordset.cpp" />
