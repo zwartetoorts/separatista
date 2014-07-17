@@ -45,6 +45,12 @@
     <ClInclude Include="unknown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="customerdirectdebitinitiation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="element.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Separatista.odl">
@@ -85,6 +91,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dispatch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="customerdirectdebitinitiation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="element.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

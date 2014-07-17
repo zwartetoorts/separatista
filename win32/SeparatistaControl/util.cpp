@@ -50,3 +50,21 @@ HRESULT DateTypeFromStdTime(time_t t, DATE *pDate)
 
 	return E_UNEXPECTED;
 }
+
+time_t StdTimeFromDateType(DATE Value)
+{
+	SYSTEMTIME stime;
+	tm ti;
+
+	// Convert Variant time to system time
+	if (!VariantTimeToSystemTime(Value, &stime))
+		return -1;
+
+	ti.tm_year = stime.wYear - 1900;
+	ti.tm_mon = stime.wMonth - 1;
+	ti.tm_mday = stime.wDay;
+	ti.tm_hour = stime.wHour;
+	ti.tm_min = stime.wMinute;
+	ti.tm_sec = stime.wSecond;
+	return mktime(&ti);
+}

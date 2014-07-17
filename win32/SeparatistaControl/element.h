@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,25 +18,72 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_CONTROL_UTIL_H
-#define SEPARATISTA_CONTROL_UTIL_H
+#ifndef SEPARATISTA_CONTROL_ELEMENT_H
+#define SEPARATISTA_CONTROL_ELEMENT_H
 
-#include <windows.h>
 #include <ctime>
+#include <windows.h>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMException.hpp>
 
-/**
-	Creates a new currency variant from string.
-*/
-HRESULT VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency);
+class Element
+{
+public:
+	Element(xercesc::DOMDocument *pDocument, const wchar_t *pName);
+	Element(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pName);
 
-/**
-	Creates a new COM date type from std time_t.
-*/
-HRESULT DateTypeFromStdTime(time_t t, DATE *pDate);
+	~Element();
 
-/**
-	Converts COM date to time_t
-*/
-time_t StdTimeFromDateType(DATE Value);
+	/**
+		Returns the value of the text node
+	*/
+	const XMLCh* GetTextValue() const;
 
-#endif // !defined SEPARATISTA_CONTROL_UTIL_H
+	/**
+		Set the value of a text node
+	*/
+	void SetTextValue(const XMLCh *pValue);
+
+	/**
+		Returns the value of the text node converted to date
+	*/
+	time_t GetDateValue() const;
+
+	/**
+		Set the value of a text node by a time_t
+	*/
+	void SetDateValue(time_t Value);
+
+protected:
+	xercesc::DOMElement *m_pElement;
+};
+
+class InitgPty : public Element
+{
+	InitgPty(xercesc::DOMDocument *pDocument, Element *pParent);
+
+	Element m_Nm;
+};
+
+class GrpHdr : public Element
+{
+public:
+	GrpHdr(xercesc::DOMDocument *pDocument, Element *pParent);
+
+	Element m_MsgId;
+	Element m_CreDtTm;
+	Element m_NbOfTxs;
+	Element m_CtrlSum;
+
+};
+
+class CstmrDrctDbtInitn : public Element
+{
+public:
+	CstmrDrctDbtInitn(xercesc::DOMDocument *pDocument);
+
+	GrpHdr m_GrpHdr;
+};
+
+#endif // ifndef SEPARATISTA_CONTROL_ELEMENT_H

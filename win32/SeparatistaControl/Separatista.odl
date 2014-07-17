@@ -208,5 +208,43 @@ library Separatista
 		interface IDispatch;
 	};
 
+	[
+		uuid(4B8AC337-5E17-454D-A7EC-8955B07B99CC),
+		helpstring("ICustomerDirectDebitInitiation interface"),
+		oleautomation,
+		dual,
+		odl
+	]
+	interface ICustomerDirectDebitInitiation : IDispatch
+	{
+		[propget, helpstring("Point to point reference, assigned by the instructing party and sent to the next party in the chain, to unambiguously identify the message")]
+		HRESULT __stdcall MessageIdentification(
+			[out, retval] BSTR *pValue);
+
+		[propput, helpstring("Point to point reference, assigned by the instructing party and sent to the next party in the chain, to unambiguously identify the message")]
+		HRESULT __stdcall MessageIdentification(
+			[in] BSTR value);
+
+		[propget, helpstring("Date and time at which a (group of) payment instruction(s) was created by the instructing party.")]
+		HRESULT __stdcall CreationDateTime(
+			[out, retval] DATE *pDate);
+
+		[propput, helpstring("Date and time at which a (group of) payment instruction(s) was created by the instructing party.")]
+		HRESULT __stdcall CreationDateTime(
+			[in] DATE Date);
+
+
+
+	};
+
+	[
+		uuid(A3142FEC-FB2E-4715-B5DF-C4F7844D2956),
+		helpstring("CustomerDirectDebitInitiation object")
+	]
+	coclass CustomerDirectDebitInitiation
+	{
+		[default] interface ICustomerDirectDebitInitiation;
+		interface IDispatch;
+	};
 
 }

@@ -23,8 +23,8 @@
 #include "dispatch.h"
 #include "iban/iban.h"
 
-#ifndef SEPARATISTA_CIBAN_H
-#define SEPARATISTA_CIBAN_H
+#ifndef SEPARATISTA_CONTROL_IBAN_H
+#define SEPARATISTA_CONTROL_IBAN_H
 
 // {3CDADD67-109C-49b4-9B1B-5C10B7121EB6}
 DEFINE_GUID(IID_IBAN, 
@@ -79,4 +79,4 @@ private:
 
 class __declspec(uuid("{2BD7342E-B12D-45b0-A5D6-ADF118386112}")) CIBAN;
 
-#endif // !defined SEPARATISTA_CIBAN_H
+#endif // !defined SEPARATISTA_CONTROL_IBAN_H

@@ -20,12 +20,14 @@
 
 #include <windows.h>
 #include <olectl.h>
+#include <xercesc/util/PlatformUtils.hpp>
 
 #include "dll.h"
 #include "classfactory.h"
 #include "mt940sdocument.h"
 #include "registrykey.h"
 #include "dispatch.cpp"
+#include "customerdirectdebitinitiation.h"
 
 /**
 	Globals
@@ -49,6 +51,17 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 	switch(fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
+		// Init Xerces
+		try
+		{
+			xercesc::XMLPlatformUtils::Initialize();
+		}
+		catch (const xercesc::XMLException &e)
+		{
+			OutputDebugString(e.getMessage());
+			return false;
+		}
+
 		// Save the Dll path
 		do{
 			if(g_lpszDllPath)
@@ -65,6 +78,9 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 		// Free the Dll path
 		if(g_lpszDllPath)
 			delete g_lpszDllPath;
+
+		// Kill Xerces
+		xercesc::XMLPlatformUtils::Terminate();
 	}
 
 	return TRUE;
@@ -80,6 +96,8 @@ STDAPI DllGetClassObject(REFCLSID rclsid,
 	*ppv = NULL;
 	if (IsEqualIID(rclsid, __uuidof(CMT940SDocument)))
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<IMT940SDocument>::Create<CMT940SDocument>);
+	else if (IsEqualIID(rclsid, __uuidof(CustomerDirectDebitInitiation)))
+		pFactory = new SepaControlClassFactory(SepaControlDispatch<ICustomerDirectDebitInitiation>::Create<CustomerDirectDebitInitiation>);
 	else
 		return CLASS_E_CLASSNOTAVAILABLE;
 
@@ -151,6 +169,13 @@ STDAPI DllUnregisterServer()
 		TEXT("{2BD7342E-B12D-45b0-A5D6-ADF118386112}"),
 		TEXT("Separatista.IBAN.1"),
 		TEXT("Separatista.IBAN"));
+
+	// Unregister Separatista.CustomerDirectDebitInitiation
+	DllUnregisterObject(
+		TEXT("{A3142FEC-FB2E-4715-B5DF-C4F7844D2956}"),
+		TEXT("Separatista.CustomerDirectDebitInitiation.1"),
+		TEXT("Separatista.CustomerDirectDebitInitiation"));
+
 
 	return S_OK;;
 }
@@ -288,6 +313,17 @@ STDAPI DllRegisterServer()
 		TEXT("{2BD7342E-B12D-45b0-A5D6-ADF118386112}"),
 		TEXT("Separatista.IBAN.1"),
 		TEXT("Separatista.IBAN"));
+	if (FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
+
+	// Try to register Separatista.CustomerDirectDebitInitiation
+	hr = DllRegisterObject(
+		TEXT("{A3142FEC-FB2E-4715-B5DF-C4F7844D2956}"),
+		TEXT("Separatista.CustomerDirectDebitInitiation.1"),
+		TEXT("Separatista.CustomerDirectDebitInitiation"));
 	if (FAILED(hr))
 	{
 		DllUnregisterServer();

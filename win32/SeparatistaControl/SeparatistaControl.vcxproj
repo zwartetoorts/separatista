@@ -51,15 +51,15 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SEPARATISTA_USINGDLL;SEPARATISTA_IBAN_USINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SEPARATISTA_IBAN_USINGDLL;_CRT_SECURE_NO_WARNINGS;XERCES_STATIC_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\lib\separatista;..\..\lib;..\..\..\xerces-c-3.1.1\src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>separatistaiban.lib;mt940s.lib;shlwapi.lib;comsuppwd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>separatistaiban.lib;mt940s.lib;shlwapi.lib;comsuppwd.lib;xerces-c_static_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);..\..\..\xerces-c-3.1.1\Build\Win32\VC10\Static Debug\</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>SeparatistaControl.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -84,8 +84,10 @@
   <ItemGroup>
     <ClInclude Include="ciban.h" />
     <ClInclude Include="classfactory.h" />
+    <ClInclude Include="customerdirectdebitinitiation.h" />
     <ClInclude Include="dispatch.h" />
     <ClInclude Include="dll.h" />
+    <ClInclude Include="element.h" />
     <ClInclude Include="enumvariant.h" />
     <ClInclude Include="mt940sdocument.h" />
     <ClInclude Include="mt940srecordset.h" />
@@ -104,10 +106,12 @@
   <ItemGroup>
     <ClCompile Include="ciban.cpp" />
     <ClCompile Include="classfactory.cpp" />
+    <ClCompile Include="customerdirectdebitinitiation.cpp" />
     <ClCompile Include="dispatch.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="dll.cpp" />
+    <ClCompile Include="element.cpp" />
     <ClCompile Include="enumvariant.cpp" />
     <ClCompile Include="mt940sdocument.cpp" />
     <ClCompile Include="mt940srecordset.cpp" />

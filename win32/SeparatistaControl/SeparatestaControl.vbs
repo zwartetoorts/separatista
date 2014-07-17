@@ -1,13 +1,9 @@
-set reader = CreateObject("Separatista.DocumentReader")
-'set ddoc = CreateObject("Separatista.DirectDebitDocument")
+set doc = CreateObject("Separatista.CustomerDirectDebitInitiation")
 
-if reader.ReadDocument("C:\Users\Okkel\Documents\Visual Studio 2013\Projects\Separatista\doc\BNG SEPA SDD 008_001_ 02 voorbeeld.XML") = 0 then
-	set ddoc = reader.DirectDebitDocument
-	WScript.Echo "MessageIdentifation: " & ddoc.MessageIdentification
-	WScript.Echo "CreationDateTime: " & ddoc.CreationDateTime
-	WScript.Echo "NumberOfTransactions: " & ddoc.NumberOfTransactions	
-	WScript.Echo "ControlSum: " & ddoc.ControlSum
-	WScript.Echo ddoc.Authorisation1
-end if
+doc.MessageIdentification = "0001"
+wscript.echo doc.MessageIdentification
+doc.CreationDateTime = now()
+wscript.echo doc.CreationDateTime
 
 
+WScript.StdIn.Read(1)
