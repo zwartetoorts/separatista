@@ -28,6 +28,7 @@
 #include "registrykey.h"
 #include "dispatch.cpp"
 #include "customerdirectdebitinitiation.h"
+#include "ciban.h"
 
 /**
 	Globals
@@ -98,7 +99,9 @@ STDAPI DllGetClassObject(REFCLSID rclsid,
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<IMT940SDocument>::Create<CMT940SDocument>);
 	else if (IsEqualIID(rclsid, __uuidof(CustomerDirectDebitInitiation)))
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<ICustomerDirectDebitInitiation>::Create<CustomerDirectDebitInitiation>);
-	else
+	else if (IsEqualIID(rclsid, __uuidof(CIBAN)))
+		pFactory = new SepaControlClassFactory(SepaControlDispatch<IIBAN>::Create<CIBAN>);
+	else 
 		return CLASS_E_CLASSNOTAVAILABLE;
 
 	if(!pFactory)

@@ -46,7 +46,9 @@ struct IIBAN : public IDispatch
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
 
 	// IIBAN
-	STDMETHOD(IBAN)(BSTR *pIBAN) PURE;
+	STDMETHOD(GetIBAN)(BSTR *pIBAN) PURE;
+	STDMETHOD(SetIBAN)(BSTR iban) PURE;
+	STDMETHOD(Check)(VARIANT_BOOL *pValid) PURE;
 };
 
 struct __declspec(uuid("{3CDADD67-109C-49b4-9B1B-5C10B7121EB6}")) IIBAN;
@@ -65,8 +67,15 @@ public:
 	*/
 	CIBAN(IUnknown *pParent = NULL);
 
+	/**
+		Destructor
+	*/
+	~CIBAN();
+
 	// COM methods
-	STDMETHOD(IBAN)(BSTR *pIBAN);
+	STDMETHOD(GetIBAN)(BSTR *pIBAN);
+	STDMETHOD(SetIBAN)(BSTR iban);
+	STDMETHOD(Check)(VARIANT_BOOL *pValid);
 
 	/**
 		Assignment operator, will set the internal pointer to the recordset
@@ -75,6 +84,7 @@ public:
 
 private:
 	Separatista::IBAN *m_pIBAN;
+	bool m_bOwnIBAN;
 };
 
 class __declspec(uuid("{2BD7342E-B12D-45b0-A5D6-ADF118386112}")) CIBAN;

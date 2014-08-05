@@ -45,6 +45,12 @@ library Separatista
 		[propget, helpstring("IBAN as text")]
 		HRESULT __stdcall IBAN(
 			[out, retval] BSTR *pIBAN);
+		[propput, helpstring("IBAN as text")]
+		HRESULT __stdcall IBAN(
+			[in] BSTR iban);
+		[helpstring("Check validity of an IBAN number")]
+		HRESULT __stdcall Check(
+			[out, retval] VARIANT_BOOL *pValid);
 	};
 	[
 		uuid(2BD7342E-B12D-45b0-A5D6-ADF118386112),
@@ -233,8 +239,21 @@ library Separatista
 		HRESULT __stdcall CreationDateTime(
 			[in] DATE Date);
 
+		[propget, helpstring("Number of individual transactions contained in the message.")]
+		HRESULT __stdcall NumberOfTransactions(
+			[out, retval] INT *pValue);
 
+		[propget, helpstring("Total of all individual amounts included in the message, irrespective of currencies.")]
+		HRESULT __stdcall ControlSum(
+			[out, retval] VARIANT *pValue);
 
+		[propget, helpstring("Name by which a party is known and which is usually used to identify that party.")]
+		HRESULT __stdcall InitiatingPartyName(
+			[out, retval] BSTR *pValue);
+
+		[propput, helpstring("Name by which a party is known and which is usually used to identify that party.")]
+		HRESULT __stdcall InitiatingPartyName(
+			[in] BSTR Value);
 	};
 
 	[

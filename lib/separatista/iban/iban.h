@@ -31,10 +31,10 @@
 #	define IBAN_EXTERN
 #endif
 
-#define IBAN_MAX_LENGTH 34
-
 namespace Separatista 
 {
+
+typedef char IBANCC[2];
 
 class IBAN
 {
@@ -46,12 +46,29 @@ public:
 
 	IBAN_EXTERN IBAN& operator = (const char *iban);
 
-	IBAN_EXTERN const char* getIBAN() const;
+	IBAN_EXTERN const char* getIBAN();
 
-	IBAN_EXTERN operator const char* () const;
+	IBAN_EXTERN operator const char* ();
+
+	IBAN_EXTERN const IBANCC &getCountryCode() const;
+
+	IBAN_EXTERN const IBANCC &getControlSum() const;
+
+	IBAN_EXTERN bool Check() const;
+
+	IBAN_EXTERN void Clear();
+
+protected:
+	void set(const char *iban);
+	void format();
 
 private:
-	std::string m_iban;
+	IBANCC m_countryCode;
+	IBANCC m_controlSum;
+	char m_accountNumber[30];
+	int m_accountNumberLength;
+
+	std::string m_formatted;
 };
 
 }

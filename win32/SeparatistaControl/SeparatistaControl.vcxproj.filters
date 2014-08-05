@@ -51,6 +51,9 @@
     <ClInclude Include="element.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="paymentinformation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Separatista.odl">
@@ -97,6 +100,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="element.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="paymentinformation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

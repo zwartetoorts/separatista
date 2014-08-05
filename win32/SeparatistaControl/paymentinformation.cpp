@@ -18,56 +18,13 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_CONTROL_ELEMENT_H
-#define SEPARATISTA_CONTROL_ELEMENT_H
+#include <comutil.h>
 
-#include <ctime>
-#include <windows.h>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMException.hpp>
+#include "paymentinformation.h"
+#include "dispatch.cpp"
 
-class Element
+PaymentInformation::PaymentInformation(CustomerDirectDebitInitiation *pParent, xercesc::DOMDocument *pDomDocument)
+:SepaControlDispatch<IPaymentInformation>(pParent)
 {
-public:
-	Element(xercesc::DOMDocument *pDocument, const wchar_t *pName);
-	Element(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pName);
-
-	~Element();
-
-	/**
-		Returns the value of the text node
-	*/
-	const XMLCh* GetTextValue() const;
-
-	/**
-		Set the value of a text node
-	*/
-	void SetTextValue(const XMLCh *pValue);
-
-	/**
-		Returns the value of the text node converted to date
-	*/
-	time_t GetDateValue() const;
-
-	/**
-		Set the value of a text node by a time_t
-	*/
-	void SetDateValue(const time_t Value);
-
-	/**
-		Get the value of a text node converted to int
-	*/
-	int GetIntValue() const;
-
-	/**
-		Set the value of a text node by an int
-	*/
-	void SetIntValue(const int Value);
-
-protected:
-	xercesc::DOMElement *m_pElement;
-};
-
-
-#endif // ifndef SEPARATISTA_CONTROL_ELEMENT_H
+	m_pDomDocument = pDomDocument;
+}

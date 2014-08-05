@@ -23,48 +23,22 @@
 
 #include "dispatch.h"
 #include "element.h"
+#include "customerdirectdebitinitiation.h"
 
-#ifndef SEPARATISTA_CONTROL_CUSTOMERDIRECTDEBITINITIATION_H
-#define SEPARATISTA_CONTROL_CUSTOMERDIRECTDEBITINITIATION_H
+#ifndef SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
+#define SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
 
-class InitgPty : public Element
-{
-public:
-	InitgPty(xercesc::DOMDocument *pDocument, Element *pParent);
+// {9D52C4C2-B5FF-43E0-9FAC-600AF2986686}
+DEFINE_GUID(IID_IPaymentInformation ,
+	0x9d52c4c2, 0xb5ff, 0x43e0, 0x9f, 0xac, 0x60, 0xa, 0xf2, 0x98, 0x66, 0x86);
 
-	Element m_Nm;
-};
+// {CBDAC56C-5A90-443F-9511-D3F3B5AC3CF7}
+DEFINE_GUID(CLSID_PAYMENTINFORMATION,
+	0xcbdac56c, 0x5a90, 0x443f, 0x95, 0x11, 0xd3, 0xf3, 0xb5, 0xac, 0x3c, 0xf7);
 
-class GrpHdr : public Element
-{
-public:
-	GrpHdr(xercesc::DOMDocument *pDocument, Element *pParent);
 
-	Element m_MsgId;
-	Element m_CreDtTm;
-	Element m_NbOfTxs;
-	Element m_CtrlSum;
-	InitgPty m_InitgPty;
 
-};
-
-class CstmrDrctDbtInitn : public Element
-{
-public:
-	CstmrDrctDbtInitn(xercesc::DOMDocument *pDocument);
-
-	GrpHdr m_GrpHdr;
-};
-
-// {4B8AC337-5E17-454D-A7EC-8955B07B99CC}
-DEFINE_GUID(IID_CUSTOMERDIRECTDEBITINITIATION ,
-	0x4b8ac337, 0x5e17, 0x454d, 0xa7, 0xec, 0x89, 0x55, 0xb0, 0x7b, 0x99, 0xcc);
-
-// {A3142FEC-FB2E-4715-B5DF-C4F7844D2956}
-DEFINE_GUID(CLSID_CUSTOMERDIRECTDEBITINITIATION,
-	0xa3142fec, 0xfb2e, 0x4715, 0xb5, 0xdf, 0xc4, 0xf7, 0x84, 0x4d, 0x29, 0x56);
-
-struct ICustomerDirectDebitInitiation : public IDispatch
+struct IPaymentInformation : public IDispatch
 {
 	// IDispatch
 	STDMETHOD_(ULONG, AddRef)() PURE;
@@ -75,20 +49,12 @@ struct ICustomerDirectDebitInitiation : public IDispatch
 	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId) PURE;
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
 
-	// ICustomerDirectDebitInitiation
-	STDMETHOD(GetMessageIdentification)(BSTR* pValue) PURE;
-	STDMETHOD(SetMessageIdentification)(BSTR Value) PURE;
-	STDMETHOD(GetCreationDateTime)(DATE *pValue) PURE;
-	STDMETHOD(SetCreationDateTime)(DATE Value) PURE;
-	STDMETHOD(GetNumberOfTransactions)(INT *pValue) PURE;
-	STDMETHOD(GetControlSum)(VARIANT *pValue) PURE;
-	STDMETHOD(GetInititiatingPartyName)(BSTR* pValue) PURE;
-	STDMETHOD(SetInititiatingPartyName)(BSTR Value) PURE;
+	// IPaymentInformation
 
 
 };
 
-struct __declspec(uuid("{4B8AC337-5E17-454D-A7EC-8955B07B99CC}")) ICustomerDirectDebitInitiation;
+struct __declspec(uuid("{9D52C4C2-B5FF-43E0-9FAC-600AF2986686}")) IPaymentInformation;
 
 /**
 	COM representation of an IBAN class.
@@ -96,34 +62,18 @@ struct __declspec(uuid("{4B8AC337-5E17-454D-A7EC-8955B07B99CC}")) ICustomerDirec
 	Other classes like CMT940SRecordset will come and go on-the-fly and hold only references to the child
 	objects in the parent CMT940SDocument.
 */
-class CustomerDirectDebitInitiation : public SepaControlDispatch<ICustomerDirectDebitInitiation>
+class PaymentInformation : public SepaControlDispatch<IPaymentInformation>
 {
 public:
 	/**
-		@see SepaControllDispatch
+	@see SepaControllDispatch
 	*/
-	CustomerDirectDebitInitiation();
-
-	/**
-		Destructor
-	*/
-	~CustomerDirectDebitInitiation();
-
-	STDMETHOD(GetMessageIdentification)(BSTR* pValue);
-	STDMETHOD(SetMessageIdentification)(BSTR Value);
-	STDMETHOD(GetCreationDateTime)(DATE *pValue);
-	STDMETHOD(SetCreationDateTime)(DATE Value);
-	STDMETHOD(GetNumberOfTransactions)(INT *pValue);
-	STDMETHOD(GetControlSum)(VARIANT *pValue);
-	STDMETHOD(GetInititiatingPartyName)(BSTR* pValue);
-	STDMETHOD(SetInititiatingPartyName)(BSTR Value);
+	PaymentInformation(CustomerDirectDebitInitiation *pParent, xercesc::DOMDocument *pDomDocument);
 
 private:
 	xercesc::DOMDocument *m_pDomDocument;
-	CstmrDrctDbtInitn *m_pCstmrDrctDbtInitn;
-
 };
 
-class __declspec(uuid("{A3142FEC-FB2E-4715-B5DF-C4F7844D2956}")) CustomerDirectDebitInitiation;
+class __declspec(uuid("{CBDAC56C-5A90-443F-9511-D3F3B5AC3CF7}")) PaymentInformation;
 
-#endif // #define SEPARATISTA_CONTROL_CUSTOMERDIRECTDEBITINITIATION_H
+#endif // SEPARATISTA_CONTROL_PAYMENTINFORMATION_H

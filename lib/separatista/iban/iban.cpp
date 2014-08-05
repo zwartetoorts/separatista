@@ -21,26 +21,138 @@
 #include "iban.h"
 
 #include <string>
+#include <sstream>
 
 using namespace Separatista;
 
 IBAN::IBAN()
 {
+	Clear();	
+}
+
+void IBAN::Clear()
+{
+	m_accountNumberLength = 0;
+	m_countryCode[0] = ' ';
+	m_countryCode[1] = ' ';
+	m_controlSum[0] = ' ';
+	m_controlSum[1] = ' ';
 }
 
 IBAN& IBAN::operator =(const char *iban)
 {
-	m_iban.assign(iban, IBAN_MAX_LENGTH);
+	set(iban);
 	return *this;
 }
 
-const char* IBAN::getIBAN() const
+const char* IBAN::getIBAN()
 {
-	return m_iban.c_str();
+	format();
+	return m_formatted.c_str();
 }
 
-IBAN::operator const char* () const
+IBAN::operator const char* ()
 {
-	return m_iban.c_str();
+	format();
+	return m_formatted.c_str();
 }
 
+const IBANCC& IBAN::getControlSum() const
+{
+	return m_controlSum;
+}
+
+const IBANCC& IBAN::getCountryCode() const
+{
+	return m_countryCode;
+}
+
+void IBAN::set(const char* iban)
+{
+	std::string value = iban;
+	
+	int pos = 0;
+
+	// Iterate over the characters
+	for (std::string::iterator it = value.begin(); it != value.end(); ++it)
+	{
+		// Skip white space
+		if (*it != ' ')
+		{
+			char c = toupper(*it);
+			if (pos < 2)
+				// Country code
+				m_countryCode[pos] = c;
+			else if (pos < 4)
+				// Controlsum
+				m_controlSum[pos - 2] = c;
+			else if (pos < 34)
+			{
+				// Account number
+				m_accountNumber[pos - 4] = c;
+				m_accountNumberLength = pos - 3;
+			}
+			++pos;
+		}
+	}
+}
+
+int translate_table(const char c)
+{
+	static const char* table = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	for (int i = 0; i < 36; i++)
+		if (table[i] == c)
+			return i;
+}
+
+bool IBAN::Check() const
+{
+	std::string val;
+	std::ostringstream ss;
+	
+	// Build value
+	for (int i = 0; i < m_accountNumberLength; i++)
+	{
+		// Account number
+		ss << translate_table(m_accountNumber[i]);
+	}
+	// Countrycode and ControlSum
+	ss << translate_table(m_countryCode[0]);
+	ss << translate_table(m_countryCode[1]);
+	ss << translate_table(m_controlSum[0]);
+	ss << translate_table(m_controlSum[1]);
+
+	val = ss.str();
+	int sum = 0, c;
+	for (std::string::iterator it = val.begin(); it != val.end(); it++)
+	{
+		c = *it;
+		c -= '0';
+		sum *= 10;
+		sum += c;
+		//if (sum >= 97)
+			sum %= 97;
+	}
+
+	return sum == 1;
+}
+
+void IBAN::format()
+{
+	m_formatted.clear();
+
+	m_formatted += m_countryCode[0];
+	m_formatted += m_countryCode[1];
+	m_formatted += m_controlSum[0];
+	m_formatted += m_controlSum[1];
+
+	// Group by 4
+	for (int i = 0; i < m_accountNumberLength; i++)
+	{
+		// Space every 4 characters
+		if (i % 4 == 0)
+			m_formatted += ' ';
+		m_formatted += m_accountNumber[i];
+	}
+}

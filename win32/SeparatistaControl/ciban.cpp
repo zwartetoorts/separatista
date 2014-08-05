@@ -27,18 +27,56 @@ CIBAN::CIBAN(IUnknown *pParent)
 :SepaControlDispatch<IIBAN>(pParent)
 {
 	m_pIBAN = NULL;
-}	
+	m_bOwnIBAN = false;
+}
+
+CIBAN::~CIBAN()
+{
+	if (m_pIBAN && m_bOwnIBAN)
+		delete m_pIBAN;
+}
 
 CIBAN& CIBAN::operator = (Separatista::IBAN *pIBAN)
 {
+	// Free old iban if neccecary
+	if (m_pIBAN && m_bOwnIBAN)
+		delete m_pIBAN;
+
 	m_pIBAN = pIBAN;
+	m_bOwnIBAN = false;
 
 	return *this;
 }
 
-STDMETHODIMP CIBAN::IBAN(BSTR *pIBAN)
+STDMETHODIMP CIBAN::GetIBAN(BSTR *pIBAN)
 {
+	if (!m_pIBAN)
+		return E_NOT_VALID_STATE;
+
 	*pIBAN = _bstr_t(m_pIBAN->getIBAN()).Detach();
 
+	return S_OK;
+}
+
+STDMETHODIMP CIBAN::SetIBAN(BSTR iban)
+{
+	if (!m_pIBAN)
+	{
+		m_pIBAN = new Separatista::IBAN();
+		if (!m_pIBAN)
+			return E_OUTOFMEMORY;
+		m_bOwnIBAN = true;
+	}
+
+	*m_pIBAN = _bstr_t(iban);
+	return S_OK;
+}
+
+STDMETHODIMP CIBAN::Check(VARIANT_BOOL *pValid)
+{
+	if (!m_pIBAN)
+		*pValid = FALSE;
+	else
+		*pValid = (m_pIBAN->Check() ? TRUE : FALSE);
 	return S_OK;
 }

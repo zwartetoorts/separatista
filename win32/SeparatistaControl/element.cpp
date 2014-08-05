@@ -20,6 +20,7 @@
 
 #include <windows.h>
 #include <olectl.h>
+#include <string>
 
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/framework/psvi/XSValue.hpp>
@@ -115,7 +116,7 @@ time_t Element::GetDateValue() const
 	return std::mktime(&tm);
 }
 
-void Element::SetDateValue(time_t Value)
+void Element::SetDateValue(const time_t Value)
 {
 	tm *ptm;
 	char buffer[64];
@@ -132,26 +133,26 @@ void Element::SetDateValue(time_t Value)
 
 }
 
-InitgPty::InitgPty(xercesc::DOMDocument *pDocument, Element *pParent) :
-Element(pDocument, pParent, TEXT("InitgPty")),
-m_Nm(pDocument, this, TEXT("Nm"))
+int Element::GetIntValue() const
 {
+	xercesc::XSValue::Status status;
+	xercesc::XSValue *pValue;
+	const XMLCh *pText = GetTextValue();
 
+	if (!pText)
+		return 0;
+
+	pValue = xercesc::XSValue::getActualValue(pText, xercesc::XSValue::DataType::dt_int, status);
+	if (!pValue || status != xercesc::XSValue::st_Init)
+		return 0;
+
+	return pValue->fData.fValue.f_int;
 }
 
-GrpHdr::GrpHdr(xercesc::DOMDocument *pDocument, Element *pParent) : 
-Element(pDocument, pParent, TEXT("GrpHdr")),
-m_MsgId(pDocument, this, TEXT("MsgId")),
-m_CreDtTm(pDocument, this, TEXT("CreDtTm")),
-m_NbOfTxs(pDocument, this, TEXT("NbOfTxs")),
-m_CtrlSum(pDocument, this, TEXT("CtrlSum"))
+void Element::SetIntValue(const int Value)
 {
+	std::wstring w = std::to_wstring(Value);
 
+	SetTextValue(w.data());
 }
 
-CstmrDrctDbtInitn::CstmrDrctDbtInitn(xercesc::DOMDocument *pDocument) :
-Element(pDocument, TEXT("CstmrDrctDbtInitn")),
-m_GrpHdr(pDocument, this)
-{
-
-}

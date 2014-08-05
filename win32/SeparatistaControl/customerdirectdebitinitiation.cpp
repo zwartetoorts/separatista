@@ -27,8 +27,8 @@
 #include "dispatch.cpp"
 #include "util.h"
 
-CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(IUnknown *pParent)
-:SepaControlDispatch<ICustomerDirectDebitInitiation>(pParent)
+CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
+:SepaControlDispatch<ICustomerDirectDebitInitiation>(NULL)
 {
 	xercesc::DOMImplementation *pDomImpl = xercesc::DOMImplementationRegistry::getDOMImplementation(TEXT("XML 1.0"));
 
@@ -96,4 +96,67 @@ STDMETHODIMP CustomerDirectDebitInitiation::SetCreationDateTime(DATE Value)
 		return E_FAIL;
 
 	m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.SetDateValue(StdTimeFromDateType(Value));
+
+	return S_OK;
+}
+
+STDMETHODIMP CustomerDirectDebitInitiation::GetNumberOfTransactions(INT *pValue)
+{
+	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+		return E_FAIL;
+
+	*pValue = m_pCstmrDrctDbtInitn->m_GrpHdr.m_NbOfTxs.GetIntValue();
+	return S_OK;
+}
+
+STDMETHODIMP CustomerDirectDebitInitiation::GetControlSum(VARIANT *pValue)
+{
+	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+		return E_FAIL; 
+	
+	*pValue = _variant_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_CtrlSum.GetTextValue()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CustomerDirectDebitInitiation::GetInititiatingPartyName(BSTR *pValue)
+{
+	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+		return E_FAIL;
+
+	*pValue = _bstr_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.GetTextValue()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP CustomerDirectDebitInitiation::SetInititiatingPartyName(BSTR Value)
+{
+	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+		return E_FAIL;
+
+	m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.SetTextValue(Value);
+	return S_OK;
+}
+
+InitgPty::InitgPty(xercesc::DOMDocument *pDocument, Element *pParent) :
+Element(pDocument, pParent, TEXT("InitgPty")),
+m_Nm(pDocument, this, TEXT("Nm"))
+{
+
+}
+
+GrpHdr::GrpHdr(xercesc::DOMDocument *pDocument, Element *pParent) :
+Element(pDocument, pParent, TEXT("GrpHdr")),
+m_MsgId(pDocument, this, TEXT("MsgId")),
+m_CreDtTm(pDocument, this, TEXT("CreDtTm")),
+m_NbOfTxs(pDocument, this, TEXT("NbOfTxs")),
+m_CtrlSum(pDocument, this, TEXT("CtrlSum")),
+m_InitgPty(pDocument, this)
+{
+
+}
+
+CstmrDrctDbtInitn::CstmrDrctDbtInitn(xercesc::DOMDocument *pDocument) :
+Element(pDocument, TEXT("CstmrDrctDbtInitn")),
+m_GrpHdr(pDocument, this)
+{
+
 }
