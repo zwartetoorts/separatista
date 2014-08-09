@@ -60,7 +60,7 @@ public:
 
 protected:
 	void set(const char *iban);
-	void format();
+	void format(bool seperator = true);
 
 private:
 	IBANCC m_countryCode;

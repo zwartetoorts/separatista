@@ -29,6 +29,7 @@
 #include "dispatch.cpp"
 #include "customerdirectdebitinitiation.h"
 #include "ciban.h"
+#include "paymentinformation.h"
 
 /**
 	Globals

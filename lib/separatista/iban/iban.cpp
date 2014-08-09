@@ -104,6 +104,7 @@ int translate_table(const char c)
 	for (int i = 0; i < 36; i++)
 		if (table[i] == c)
 			return i;
+	return 0;
 }
 
 bool IBAN::Check() const
@@ -138,7 +139,7 @@ bool IBAN::Check() const
 	return sum == 1;
 }
 
-void IBAN::format()
+void IBAN::format(bool seperator)
 {
 	m_formatted.clear();
 
@@ -151,7 +152,7 @@ void IBAN::format()
 	for (int i = 0; i < m_accountNumberLength; i++)
 	{
 		// Space every 4 characters
-		if (i % 4 == 0)
+		if (seperator && i % 4 == 0)
 			m_formatted += ' ';
 		m_formatted += m_accountNumber[i];
 	}

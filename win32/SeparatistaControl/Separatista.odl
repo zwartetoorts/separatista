@@ -214,6 +214,40 @@ library Separatista
 		interface IDispatch;
 	};
 
+	/**
+		PaymentInformation
+	*/
+	[
+		uuid(9D52C4C2-B5FF-43E0-9FAC-600AF2986686),
+		helpstring("IPaymentInformation interface"),
+		oleautomation,
+		dual,
+		odl
+	]
+	interface IPaymentInformation : IDispatch
+	{
+		[propget, helpstring("Unique identification, as assigned by a sending party, to unambiguously identify the payment information group within the message.")]
+		HRESULT __stdcall PaymentInformationIdentification(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Unique identification, as assigned by a sending party, to unambiguously identify the payment information group within the message.")]
+		HRESULT __stdcall PaymentInformationIdentification(
+			[in] BSTR Value);
+	};
+
+	[
+		uuid(CBDAC56C-5A90-443F-9511-D3F3B5AC3CF7),
+		helpstring("PaymentInformation object")
+	]
+	coclass PaymentInformation
+	{
+		[default] interface IPaymentInformation;
+		interface IDispatch;
+	};
+
+	/**
+		CustomerDirectDebitInitiation
+	*/
+
 	[
 		uuid(4B8AC337-5E17-454D-A7EC-8955B07B99CC),
 		helpstring("ICustomerDirectDebitInitiation interface"),
