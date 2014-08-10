@@ -44,7 +44,12 @@ CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
 			TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.02"),
 			TEXT("Document"),
 			NULL);
-		m_pCstmrDrctDbtInitn = new CstmrDrctDbtInitn(m_pDomDocument);
+		m_pCstmrDrctDbtInitn = new CstmrDrctDbtInitn();
+		if (m_pCstmrDrctDbtInitn)
+		{
+			// Set default values
+			m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.SetDateValue(std::time(NULL));
+		}
 	}
 	catch (const xercesc::DOMException &e)
 	{
@@ -136,27 +141,77 @@ STDMETHODIMP CustomerDirectDebitInitiation::SetInititiatingPartyName(BSTR Value)
 	return S_OK;
 }
 
-InitgPty::InitgPty(xercesc::DOMDocument *pDocument, Element *pParent) :
-Element(pDocument, pParent, TEXT("InitgPty")),
-m_Nm(pDocument, this, TEXT("Nm"))
+STDMETHODIMP CustomerDirectDebitInitiation::AddPaymentInformation(PaymentInformation *pPaymentInformation)
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return S_FALSE;
+
+	m_pCstmrDrctDbtInitn->AddPmtInf(pPaymentInformation->GetPmtInf());
+	return S_OK;
+}
+
+InitgPty::InitgPty() :
+Element(TEXT("InitgPty")),
+m_Nm(TEXT("Nm"))
 {
 
 }
 
-GrpHdr::GrpHdr(xercesc::DOMDocument *pDocument, Element *pParent) :
-Element(pDocument, pParent, TEXT("GrpHdr")),
-m_MsgId(pDocument, this, TEXT("MsgId")),
-m_CreDtTm(pDocument, this, TEXT("CreDtTm")),
-m_NbOfTxs(pDocument, this, TEXT("NbOfTxs")),
-m_CtrlSum(pDocument, this, TEXT("CtrlSum")),
-m_InitgPty(pDocument, this)
+xercesc::DOMElement* InitgPty::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+		m_Nm.toDOMDocument(pDocument, pElement);
+
+	return pElement;
+}
+
+GrpHdr::GrpHdr() :
+Element(TEXT("GrpHdr")),
+m_MsgId(TEXT("MsgId")),
+m_CreDtTm(TEXT("CreDtTm")),
+m_NbOfTxs(TEXT("NbOfTxs")),
+m_CtrlSum(TEXT("CtrlSum")),
+m_InitgPty()
 {
 
 }
 
-CstmrDrctDbtInitn::CstmrDrctDbtInitn(xercesc::DOMDocument *pDocument) :
-Element(pDocument, TEXT("CstmrDrctDbtInitn")),
-m_GrpHdr(pDocument, this)
+xercesc::DOMElement* GrpHdr::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+	{
+		m_MsgId.toDOMDocument(pDocument, pElement);
+		m_CreDtTm.toDOMDocument(pDocument, pElement);
+		m_NbOfTxs.toDOMDocument(pDocument, pElement);
+		m_CtrlSum.toDOMDocument(pDocument, pElement);
+		m_InitgPty.toDOMDocument(pDocument, pElement);
+	}
+		
+	return pElement;
+}
+
+CstmrDrctDbtInitn::CstmrDrctDbtInitn() :
+Element(TEXT("CstmrDrctDbtInitn")),
+m_GrpHdr()
 {
 
+}
+
+xercesc::DOMElement* CstmrDrctDbtInitn::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+		m_GrpHdr.toDOMDocument(pDocument, pElement);
+
+	return pElement;
+}
+
+void CstmrDrctDbtInitn::AddPmtInf(PmtInf *pPmtInf)
+{
+	m_PmtInfs.push_back(pPmtInf);
 }

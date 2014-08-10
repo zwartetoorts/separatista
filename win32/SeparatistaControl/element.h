@@ -22,6 +22,7 @@
 #define SEPARATISTA_CONTROL_ELEMENT_H
 
 #include <ctime>
+#include <string>
 #include <windows.h>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMElement.hpp>
@@ -30,10 +31,16 @@
 class Element
 {
 public:
-	Element(xercesc::DOMDocument *pDocument, const wchar_t *pName);
-	Element(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pName);
+	Element(const wchar_t *pName);
 
 	~Element();
+
+	/**
+		Appends the actual element to the DOMDocument.
+		@param bForce If true the element will always be created, even if no value was set.
+		@return Pointer to the new created DOMElement.
+	*/
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, bool bForce = false);
 
 	/**
 		Returns the value of the text node
@@ -66,7 +73,9 @@ public:
 	void SetIntValue(const int Value);
 
 protected:
-	xercesc::DOMElement *m_pElement;
+	/// Tag name
+	const wchar_t *m_pTag;
+	std::wstring m_value;
 };
 
 

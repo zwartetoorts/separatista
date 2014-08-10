@@ -27,39 +27,37 @@
 
 #include "element.h"
 
-Element::Element(xercesc::DOMDocument *pDocument, const wchar_t *pName)
+Element::Element(const wchar_t *pName)
 {
-	xercesc::DOMElement *pRootElement = pDocument->getDocumentElement();
-
-	try
-	{
-		m_pElement = pDocument->createElement(pName);
-		if (m_pElement)
-			pRootElement->appendChild(m_pElement);
-	}
-	catch (const xercesc::DOMException &e)
-	{
-		OutputDebugString(e.getMessage());
-		m_pElement = NULL;
-	}
-
+	m_pTag = pName;
 }
 
-Element::Element(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pName)
+xercesc::DOMElement* Element::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, bool bForce)
 {
+	xercesc::DOMElement *pElement;
+
+	// Check for empty value
+	if (!bForce && m_value.empty())
+		return NULL;
+
 	try
 	{
-		m_pElement = pDocument->createElement(pName);
-		if (m_pElement && pParent->m_pElement)
-			pParent->m_pElement->appendChild(m_pElement);
-		else
-			m_pElement = NULL;
+		pElement = pDocument->createElement(m_pTag);
+		if (pElement)
+		{
+			// Set text content, if any
+			if (!m_value.empty())
+				pElement->setTextContent(m_value.data());
+			pParent->appendChild(pElement);
+		}
 	}
 	catch (const xercesc::DOMException &e)
 	{
 		OutputDebugString(e.getMessage());
-		m_pElement = NULL;
+		return NULL;
 	}
+
+	return pElement;
 }
 
 Element::~Element()
@@ -68,27 +66,12 @@ Element::~Element()
 
 const XMLCh* Element::GetTextValue() const
 {
-	try
-	{
-		return m_pElement->getTextContent();
-	}
-	catch (const xercesc::DOMException &e)
-	{
-		OutputDebugString(e.getMessage());
-		return NULL;
-	}
+	return m_value.data();
 }
 
 void Element::SetTextValue(const XMLCh *pValue)
 {
-	try
-	{
-		m_pElement->setTextContent(pValue);
-	}
-	catch (const xercesc::XMLException &e)
-	{
-		OutputDebugString(e.getMessage());
-	}
+	m_value = pValue;
 }
 
 time_t Element::GetDateValue() const

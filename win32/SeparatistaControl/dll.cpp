@@ -102,6 +102,8 @@ STDAPI DllGetClassObject(REFCLSID rclsid,
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<ICustomerDirectDebitInitiation>::Create<CustomerDirectDebitInitiation>);
 	else if (IsEqualIID(rclsid, __uuidof(CIBAN)))
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<IIBAN>::Create<CIBAN>);
+	else if (IsEqualIID(rclsid, __uuidof(PaymentInformation)))
+		pFactory = new SepaControlClassFactory(SepaControlDispatch<IPaymentInformation>::Create<PaymentInformation>);
 	else 
 		return CLASS_E_CLASSNOTAVAILABLE;
 

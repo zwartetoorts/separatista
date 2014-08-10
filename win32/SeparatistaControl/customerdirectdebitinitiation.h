@@ -18,11 +18,13 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <vector>
 #include <windows.h>
 #include <xercesc/dom/DOMDocument.hpp>
 
 #include "dispatch.h"
 #include "element.h"
+#include "paymentinformation.h"
 
 #ifndef SEPARATISTA_CONTROL_CUSTOMERDIRECTDEBITINITIATION_H
 #define SEPARATISTA_CONTROL_CUSTOMERDIRECTDEBITINITIATION_H
@@ -30,7 +32,9 @@
 class InitgPty : public Element
 {
 public:
-	InitgPty(xercesc::DOMDocument *pDocument, Element *pParent);
+	InitgPty();
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	Element m_Nm;
 };
@@ -38,7 +42,9 @@ public:
 class GrpHdr : public Element
 {
 public:
-	GrpHdr(xercesc::DOMDocument *pDocument, Element *pParent);
+	GrpHdr();
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	Element m_MsgId;
 	Element m_CreDtTm;
@@ -51,9 +57,16 @@ public:
 class CstmrDrctDbtInitn : public Element
 {
 public:
-	CstmrDrctDbtInitn(xercesc::DOMDocument *pDocument);
+	CstmrDrctDbtInitn();
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	GrpHdr m_GrpHdr;
+
+	void AddPmtInf(PmtInf *pPmtInf);
+
+private:
+	std::vector<PmtInf*> m_PmtInfs;
 };
 
 // {4B8AC337-5E17-454D-A7EC-8955B07B99CC}
@@ -84,6 +97,7 @@ struct ICustomerDirectDebitInitiation : public IDispatch
 	STDMETHOD(GetControlSum)(VARIANT *pValue) PURE;
 	STDMETHOD(GetInititiatingPartyName)(BSTR* pValue) PURE;
 	STDMETHOD(SetInititiatingPartyName)(BSTR Value) PURE;
+	STDMETHOD(AddPaymentInformation)(PaymentInformation *pPaymentInformation) PURE;
 
 
 };
@@ -117,11 +131,11 @@ public:
 	STDMETHOD(GetControlSum)(VARIANT *pValue);
 	STDMETHOD(GetInititiatingPartyName)(BSTR* pValue);
 	STDMETHOD(SetInititiatingPartyName)(BSTR Value);
+	STDMETHOD(AddPaymentInformation)(PaymentInformation *pPaymentInformation);
 
 private:
 	xercesc::DOMDocument *m_pDomDocument;
 	CstmrDrctDbtInitn *m_pCstmrDrctDbtInitn;
-
 };
 
 class __declspec(uuid("{A3142FEC-FB2E-4715-B5DF-C4F7844D2956}")) CustomerDirectDebitInitiation;

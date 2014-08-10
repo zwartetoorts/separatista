@@ -232,6 +232,78 @@ library Separatista
 		[propput, helpstring("Unique identification, as assigned by a sending party, to unambiguously identify the payment information group within the message.")]
 		HRESULT __stdcall PaymentInformationIdentification(
 			[in] BSTR Value);
+		[propget, helpstring("Specifies the means of payment that will be used to move the amount of money.")]
+		HRESULT __stdcall PaymentMethod(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Specifies the means of payment that will be used to move the amount of money.")]
+		HRESULT __stdcall PaymentMethod(
+			[in] BSTR Value);
+		[propget, helpstring("Number of individual transactions contained in the payment information group.")]
+		HRESULT __stdcall NumberOfTransactions(
+			[out, retval] INT *pValue);
+		[propget, helpstring("Total of all individual amounts included in the group, irrespective of currencies.")]
+		HRESULT __stdcall ControlSum(
+			[out, retval] VARIANT *pValue);
+		[propget, helpstring("Specifies a pre-agreed service or level of service between the parties, as published in an external service level code list.")]
+		HRESULT __stdcall PaymentTypeInformationServiceLevelCode(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Specifies a pre-agreed service or level of service between the parties, as published in an external service level code list.")]
+		HRESULT __stdcall PaymentTypeInformationServiceLevelCode(
+			[in] BSTR Value);
+		[propget, helpstring("Specifies the local instrument, as published in an external local instrument code list.")]
+		HRESULT __stdcall PaymentTypeInformationLocalIntrumentCode(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Specifies the local instrument, as published in an external local instrument code list.")]
+		HRESULT __stdcall PaymentTypeInformationLocalInstrumentCode(
+			[in] BSTR Value);
+		[propget, helpstring("Identifies the direct debit sequence, such as first, recurrent, final or one-off.")]
+		HRESULT __stdcall PaymentTypeInformationSequenceType(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Identifies the direct debit sequence, such as first, recurrent, final or one-off.")]
+		HRESULT __stdcall PaymentTypeInformationSequenceType(
+			[in] BSTR Value);
+		[propget, helpstring("Date and time at which the creditor requests that the amount of money is to be collected from the debtor.")]
+		HRESULT __stdcall RequestedCollectionDate(
+			[out, retval] DATE *pValue);
+		[propput, helpstring("Date and time at which the creditor requests that the amount of money is to be collected from the debtor.")]
+		HRESULT __stdcall RequestedCollectionDate(
+			[in] DATE Value);
+		[propget, helpstring(" Name by which a party is known and which is usually used to identify that party.")]
+		HRESULT __stdcall CreditorName(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring(" Name by which a party is known and which is usually used to identify that party.")]
+		HRESULT __stdcall CreditorName(
+			[in] BSTR Value);
+		[propget, helpstring("International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer.Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number(IBAN)\" version 1997-10-01, or later revisions.")]
+		HRESULT __stdcall CreditorAccountIdentificationIBAN(
+			[out, retval] IIBAN **ppValue);
+		[propput, helpstring("International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer.Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number(IBAN)\" version 1997-10-01, or later revisions.")]
+		HRESULT __stdcall CreditorAccountIdentificationIBAN(
+			[in] IIBAN *pValue);
+		[propget, helpstring("Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 \"Banking - Banking telecommunication messages - Business identifier code (BIC)\".")]
+		HRESULT __stdcall CreditorAgentFinancialInstitutionIdentificationBIC(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 \"Banking - Banking telecommunication messages - Business identifier code (BIC)\".")]
+		HRESULT __stdcall CreditorAgentFinancialInstitutionIdentificationBIC(
+			[in] BSTR Value);
+		[propget, helpstring("Specifies which party/parties will bear the charges associated with the processing of the payment transaction.")]
+		HRESULT __stdcall ChargeBearer(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Specifies which party/parties will bear the charges associated with the processing of the payment transaction.")]
+		HRESULT __stdcall ChargeBearer(
+			[in] BSTR Value);
+		[propget, helpstring("Identification assigned by an institution.")]
+		HRESULT __stdcall CreditorSchemeIdentification(
+			[out, retval] IIBAN **ppValue);
+		[propput, helpstring("Identification assigned by an institution.")]
+		HRESULT __stdcall CreditorSchemeIdentification(
+			[in] IIBAN *pValue);
+		[propget, helpstring("Name of the identification scheme, in a free text form.")]
+		HRESULT __stdcall CreditorSchemeIdentificationSchemeName(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Name of the identification scheme, in a free text form.")]
+		HRESULT __stdcall CreditorSchemeIdentificationSchemeName(
+			[in] BSTR Value);
 	};
 
 	[
@@ -288,6 +360,10 @@ library Separatista
 		[propput, helpstring("Name by which a party is known and which is usually used to identify that party.")]
 		HRESULT __stdcall InitiatingPartyName(
 			[in] BSTR Value);
+
+		[helpstring("Append a new PaymentInformation")]
+		HRESULT __stdcall AddPaymentInformation(
+			[in] IPaymentInformation *pPaymentInformation);
 	};
 
 	[

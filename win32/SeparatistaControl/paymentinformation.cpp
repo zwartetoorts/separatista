@@ -23,99 +23,254 @@
 #include "paymentinformation.h"
 #include "dispatch.cpp"
 
-SvcLvl::SvcLvl(xercesc::DOMDocument *pDocument, Element *pParent) :
-Element(pDocument, pParent, TEXT("SvcLvl")),
-m_Cd(pDocument, this, TEXT("Cd"))
+SvcLvl::SvcLvl() :
+Element(TEXT("SvcLvl")),
+m_Cd(TEXT("Cd"))
 {
 
 }
 
-LclInstrm::LclInstrm(xercesc::DOMDocument *pDocument, Element *pParent) :
-Element(pDocument, pParent, TEXT("LclInstrm")),
-m_cd(pDocument, this, TEXT("Cd"))
+xercesc::DOMElement* SvcLvl::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+		m_Cd.toDOMDocument(pDocument, pParent);
+
+	return pElement;
+}
+
+LclInstrm::LclInstrm() :
+Element(TEXT("LclInstrm")),
+m_Cd(TEXT("Cd"))
 {
 
 }
 
-PmtTpInf::PmtTpInf(xercesc::DOMDocument *pDocument, Element *pParent) :
-Element(pDocument, pParent, TEXT("PmtTpInf")),
-m_SvcLvl(pDocument, this),
-m_LclInstrm(pDocument, this),
-m_SeqTp(pDocument, this, TEXT("SeqTp"))
+xercesc::DOMElement* LclInstrm::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+		m_Cd.toDOMDocument(pDocument, pParent);
+
+	return pElement;
+}
+
+PmtTpInf::PmtTpInf() :
+Element(TEXT("PmtTpInf")),
+m_SvcLvl(),
+m_LclInstrm(),
+m_SeqTp(TEXT("SeqTp"))
 {
 
 }
 
-CashAccount::CashAccount(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag) :
-Element(pDocument, pParent, pTag),
-m_Id(pDocument, this, TEXT("Id"))
+xercesc::DOMElement* PmtTpInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+	{
+		m_SvcLvl.toDOMDocument(pDocument, pElement);
+		m_LclInstrm.toDOMDocument(pDocument, pElement);
+		m_SeqTp.toDOMDocument(pDocument, pElement);
+	}
+
+	return pElement;
+}
+
+CashAccount::CashAccount(const wchar_t *pTag) :
+Element(pTag),
+m_Id(TEXT("Id"))
 {
 
 }
 
-FinancialInstitutionIdentification::FinancialInstitutionIdentification(xercesc::DOMDocument *pDocument, Element *pParent) :
-Element(pDocument, pParent, TEXT("FinInstnId")),
-m_BIC(pDocument, this, TEXT("BIC"))
+xercesc::DOMElement* CashAccount::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+	{
+		m_Id.toDOMDocument(pDocument, pElement);
+	}
+
+	return pElement;
+}
+
+FinancialInstitutionIdentification::FinancialInstitutionIdentification() :
+Element(TEXT("FinInstnId")),
+m_BIC(TEXT("BIC"))
 {
 
 }
 
-BranchAndFinancialInstitutionIdentification::BranchAndFinancialInstitutionIdentification(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag) :
-Element(pDocument, pParent, pTag),
-m_FinancialInstitutionIdentification(pDocument, this)
+xercesc::DOMElement* FinancialInstitutionIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+	{
+		m_BIC.toDOMDocument(pDocument, pParent);
+	}
+
+	return pElement;
+}
+
+BranchAndFinancialInstitutionIdentification::BranchAndFinancialInstitutionIdentification(const wchar_t *pTag) :
+Element(pTag),
+m_FinancialInstitutionIdentification()
 {
 
 }
 
-PersonIdentificationSchemeName::PersonIdentificationSchemeName(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag) :
-Element(pDocument, pParent, pTag),
-m_Prtry(pDocument, this, TEXT("Prtry"))
+xercesc::DOMElement* BranchAndFinancialInstitutionIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+	{
+		m_FinancialInstitutionIdentification.toDOMDocument(pDocument, pElement);
+	}
+
+	return pElement;
+}
+
+PersonIdentificationSchemeName::PersonIdentificationSchemeName(const wchar_t *pTag) :
+Element(pTag),
+m_Prtry(TEXT("Prtry"))
 {
 
 }
 
-GenericPersonIdentification::GenericPersonIdentification(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag) :
-Element(pDocument, pParent, pTag),
-m_Id(pDocument, this, TEXT("Id")),
-m_SchmeNm(pDocument, this, TEXT("SchmeNm"))
+xercesc::DOMElement* PersonIdentificationSchemeName::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+	{
+		m_Prtry.toDOMDocument(pDocument, pElement);
+	}
+
+	return pElement;
+}
+
+GenericPersonIdentification::GenericPersonIdentification(const wchar_t *pTag) :
+Element(pTag),
+m_Id(TEXT("Id")),
+m_SchmeNm(TEXT("SchmeNm"))
 {
 
 }
 
-PersonIdentification::PersonIdentification(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag) :
-Element(pDocument, pParent, pTag),
-m_Othr(pDocument, pParent, TEXT("Othr"))
+xercesc::DOMElement* GenericPersonIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+	{
+		m_Id.toDOMDocument(pDocument, pElement);
+		m_SchmeNm.toDOMDocument(pDocument, pElement);
+	}
+
+	return pElement;
+}
+
+PersonIdentification::PersonIdentification(const wchar_t *pTag) :
+Element(pTag),
+m_Othr(TEXT("Othr"))
 {
 
 }
 
-PartyIdentification::PartyIdentification(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag) :
-Element(pDocument, pParent, pTag),
-m_Nm(pDocument, this, TEXT("Nm")),
-m_PrvtId(pDocument, this, TEXT("PrvtId"))
+xercesc::DOMElement* PersonIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+	{
+		m_Othr.toDOMDocument(pDocument, pElement);
+	}
+
+	return pElement;
+}
+
+PartyIdentification::PartyIdentification(const wchar_t *pTag) :
+Element(pTag),
+m_Nm(TEXT("Nm")),
+m_PrvtId(TEXT("PrvtId"))
 {
 
 }
 
-PmtInf::PmtInf(xercesc::DOMDocument *pDocument, Element *pParent) :
-Element(pDocument, pParent, TEXT("PmtInf")),
-m_PmtInfId(pDocument, this, TEXT("PmtInfId")),
-m_PmtMtd(pDocument, this, TEXT("PmtMtd")),
-m_NbOfTxs(pDocument, this, TEXT("NbOfTxs")),
-m_CtrlSum(pDocument, this, TEXT("CtrlSum")),
-m_PmtTpInf(pDocument, this),
-m_ReqdColltnDt(pDocument, this, TEXT("ReqdColltnDt")),
-m_Cdtr(pDocument, this, TEXT("Cdtr")),
-m_CdtrAcct(pDocument, this, TEXT("CdtrAcct")),
-m_CdtrAgt(pDocument, this, TEXT("CdtrAft")),
-m_ChrgBr(pDocument, this, TEXT("ChrgBr")),
-m_CdtrSchmeId(pDocument, this, TEXT("CdtrSchmeId"))
+xercesc::DOMElement* PartyIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+	{
+		m_Nm.toDOMDocument(pDocument, pElement);
+		m_PrvtId.toDOMDocument(pDocument, pElement);
+	}
+
+	return pElement;
+}
+
+PmtInf::PmtInf() :
+Element(TEXT("PmtInf")),
+m_PmtInfId(TEXT("PmtInfId")),
+m_PmtMtd(TEXT("PmtMtd")),
+m_NbOfTxs(TEXT("NbOfTxs")),
+m_CtrlSum(TEXT("CtrlSum")),
+m_PmtTpInf(),
+m_ReqdColltnDt(TEXT("ReqdColltnDt")),
+m_Cdtr(TEXT("Cdtr")),
+m_CdtrAcct(TEXT("CdtrAcct")),
+m_CdtrAgt(TEXT("CdtrAft")),
+m_ChrgBr(TEXT("ChrgBr")),
+m_CdtrSchmeId(TEXT("CdtrSchmeId"))
 {
 
 }
 
-PaymentInformation::PaymentInformation(CustomerDirectDebitInitiation *pParent, xercesc::DOMDocument *pDomDocument)
-:SepaControlDispatch<IPaymentInformation>(pParent)
+xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	m_pDomDocument = pDomDocument;
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+	{
+		m_PmtInfId.toDOMDocument(pDocument, pElement);
+		m_PmtMtd.toDOMDocument(pDocument, pElement);
+		m_NbOfTxs.toDOMDocument(pDocument, pElement);
+		m_CtrlSum.toDOMDocument(pDocument, pElement);
+		m_PmtTpInf.toDOMDocument(pDocument, pElement);
+		m_ReqdColltnDt.toDOMDocument(pDocument, pElement);
+		m_Cdtr.toDOMDocument(pDocument, pElement);
+		m_CdtrAcct.toDOMDocument(pDocument, pElement);
+		m_CdtrAgt.toDOMDocument(pDocument, pElement);
+		m_ChrgBr.toDOMDocument(pDocument, pElement);
+		m_CdtrSchmeId.toDOMDocument(pDocument, pElement);
+	}
+
+	return pElement;
 }
+
+PaymentInformation::PaymentInformation()
+{
+	m_PmtInf = new PmtInf();
+	if (m_PmtInf)
+	{
+		// Set some default values
+		m_PmtInf->m_NbOfTxs.SetIntValue(0);
+		m_PmtInf->m_CtrlSum.SetIntValue(0);
+		m_PmtInf->m_PmtTpInf.m_SvcLvl.m_Cd.SetTextValue(TEXT("SEPA"));
+		m_PmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.SetTextValue(TEXT("SEPA"));
+	}
+}
+
+PmtInf* PaymentInformation::GetPmtInf() const
+{
+	return m_PmtInf;
+}
+

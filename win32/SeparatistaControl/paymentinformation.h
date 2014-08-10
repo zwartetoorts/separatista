@@ -23,7 +23,6 @@
 
 #include "dispatch.h"
 #include "element.h"
-#include "customerdirectdebitinitiation.h"
 
 #ifndef SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
 #define SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
@@ -31,7 +30,9 @@
 class SvcLvl : public Element
 {
 public:
-	SvcLvl(xercesc::DOMDocument *pDocument, Element *pParent);
+	SvcLvl();
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	Element m_Cd;
 };
@@ -39,15 +40,19 @@ public:
 class LclInstrm : public Element
 {
 public:
-	LclInstrm(xercesc::DOMDocument *pDocument, Element *pParent);
+	LclInstrm();
 
-	Element m_cd;
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+	Element m_Cd;
 };
 
 class PmtTpInf : public Element
 {
 public:
-	PmtTpInf(xercesc::DOMDocument *pDocument, Element *pParent);
+	PmtTpInf();
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	SvcLvl m_SvcLvl;
 	LclInstrm m_LclInstrm;
@@ -57,7 +62,9 @@ public:
 class CashAccount : public Element
 {
 public:
-	CashAccount(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag);
+	CashAccount(const wchar_t *pTag);
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	Element m_Id;
 };
@@ -65,7 +72,9 @@ public:
 class FinancialInstitutionIdentification : public Element
 {
 public:
-	FinancialInstitutionIdentification(xercesc::DOMDocument *pDocument, Element *pParent);
+	FinancialInstitutionIdentification();
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	Element m_BIC;
 };
@@ -73,7 +82,9 @@ public:
 class BranchAndFinancialInstitutionIdentification : public Element
 {
 public:
-	BranchAndFinancialInstitutionIdentification(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag);
+	BranchAndFinancialInstitutionIdentification(const wchar_t *pTag);
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	FinancialInstitutionIdentification m_FinancialInstitutionIdentification;
 };
@@ -81,7 +92,9 @@ public:
 class PersonIdentificationSchemeName : public Element
 {
 public:
-	PersonIdentificationSchemeName::PersonIdentificationSchemeName(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag);
+	PersonIdentificationSchemeName::PersonIdentificationSchemeName(const wchar_t *pTag);
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	Element m_Prtry;
 };
@@ -89,7 +102,9 @@ public:
 class GenericPersonIdentification : public Element
 {
 public:
-	GenericPersonIdentification(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag);
+	GenericPersonIdentification(const wchar_t *pTag);
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	Element m_Id;
 	PersonIdentificationSchemeName m_SchmeNm;
@@ -98,7 +113,9 @@ public:
 class PersonIdentification : public Element
 {
 public:
-	PersonIdentification(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag);
+	PersonIdentification(const wchar_t *pTag);
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	GenericPersonIdentification m_Othr;
 };
@@ -106,7 +123,9 @@ public:
 class PartyIdentification : public Element
 {
 public:
-	PartyIdentification(xercesc::DOMDocument *pDocument, Element *pParent, const wchar_t *pTag);
+	PartyIdentification(const wchar_t *pTag);
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	Element m_Nm;
 	PersonIdentification m_PrvtId;
@@ -116,7 +135,9 @@ public:
 class PmtInf : public Element
 {
 public:
-	PmtInf(xercesc::DOMDocument *pDocument, Element *pParent);
+	PmtInf();
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	Element m_PmtInfId;
 	Element m_PmtMtd;
@@ -159,10 +180,7 @@ struct IPaymentInformation : public IDispatch
 struct __declspec(uuid("{9D52C4C2-B5FF-43E0-9FAC-600AF2986686}")) IPaymentInformation;
 
 /**
-	COM representation of an IBAN class.
-	Memory management takes 2 strategies. The CMT940SDocument will persist until all references are released.
-	Other classes like CMT940SRecordset will come and go on-the-fly and hold only references to the child
-	objects in the parent CMT940SDocument.
+	
 */
 class PaymentInformation : public SepaControlDispatch<IPaymentInformation>
 {
@@ -170,10 +188,19 @@ public:
 	/**
 	@see SepaControllDispatch
 	*/
-	PaymentInformation(CustomerDirectDebitInitiation *pParent, xercesc::DOMDocument *pDomDocument);
+	PaymentInformation();
+
+	// COM methods
+
+
+
+	PmtInf* GetPmtInf() const;
+
+
+
 
 private:
-	xercesc::DOMDocument *m_pDomDocument;
+	PmtInf *m_PmtInf;
 };
 
 class __declspec(uuid("{CBDAC56C-5A90-443F-9511-D3F3B5AC3CF7}")) PaymentInformation;
