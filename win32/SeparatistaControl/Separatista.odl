@@ -217,6 +217,20 @@ library Separatista
 	/**
 		PaymentInformation
 	*/
+
+	typedef enum {
+		CORE = 1,
+		COR1,
+		B2B
+	} ExternalLocalInstrumentCode;
+
+	typedef enum {
+		FRST = 1,
+		RCUR,
+		FNAL,
+		OOFF
+	} SequenceTypeCode;
+
 	[
 		uuid(9D52C4C2-B5FF-43E0-9FAC-600AF2986686),
 		helpstring("IPaymentInformation interface"),
@@ -252,16 +266,16 @@ library Separatista
 			[in] BSTR Value);
 		[propget, helpstring("Specifies the local instrument, as published in an external local instrument code list.")]
 		HRESULT __stdcall PaymentTypeInformationLocalIntrumentCode(
-			[out, retval] BSTR *pValue);
+			[out, retval] ExternalLocalInstrumentCode *pValue);
 		[propput, helpstring("Specifies the local instrument, as published in an external local instrument code list.")]
 		HRESULT __stdcall PaymentTypeInformationLocalInstrumentCode(
-			[in] BSTR Value);
+			[in] ExternalLocalInstrumentCode Value);
 		[propget, helpstring("Identifies the direct debit sequence, such as first, recurrent, final or one-off.")]
 		HRESULT __stdcall PaymentTypeInformationSequenceType(
-			[out, retval] BSTR *pValue);
+			[out, retval] SequenceTypeCode *pValue);
 		[propput, helpstring("Identifies the direct debit sequence, such as first, recurrent, final or one-off.")]
 		HRESULT __stdcall PaymentTypeInformationSequenceType(
-			[in] BSTR Value);
+			[in] SequenceTypeCode Value);
 		[propget, helpstring("Date and time at which the creditor requests that the amount of money is to be collected from the debtor.")]
 		HRESULT __stdcall RequestedCollectionDate(
 			[out, retval] DATE *pValue);

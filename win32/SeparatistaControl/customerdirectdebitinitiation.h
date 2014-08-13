@@ -54,18 +54,22 @@ public:
 
 };
 
-class CstmrDrctDbtInitn : public Element
+class CstmrDrctDbtInitn : public Element, ElementListener
 {
 public:
 	CstmrDrctDbtInitn();
 
 	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+	void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
+
 	GrpHdr m_GrpHdr;
 
 	void AddPmtInf(PmtInf *pPmtInf);
 
 private:
+	void calcSum();
+
 	std::vector<PmtInf*> m_PmtInfs;
 };
 

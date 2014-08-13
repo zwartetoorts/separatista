@@ -48,7 +48,7 @@ CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
 		if (m_pCstmrDrctDbtInitn)
 		{
 			// Set default values
-			m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.SetDateValue(std::time(NULL));
+			m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.setValue(std::time(NULL));
 		}
 	}
 	catch (const xercesc::DOMException &e)
@@ -72,7 +72,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::GetMessageIdentification(BSTR *pValu
 	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
-	*pValue = _bstr_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_MsgId.GetTextValue()).Detach();
+	*pValue = _bstr_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_MsgId.getTextValue()).Detach();
 
 	return S_OK;
 }
@@ -82,7 +82,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::SetMessageIdentification(BSTR Value)
 	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
-	m_pCstmrDrctDbtInitn->m_GrpHdr.m_MsgId.SetTextValue(Value);
+	m_pCstmrDrctDbtInitn->m_GrpHdr.m_MsgId.setValue(Value);
 
 	return S_OK;
 }
@@ -92,7 +92,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::GetCreationDateTime(DATE *pValue)
 	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
-	return DateTypeFromStdTime(m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.GetDateValue(), pValue);
+	return DateTypeFromStdTime(m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.getDateValue(), pValue);
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::SetCreationDateTime(DATE Value)
@@ -100,7 +100,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::SetCreationDateTime(DATE Value)
 	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
-	m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.SetDateValue(StdTimeFromDateType(Value));
+	m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.setValue(StdTimeFromDateType(Value));
 
 	return S_OK;
 }
@@ -110,7 +110,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::GetNumberOfTransactions(INT *pValue)
 	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
-	*pValue = m_pCstmrDrctDbtInitn->m_GrpHdr.m_NbOfTxs.GetIntValue();
+	*pValue = m_pCstmrDrctDbtInitn->m_GrpHdr.m_NbOfTxs.getIntValue();
 	return S_OK;
 }
 
@@ -119,7 +119,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::GetControlSum(VARIANT *pValue)
 	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
 		return E_FAIL; 
 	
-	*pValue = _variant_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_CtrlSum.GetTextValue()).Detach();
+	*pValue = _variant_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_CtrlSum.getTextValue()).Detach();
 	return S_OK;
 }
 
@@ -128,7 +128,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::GetInititiatingPartyName(BSTR *pValu
 	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
-	*pValue = _bstr_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.GetTextValue()).Detach();
+	*pValue = _bstr_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.getTextValue()).Detach();
 	return S_OK;
 }
 
@@ -137,7 +137,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::SetInititiatingPartyName(BSTR Value)
 	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
-	m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.SetTextValue(Value);
+	m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.setValue(Value);
 	return S_OK;
 }
 
@@ -211,7 +211,33 @@ xercesc::DOMElement* CstmrDrctDbtInitn::toDOMDocument(xercesc::DOMDocument *pDoc
 	return pElement;
 }
 
+void CstmrDrctDbtInitn::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
+{
+	calcSum();
+}
+
 void CstmrDrctDbtInitn::AddPmtInf(PmtInf *pPmtInf)
 {
+	// Set listeners
+	pPmtInf->m_NbOfTxs.setElementListener(this);
+	pPmtInf->m_CtrlSum.setElementListener(this);
+
 	m_PmtInfs.push_back(pPmtInf);
+}
+
+void CstmrDrctDbtInitn::calcSum()
+{
+	// Calc both sum and count of transactions
+	std::vector<PmtInf*>::iterator it;
+	int ntx = 0;
+	double sum = 0.0;
+
+	for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
+	{
+		ntx += (*it)->m_NbOfTxs.getIntValue();
+		sum += (*it)->m_CtrlSum.getDoubleValue();
+	}
+
+	m_GrpHdr.m_NbOfTxs.setValue(ntx);
+	m_GrpHdr.m_CtrlSum.setValue(sum);
 }

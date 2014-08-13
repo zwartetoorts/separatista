@@ -231,7 +231,7 @@ m_CdtrAgt(TEXT("CdtrAft")),
 m_ChrgBr(TEXT("ChrgBr")),
 m_CdtrSchmeId(TEXT("CdtrSchmeId"))
 {
-
+	
 }
 
 xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
@@ -256,21 +256,65 @@ xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 	return pElement;
 }
 
+void PmtInf::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
+{
+
+}
+
 PaymentInformation::PaymentInformation()
 {
-	m_PmtInf = new PmtInf();
-	if (m_PmtInf)
+	m_pPmtInf = new PmtInf();
+	if (m_pPmtInf)
 	{
 		// Set some default values
-		m_PmtInf->m_NbOfTxs.SetIntValue(0);
-		m_PmtInf->m_CtrlSum.SetIntValue(0);
-		m_PmtInf->m_PmtTpInf.m_SvcLvl.m_Cd.SetTextValue(TEXT("SEPA"));
-		m_PmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.SetTextValue(TEXT("SEPA"));
+		m_pPmtInf->m_NbOfTxs.setValue(0);
+		m_pPmtInf->m_CtrlSum.setValue(0.0);
+		m_pPmtInf->m_PmtTpInf.m_SvcLvl.m_Cd.setValue(TEXT("SEPA"));
+		m_pPmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(TEXT("SEPA"));
+		m_pPmtInf->m_ChrgBr.setValue(TEXT("SLEV"));
 	}
 }
 
 PmtInf* PaymentInformation::GetPmtInf() const
 {
-	return m_PmtInf;
+	return m_pPmtInf;
+}
+
+STDMETHODIMP PaymentInformation::GetPaymentInformationIdentification(BSTR *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pPmtInf->m_PmtInfId.getTextValue()).Detach();
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::SetPaymentInformationIdentification(BSTR Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	m_pPmtInf->m_PmtInfId.setValue(Value);
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetPaymentMethod(BSTR *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pPmtInf->m_PmtMtd.getTextValue()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::SetPaymentMethod(BSTR Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	m_pPmtInf->setValue(Value);
+
+	return S_OK;
 }
 

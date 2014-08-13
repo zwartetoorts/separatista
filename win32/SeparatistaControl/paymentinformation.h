@@ -23,6 +23,7 @@
 
 #include "dispatch.h"
 #include "element.h"
+#include "ciban.h"
 
 #ifndef SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
 #define SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
@@ -132,12 +133,14 @@ public:
 };
 
 
-class PmtInf : public Element
+class PmtInf : public Element, ElementListener
 {
 public:
 	PmtInf();
 
 	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+	void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 
 	Element m_PmtInfId;
 	Element m_PmtMtd;
@@ -162,6 +165,19 @@ DEFINE_GUID(CLSID_PAYMENTINFORMATION,
 
 struct IPaymentInformation : public IDispatch
 {
+	typedef enum {
+		CORE = 1,
+		COR1,
+		B2B
+	} ExternalLocalInstrumentCode;
+
+	typedef enum {
+		FRST = 1,
+		RCUR,
+		FNAL,
+		OOFF
+	} SequenceTypeCode;
+
 	// IDispatch
 	STDMETHOD_(ULONG, AddRef)() PURE;
 	STDMETHOD_(ULONG, Release)() PURE;
@@ -174,6 +190,30 @@ struct IPaymentInformation : public IDispatch
 	// IPaymentInformation
 	STDMETHOD(GetPaymentInformationIdentification)(BSTR *pValue) PURE;
 	STDMETHOD(SetPaymentInformationIdentification)(BSTR Value) PURE;
+	STDMETHOD(GetPaymentMethod)(BSTR *pValue) PURE;
+	STDMETHOD(SetPaymentMethod)(BSTR Value) PURE;
+	STDMETHOD(GetNumberOfTransactions)(INT *pValue) PURE;
+	STDMETHOD(GetControlSum)(VARIANT *pValue) PURE;
+	STDMETHOD(GetPaymentTypeInformationServiceLevelCode)(BSTR *pValue) PURE;
+	STDMETHOD(SetPaymentTypeInformationServiceLevelCode)(BSTR Value) PURE;
+	STDMETHOD(GetPaymentTypeInformationLocalIntrumentCode)(IPaymentInformation::ExternalLocalInstrumentCode *pValue) PURE;
+	STDMETHOD(SetPaymentTypeInformationLocalIntrumentCode)(IPaymentInformation::ExternalLocalInstrumentCode Value) PURE;
+	STDMETHOD(GetPaymentTypeInformationSequenceType)(IPaymentInformation::SequenceTypeCode *pValue) PURE;
+	STDMETHOD(SetPaymentTypeInformationSequenceType)(IPaymentInformation::SequenceTypeCode Value) PURE;
+	STDMETHOD(GetRequestedCollectionDate)(DATE *pValue) PURE;
+	STDMETHOD(SetRequestedCollectionDate)(DATE Value) PURE;
+	STDMETHOD(GetCreditorName)(BSTR *pValue) PURE;
+	STDMETHOD(SetCreditorName)(BSTR Value) PURE;
+	STDMETHOD(GetCreditorAccountIdentificationIBAN)(IIBAN **ppIBAN) PURE;
+	STDMETHOD(SetCreditorAccountIdentificationIBAN)(IIBAN *pIBAN) PURE;
+	STDMETHOD(GetCreditorAgentFinancialInstitutionIdentificationBIC)(BSTR *pValue) PURE;
+	STDMETHOD(SetCreditorAgentFinancialInstitutionIdentificationBIC)(BSTR Value) PURE;
+	STDMETHOD(GetChargeBearer)(BSTR *pValue) PURE;
+	STDMETHOD(SetChargeBearer)(BSTR Value) PURE;
+	STDMETHOD(GetCreditorSchemeIdentification)(IIBAN **ppIBAN) PURE;
+	STDMETHOD(SetCreditorSchemeIdentification)(IIBAN *pIBAN) PURE;
+	STDMETHOD(GetCreditorSchemeIdentificationSchemeName)(BSTR *pValue) PURE;
+	STDMETHOD(SetCreditorSchemeIdentificationSchemeName)(BSTR Value) PURE;
 	
 };
 
@@ -191,16 +231,38 @@ public:
 	PaymentInformation();
 
 	// COM methods
+	STDMETHOD(GetPaymentInformationIdentification)(BSTR *pValue);
+	STDMETHOD(SetPaymentInformationIdentification)(BSTR Value);
+	STDMETHOD(GetPaymentMethod)(BSTR *pValue);
+	STDMETHOD(SetPaymentMethod)(BSTR Value);
+	STDMETHOD(GetNumberOfTransactions)(INT *pValue);
+	STDMETHOD(GetControlSum)(VARIANT *pValue);
+	STDMETHOD(GetPaymentTypeInformationServiceLevelCode)(BSTR *pValue);
+	STDMETHOD(SetPaymentTypeInformationServiceLevelCode)(BSTR Value);
+	STDMETHOD(GetPaymentTypeInformationLocalIntrumentCode)(IPaymentInformation::ExternalLocalInstrumentCode *pValue);
+	STDMETHOD(SetPaymentTypeInformationLocalIntrumentCode)(IPaymentInformation::ExternalLocalInstrumentCode Value);
+	STDMETHOD(GetPaymentTypeInformationSequenceType)(IPaymentInformation::SequenceTypeCode *pValue);
+	STDMETHOD(SetPaymentTypeInformationSequenceType)(IPaymentInformation::SequenceTypeCode Value);
+	STDMETHOD(GetRequestedCollectionDate)(DATE *pValue);
+	STDMETHOD(SetRequestedCollectionDate)(DATE Value);
+	STDMETHOD(GetCreditorName)(BSTR *pValue);
+	STDMETHOD(SetCreditorName)(BSTR Value);
+	STDMETHOD(GetCreditorAccountIdentificationIBAN)(IIBAN **ppIBAN);
+	STDMETHOD(SetCreditorAccountIdentificationIBAN)(IIBAN *pIBAN);
+	STDMETHOD(GetCreditorAgentFinancialInstitutionIdentificationBIC)(BSTR *pValue);
+	STDMETHOD(SetCreditorAgentFinancialInstitutionIdentificationBIC)(BSTR Value);
+	STDMETHOD(GetChargeBearer)(BSTR *pValue);
+	STDMETHOD(SetChargeBearer)(BSTR Value);
+	STDMETHOD(GetCreditorSchemeIdentification)(IIBAN **ppIBAN);
+	STDMETHOD(SetCreditorSchemeIdentification)(IIBAN *pIBAN);
+	STDMETHOD(GetCreditorSchemeIdentificationSchemeName)(BSTR *pValue);
+	STDMETHOD(SetCreditorSchemeIdentificationSchemeName)(BSTR Value);
 
-
-
+	// PaymentInformation methods
 	PmtInf* GetPmtInf() const;
 
-
-
-
 private:
-	PmtInf *m_PmtInf;
+	PmtInf *m_pPmtInf;
 };
 
 class __declspec(uuid("{CBDAC56C-5A90-443F-9511-D3F3B5AC3CF7}")) PaymentInformation;

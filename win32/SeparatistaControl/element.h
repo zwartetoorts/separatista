@@ -28,6 +28,15 @@
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMException.hpp>
 
+// Forward decl
+class Element;
+
+class ElementListener
+{
+public:
+	virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue) = 0;
+};
+
 class Element
 {
 public:
@@ -43,39 +52,68 @@ public:
 	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, bool bForce = false);
 
 	/**
+		Set the elementlistener. Will be notified of changed to the element. If a previous elementlistener was registered, it 
+		will be returned from this function. It's the caller's choice to store this listener and notify it of changes.
+		@param pElementListener The elementlistener to register.
+		@return A pointer to a previous registered elementlistener or NULL if none was registered.
+		@see ElementListener
+	*/
+	ElementListener* setElementListener(ElementListener* pElementListener);
+
+	/**
+		Returns the tag name
+	*/
+	const wchar_t* getTag() const;
+
+	/**
 		Returns the value of the text node
 	*/
-	const XMLCh* GetTextValue() const;
+	const XMLCh* getTextValue() const;
 
 	/**
 		Set the value of a text node
 	*/
-	void SetTextValue(const XMLCh *pValue);
+	void setValue(const XMLCh *pValue);
 
 	/**
 		Returns the value of the text node converted to date
 	*/
-	time_t GetDateValue() const;
+	time_t getDateValue() const;
 
 	/**
 		Set the value of a text node by a time_t
 	*/
-	void SetDateValue(const time_t Value);
+	void setValue(const time_t Value);
 
 	/**
 		Get the value of a text node converted to int
 	*/
-	int GetIntValue() const;
+	int getIntValue() const;
 
 	/**
 		Set the value of a text node by an int
 	*/
-	void SetIntValue(const int Value);
+	void setValue(const int Value);
+
+	/**
+		Get the value of a text node converted to double
+	*/
+	double getDoubleValue() const;
+
+	/**
+		Set the value of a text node conveted to double
+	*/
+	void setValue(double d);
+
 
 protected:
+	/// Calls a registered ElementListener's valueChanged
+	void onValueChanged();
+
 	/// Tag name
 	const wchar_t *m_pTag;
 	std::wstring m_value;
+	ElementListener *m_pElementListener;
 };
 
 

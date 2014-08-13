@@ -21,6 +21,7 @@
 #include <windows.h>
 #include <olectl.h>
 #include <string>
+#include <sstream>
 
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/framework/psvi/XSValue.hpp>
@@ -30,6 +31,7 @@
 Element::Element(const wchar_t *pName)
 {
 	m_pTag = pName;
+	m_pElementListener = NULL;
 }
 
 xercesc::DOMElement* Element::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, bool bForce)
@@ -64,23 +66,36 @@ Element::~Element()
 {
 }
 
-const XMLCh* Element::GetTextValue() const
+ElementListener* Element::setElementListener(ElementListener *pElementListener)
+{
+	ElementListener *pOld = m_pElementListener;
+	m_pElementListener = pElementListener;
+	return pOld;
+}
+
+const wchar_t* Element::getTag() const
+{
+	return m_pTag;
+}
+
+const XMLCh* Element::getTextValue() const
 {
 	return m_value.data();
 }
 
-void Element::SetTextValue(const XMLCh *pValue)
+void Element::setValue(const XMLCh *pValue)
 {
 	m_value = pValue;
+	onValueChanged();
 }
 
-time_t Element::GetDateValue() const
+time_t Element::getDateValue() const
 {
 	xercesc::XSValue::Status status;
 	xercesc::XSValue *pValue;
 	std::tm tm;
 
-	const XMLCh *pText = GetTextValue();
+	const XMLCh *pText = getTextValue();
 
 	if (!pText)
 		return -1;
@@ -99,7 +114,7 @@ time_t Element::GetDateValue() const
 	return std::mktime(&tm);
 }
 
-void Element::SetDateValue(const time_t Value)
+void Element::setValue(const time_t Value)
 {
 	tm *ptm;
 	char buffer[64];
@@ -110,17 +125,17 @@ void Element::SetDateValue(const time_t Value)
 	XMLCh *xmlch = xercesc::XMLString::transcode(buffer);
 	if (xmlch)
 	{
-		SetTextValue(xmlch);
+		setValue(xmlch);
 		xercesc::XMLString::release(&xmlch);
 	}
 
 }
 
-int Element::GetIntValue() const
+int Element::getIntValue() const
 {
 	xercesc::XSValue::Status status;
 	xercesc::XSValue *pValue;
-	const XMLCh *pText = GetTextValue();
+	const XMLCh *pText = getTextValue();
 
 	if (!pText)
 		return 0;
@@ -132,10 +147,42 @@ int Element::GetIntValue() const
 	return pValue->fData.fValue.f_int;
 }
 
-void Element::SetIntValue(const int Value)
+void Element::setValue(const int Value)
 {
 	std::wstring w = std::to_wstring(Value);
 
-	SetTextValue(w.data());
+	setValue(w.data());
+}
+
+void Element::onValueChanged()
+{
+	if (m_pElementListener)
+		m_pElementListener->elementValueChanged(this, m_value.data());
+}
+
+double Element::getDoubleValue() const
+{
+	xercesc::XSValue::Status status;
+	xercesc::XSValue *pValue;
+	const XMLCh *pText = getTextValue();
+
+	if (!pText)
+		return (double)0;
+
+	pValue = xercesc::XSValue::getActualValue(pText, xercesc::XSValue::DataType::dt_double, status);
+	if (!pValue || status != xercesc::XSValue::st_Init)
+		return (double)0;
+
+	return pValue->fData.fValue.f_double;
+}
+
+void Element::setValue(double d)
+{
+	std::wostringstream wos;
+
+	wos.imbue(std::locale::classic());
+	wos.precision(2);
+	wos << d;
+	setValue(wos.str().data());
 }
 
