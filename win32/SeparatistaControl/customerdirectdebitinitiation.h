@@ -63,6 +63,8 @@ public:
 
 	void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 
+	void elementDeleted(Element *pElement) {};
+
 	GrpHdr m_GrpHdr;
 
 	void AddPmtInf(PmtInf *pPmtInf);

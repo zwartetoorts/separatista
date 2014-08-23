@@ -35,6 +35,7 @@ class ElementListener
 {
 public:
 	virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue) = 0;
+	virtual void elementDeleted(Element *pElement) = 0;
 };
 
 class Element
@@ -64,6 +65,11 @@ public:
 		Returns the tag name
 	*/
 	const wchar_t* getTag() const;
+
+	/**
+		Clears the content of the node
+	*/
+	void Delete();
 
 	/**
 		Returns the value of the text node
@@ -107,8 +113,10 @@ public:
 
 
 protected:
-	/// Calls a registered ElementListener's valueChanged
+	/// Calls a registered ElementListener's elementValueChanged
 	void onValueChanged();
+	/// Calls a registerd ElementListener's elementDeleted
+	void onDeleted();
 
 	/// Tag name
 	const wchar_t *m_pTag;

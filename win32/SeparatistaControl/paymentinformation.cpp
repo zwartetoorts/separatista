@@ -22,6 +22,7 @@
 
 #include "paymentinformation.h"
 #include "dispatch.cpp"
+#include "util.h"
 
 SvcLvl::SvcLvl() :
 Element(TEXT("SvcLvl")),
@@ -231,7 +232,12 @@ m_CdtrAgt(TEXT("CdtrAft")),
 m_ChrgBr(TEXT("ChrgBr")),
 m_CdtrSchmeId(TEXT("CdtrSchmeId"))
 {
-	
+	// Set some default values
+	m_NbOfTxs.setValue(0);
+	m_CtrlSum.setValue(0.0);
+	m_PmtTpInf.m_SvcLvl.m_Cd.setValue(TEXT("SEPA"));
+	m_CdtrSchmeId.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(TEXT("SEPA"));
+	m_ChrgBr.setValue(TEXT("SLEV"));
 }
 
 xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
@@ -264,15 +270,6 @@ void PmtInf::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
 PaymentInformation::PaymentInformation()
 {
 	m_pPmtInf = new PmtInf();
-	if (m_pPmtInf)
-	{
-		// Set some default values
-		m_pPmtInf->m_NbOfTxs.setValue(0);
-		m_pPmtInf->m_CtrlSum.setValue(0.0);
-		m_pPmtInf->m_PmtTpInf.m_SvcLvl.m_Cd.setValue(TEXT("SEPA"));
-		m_pPmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(TEXT("SEPA"));
-		m_pPmtInf->m_ChrgBr.setValue(TEXT("SLEV"));
-	}
 }
 
 PmtInf* PaymentInformation::GetPmtInf() const
@@ -318,3 +315,267 @@ STDMETHODIMP PaymentInformation::SetPaymentMethod(BSTR Value)
 	return S_OK;
 }
 
+STDMETHODIMP PaymentInformation::GetNumberOfTransactions(INT *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	*pValue = m_pPmtInf->m_NbOfTxs.getIntValue();
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetControlSum(VARIANT *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	*pValue = _variant_t(m_pPmtInf->m_CtrlSum.getDoubleValue()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetPaymentTypeInformationServiceLevelCode(BSTR *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pPmtInf->m_PmtTpInf.m_SvcLvl.m_Cd.getTextValue()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::SetPaymentTypeInformationServiceLevelCode(BSTR Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	m_pPmtInf->m_PmtTpInf.m_SvcLvl.m_Cd.setValue(Value);
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetPaymentTypeInformationLocalIntrumentCode(IPaymentInformation::ExternalLocalInstrumentCode *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	const wchar_t *pCode = m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.getTextValue();
+	if (std::wcscmp(pCode, TEXT("CORE")) == 0)
+		*pValue = IPaymentInformation::LC_CORE;
+	else if (std::wcscmp(pCode, TEXT("COR1")) == 0)
+		*pValue = IPaymentInformation::LC_COR1;
+	else if (std::wcscmp(pCode, TEXT("B2B")) == 0)
+		*pValue = IPaymentInformation::LC_B2B;
+	else
+		*pValue = IPaymentInformation::LC_UNKNOWN;
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::SetPaymentTypeInformationLocalIntrumentCode(IPaymentInformation::ExternalLocalInstrumentCode Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	switch (Value)
+	{
+	case IPaymentInformation::LC_CORE:
+		m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.setValue(TEXT("CORE"));
+		break;
+	case IPaymentInformation::LC_COR1:
+		m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.setValue(TEXT("COR1"));
+		break;
+	case IPaymentInformation::LC_B2B:
+		m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.setValue(TEXT("B2B"));
+		break;
+	default:
+		m_pPmtInf->Delete();
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetPaymentTypeInformationSequenceType(IPaymentInformation::SequenceTypeCode* pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	const wchar_t *pCode = m_pPmtInf->m_PmtTpInf.m_SeqTp.getTextValue();
+	if (std::wcscmp(pCode, TEXT("FNAL")) == 0)
+		*pValue = IPaymentInformation::ST_FNAL;
+	else if (std::wcscmp(pCode, TEXT("FRST")) == 0)
+		*pValue = IPaymentInformation::ST_FRST;
+	else if (std::wcscmp(pCode, TEXT("OOFF")) == 0)
+		*pValue = IPaymentInformation::ST_OOFF;
+	else if (std::wcscmp(pCode, TEXT("RCUR")) == 0)
+		*pValue = IPaymentInformation::ST_RCUR;
+	else
+		*pValue = IPaymentInformation::ST_UNKNOWN;
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::SetPaymentTypeInformationSequenceType(IPaymentInformation::SequenceTypeCode Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	switch (Value)
+	{
+	case IPaymentInformation::ST_FNAL:
+		m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("FNAL"));
+		break;
+	case IPaymentInformation::ST_FRST:
+		m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("FRST"));
+		break;
+	case IPaymentInformation::ST_OOFF:
+		m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("OOFF"));
+		break;
+	case IPaymentInformation::ST_RCUR:
+		m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("RCUR"));
+		break;
+	default:
+		return E_UNEXPECTED;
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetRequestedCollectionDate(DATE *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	return DateTypeFromStdTime(m_pPmtInf->m_ReqdColltnDt.getDateValue(), pValue);
+}
+
+STDMETHODIMP PaymentInformation::SetRequestedCollectionDate(DATE Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	m_pPmtInf->m_ReqdColltnDt.setValue(StdTimeFromDateType(Value));
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetCreditorName(BSTR *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pPmtInf->m_Cdtr.m_Nm.getTextValue()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::SetCreditorName(BSTR Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	m_pPmtInf->m_Cdtr.m_Nm.setValue(Value);
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetCreditorAccountIdentificationIBAN(BSTR *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pPmtInf->m_CdtrAcct.m_Id.getTextValue()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::SetCreditorAccountIdentificationIBAN(BSTR Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	m_pPmtInf->m_CdtrAcct.m_Id.setValue(Value);
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetCreditorAgentFinancialInstitutionIdentificationBIC(BSTR *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pPmtInf->m_CdtrAgt.m_FinancialInstitutionIdentification.m_BIC.getTextValue()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::SetCreditorAgentFinancialInstitutionIdentificationBIC(BSTR Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	m_pPmtInf->m_CdtrAgt.m_FinancialInstitutionIdentification.m_BIC.setValue(Value);
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetChargeBearer(BSTR *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pPmtInf->m_ChrgBr.getTextValue()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::SetChargeBearer(BSTR Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	m_pPmtInf->m_ChrgBr.setValue(Value);
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetCreditorSchemeIdentification(BSTR *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pPmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_Id.getTextValue()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::SetCreditorSchemeIdentification(BSTR Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	m_pPmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_Id.setValue(Value);
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::GetCreditorSchemeIdentificationSchemeName(BSTR *pValue)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	*pValue = _bstr_t(m_pPmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.getTextValue()).Detach();
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::SetCreditorSchemeIdentificationSchemeName(BSTR Value)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	m_pPmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(Value);
+
+	return S_OK;
+}

@@ -78,6 +78,12 @@ const wchar_t* Element::getTag() const
 	return m_pTag;
 }
 
+void Element::Delete()
+{
+	m_value.clear();
+	onDeleted();
+}
+
 const XMLCh* Element::getTextValue() const
 {
 	return m_value.data();
@@ -158,6 +164,12 @@ void Element::onValueChanged()
 {
 	if (m_pElementListener)
 		m_pElementListener->elementValueChanged(this, m_value.data());
+}
+
+void Element::onDeleted()
+{
+	if (m_pElementListener)
+		m_pElementListener->elementDeleted(this);
 }
 
 double Element::getDoubleValue() const

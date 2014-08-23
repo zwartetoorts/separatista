@@ -141,6 +141,7 @@ public:
 	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
+	void elementDeleted(Element *pElement) {};
 
 	Element m_PmtInfId;
 	Element m_PmtMtd;
@@ -165,17 +166,21 @@ DEFINE_GUID(CLSID_PAYMENTINFORMATION,
 
 struct IPaymentInformation : public IDispatch
 {
-	typedef enum {
-		CORE = 1,
-		COR1,
-		B2B
+	typedef enum 
+	{
+		LC_UNKNOWN = 1,
+		LC_CORE,
+		LC_COR1,
+		LC_B2B
 	} ExternalLocalInstrumentCode;
 
-	typedef enum {
-		FRST = 1,
-		RCUR,
-		FNAL,
-		OOFF
+	typedef enum 
+	{
+		ST_UNKNOWN = 1,
+		ST_FRST,
+		ST_RCUR,
+		ST_FNAL,
+		ST_OOFF
 	} SequenceTypeCode;
 
 	// IDispatch
@@ -204,14 +209,14 @@ struct IPaymentInformation : public IDispatch
 	STDMETHOD(SetRequestedCollectionDate)(DATE Value) PURE;
 	STDMETHOD(GetCreditorName)(BSTR *pValue) PURE;
 	STDMETHOD(SetCreditorName)(BSTR Value) PURE;
-	STDMETHOD(GetCreditorAccountIdentificationIBAN)(IIBAN **ppIBAN) PURE;
-	STDMETHOD(SetCreditorAccountIdentificationIBAN)(IIBAN *pIBAN) PURE;
+	STDMETHOD(GetCreditorAccountIdentificationIBAN)(BSTR *pValue) PURE;
+	STDMETHOD(SetCreditorAccountIdentificationIBAN)(BSTR Value) PURE;
 	STDMETHOD(GetCreditorAgentFinancialInstitutionIdentificationBIC)(BSTR *pValue) PURE;
 	STDMETHOD(SetCreditorAgentFinancialInstitutionIdentificationBIC)(BSTR Value) PURE;
 	STDMETHOD(GetChargeBearer)(BSTR *pValue) PURE;
 	STDMETHOD(SetChargeBearer)(BSTR Value) PURE;
-	STDMETHOD(GetCreditorSchemeIdentification)(IIBAN **ppIBAN) PURE;
-	STDMETHOD(SetCreditorSchemeIdentification)(IIBAN *pIBAN) PURE;
+	STDMETHOD(GetCreditorSchemeIdentification)(BSTR *pValue) PURE;
+	STDMETHOD(SetCreditorSchemeIdentification)(BSTR Value) PURE;
 	STDMETHOD(GetCreditorSchemeIdentificationSchemeName)(BSTR *pValue) PURE;
 	STDMETHOD(SetCreditorSchemeIdentificationSchemeName)(BSTR Value) PURE;
 	
@@ -247,14 +252,14 @@ public:
 	STDMETHOD(SetRequestedCollectionDate)(DATE Value);
 	STDMETHOD(GetCreditorName)(BSTR *pValue);
 	STDMETHOD(SetCreditorName)(BSTR Value);
-	STDMETHOD(GetCreditorAccountIdentificationIBAN)(IIBAN **ppIBAN);
-	STDMETHOD(SetCreditorAccountIdentificationIBAN)(IIBAN *pIBAN);
+	STDMETHOD(GetCreditorAccountIdentificationIBAN)(BSTR *pValue);
+	STDMETHOD(SetCreditorAccountIdentificationIBAN)(BSTR Value);
 	STDMETHOD(GetCreditorAgentFinancialInstitutionIdentificationBIC)(BSTR *pValue);
 	STDMETHOD(SetCreditorAgentFinancialInstitutionIdentificationBIC)(BSTR Value);
 	STDMETHOD(GetChargeBearer)(BSTR *pValue);
 	STDMETHOD(SetChargeBearer)(BSTR Value);
-	STDMETHOD(GetCreditorSchemeIdentification)(IIBAN **ppIBAN);
-	STDMETHOD(SetCreditorSchemeIdentification)(IIBAN *pIBAN);
+	STDMETHOD(GetCreditorSchemeIdentification)(BSTR *pValue);
+	STDMETHOD(SetCreditorSchemeIdentification)(BSTR Value);
 	STDMETHOD(GetCreditorSchemeIdentificationSchemeName)(BSTR *pValue);
 	STDMETHOD(SetCreditorSchemeIdentificationSchemeName)(BSTR Value);
 

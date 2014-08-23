@@ -222,6 +222,9 @@ void CstmrDrctDbtInitn::AddPmtInf(PmtInf *pPmtInf)
 	pPmtInf->m_NbOfTxs.setElementListener(this);
 	pPmtInf->m_CtrlSum.setElementListener(this);
 
+	// Set default value(s) for DirectDebit
+	pPmtInf->m_PmtMtd.setValue(TEXT("DD"));
+
 	m_PmtInfs.push_back(pPmtInf);
 }
 

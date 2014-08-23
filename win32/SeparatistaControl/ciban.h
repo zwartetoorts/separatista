@@ -78,7 +78,7 @@ public:
 	STDMETHOD(Check)(VARIANT_BOOL *pValid);
 
 	/**
-		Assignment operator, will set the internal pointer to the recordset
+		Assignment operator, will set the internal pointer to the Separatista::IBAN object
 	*/
 	CIBAN& operator = (Separatista::IBAN *pIBAN);
 
