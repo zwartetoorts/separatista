@@ -147,6 +147,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::AddPaymentInformation(PaymentInforma
 		return S_FALSE;
 
 	m_pCstmrDrctDbtInitn->AddPmtInf(pPaymentInformation->GetPmtInf());
+	pPaymentInformation->Detach();
 	return S_OK;
 }
 
@@ -212,6 +213,11 @@ xercesc::DOMElement* CstmrDrctDbtInitn::toDOMDocument(xercesc::DOMDocument *pDoc
 }
 
 void CstmrDrctDbtInitn::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
+{
+	calcSum();
+}
+
+void CstmrDrctDbtInitn::elementDeleted(Element *pElement)
 {
 	calcSum();
 }

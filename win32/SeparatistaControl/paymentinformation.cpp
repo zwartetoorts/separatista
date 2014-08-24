@@ -36,7 +36,7 @@ xercesc::DOMElement* SvcLvl::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
 
 	if (pElement)
-		m_Cd.toDOMDocument(pDocument, pParent);
+		m_Cd.toDOMDocument(pDocument, pElement);
 
 	return pElement;
 }
@@ -53,7 +53,7 @@ xercesc::DOMElement* LclInstrm::toDOMDocument(xercesc::DOMDocument *pDocument, x
 	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
 
 	if (pElement)
-		m_Cd.toDOMDocument(pDocument, pParent);
+		m_Cd.toDOMDocument(pDocument, pElement);
 
 	return pElement;
 }
@@ -81,9 +81,28 @@ xercesc::DOMElement* PmtTpInf::toDOMDocument(xercesc::DOMDocument *pDocument, xe
 	return pElement;
 }
 
+AccountIdentification::AccountIdentification() :
+Element(TEXT("Id")),
+m_IBAN(TEXT("IBAN"))
+{
+
+}
+
+xercesc::DOMElement* AccountIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent);
+
+	if (pElement)
+	{
+		m_IBAN.toDOMDocument(pDocument, pElement);
+	}
+
+	return pElement;
+}
+
 CashAccount::CashAccount(const wchar_t *pTag) :
 Element(pTag),
-m_Id(TEXT("Id"))
+m_Id()
 {
 
 }
@@ -113,7 +132,7 @@ xercesc::DOMElement* FinancialInstitutionIdentification::toDOMDocument(xercesc::
 
 	if (pElement)
 	{
-		m_BIC.toDOMDocument(pDocument, pParent);
+		m_BIC.toDOMDocument(pDocument, pElement);
 	}
 
 	return pElement;
@@ -264,12 +283,55 @@ xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 
 void PmtInf::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
 {
-
+	calcSums();
 }
 
-PaymentInformation::PaymentInformation()
+void PmtInf::elementDeleted(Element *pElement)
+{
+	calcSums();
+}
+
+void PmtInf::AddDrctDbtTxInf(DrctDbtTxInf *pDrctDbtTxInf)
+{
+	// Set listeners
+	pDrctDbtTxInf->m_InstdAmt.setElementListener(this);
+	
+	m_DrctDbtTxInfs.push_back(pDrctDbtTxInf);
+	calcSums();
+}
+
+void PmtInf::calcSums()
+{
+	std::vector<DrctDbtTxInf*>::iterator it;
+	int ntx = 0;
+	double sum = 0.0;
+
+	for (it = m_DrctDbtTxInfs.begin(); it != m_DrctDbtTxInfs.end(); it++)
+	{
+		ntx++;
+		sum += (*it)->m_InstdAmt.getDoubleValue();
+	}
+
+	m_NbOfTxs.setValue(ntx);
+	m_CtrlSum.setValue(sum);
+}
+
+PaymentInformation::PaymentInformation(IUnknown *pParent) :
+SepaControlDispatch<IPaymentInformation>(pParent)
 {
 	m_pPmtInf = new PmtInf();
+	m_bOwnPmtInf = true;
+}
+
+PaymentInformation::~PaymentInformation()
+{
+	if (m_bOwnPmtInf)
+		delete m_pPmtInf;
+}
+
+void PaymentInformation::Detach()
+{
+	m_bOwnPmtInf = false;
 }
 
 PmtInf* PaymentInformation::GetPmtInf() const
@@ -576,6 +638,17 @@ STDMETHODIMP PaymentInformation::SetCreditorSchemeIdentificationSchemeName(BSTR 
 		return E_UNEXPECTED;
 
 	m_pPmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(Value);
+
+	return S_OK;
+}
+
+STDMETHODIMP PaymentInformation::AddDirectDebitTransactionInformation(DirectDebitTransactionInformation *pDirectDebitTransactionInformation)
+{
+	if (!m_pPmtInf)
+		return E_UNEXPECTED;
+
+	m_pPmtInf->AddDrctDbtTxInf(pDirectDebitTransactionInformation->getDrctDbtTxInf());
+	pDirectDebitTransactionInformation->Detach();
 
 	return S_OK;
 }

@@ -54,6 +54,18 @@
     <ClInclude Include="paymentinformation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="directdebittransactioninformation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="branchandfinancialinstitutionidentification.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="partyidentification.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cashaccount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Separatista.odl">
@@ -103,6 +115,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="paymentinformation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="directdebittransactioninformation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

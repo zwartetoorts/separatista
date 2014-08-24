@@ -18,12 +18,16 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <vector>
 #include <windows.h>
 #include <xercesc/dom/DOMDocument.hpp>
 
 #include "dispatch.h"
 #include "element.h"
-#include "ciban.h"
+#include "directdebittransactioninformation.h"
+#include "branchandfinancialinstitutionidentification.h"
+#include "partyidentification.h"
+#include "cashaccount.h"
 
 #ifndef SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
 #define SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
@@ -60,79 +64,6 @@ public:
 	Element m_SeqTp;
 };
 
-class CashAccount : public Element
-{
-public:
-	CashAccount(const wchar_t *pTag);
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_Id;
-};
-
-class FinancialInstitutionIdentification : public Element
-{
-public:
-	FinancialInstitutionIdentification();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_BIC;
-};
-
-class BranchAndFinancialInstitutionIdentification : public Element
-{
-public:
-	BranchAndFinancialInstitutionIdentification(const wchar_t *pTag);
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	FinancialInstitutionIdentification m_FinancialInstitutionIdentification;
-};
-
-class PersonIdentificationSchemeName : public Element
-{
-public:
-	PersonIdentificationSchemeName::PersonIdentificationSchemeName(const wchar_t *pTag);
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_Prtry;
-};
-
-class GenericPersonIdentification : public Element
-{
-public:
-	GenericPersonIdentification(const wchar_t *pTag);
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_Id;
-	PersonIdentificationSchemeName m_SchmeNm;
-};
-
-class PersonIdentification : public Element
-{
-public:
-	PersonIdentification(const wchar_t *pTag);
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	GenericPersonIdentification m_Othr;
-};
-
-class PartyIdentification : public Element
-{
-public:
-	PartyIdentification(const wchar_t *pTag);
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_Nm;
-	PersonIdentification m_PrvtId;
-};
-
-
 class PmtInf : public Element, ElementListener
 {
 public:
@@ -141,7 +72,9 @@ public:
 	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
-	void elementDeleted(Element *pElement) {};
+	void elementDeleted(Element *pElement);
+
+	void AddDrctDbtTxInf(DrctDbtTxInf *pDrctDbtTxInf);
 
 	Element m_PmtInfId;
 	Element m_PmtMtd;
@@ -154,6 +87,11 @@ public:
 	BranchAndFinancialInstitutionIdentification m_CdtrAgt;
 	Element m_ChrgBr;
 	PartyIdentification m_CdtrSchmeId;
+
+private:
+	void calcSums();
+
+	std::vector<DrctDbtTxInf*> m_DrctDbtTxInfs;
 };
 
 // {9D52C4C2-B5FF-43E0-9FAC-600AF2986686}
@@ -219,7 +157,7 @@ struct IPaymentInformation : public IDispatch
 	STDMETHOD(SetCreditorSchemeIdentification)(BSTR Value) PURE;
 	STDMETHOD(GetCreditorSchemeIdentificationSchemeName)(BSTR *pValue) PURE;
 	STDMETHOD(SetCreditorSchemeIdentificationSchemeName)(BSTR Value) PURE;
-	
+	STDMETHOD(AddDirectDebitTransactionInformation)(DirectDebitTransactionInformation *pDirectDebitTransactionInformation) PURE;
 };
 
 struct __declspec(uuid("{9D52C4C2-B5FF-43E0-9FAC-600AF2986686}")) IPaymentInformation;
@@ -233,7 +171,13 @@ public:
 	/**
 	@see SepaControllDispatch
 	*/
-	PaymentInformation();
+	PaymentInformation(IUnknown *pParent = NULL);
+
+	/**
+		If this object owns the underlaying Separatista object, it will be detached from the object. If this 
+		com class is destroyed, the underlaying Separatista object won't be destroyed.
+	*/
+	void Detach();
 
 	// COM methods
 	STDMETHOD(GetPaymentInformationIdentification)(BSTR *pValue);
@@ -262,12 +206,16 @@ public:
 	STDMETHOD(SetCreditorSchemeIdentification)(BSTR Value);
 	STDMETHOD(GetCreditorSchemeIdentificationSchemeName)(BSTR *pValue);
 	STDMETHOD(SetCreditorSchemeIdentificationSchemeName)(BSTR Value);
+	STDMETHOD(AddDirectDebitTransactionInformation)(DirectDebitTransactionInformation *pDirectDebitTransactionInformation);
 
 	// PaymentInformation methods
 	PmtInf* GetPmtInf() const;
+protected:
+	~PaymentInformation();
 
 private:
 	PmtInf *m_pPmtInf;
+	bool m_bOwnPmtInf;
 };
 
 class __declspec(uuid("{CBDAC56C-5A90-443F-9511-D3F3B5AC3CF7}")) PaymentInformation;

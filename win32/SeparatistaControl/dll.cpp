@@ -30,6 +30,7 @@
 #include "customerdirectdebitinitiation.h"
 #include "ciban.h"
 #include "paymentinformation.h"
+#include "directdebittransactioninformation.h"
 
 /**
 	Globals
@@ -104,6 +105,8 @@ STDAPI DllGetClassObject(REFCLSID rclsid,
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<IIBAN>::Create<CIBAN>);
 	else if (IsEqualIID(rclsid, __uuidof(PaymentInformation)))
 		pFactory = new SepaControlClassFactory(SepaControlDispatch<IPaymentInformation>::Create<PaymentInformation>);
+	else if (IsEqualIID(rclsid, __uuidof(DirectDebitTransactionInformation)))
+		pFactory = new SepaControlClassFactory(SepaControlDispatch<IDirectDebitTransactionInformation>::Create<DirectDebitTransactionInformation>);
 	else 
 		return CLASS_E_CLASSNOTAVAILABLE;
 
@@ -330,6 +333,28 @@ STDAPI DllRegisterServer()
 		TEXT("{A3142FEC-FB2E-4715-B5DF-C4F7844D2956}"),
 		TEXT("Separatista.CustomerDirectDebitInitiation.1"),
 		TEXT("Separatista.CustomerDirectDebitInitiation"));
+	if (FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
+
+	// Try to register Separatista.PaymentInformation
+	hr = DllRegisterObject(
+		TEXT("{CBDAC56C-5A90-443F-9511-D3F3B5AC3CF7}"),
+		TEXT("Separatista.PaymentInformation.1"),
+		TEXT("Separatista.PaymentInformation"));
+	if (FAILED(hr))
+	{
+		DllUnregisterServer();
+		return hr;
+	}
+
+	// Try to register Separatista.DirectDebitTransactionInformation
+	hr = DllRegisterObject(
+		TEXT("{34F53824-3D5A-49A2-8F94-A721ED35E01D}"),
+		TEXT("Separatista.DirectDebitTransactionInformation.1"),
+		TEXT("Separatista.DirectDebitTransactionInformation"));
 	if (FAILED(hr))
 	{
 		DllUnregisterServer();

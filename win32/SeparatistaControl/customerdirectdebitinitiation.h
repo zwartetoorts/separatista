@@ -63,7 +63,7 @@ public:
 
 	void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 
-	void elementDeleted(Element *pElement) {};
+	void elementDeleted(Element *pElement);
 
 	GrpHdr m_GrpHdr;
 

@@ -215,6 +215,80 @@ library Separatista
 	};
 
 	/**
+	DirectDebitTransactionInformation
+	*/
+	[
+		uuid(C660CA93-13FB-40B5-B66A-818616D1BD55),
+		helpstring("IDirectDebitTransactionInformation interface"),
+		oleautomation,
+		dual,
+		odl
+	]
+	interface IDirectDebitTransactionInformation : IDispatch
+	{
+		[propget, helpstring("Unique identification assigned by the initiating party to unumbiguously identify the transaction.This identification is passed on, unchanged, throughout the entire end-to-end chain.")]
+		HRESULT __stdcall PaymentIdentificationEndToEndId(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Unique identification assigned by the initiating party to unumbiguously identify the transaction.This identification is passed on, unchanged, throughout the entire end-to-end chain.")]
+		HRESULT __stdcall PaymentIdentificationEndToEndId(
+			[in] BSTR Value);
+		[propget, helpstring("Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.")]
+		HRESULT __stdcall InstructedAmount(
+			[out, retval] VARIANT *pValue);
+		[propput, helpstring("Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.")]
+		HRESULT __stdcall InstructedAmount(
+			[in] VARIANT Value);
+		[propget, helpstring("Unique identification, as assigned by the creditor, to unambiguously identify the mandate.")]
+		HRESULT __stdcall MandateIdentification(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Unique identification, as assigned by the creditor, to unambiguously identify the mandate.")]
+		HRESULT __stdcall MandateIdentification(
+			[in] BSTR Value);
+		[propget, helpstring("Date on which the direct debit mandate has been signed by the debtor.")]
+		HRESULT __stdcall DateOfSignature(
+			[out, retval] DATE *pValue);
+		[propput, helpstring("Date on which the direct debit mandate has been signed by the debtor.")]
+		HRESULT __stdcall DateOfSignature(
+			[in] DATE Value);
+		[propget, helpstring("Financial institution servicing an account for the debtor.")]
+		HRESULT __stdcall DebtorAgentFinancialInstitutionIdentificationBIC(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Financial institution servicing an account for the debtor.")]
+		HRESULT __stdcall DebtorAgentFinancialInstitutionIdentificationBIC(
+			[in] BSTR Value);
+		[propget, helpstring("Party that owes an amount of money to the (ultimate) creditor.")]
+		HRESULT __stdcall DebtorName(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Party that owes an amount of money to the (ultimate) creditor.")]
+		HRESULT __stdcall DebtorName(
+			[in] BSTR Value);
+		[propget, helpstring("Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction.")]
+		HRESULT __stdcall DebtorAccountIBAN(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction.")]
+		HRESULT __stdcall DebtorAccountIBAN(
+			[in] BSTR Value);
+		[propget, helpstring("Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form.")]
+		HRESULT __stdcall RemittanceInformationUnstructured(
+			[out, retval] BSTR *pValue);
+		[propput, helpstring("Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form.")]
+		HRESULT __stdcall RemittanceInformationUnstructured(
+			[in] BSTR Value);
+	};
+
+	[
+		uuid(34F53824-3D5A-49A2-8F94-A721ED35E01D),
+		helpstring("DirectDebitTransactionInformation object")
+	]
+	coclass DirectDebitTransactionInformation
+	{
+		[default] interface IDirectDebitTransactionInformation;
+		interface IDispatch;
+	};
+
+
+
+	/**
 		PaymentInformation
 	*/
 
@@ -322,6 +396,9 @@ library Separatista
 		[propput, helpstring("Name of the identification scheme, in a free text form.")]
 		HRESULT __stdcall CreditorSchemeIdentificationSchemeName(
 			[in] BSTR Value);
+		[helpstring("Append a new DirectDebitTransactionInformation")]
+		HRESULT __stdcall AddDirectDebitTransactionInformation(
+			[in] IDirectDebitTransactionInformation *pDirectDebitTransactionInformation);
 	};
 
 	[
