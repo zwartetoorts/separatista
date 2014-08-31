@@ -101,7 +101,7 @@ xercesc::DOMElement* RmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 }
 
 DrctDbtTxInf::DrctDbtTxInf() :
-Element(TEXT("DrctDbtTxInt")),
+Element(TEXT("DrctDbtTxInf")),
 m_PmtId(),
 m_InstdAmt(TEXT("InstdAmt")),
 m_DrctDbtTx(),

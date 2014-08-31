@@ -57,6 +57,16 @@ public:
 	GenericPersonIdentification m_Othr;
 };
 
+class PartyChoice : public Element
+{
+public:
+	PartyChoice();
+
+	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+	PersonIdentification m_PrvtId;
+};
+
 class PartyIdentification : public Element
 {
 public:
@@ -65,7 +75,7 @@ public:
 	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	Element m_Nm;
-	PersonIdentification m_PrvtId;
+	PartyChoice m_Id;
 };
 
 #endif // SEPARATISTA_CONTROL_PARTYIDENTIFICATION_H

@@ -69,6 +69,11 @@ class PmtInf : public Element, ElementListener
 public:
 	PmtInf();
 
+	/**
+		Destructor, will delete all added DrctDbtTxInf's
+	*/
+	~PmtInf();
+
 	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	void elementValueChanged(Element *pElement, const wchar_t *pNewValue);

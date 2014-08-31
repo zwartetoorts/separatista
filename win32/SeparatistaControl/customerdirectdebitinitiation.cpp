@@ -22,6 +22,11 @@
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMLSSerializer.hpp>
+#include <xercesc/dom/DOMLSOutput.hpp>
+#include <xercesc/framework/LocalFileFormatTarget.hpp>
+#include <xercesc/dom/DOMConfiguration.hpp>
+#include <xercesc/util/XMLUni.hpp>
 
 #include "customerdirectdebitinitiation.h"
 #include "dispatch.cpp"
@@ -30,46 +35,19 @@
 CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
 :SepaControlDispatch<ICustomerDirectDebitInitiation>(NULL)
 {
-	xercesc::DOMImplementation *pDomImpl = xercesc::DOMImplementationRegistry::getDOMImplementation(TEXT("XML 1.0"));
-
-	if (!pDomImpl)
-	{
-		m_pDomDocument = NULL;
-		return;
-	}
-
-	try
-	{
-		m_pDomDocument = pDomImpl->createDocument(
-			TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.02"),
-			TEXT("Document"),
-			NULL);
-		m_pCstmrDrctDbtInitn = new CstmrDrctDbtInitn();
-		if (m_pCstmrDrctDbtInitn)
-		{
-			// Set default values
-			m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.setValue(std::time(NULL));
-		}
-	}
-	catch (const xercesc::DOMException &e)
-	{
-		OutputDebugString(e.getMessage());
-		m_pDomDocument = NULL;
-	}
+	m_pCstmrDrctDbtInitn = new CstmrDrctDbtInitn();
+	m_bOwnCstmrDrctDbtInitn = true;
 }
 
 CustomerDirectDebitInitiation::~CustomerDirectDebitInitiation()
 {
-	if (m_pDomDocument)
-		m_pDomDocument->release();
-
-	if (m_pCstmrDrctDbtInitn)
+	if (m_bOwnCstmrDrctDbtInitn && m_pCstmrDrctDbtInitn)
 		delete m_pCstmrDrctDbtInitn;
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::GetMessageIdentification(BSTR *pValue)
 {
-	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+	if (!m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
 	*pValue = _bstr_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_MsgId.getTextValue()).Detach();
@@ -79,7 +57,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::GetMessageIdentification(BSTR *pValu
 
 STDMETHODIMP CustomerDirectDebitInitiation::SetMessageIdentification(BSTR Value)
 {
-	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+	if (!m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
 	m_pCstmrDrctDbtInitn->m_GrpHdr.m_MsgId.setValue(Value);
@@ -89,7 +67,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::SetMessageIdentification(BSTR Value)
 
 STDMETHODIMP CustomerDirectDebitInitiation::GetCreationDateTime(DATE *pValue)
 {
-	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+	if (!m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
 	return DateTypeFromStdTime(m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.getDateValue(), pValue);
@@ -97,17 +75,17 @@ STDMETHODIMP CustomerDirectDebitInitiation::GetCreationDateTime(DATE *pValue)
 
 STDMETHODIMP CustomerDirectDebitInitiation::SetCreationDateTime(DATE Value)
 {
-	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+	if (!m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
-	m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.setValue(StdTimeFromDateType(Value));
+	m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.setValue(StdTimeFromDateType(Value), true);
 
 	return S_OK;
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::GetNumberOfTransactions(INT *pValue)
 {
-	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+	if (!m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
 	*pValue = m_pCstmrDrctDbtInitn->m_GrpHdr.m_NbOfTxs.getIntValue();
@@ -116,7 +94,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::GetNumberOfTransactions(INT *pValue)
 
 STDMETHODIMP CustomerDirectDebitInitiation::GetControlSum(VARIANT *pValue)
 {
-	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+	if (!m_pCstmrDrctDbtInitn)
 		return E_FAIL; 
 	
 	*pValue = _variant_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_CtrlSum.getTextValue()).Detach();
@@ -125,7 +103,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::GetControlSum(VARIANT *pValue)
 
 STDMETHODIMP CustomerDirectDebitInitiation::GetInititiatingPartyName(BSTR *pValue)
 {
-	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+	if (!m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
 	*pValue = _bstr_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.getTextValue()).Detach();
@@ -134,7 +112,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::GetInititiatingPartyName(BSTR *pValu
 
 STDMETHODIMP CustomerDirectDebitInitiation::SetInititiatingPartyName(BSTR Value)
 {
-	if (!m_pDomDocument || !m_pCstmrDrctDbtInitn)
+	if (!m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
 	m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.setValue(Value);
@@ -202,12 +180,27 @@ m_GrpHdr()
 
 }
 
+CstmrDrctDbtInitn::~CstmrDrctDbtInitn()
+{
+	// Delete all PmtInfs
+	std::vector<PmtInf*>::iterator it;
+
+	for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
+		delete (*it);
+}
+
 xercesc::DOMElement* CstmrDrctDbtInitn::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	std::vector<PmtInf*>::iterator it;
 	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
 
 	if (pElement)
+	{
 		m_GrpHdr.toDOMDocument(pDocument, pElement);
+
+		for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
+			(*it)->toDOMDocument(pDocument, pElement);
+	}
 
 	return pElement;
 }
@@ -232,6 +225,8 @@ void CstmrDrctDbtInitn::AddPmtInf(PmtInf *pPmtInf)
 	pPmtInf->m_PmtMtd.setValue(TEXT("DD"));
 
 	m_PmtInfs.push_back(pPmtInf);
+
+	calcSum();
 }
 
 void CstmrDrctDbtInitn::calcSum()
@@ -249,4 +244,92 @@ void CstmrDrctDbtInitn::calcSum()
 
 	m_GrpHdr.m_NbOfTxs.setValue(ntx);
 	m_GrpHdr.m_CtrlSum.setValue(sum);
+}
+
+STDMETHODIMP CustomerDirectDebitInitiation::Save(LONG hWnd)
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return E_UNEXPECTED;
+
+	OPENFILENAME ofn = { 0 };
+	WCHAR filename[MAX_PATH + 1];
+	std::wcscpy(filename, TEXT("sepa.xml"));
+
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = (HWND)hWnd;
+	ofn.hInstance = NULL;
+	ofn.lpstrFilter = TEXT("All files\0*.*\0");
+	ofn.lpstrCustomFilter = NULL;
+	ofn.nMaxCustFilter = 0;
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFile = filename;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.lpstrFileTitle = TEXT("Save SEPA DirectDebit document as");
+	ofn.Flags = OFN_OVERWRITEPROMPT;
+	ofn.nFileOffset = 0;
+	ofn.nFileExtension = 0;
+	ofn.lpstrDefExt = NULL;
+	ofn.pvReserved = NULL;
+	ofn.dwReserved = 0;
+	ofn.FlagsEx = 0;
+
+	if (GetSaveFileName(&ofn))
+		return SaveAs(filename);
+
+	return S_OK;
+}
+
+STDMETHODIMP CustomerDirectDebitInitiation::SaveAs(BSTR Path)
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return E_UNEXPECTED;
+
+	// Create a DOM Document
+	xercesc::DOMImplementation *pDomImpl = xercesc::DOMImplementationRegistry::getDOMImplementation(TEXT("LS"));
+	xercesc::DOMDocument *pDocument;
+	HRESULT ret;
+
+	if (!pDomImpl)
+		return E_FAIL;
+
+	try
+	{
+		pDocument = pDomImpl->createDocument(
+			TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.02"),
+			TEXT("Document"),
+			NULL);
+
+		if (m_pCstmrDrctDbtInitn->toDOMDocument(pDocument, pDocument->getDocumentElement()))
+		{
+			xercesc::DOMLSSerializer *pSerializer = ((xercesc::DOMImplementationLS*)pDomImpl)->createLSSerializer();
+			xercesc::DOMLSOutput *pOutput = ((xercesc::DOMImplementationLS*)pDomImpl)->createLSOutput();
+			xercesc::LocalFileFormatTarget *pTarget = new xercesc::LocalFileFormatTarget(Path);
+
+			pOutput->setByteStream(pTarget);
+			pOutput->setEncoding(TEXT("UTF-8"));
+			pSerializer->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMXMLDeclaration, true);
+			pSerializer->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMWRTFormatPrettyPrint, true);
+			pSerializer->write(pDocument, pOutput);
+			pTarget->flush();
+
+			delete pTarget;
+			pOutput->release();
+			pSerializer->release();
+
+			ret = S_OK;
+		}
+		else
+			ret = E_FAIL;
+
+	}
+	catch (const xercesc::DOMException &e)
+	{
+		OutputDebugString(e.getMessage());
+		return E_FAIL;
+	}
+
+	return ret;
 }

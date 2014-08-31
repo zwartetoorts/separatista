@@ -90,7 +90,7 @@ m_IBAN(TEXT("IBAN"))
 
 xercesc::DOMElement* AccountIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent);
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
 
 	if (pElement)
 	{
@@ -216,10 +216,27 @@ xercesc::DOMElement* PersonIdentification::toDOMDocument(xercesc::DOMDocument *p
 	return pElement;
 }
 
+PartyChoice::PartyChoice() :
+Element(TEXT("Id")),
+m_PrvtId(TEXT("PrvtId"))
+{
+
+}
+
+xercesc::DOMElement* PartyChoice::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+
+	if (pElement)
+		m_PrvtId.toDOMDocument(pDocument, pElement);
+
+	return pElement;
+}
+
 PartyIdentification::PartyIdentification(const wchar_t *pTag) :
 Element(pTag),
 m_Nm(TEXT("Nm")),
-m_PrvtId(TEXT("PrvtId"))
+m_Id()
 {
 
 }
@@ -230,8 +247,10 @@ xercesc::DOMElement* PartyIdentification::toDOMDocument(xercesc::DOMDocument *pD
 
 	if (pElement)
 	{
-		m_Nm.toDOMDocument(pDocument, pElement);
-		m_PrvtId.toDOMDocument(pDocument, pElement);
+		if(!m_Nm.empty())
+			m_Nm.toDOMDocument(pDocument, pElement);
+		else
+			m_Id.toDOMDocument(pDocument, pElement);
 	}
 
 	return pElement;
@@ -247,7 +266,7 @@ m_PmtTpInf(),
 m_ReqdColltnDt(TEXT("ReqdColltnDt")),
 m_Cdtr(TEXT("Cdtr")),
 m_CdtrAcct(TEXT("CdtrAcct")),
-m_CdtrAgt(TEXT("CdtrAft")),
+m_CdtrAgt(TEXT("CdtrAgt")),
 m_ChrgBr(TEXT("ChrgBr")),
 m_CdtrSchmeId(TEXT("CdtrSchmeId"))
 {
@@ -255,12 +274,21 @@ m_CdtrSchmeId(TEXT("CdtrSchmeId"))
 	m_NbOfTxs.setValue(0);
 	m_CtrlSum.setValue(0.0);
 	m_PmtTpInf.m_SvcLvl.m_Cd.setValue(TEXT("SEPA"));
-	m_CdtrSchmeId.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(TEXT("SEPA"));
+	m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(TEXT("SEPA"));
 	m_ChrgBr.setValue(TEXT("SLEV"));
+}
+
+PmtInf::~PmtInf()
+{
+	std::vector<DrctDbtTxInf*>::iterator it;
+
+	for (it = m_DrctDbtTxInfs.begin(); it != m_DrctDbtTxInfs.end(); it++)
+		delete (*it);
 }
 
 xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	std::vector<DrctDbtTxInf*>::iterator it;
 	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
 
 	if (pElement)
@@ -276,6 +304,9 @@ xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 		m_CdtrAgt.toDOMDocument(pDocument, pElement);
 		m_ChrgBr.toDOMDocument(pDocument, pElement);
 		m_CdtrSchmeId.toDOMDocument(pDocument, pElement);
+
+		for (it = m_DrctDbtTxInfs.begin(); it != m_DrctDbtTxInfs.end(); it++)
+			(*it)->toDOMDocument(pDocument, pElement);
 	}
 
 	return pElement;
@@ -372,7 +403,7 @@ STDMETHODIMP PaymentInformation::SetPaymentMethod(BSTR Value)
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->setValue(Value);
+	m_pPmtInf->m_PmtMtd.setValue(Value);
 
 	return S_OK;
 }
@@ -547,7 +578,7 @@ STDMETHODIMP PaymentInformation::GetCreditorAccountIdentificationIBAN(BSTR *pVal
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	*pValue = _bstr_t(m_pPmtInf->m_CdtrAcct.m_Id.getTextValue()).Detach();
+	*pValue = _bstr_t(m_pPmtInf->m_CdtrAcct.m_Id.m_IBAN.getTextValue()).Detach();
 
 	return S_OK;
 }
@@ -557,7 +588,7 @@ STDMETHODIMP PaymentInformation::SetCreditorAccountIdentificationIBAN(BSTR Value
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_CdtrAcct.m_Id.setValue(Value);
+	m_pPmtInf->m_CdtrAcct.m_Id.m_IBAN.setValue(Value);
 
 	return S_OK;
 }
@@ -607,7 +638,7 @@ STDMETHODIMP PaymentInformation::GetCreditorSchemeIdentification(BSTR *pValue)
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	*pValue = _bstr_t(m_pPmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_Id.getTextValue()).Detach();
+	*pValue = _bstr_t(m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_Id.getTextValue()).Detach();
 
 	return S_OK;
 }
@@ -617,7 +648,7 @@ STDMETHODIMP PaymentInformation::SetCreditorSchemeIdentification(BSTR Value)
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_Id.setValue(Value);
+	m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_Id.setValue(Value);
 
 	return S_OK;
 }
@@ -627,7 +658,7 @@ STDMETHODIMP PaymentInformation::GetCreditorSchemeIdentificationSchemeName(BSTR 
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	*pValue = _bstr_t(m_pPmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.getTextValue()).Detach();
+	*pValue = _bstr_t(m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.getTextValue()).Detach();
 
 	return S_OK;
 }
@@ -637,7 +668,7 @@ STDMETHODIMP PaymentInformation::SetCreditorSchemeIdentificationSchemeName(BSTR 
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_CdtrSchmeId.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(Value);
+	m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(Value);
 
 	return S_OK;
 }

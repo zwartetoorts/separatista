@@ -185,7 +185,18 @@ STDAPI DllUnregisterServer()
 		TEXT("Separatista.CustomerDirectDebitInitiation.1"),
 		TEXT("Separatista.CustomerDirectDebitInitiation"));
 
-
+	// Unregister Separatista.PaymentInformation
+	DllUnregisterObject(
+		TEXT("{CBDAC56C-5A90-443F-9511-D3F3B5AC3CF7}"),
+		TEXT("Separatista.PaymentInformation.1"),
+		TEXT("Separatista.PaymentInformation"));
+	
+	// Unregister Separatista.DirectDebitTransactionInformation
+	DllUnregisterObject(
+		TEXT("{34F53824-3D5A-49A2-8F94-A721ED35E01D}"),
+		TEXT("Separatista.DirectDebitTransactionInformation.1"),
+		TEXT("Separatista.DirectDebitTransactionInformation"));
+	
 	return S_OK;;
 }
 

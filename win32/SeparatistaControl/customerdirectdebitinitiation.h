@@ -59,6 +59,11 @@ class CstmrDrctDbtInitn : public Element, ElementListener
 public:
 	CstmrDrctDbtInitn();
 
+	/**
+		Destructor, will delete all added PmtInf's
+	*/
+	~CstmrDrctDbtInitn();
+
 	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 	void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
@@ -104,8 +109,8 @@ struct ICustomerDirectDebitInitiation : public IDispatch
 	STDMETHOD(GetInititiatingPartyName)(BSTR* pValue) PURE;
 	STDMETHOD(SetInititiatingPartyName)(BSTR Value) PURE;
 	STDMETHOD(AddPaymentInformation)(PaymentInformation *pPaymentInformation) PURE;
-
-
+	STDMETHOD(Save)(LONG hWnd = NULL) PURE;
+	STDMETHOD(SaveAs)(BSTR Path) PURE;
 };
 
 struct __declspec(uuid("{4B8AC337-5E17-454D-A7EC-8955B07B99CC}")) ICustomerDirectDebitInitiation;
@@ -124,11 +129,6 @@ public:
 	*/
 	CustomerDirectDebitInitiation();
 
-	/**
-		Destructor
-	*/
-	~CustomerDirectDebitInitiation();
-
 	STDMETHOD(GetMessageIdentification)(BSTR* pValue);
 	STDMETHOD(SetMessageIdentification)(BSTR Value);
 	STDMETHOD(GetCreationDateTime)(DATE *pValue);
@@ -138,10 +138,18 @@ public:
 	STDMETHOD(GetInititiatingPartyName)(BSTR* pValue);
 	STDMETHOD(SetInititiatingPartyName)(BSTR Value);
 	STDMETHOD(AddPaymentInformation)(PaymentInformation *pPaymentInformation);
+	STDMETHOD(Save)(LONG hWnd);
+	STDMETHOD(SaveAs)(BSTR Path);
+
+protected:
+	/**
+	Destructor
+	*/
+	~CustomerDirectDebitInitiation();
 
 private:
-	xercesc::DOMDocument *m_pDomDocument;
 	CstmrDrctDbtInitn *m_pCstmrDrctDbtInitn;
+	bool m_bOwnCstmrDrctDbtInitn;
 };
 
 class __declspec(uuid("{A3142FEC-FB2E-4715-B5DF-C4F7844D2956}")) CustomerDirectDebitInitiation;

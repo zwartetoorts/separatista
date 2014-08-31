@@ -88,8 +88,9 @@ public:
 
 	/**
 		Set the value of a text node by a time_t
+		@param bWithTime Wether the time should be included or not
 	*/
-	void setValue(const time_t Value);
+	void setValue(const time_t Value, bool bWithTime = false);
 
 	/**
 		Get the value of a text node converted to int
@@ -111,6 +112,10 @@ public:
 	*/
 	void setValue(double d);
 
+	/**
+		Returns true of the element text is empty
+	*/
+	bool empty() const;
 
 protected:
 	/// Calls a registered ElementListener's elementValueChanged

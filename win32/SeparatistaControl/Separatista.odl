@@ -286,8 +286,6 @@ library Separatista
 		interface IDispatch;
 	};
 
-
-
 	/**
 		PaymentInformation
 	*/
@@ -343,7 +341,7 @@ library Separatista
 		HRESULT __stdcall PaymentTypeInformationServiceLevelCode(
 			[in] BSTR Value);
 		[propget, helpstring("Specifies the local instrument, as published in an external local instrument code list.")]
-		HRESULT __stdcall PaymentTypeInformationLocalIntrumentCode(
+		HRESULT __stdcall PaymentTypeInformationLocalInstrumentCode(
 			[out, retval] ExternalLocalInstrumentCode *pValue);
 		[propput, helpstring("Specifies the local instrument, as published in an external local instrument code list.")]
 		HRESULT __stdcall PaymentTypeInformationLocalInstrumentCode(
@@ -427,38 +425,36 @@ library Separatista
 		[propget, helpstring("Point to point reference, assigned by the instructing party and sent to the next party in the chain, to unambiguously identify the message")]
 		HRESULT __stdcall MessageIdentification(
 			[out, retval] BSTR *pValue);
-
 		[propput, helpstring("Point to point reference, assigned by the instructing party and sent to the next party in the chain, to unambiguously identify the message")]
 		HRESULT __stdcall MessageIdentification(
 			[in] BSTR value);
-
 		[propget, helpstring("Date and time at which a (group of) payment instruction(s) was created by the instructing party.")]
 		HRESULT __stdcall CreationDateTime(
 			[out, retval] DATE *pDate);
-
 		[propput, helpstring("Date and time at which a (group of) payment instruction(s) was created by the instructing party.")]
 		HRESULT __stdcall CreationDateTime(
 			[in] DATE Date);
-
 		[propget, helpstring("Number of individual transactions contained in the message.")]
 		HRESULT __stdcall NumberOfTransactions(
 			[out, retval] INT *pValue);
-
 		[propget, helpstring("Total of all individual amounts included in the message, irrespective of currencies.")]
 		HRESULT __stdcall ControlSum(
 			[out, retval] VARIANT *pValue);
-
 		[propget, helpstring("Name by which a party is known and which is usually used to identify that party.")]
 		HRESULT __stdcall InitiatingPartyName(
 			[out, retval] BSTR *pValue);
-
 		[propput, helpstring("Name by which a party is known and which is usually used to identify that party.")]
 		HRESULT __stdcall InitiatingPartyName(
 			[in] BSTR Value);
-
 		[helpstring("Append a new PaymentInformation")]
 		HRESULT __stdcall AddPaymentInformation(
 			[in] IPaymentInformation *pPaymentInformation);
+		[helpstring("Shows the user a file open dialog and saves the document to the specified location.")]
+		HRESULT __stdcall Save(
+			[in, defaultvalue(NULL)] long hWnd);
+		[helpstring("Saves the document to the specified location")]
+		HRESULT __stdcall SaveAs(
+			[in] BSTR Path);
 	};
 
 	[

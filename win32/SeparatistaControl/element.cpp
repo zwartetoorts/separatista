@@ -22,6 +22,7 @@
 #include <olectl.h>
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/framework/psvi/XSValue.hpp>
@@ -44,7 +45,7 @@ xercesc::DOMElement* Element::toDOMDocument(xercesc::DOMDocument *pDocument, xer
 
 	try
 	{
-		pElement = pDocument->createElement(m_pTag);
+		pElement = pDocument->createElementNS(pParent->getNamespaceURI(), m_pTag);
 		if (pElement)
 		{
 			// Set text content, if any
@@ -120,13 +121,16 @@ time_t Element::getDateValue() const
 	return std::mktime(&tm);
 }
 
-void Element::setValue(const time_t Value)
+void Element::setValue(const time_t Value, bool bWithTime)
 {
 	tm *ptm;
 	char buffer[64];
 
 	ptm = std::localtime(&Value);
-	strftime(buffer, 64, "%Y-%m-%dT%H:%M:%S", ptm);
+	if (bWithTime)
+		strftime(buffer, 64, "%Y-%m-%dT%H:%M:%S", ptm);
+	else
+		strftime(buffer, 64, "%Y-%m-%d", ptm);
 
 	XMLCh *xmlch = xercesc::XMLString::transcode(buffer);
 	if (xmlch)
@@ -193,8 +197,12 @@ void Element::setValue(double d)
 	std::wostringstream wos;
 
 	wos.imbue(std::locale::classic());
-	wos.precision(2);
-	wos << d;
+	wos << std::setprecision(2) << std::fixed << d;
 	setValue(wos.str().data());
+}
+
+bool Element::empty() const
+{
+	return m_value.empty();
 }
 
