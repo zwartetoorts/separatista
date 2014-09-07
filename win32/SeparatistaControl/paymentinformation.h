@@ -18,86 +18,17 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <vector>
 #include <windows.h>
-#include <xercesc/dom/DOMDocument.hpp>
+#include <separatista/separatista.h>
+#include <separatista/paymentinformation.h>
 
+#include "directdebittransactioninformation.h"
 #include "dispatch.h"
 #include "element.h"
-#include "directdebittransactioninformation.h"
-#include "branchandfinancialinstitutionidentification.h"
-#include "partyidentification.h"
-#include "cashaccount.h"
 
 #ifndef SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
 #define SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
 
-class SvcLvl : public Element
-{
-public:
-	SvcLvl();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_Cd;
-};
-
-class LclInstrm : public Element
-{
-public:
-	LclInstrm();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_Cd;
-};
-
-class PmtTpInf : public Element
-{
-public:
-	PmtTpInf();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	SvcLvl m_SvcLvl;
-	LclInstrm m_LclInstrm;
-	Element m_SeqTp;
-};
-
-class PmtInf : public Element, ElementListener
-{
-public:
-	PmtInf();
-
-	/**
-		Destructor, will delete all added DrctDbtTxInf's
-	*/
-	~PmtInf();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
-	void elementDeleted(Element *pElement);
-
-	void AddDrctDbtTxInf(DrctDbtTxInf *pDrctDbtTxInf);
-
-	Element m_PmtInfId;
-	Element m_PmtMtd;
-	Element m_NbOfTxs;
-	Element m_CtrlSum;
-	PmtTpInf m_PmtTpInf;
-	Element m_ReqdColltnDt;
-	PartyIdentification m_Cdtr;
-	CashAccount m_CdtrAcct;
-	BranchAndFinancialInstitutionIdentification m_CdtrAgt;
-	Element m_ChrgBr;
-	PartyIdentification m_CdtrSchmeId;
-
-private:
-	void calcSums();
-
-	std::vector<DrctDbtTxInf*> m_DrctDbtTxInfs;
-};
 
 // {9D52C4C2-B5FF-43E0-9FAC-600AF2986686}
 DEFINE_GUID(IID_IPaymentInformation ,
@@ -214,12 +145,12 @@ public:
 	STDMETHOD(AddDirectDebitTransactionInformation)(DirectDebitTransactionInformation *pDirectDebitTransactionInformation);
 
 	// PaymentInformation methods
-	PmtInf* GetPmtInf() const;
+	Separatista::PmtInf* GetPmtInf() const;
 protected:
 	~PaymentInformation();
 
 private:
-	PmtInf *m_pPmtInf;
+	Separatista::PmtInf *m_pPmtInf;
 	bool m_bOwnPmtInf;
 };
 

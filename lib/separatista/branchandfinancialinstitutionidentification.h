@@ -23,59 +23,31 @@
 
 #include "element.h"
 
-#ifndef SEPARATISTA_CONTROL_PARTYIDENTIFICATION_H
-#define SEPARATISTA_CONTROL_PARTYIDENTIFICATION_H
+#ifndef SEPARATISTA_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
+#define SEPARATISTA_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
 
-class PersonIdentificationSchemeName : public Element
+namespace Separatista
 {
-public:
-	PersonIdentificationSchemeName::PersonIdentificationSchemeName(const wchar_t *pTag);
 
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+	class SEPARATISTA_EXTERN FinancialInstitutionIdentification : public Element
+	{
+	public:
+		FinancialInstitutionIdentification();
 
-	Element m_Prtry;
-};
+		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-class GenericPersonIdentification : public Element
-{
-public:
-	GenericPersonIdentification(const wchar_t *pTag);
+		Element m_BIC;
+	};
 
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+	class SEPARATISTA_EXTERN BranchAndFinancialInstitutionIdentification : public Element
+	{
+	public:
+		BranchAndFinancialInstitutionIdentification(const wchar_t *pTag);
 
-	Element m_Id;
-	PersonIdentificationSchemeName m_SchmeNm;
-};
+		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-class PersonIdentification : public Element
-{
-public:
-	PersonIdentification(const wchar_t *pTag);
+		FinancialInstitutionIdentification m_FinancialInstitutionIdentification;
+	};
 
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	GenericPersonIdentification m_Othr;
-};
-
-class PartyChoice : public Element
-{
-public:
-	PartyChoice();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	PersonIdentification m_PrvtId;
-};
-
-class PartyIdentification : public Element
-{
-public:
-	PartyIdentification(const wchar_t *pTag);
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_Nm;
-	PartyChoice m_Id;
-};
-
-#endif // SEPARATISTA_CONTROL_PARTYIDENTIFICATION_H
+}
+#endif // SEPARATISTA_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H

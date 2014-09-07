@@ -19,73 +19,13 @@
 ***************************************************************************/
 
 #include <windows.h>
-#include <xercesc/dom/DOMDocument.hpp>
+#include <separatista/separatista.h>
+#include <separatista/directdebittransactioninformation.h>
 
 #include "dispatch.h"
-#include "element.h"
-#include "branchandfinancialinstitutionidentification.h"
-#include "partyidentification.h"
-#include "cashaccount.h"
 
 #ifndef SEPARATISTA_CONTROL_DIRECTDEBITTRANSACTIONINFORMATION_H
 #define SEPARATISTA_CONTROL_DIRECTDEBITTRANSACTIONINFORMATION_H
-
-class PmtId : public Element
-{
-public:
-	PmtId();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_EndToEndId;
-};
-
-class MndtRltdInf : public Element
-{
-public:
-	MndtRltdInf();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_MndtId;
-	Element m_DtOfSgntr;
-};
-
-class DrctDbtTx : public Element
-{
-public:
-	DrctDbtTx();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	MndtRltdInf m_MndtRltdInf;
-};
-
-class RmtInf : public Element
-{
-public:
-	RmtInf();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-	
-	Element m_Ustrd;
-};
-
-class DrctDbtTxInf : public Element
-{
-public:
-	DrctDbtTxInf();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	PmtId m_PmtId;
-	Element m_InstdAmt;
-	DrctDbtTx m_DrctDbtTx;
-	BranchAndFinancialInstitutionIdentification m_DbtrAgt;
-	PartyIdentification m_Dbtr;
-	CashAccount m_DbtrAcct;
-	RmtInf m_RmtInf;
-};
 
 // {C660CA93-13FB-40B5-B66A-818616D1BD55}
 DEFINE_GUID(IID_IDirectDebitTransactionInformation ,
@@ -142,7 +82,7 @@ public:
 	void Detach();
 
 
-	DrctDbtTxInf* getDrctDbtTxInf() const;
+	Separatista::DrctDbtTxInf* getDrctDbtTxInf() const;
 
 	// COM Methods
 	STDMETHOD(GetPaymentIdentificationEndToEndId)(BSTR *pValue);
@@ -165,7 +105,7 @@ protected:
 	~DirectDebitTransactionInformation();
 
 private:
-	DrctDbtTxInf *m_pDrctDbtTxInf;
+	Separatista::DrctDbtTxInf *m_pDrctDbtTxInf;
 	bool m_bOwnDrctDbtTxInf;
 
 };

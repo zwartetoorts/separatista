@@ -48,22 +48,10 @@
     <ClInclude Include="customerdirectdebitinitiation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="element.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="paymentinformation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="directdebittransactioninformation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="branchandfinancialinstitutionidentification.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="partyidentification.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cashaccount.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -109,9 +97,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="customerdirectdebitinitiation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="element.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="paymentinformation.cpp">

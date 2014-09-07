@@ -18,32 +18,75 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
 #include <xercesc/dom/DOMDocument.hpp>
 
+#include "separatista.h"
 #include "element.h"
+#include "paymentinformation.h"
 
-#ifndef SEPARATISTA_CONTROL_CASHACCOUNT_H
-#define SEPARATISTA_CONTROL_CASHACCOUNT_H
+#ifndef SEPARATISTA_CUSTOMERDIRECTDEBITINITIATION_H
+#define SEPARATISTA_CUSTOMERDIRECTDEBITINITIATION_H
 
-class AccountIdentification : public Element
+namespace Separatista
 {
-public:
-	AccountIdentification();
+	class SEPARATISTA_EXTERN InitgPty : public Element
+	{
+	public:
+		InitgPty();
 
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-	Element m_IBAN;
-};
+		Element m_Nm;
+	};
 
-class CashAccount : public Element
-{
-public:
-	CashAccount(const wchar_t *pTag);
+	class SEPARATISTA_EXTERN GrpHdr : public Element
+	{
+	public:
+		GrpHdr();
 
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-	AccountIdentification m_Id;
-};
+		Element m_MsgId;
+		Element m_CreDtTm;
+		Element m_NbOfTxs;
+		Element m_CtrlSum;
+		InitgPty m_InitgPty;
 
-#endif // SEPARATISTA_CONTROL_CASHACCOUNT_H
+	};
+
+	class SEPARATISTA_EXTERN CstmrDrctDbtInitn : public Element, ElementListener
+	{
+	public:
+		CstmrDrctDbtInitn();
+
+		/**
+		Destructor, will delete all added PmtInf's
+		*/
+		~CstmrDrctDbtInitn();
+
+		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+		void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
+
+		void elementDeleted(Element *pElement);
+
+		GrpHdr m_GrpHdr;
+
+		void AddPmtInf(PmtInf *pPmtInf);
+
+		/**
+			Writes the DOM document to a local file path
+			@param pPath The path to write to
+			@return Error code
+		*/
+		IOErrorCode SaveAs(const wchar_t *pPath);
+
+	private:
+		void calcSum();
+
+		std::vector<PmtInf*> m_PmtInfs;
+	};
+
+}
+
+#endif // SEPARATISTA_CUSTOMERDIRECTDEBITINITIATION_H

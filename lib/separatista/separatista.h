@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,32 +18,53 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
-#include <xercesc/dom/DOMDocument.hpp>
+#ifndef SEPARATISTA_H
+#define SEPARATISTA_H
 
-#include "element.h"
+#ifdef SEPARATISTA_BUILDINGDLL
+#	define SEPARATISTA_EXTERN __declspec(dllexport)
+#elif defined SEPARATISTA_USINGDLL
+#		define SEPARATISTA_EXTERN __declspec(dllimport)
+#else
+#	define SEPARATISTA_EXTERN
+#endif
 
-#ifndef SEPARATISTA_CONTROL_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
-#define SEPARATISTA_CONTROL_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
+#if defined(SEPARATISTA_DEBUG) || defined(_DEBUG) || !defined(NDEBUG)
+#define SEPARATISTA_DEBUG
+#else
+#undef SEPARATISTA_DEBUG 
+#endif
 
-class FinancialInstitutionIdentification : public Element
+namespace Separatista
 {
-public:
-	FinancialInstitutionIdentification();
+	/**
+		Return values of IO operations
+	*/
+	typedef enum
+	{
+		Success = 0,
+		/// The error was caused by Separatista
+		Separatista,	
+		/// Xerces caused the error, thus xml related
+		Xerces
+	} IOErrorCode;
 
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+	/// Initialization, initializes xerces
+	SEPARATISTA_EXTERN IOErrorCode Init();
 
-	Element m_BIC;
-};
+	/// Termination
+	SEPARATISTA_EXTERN void Terminate();
 
-class BranchAndFinancialInstitutionIdentification : public Element
-{
-public:
-	BranchAndFinancialInstitutionIdentification(const wchar_t *pTag);
+#ifdef SEPARATISTA_DEBUG
+	/// Get Xerces debug messages
+	SEPARATISTA_EXTERN const wchar_t* GetDebugMessage();
 
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+	SEPARATISTA_EXTERN void SetDebugMessage(const wchar_t *pMessage);
+#else
+#define Separatista::GetDebugMessage
+#define Separatista::SetDebugMessage
+#endif
 
-	FinancialInstitutionIdentification m_FinancialInstitutionIdentification;
-};
+}
 
-#endif // SEPARATISTA_CONTROL_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
+#endif // SEPARATISTA_H

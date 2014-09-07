@@ -24,120 +24,10 @@
 #include "dispatch.cpp"
 #include "util.h"
 
-PmtId::PmtId() :
-Element(TEXT("PmtId")),
-m_EndToEndId(TEXT("EndToEndId"))
-{
-
-}
-
-xercesc::DOMElement* PmtId::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
-{
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
-
-	if (pElement)
-		m_EndToEndId.toDOMDocument(pDocument, pElement);
-
-	return pElement;
-}
-
-MndtRltdInf::MndtRltdInf() :
-Element(TEXT("MndtRltdInf")),
-m_MndtId(TEXT("MndtId")),
-m_DtOfSgntr(TEXT("DtOfSgntr"))
-{
-	m_DtOfSgntr.setValue(std::time(NULL));
-}
-
-xercesc::DOMElement* MndtRltdInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
-{
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
-
-	if (pElement)
-	{
-		m_MndtId.toDOMDocument(pDocument, pElement);
-		m_DtOfSgntr.toDOMDocument(pDocument, pElement);
-	}
-
-	return pElement;
-}
-
-DrctDbtTx::DrctDbtTx() :
-Element(TEXT("DrctDbtTx")),
-m_MndtRltdInf()
-{
-
-}
-
-xercesc::DOMElement* DrctDbtTx::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
-{
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
-
-	if (pElement)
-	{
-		m_MndtRltdInf.toDOMDocument(pDocument, pElement);
-	}
-
-	return pElement;
-}
-
-RmtInf::RmtInf() :
-Element(TEXT("RmtInf")),
-m_Ustrd(TEXT("Ustrd"))
-{
-
-}
-
-xercesc::DOMElement* RmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
-{
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
-
-	if (pElement)
-	{
-		m_Ustrd.toDOMDocument(pDocument, pElement);
-	}
-
-	return pElement;
-}
-
-DrctDbtTxInf::DrctDbtTxInf() :
-Element(TEXT("DrctDbtTxInf")),
-m_PmtId(),
-m_InstdAmt(TEXT("InstdAmt")),
-m_DrctDbtTx(),
-m_DbtrAgt(TEXT("DbtrAgt")),
-m_Dbtr(TEXT("Dbtr")),
-m_DbtrAcct(TEXT("DbtrAcct")),
-m_RmtInf()
-{
-
-}
-
-xercesc::DOMElement* DrctDbtTxInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
-{
-	xercesc::DOMElement *pInstdAmt;
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
-
-	if (pElement)
-	{
-		m_PmtId.toDOMDocument(pDocument, pElement);
-		pInstdAmt = m_InstdAmt.toDOMDocument(pDocument, pElement);
-		if (pInstdAmt)
-			pInstdAmt->setAttribute(TEXT("Ccy"), TEXT("EUR"));
-		m_DrctDbtTx.toDOMDocument(pDocument, pElement);
-		m_DbtrAgt.toDOMDocument(pDocument, pElement);
-		m_Dbtr.toDOMDocument(pDocument, pElement);
-		m_DbtrAcct.toDOMDocument(pDocument, pElement);
-		m_RmtInf.toDOMDocument(pDocument, pElement);
-	}
-
-	return pElement;
-}
-
 DirectDebitTransactionInformation::DirectDebitTransactionInformation(IUnknown *pParent) :
 SepaControlDispatch<IDirectDebitTransactionInformation>(pParent)
 {
-	m_pDrctDbtTxInf = new DrctDbtTxInf();
+	m_pDrctDbtTxInf = new Separatista::DrctDbtTxInf();
 	m_bOwnDrctDbtTxInf = true;
 }
 
@@ -152,7 +42,7 @@ void DirectDebitTransactionInformation::Detach()
 	m_bOwnDrctDbtTxInf = false;
 }
 
-DrctDbtTxInf* DirectDebitTransactionInformation::getDrctDbtTxInf() const
+Separatista::DrctDbtTxInf* DirectDebitTransactionInformation::getDrctDbtTxInf() const
 {
 	return m_pDrctDbtTxInf;
 }

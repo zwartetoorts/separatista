@@ -20,65 +20,14 @@
 
 #include <vector>
 #include <windows.h>
-#include <xercesc/dom/DOMDocument.hpp>
+#include <separatista/separatista.h>
+#include <separatista/customerdirectdebitinitiation.h>
 
 #include "dispatch.h"
-#include "element.h"
 #include "paymentinformation.h"
 
 #ifndef SEPARATISTA_CONTROL_CUSTOMERDIRECTDEBITINITIATION_H
 #define SEPARATISTA_CONTROL_CUSTOMERDIRECTDEBITINITIATION_H
-
-class InitgPty : public Element
-{
-public:
-	InitgPty();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_Nm;
-};
-
-class GrpHdr : public Element
-{
-public:
-	GrpHdr();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	Element m_MsgId;
-	Element m_CreDtTm;
-	Element m_NbOfTxs;
-	Element m_CtrlSum;
-	InitgPty m_InitgPty;
-
-};
-
-class CstmrDrctDbtInitn : public Element, ElementListener
-{
-public:
-	CstmrDrctDbtInitn();
-
-	/**
-		Destructor, will delete all added PmtInf's
-	*/
-	~CstmrDrctDbtInitn();
-
-	xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-	void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
-
-	void elementDeleted(Element *pElement);
-
-	GrpHdr m_GrpHdr;
-
-	void AddPmtInf(PmtInf *pPmtInf);
-
-private:
-	void calcSum();
-
-	std::vector<PmtInf*> m_PmtInfs;
-};
 
 // {4B8AC337-5E17-454D-A7EC-8955B07B99CC}
 DEFINE_GUID(IID_CUSTOMERDIRECTDEBITINITIATION ,
@@ -148,7 +97,7 @@ protected:
 	~CustomerDirectDebitInitiation();
 
 private:
-	CstmrDrctDbtInitn *m_pCstmrDrctDbtInitn;
+	Separatista::CstmrDrctDbtInitn *m_pCstmrDrctDbtInitn;
 	bool m_bOwnCstmrDrctDbtInitn;
 };
 

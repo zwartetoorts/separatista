@@ -20,7 +20,6 @@
 
 #include <windows.h>
 #include <olectl.h>
-#include <xercesc/util/PlatformUtils.hpp>
 
 #include "dll.h"
 #include "classfactory.h"
@@ -54,16 +53,9 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 	switch(fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
-		// Init Xerces
-		try
-		{
-			xercesc::XMLPlatformUtils::Initialize();
-		}
-		catch (const xercesc::XMLException &e)
-		{
-			OutputDebugString(e.getMessage());
-			return false;
-		}
+		// Init Separatista
+		if (Separatista::Init() != Separatista::IOErrorCode::Success)
+			OutputDebugString(Separatista::GetDebugMessage());
 
 		// Save the Dll path
 		do{
@@ -82,8 +74,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 		if(g_lpszDllPath)
 			delete g_lpszDllPath;
 
-		// Kill Xerces
-		xercesc::XMLPlatformUtils::Terminate();
+		// Kill Separatista
+		Separatista::Terminate();
 	}
 
 	return TRUE;

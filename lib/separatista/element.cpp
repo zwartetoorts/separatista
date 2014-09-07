@@ -18,8 +18,6 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
-#include <olectl.h>
 #include <string>
 #include <sstream>
 #include <iomanip>
@@ -27,7 +25,10 @@
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/framework/psvi/XSValue.hpp>
 
+#include "separatista.h"
 #include "element.h"
+
+using namespace Separatista;
 
 Element::Element(const wchar_t *pName)
 {
@@ -56,7 +57,7 @@ xercesc::DOMElement* Element::toDOMDocument(xercesc::DOMDocument *pDocument, xer
 	}
 	catch (const xercesc::DOMException &e)
 	{
-		OutputDebugString(e.getMessage());
+		// OutputDebugString(e.getMessage());
 		return NULL;
 	}
 
