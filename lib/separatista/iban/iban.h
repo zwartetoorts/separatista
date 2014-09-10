@@ -23,6 +23,11 @@
 
 #include <string>
 
+// Disable Visual c++ warning C4251
+#ifdef _MSC_VER 
+#pragma warning(disable: 4251)
+#endif
+
 #ifdef SEPARATISTA_IBAN_BUILDINGDLL
 #	define IBAN_EXTERN __declspec(dllexport)
 #elif defined SEPARATISTA_IBAN_USINGDLL
@@ -36,30 +41,61 @@ namespace Separatista
 
 typedef char IBANCC[2];
 
-class IBAN
+class IBAN_EXTERN IBAN
 {
 public:
 	/**
 		Constructor
 	*/
-	IBAN_EXTERN IBAN();
+	IBAN();
 
-	IBAN_EXTERN IBAN& operator = (const char *iban);
+	/**
+		Sets the value from a string
+	*/
+	IBAN& operator = (const char *iban);
 
-	IBAN_EXTERN const char* getIBAN();
+	/**
+		Sets the value from a string, no error checking is applied
+	*/
+	void set(const char *iban);
+	
+	/**
+		Returns the formatted IBAN. 
+		@return Pointer to a internal buffer. The buffer is only valid until the next call to this object is made.
+		It's recommended to copy the contents as soon as possible.
+	*/
+	const char* getIBAN();
+	
+	/**
+		@see getIBAN()
+	*/
+	operator const char* ();
 
-	IBAN_EXTERN operator const char* ();
+	/**
+		returns the 2 characters long countrycode
+	*/
+	const IBANCC& getCountryCode() const;
+	
+	/**
+		returns the 2 characters long controlsum
+	*/
+	const IBANCC& getControlSum() const;
 
-	IBAN_EXTERN const IBANCC &getCountryCode() const;
+	/**
+		Checks a IBAN for validity. This is done with the controlsum, no other checks are being made.
+	*/
+	bool Check() const;
 
-	IBAN_EXTERN const IBANCC &getControlSum() const;
-
-	IBAN_EXTERN bool Check() const;
-
-	IBAN_EXTERN void Clear();
+	/**
+		Clears all values
+	*/
+	void Clear();
 
 protected:
-	void set(const char *iban);
+	/**
+		Writes the value of this IBAN to the internal buffer. 
+		@param seperator If true, the IBAN is divided every four characters by a space (NL00 RBOS 0123 4567 89)
+	*/
 	void format(bool seperator = true);
 
 private:

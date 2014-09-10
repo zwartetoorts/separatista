@@ -24,7 +24,7 @@
 using namespace Separatista;
 
 SvcLvl::SvcLvl() :
-Element(TEXT("SvcLvl")),
+BranchElement(TEXT("SvcLvl")),
 m_Cd(TEXT("Cd"))
 {
 
@@ -32,7 +32,7 @@ m_Cd(TEXT("Cd"))
 
 xercesc::DOMElement* SvcLvl::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 		m_Cd.toDOMDocument(pDocument, pElement);
@@ -41,7 +41,7 @@ xercesc::DOMElement* SvcLvl::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 }
 
 LclInstrm::LclInstrm() :
-Element(TEXT("LclInstrm")),
+BranchElement(TEXT("LclInstrm")),
 m_Cd(TEXT("Cd"))
 {
 
@@ -49,7 +49,7 @@ m_Cd(TEXT("Cd"))
 
 xercesc::DOMElement* LclInstrm::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 		m_Cd.toDOMDocument(pDocument, pElement);
@@ -58,7 +58,7 @@ xercesc::DOMElement* LclInstrm::toDOMDocument(xercesc::DOMDocument *pDocument, x
 }
 
 PmtTpInf::PmtTpInf() :
-Element(TEXT("PmtTpInf")),
+BranchElement(TEXT("PmtTpInf")),
 m_SvcLvl(),
 m_LclInstrm(),
 m_SeqTp(TEXT("SeqTp"))
@@ -68,7 +68,7 @@ m_SeqTp(TEXT("SeqTp"))
 
 xercesc::DOMElement* PmtTpInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -81,7 +81,7 @@ xercesc::DOMElement* PmtTpInf::toDOMDocument(xercesc::DOMDocument *pDocument, xe
 }
 
 AccountIdentification::AccountIdentification() :
-Element(TEXT("Id")),
+BranchElement(TEXT("Id")),
 m_IBAN(TEXT("IBAN"))
 {
 
@@ -89,7 +89,7 @@ m_IBAN(TEXT("IBAN"))
 
 xercesc::DOMElement* AccountIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -100,7 +100,7 @@ xercesc::DOMElement* AccountIdentification::toDOMDocument(xercesc::DOMDocument *
 }
 
 CashAccount::CashAccount(const wchar_t *pTag) :
-Element(pTag),
+BranchElement(pTag),
 m_Id()
 {
 
@@ -108,7 +108,7 @@ m_Id()
 
 xercesc::DOMElement* CashAccount::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -119,7 +119,7 @@ xercesc::DOMElement* CashAccount::toDOMDocument(xercesc::DOMDocument *pDocument,
 }
 
 FinancialInstitutionIdentification::FinancialInstitutionIdentification() :
-Element(TEXT("FinInstnId")),
+BranchElement(TEXT("FinInstnId")),
 m_BIC(TEXT("BIC"))
 {
 
@@ -127,7 +127,7 @@ m_BIC(TEXT("BIC"))
 
 xercesc::DOMElement* FinancialInstitutionIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -138,7 +138,7 @@ xercesc::DOMElement* FinancialInstitutionIdentification::toDOMDocument(xercesc::
 }
 
 BranchAndFinancialInstitutionIdentification::BranchAndFinancialInstitutionIdentification(const wchar_t *pTag) :
-Element(pTag),
+BranchElement(pTag),
 m_FinancialInstitutionIdentification()
 {
 
@@ -146,7 +146,7 @@ m_FinancialInstitutionIdentification()
 
 xercesc::DOMElement* BranchAndFinancialInstitutionIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -157,7 +157,7 @@ xercesc::DOMElement* BranchAndFinancialInstitutionIdentification::toDOMDocument(
 }
 
 PersonIdentificationSchemeName::PersonIdentificationSchemeName(const wchar_t *pTag) :
-Element(pTag),
+BranchElement(pTag),
 m_Prtry(TEXT("Prtry"))
 {
 
@@ -165,7 +165,7 @@ m_Prtry(TEXT("Prtry"))
 
 xercesc::DOMElement* PersonIdentificationSchemeName::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -176,7 +176,7 @@ xercesc::DOMElement* PersonIdentificationSchemeName::toDOMDocument(xercesc::DOMD
 }
 
 GenericPersonIdentification::GenericPersonIdentification(const wchar_t *pTag) :
-Element(pTag),
+BranchElement(pTag),
 m_Id(TEXT("Id")),
 m_SchmeNm(TEXT("SchmeNm"))
 {
@@ -185,7 +185,7 @@ m_SchmeNm(TEXT("SchmeNm"))
 
 xercesc::DOMElement* GenericPersonIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -197,7 +197,7 @@ xercesc::DOMElement* GenericPersonIdentification::toDOMDocument(xercesc::DOMDocu
 }
 
 PersonIdentification::PersonIdentification(const wchar_t *pTag) :
-Element(pTag),
+BranchElement(pTag),
 m_Othr(TEXT("Othr"))
 {
 
@@ -205,7 +205,7 @@ m_Othr(TEXT("Othr"))
 
 xercesc::DOMElement* PersonIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -216,7 +216,7 @@ xercesc::DOMElement* PersonIdentification::toDOMDocument(xercesc::DOMDocument *p
 }
 
 PartyChoice::PartyChoice() :
-Element(TEXT("Id")),
+BranchElement(TEXT("Id")),
 m_PrvtId(TEXT("PrvtId"))
 {
 
@@ -224,7 +224,7 @@ m_PrvtId(TEXT("PrvtId"))
 
 xercesc::DOMElement* PartyChoice::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 		m_PrvtId.toDOMDocument(pDocument, pElement);
@@ -233,7 +233,7 @@ xercesc::DOMElement* PartyChoice::toDOMDocument(xercesc::DOMDocument *pDocument,
 }
 
 PartyIdentification::PartyIdentification(const wchar_t *pTag) :
-Element(pTag),
+BranchElement(pTag),
 m_Nm(TEXT("Nm")),
 m_Id()
 {
@@ -242,11 +242,11 @@ m_Id()
 
 xercesc::DOMElement* PartyIdentification::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		if (!m_Nm.empty())
+		if (!m_Nm.isEmpty())
 			m_Nm.toDOMDocument(pDocument, pElement);
 		else
 			m_Id.toDOMDocument(pDocument, pElement);
@@ -256,7 +256,7 @@ xercesc::DOMElement* PartyIdentification::toDOMDocument(xercesc::DOMDocument *pD
 }
 
 PmtInf::PmtInf() :
-Element(TEXT("PmtInf")),
+BranchElement(TEXT("PmtInf")),
 m_PmtInfId(TEXT("PmtInfId")),
 m_PmtMtd(TEXT("PmtMtd")),
 m_NbOfTxs(TEXT("NbOfTxs")),
@@ -288,7 +288,7 @@ PmtInf::~PmtInf()
 xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
 	std::vector<DrctDbtTxInf*>::iterator it;
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{

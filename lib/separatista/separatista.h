@@ -21,6 +21,11 @@
 #ifndef SEPARATISTA_H
 #define SEPARATISTA_H
 
+// Disable Visual c++ warning C4251
+#ifdef _MSC_VER 
+#pragma warning(disable: 4251)
+#endif
+
 #ifdef SEPARATISTA_BUILDINGDLL
 #	define SEPARATISTA_EXTERN __declspec(dllexport)
 #elif defined SEPARATISTA_USINGDLL

@@ -21,7 +21,8 @@
 #include <windows.h>
 #include <xercesc/dom/DOMDocument.hpp>
 
-#include "element.h"
+#include "branchelement.h"
+#include "leafelement.h"
 
 #ifndef SEPARATISTA_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
 #define SEPARATISTA_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
@@ -29,17 +30,17 @@
 namespace Separatista
 {
 
-	class SEPARATISTA_EXTERN FinancialInstitutionIdentification : public Element
+	class SEPARATISTA_EXTERN FinancialInstitutionIdentification : public BranchElement
 	{
 	public:
 		FinancialInstitutionIdentification();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		Element m_BIC;
+		LeafElement m_BIC;
 	};
 
-	class SEPARATISTA_EXTERN BranchAndFinancialInstitutionIdentification : public Element
+	class SEPARATISTA_EXTERN BranchAndFinancialInstitutionIdentification : public BranchElement
 	{
 	public:
 		BranchAndFinancialInstitutionIdentification(const wchar_t *pTag);

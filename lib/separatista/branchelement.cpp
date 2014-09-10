@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,37 +18,20 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
-#include <xercesc/dom/DOMDocument.hpp>
+#include <string>
+#include <sstream>
+#include <iomanip>
 
+#include <xercesc/util/XMLDateTime.hpp>
+#include <xercesc/framework/psvi/XSValue.hpp>
+
+#include "separatista.h"
 #include "branchelement.h"
-#include "leafelement.h"
 
-#ifndef SEPARATISTA_CASHACCOUNT_H
-#define SEPARATISTA_CASHACCOUNT_H
+using namespace Separatista;
 
-namespace Separatista
+BranchElement::BranchElement(const wchar_t *pTagName) :
+Element(pTagName)
 {
-	class SEPARATISTA_EXTERN AccountIdentification : public BranchElement
-	{
-	public:
-		AccountIdentification();
-
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-		LeafElement m_IBAN;
-	};
-
-	class SEPARATISTA_EXTERN CashAccount : public BranchElement
-	{
-	public:
-		CashAccount(const wchar_t *pTag);
-
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-		AccountIdentification m_Id;
-	};
 
 }
-
-#endif // SEPARATISTA_CONTROL_CASHACCOUNT_H

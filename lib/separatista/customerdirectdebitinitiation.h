@@ -29,32 +29,32 @@
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN InitgPty : public Element
+	class SEPARATISTA_EXTERN InitgPty : public BranchElement
 	{
 	public:
 		InitgPty();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		Element m_Nm;
+		LeafElement m_Nm;
 	};
 
-	class SEPARATISTA_EXTERN GrpHdr : public Element
+	class SEPARATISTA_EXTERN GrpHdr : public BranchElement
 	{
 	public:
 		GrpHdr();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		Element m_MsgId;
-		Element m_CreDtTm;
-		Element m_NbOfTxs;
-		Element m_CtrlSum;
+		LeafElement m_MsgId;
+		LeafElement m_CreDtTm;
+		LeafElement m_NbOfTxs;
+		LeafElement m_CtrlSum;
 		InitgPty m_InitgPty;
 
 	};
 
-	class SEPARATISTA_EXTERN CstmrDrctDbtInitn : public Element, ElementListener
+	class SEPARATISTA_EXTERN CstmrDrctDbtInitn : public BranchElement, ElementListener
 	{
 	public:
 		CstmrDrctDbtInitn();

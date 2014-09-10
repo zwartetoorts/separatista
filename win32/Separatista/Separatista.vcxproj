@@ -96,18 +96,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.h" />
+    <ClInclude Include="..\..\lib\separatista\branchelement.h" />
     <ClInclude Include="..\..\lib\separatista\cashaccount.h" />
     <ClInclude Include="..\..\lib\separatista\customerdirectdebitinitiation.h" />
     <ClInclude Include="..\..\lib\separatista\directdebittransactioninformation.h" />
     <ClInclude Include="..\..\lib\separatista\element.h" />
+    <ClInclude Include="..\..\lib\separatista\leafelement.h" />
     <ClInclude Include="..\..\lib\separatista\partyidentification.h" />
     <ClInclude Include="..\..\lib\separatista\paymentinformation.h" />
     <ClInclude Include="..\..\lib\separatista\separatista.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\lib\separatista\branchelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\customerdirectdebitinitiation.cpp" />
     <ClCompile Include="..\..\lib\separatista\directdebittransactioninformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\element.cpp" />
+    <ClCompile Include="..\..\lib\separatista\leafelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\paymentinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\separatista.cpp" />
   </ItemGroup>

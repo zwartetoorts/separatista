@@ -32,27 +32,27 @@
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN SvcLvl : public Element
+	class SEPARATISTA_EXTERN SvcLvl : public BranchElement
 	{
 	public:
 		SvcLvl();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		Element m_Cd;
+		LeafElement m_Cd;
 	};
 
-	class SEPARATISTA_EXTERN LclInstrm : public Element
+	class SEPARATISTA_EXTERN LclInstrm : public BranchElement
 	{
 	public:
 		LclInstrm();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		Element m_Cd;
+		LeafElement m_Cd;
 	};
 
-	class SEPARATISTA_EXTERN PmtTpInf : public Element
+	class SEPARATISTA_EXTERN PmtTpInf : public BranchElement
 	{
 	public:
 		PmtTpInf();
@@ -61,10 +61,10 @@ namespace Separatista
 
 		SvcLvl m_SvcLvl;
 		LclInstrm m_LclInstrm;
-		Element m_SeqTp;
+		LeafElement m_SeqTp;
 	};
 
-	class SEPARATISTA_EXTERN PmtInf : public Element, ElementListener
+	class SEPARATISTA_EXTERN PmtInf : public BranchElement, ElementListener
 	{
 	public:
 		PmtInf();
@@ -81,16 +81,16 @@ namespace Separatista
 
 		void AddDrctDbtTxInf(DrctDbtTxInf *pDrctDbtTxInf);
 
-		Element m_PmtInfId;
-		Element m_PmtMtd;
-		Element m_NbOfTxs;
-		Element m_CtrlSum;
+		LeafElement m_PmtInfId;
+		LeafElement m_PmtMtd;
+		LeafElement m_NbOfTxs;
+		LeafElement m_CtrlSum;
 		PmtTpInf m_PmtTpInf;
-		Element m_ReqdColltnDt;
+		LeafElement m_ReqdColltnDt;
 		PartyIdentification m_Cdtr;
 		CashAccount m_CdtrAcct;
 		BranchAndFinancialInstitutionIdentification m_CdtrAgt;
-		Element m_ChrgBr;
+		LeafElement m_ChrgBr;
 		PartyIdentification m_CdtrSchmeId;
 
 	private:

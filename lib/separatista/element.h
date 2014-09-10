@@ -42,20 +42,20 @@ namespace Separatista
 	class SEPARATISTA_EXTERN Element
 	{
 	public:
-		Element(const wchar_t *pName);
-
 		~Element();
 
 		/**
-			Appends the actual element to the DOMDocument.
-			@param bForce If true the element will always be created, even if no value was set.
-			@return Pointer to the new created DOMElement.
-			*/
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, bool bForce = false);
+			Abstract method to call to write an element to a DOMDocument.
+			@param pDocument The DOMDocument to create the element for.
+			@param pParent The DOMElement to append the element to.
+			@return Pointer to the new created DOMElement, or NULL
+			@see createElement
+		*/
+		virtual xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent) = 0;
 
 		/**
-			Set the elementlistener. Will be notified of changed to the element. If a previous elementlistener was registered, it
-			will be returned from this function. It's the caller's choice to store this listener and notify it of changes.
+			Set the elementlistener. Will be notified of changes to the element. If a previous elementlistener was registered, it
+			will be returned from this function. It's the caller's choise to store this listener and notify it of changes.
 			@param pElementListener The elementlistener to register.
 			@return A pointer to a previous registered elementlistener or NULL if none was registered.
 			@see ElementListener
@@ -64,69 +64,32 @@ namespace Separatista
 
 		/**
 			Returns the tag name
-			*/
+		*/
 		const wchar_t* getTag() const;
 
-		/**
-			Clears the content of the node
-			*/
-		void Delete();
-
-		/**
-			Returns the value of the text node
-			*/
-		const XMLCh* getTextValue() const;
-
-		/**
-			Set the value of a text node
-			*/
-		void setValue(const XMLCh *pValue);
-
-		/**
-			Returns the value of the text node converted to date
-			*/
-		time_t getDateValue() const;
-
-		/**
-			Set the value of a text node by a time_t
-			@param bWithTime Wether the time should be included or not
-			*/
-		void setValue(const time_t Value, bool bWithTime = false);
-
-		/**
-			Get the value of a text node converted to int
-			*/
-		int getIntValue() const;
-
-		/**
-			Set the value of a text node by an int
-			*/
-		void setValue(const int Value);
-
-		/**
-			Get the value of a text node converted to double
-			*/
-		double getDoubleValue() const;
-
-		/**
-			Set the value of a text node conveted to double
-			*/
-		void setValue(double d);
-
-		/**
-			Returns true of the element text is empty
-			*/
-		bool empty() const;
-
 	protected:
+		/**
+		Construct a new Element
+		@param pTagName The name of the xml tag
+		*/
+		Element(const wchar_t *pTagName);
+
 		/// Calls a registered ElementListener's elementValueChanged
-		void onValueChanged();
+		void onValueChanged(const wchar_t *pNewValue);
 		/// Calls a registerd ElementListener's elementDeleted
 		void onDeleted();
 
+		/**
+			Creates the element and appends it to it's parent. The xml namespace is taken from it's parent.
+			@param pDocument The DOMDocument to create the element for
+			@param pParent The parent DOMElement to append the element to.
+			@return Pointer to the newly created element, or NULL 
+		*/
+		xercesc::DOMElement* createElement(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
 		/// Tag name
 		const wchar_t *m_pTag;
-		std::wstring m_value;
+		
 		ElementListener *m_pElementListener;
 	};
 

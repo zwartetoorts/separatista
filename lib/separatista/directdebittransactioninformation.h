@@ -19,7 +19,8 @@
 ***************************************************************************/
 
 #include <xercesc/dom/DOMDocument.hpp>
-#include "element.h"
+#include "branchelement.h"
+#include "leafelement.h"
 #include "branchandfinancialinstitutionidentification.h"
 #include "partyidentification.h"
 #include "cashaccount.h"
@@ -29,28 +30,28 @@
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN PmtId : public Element
+	class SEPARATISTA_EXTERN PmtId : public BranchElement
 	{
 	public:
 		PmtId();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		Element m_EndToEndId;
+		LeafElement m_EndToEndId;
 	};
 
-	class SEPARATISTA_EXTERN MndtRltdInf : public Element
+	class SEPARATISTA_EXTERN MndtRltdInf : public BranchElement
 	{
 	public:
 		MndtRltdInf();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		Element m_MndtId;
-		Element m_DtOfSgntr;
+		LeafElement m_MndtId;
+		LeafElement m_DtOfSgntr;
 	};
 
-	class SEPARATISTA_EXTERN DrctDbtTx : public Element
+	class SEPARATISTA_EXTERN DrctDbtTx : public BranchElement
 	{
 	public:
 		DrctDbtTx();
@@ -60,17 +61,17 @@ namespace Separatista
 		MndtRltdInf m_MndtRltdInf;
 	};
 
-	class SEPARATISTA_EXTERN RmtInf : public Element
+	class SEPARATISTA_EXTERN RmtInf : public BranchElement
 	{
 	public:
 		RmtInf();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		Element m_Ustrd;
+		LeafElement m_Ustrd;
 	};
 
-	class SEPARATISTA_EXTERN DrctDbtTxInf : public Element
+	class SEPARATISTA_EXTERN DrctDbtTxInf : public BranchElement
 	{
 	public:
 		DrctDbtTxInf();
@@ -78,7 +79,7 @@ namespace Separatista
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 		PmtId m_PmtId;
-		Element m_InstdAmt;
+		LeafElement m_InstdAmt;
 		DrctDbtTx m_DrctDbtTx;
 		BranchAndFinancialInstitutionIdentification m_DbtrAgt;
 		PartyIdentification m_Dbtr;

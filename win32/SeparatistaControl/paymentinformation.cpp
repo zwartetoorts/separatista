@@ -160,7 +160,7 @@ STDMETHODIMP PaymentInformation::SetPaymentTypeInformationLocalIntrumentCode(IPa
 		m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.setValue(TEXT("B2B"));
 		break;
 	default:
-		m_pPmtInf->Delete();
+		m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.clear();
 	}
 
 	return S_OK;

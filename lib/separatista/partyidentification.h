@@ -21,35 +21,36 @@
 #include <xercesc/dom/DOMDocument.hpp>
 
 #include "separatista.h"
-#include "element.h"
+#include "branchelement.h"
+#include "leafelement.h"
 
 #ifndef SEPARATISTA_PARTYIDENTIFICATION_H
 #define SEPARATISTA_PARTYIDENTIFICATION_H
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN PersonIdentificationSchemeName : public Element
+	class SEPARATISTA_EXTERN PersonIdentificationSchemeName : public BranchElement
 	{
 	public:
 		PersonIdentificationSchemeName::PersonIdentificationSchemeName(const wchar_t *pTag);
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		Element m_Prtry;
+		LeafElement m_Prtry;
 	};
 
-	class SEPARATISTA_EXTERN GenericPersonIdentification : public Element
+	class SEPARATISTA_EXTERN GenericPersonIdentification : public BranchElement
 	{
 	public:
 		GenericPersonIdentification(const wchar_t *pTag);
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		Element m_Id;
+		LeafElement m_Id;
 		PersonIdentificationSchemeName m_SchmeNm;
 	};
 
-	class SEPARATISTA_EXTERN PersonIdentification : public Element
+	class SEPARATISTA_EXTERN PersonIdentification : public BranchElement
 	{
 	public:
 		PersonIdentification(const wchar_t *pTag);
@@ -59,7 +60,7 @@ namespace Separatista
 		GenericPersonIdentification m_Othr;
 	};
 
-	class SEPARATISTA_EXTERN PartyChoice : public Element
+	class SEPARATISTA_EXTERN PartyChoice : public BranchElement
 	{
 	public:
 		PartyChoice();
@@ -69,14 +70,14 @@ namespace Separatista
 		PersonIdentification m_PrvtId;
 	};
 
-	class SEPARATISTA_EXTERN PartyIdentification : public Element
+	class SEPARATISTA_EXTERN PartyIdentification : public BranchElement
 	{
 	public:
 		PartyIdentification(const wchar_t *pTag);
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		Element m_Nm;
+		LeafElement m_Nm;
 		PartyChoice m_Id;
 	};
 }

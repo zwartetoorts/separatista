@@ -36,34 +36,6 @@ Element::Element(const wchar_t *pName)
 	m_pElementListener = NULL;
 }
 
-xercesc::DOMElement* Element::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, bool bForce)
-{
-	xercesc::DOMElement *pElement;
-
-	// Check for empty value
-	if (!bForce && m_value.empty())
-		return NULL;
-
-	try
-	{
-		pElement = pDocument->createElementNS(pParent->getNamespaceURI(), m_pTag);
-		if (pElement)
-		{
-			// Set text content, if any
-			if (!m_value.empty())
-				pElement->setTextContent(m_value.data());
-			pParent->appendChild(pElement);
-		}
-	}
-	catch (const xercesc::DOMException &e)
-	{
-		// OutputDebugString(e.getMessage());
-		return NULL;
-	}
-
-	return pElement;
-}
-
 Element::~Element()
 {
 }
@@ -75,135 +47,39 @@ ElementListener* Element::setElementListener(ElementListener *pElementListener)
 	return pOld;
 }
 
+xercesc::DOMElement* Element::createElement(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement;
+
+	try
+	{
+		pElement = pDocument->createElementNS(pParent->getNamespaceURI(), m_pTag);
+		if (pElement)
+			pParent->appendChild(pElement);
+	}
+	catch (const xercesc::DOMException &e)
+	{
+		SetDebugMessage(e.getMessage());
+		return NULL;
+	}
+
+	return pElement;
+}
+
 const wchar_t* Element::getTag() const
 {
 	return m_pTag;
 }
 
-void Element::Delete()
-{
-	m_value.clear();
-	onDeleted();
-}
-
-const XMLCh* Element::getTextValue() const
-{
-	return m_value.data();
-}
-
-void Element::setValue(const XMLCh *pValue)
-{
-	m_value = pValue;
-	onValueChanged();
-}
-
-time_t Element::getDateValue() const
-{
-	xercesc::XSValue::Status status;
-	xercesc::XSValue *pValue;
-	std::tm tm;
-
-	const XMLCh *pText = getTextValue();
-
-	if (!pText)
-		return -1;
-
-	pValue = xercesc::XSValue::getActualValue(pText, xercesc::XSValue::DataType::dt_dateTime, status);
-	if (!pValue || status != xercesc::XSValue::st_Init)
-		return -1;
-
-	tm.tm_year = pValue->fData.fValue.f_datetime.f_year - 1900;
-	tm.tm_mon = pValue->fData.fValue.f_datetime.f_month - 1;
-	tm.tm_mday = pValue->fData.fValue.f_datetime.f_day;
-	tm.tm_hour = pValue->fData.fValue.f_datetime.f_hour;
-	tm.tm_min = pValue->fData.fValue.f_datetime.f_min;
-	tm.tm_sec = pValue->fData.fValue.f_datetime.f_milisec / 1000;
-
-	return std::mktime(&tm);
-}
-
-void Element::setValue(const time_t Value, bool bWithTime)
-{
-	tm *ptm;
-	char buffer[64];
-
-	ptm = std::localtime(&Value);
-	if (bWithTime)
-		strftime(buffer, 64, "%Y-%m-%dT%H:%M:%S", ptm);
-	else
-		strftime(buffer, 64, "%Y-%m-%d", ptm);
-
-	XMLCh *xmlch = xercesc::XMLString::transcode(buffer);
-	if (xmlch)
-	{
-		setValue(xmlch);
-		xercesc::XMLString::release(&xmlch);
-	}
-
-}
-
-int Element::getIntValue() const
-{
-	xercesc::XSValue::Status status;
-	xercesc::XSValue *pValue;
-	const XMLCh *pText = getTextValue();
-
-	if (!pText)
-		return 0;
-
-	pValue = xercesc::XSValue::getActualValue(pText, xercesc::XSValue::DataType::dt_int, status);
-	if (!pValue || status != xercesc::XSValue::st_Init)
-		return 0;
-
-	return pValue->fData.fValue.f_int;
-}
-
-void Element::setValue(const int Value)
-{
-	std::wstring w = std::to_wstring(Value);
-
-	setValue(w.data());
-}
-
-void Element::onValueChanged()
+void Element::onValueChanged(const wchar_t *pNewValue)
 {
 	if (m_pElementListener)
-		m_pElementListener->elementValueChanged(this, m_value.data());
+		m_pElementListener->elementValueChanged(this, pNewValue);
 }
 
 void Element::onDeleted()
 {
 	if (m_pElementListener)
 		m_pElementListener->elementDeleted(this);
-}
-
-double Element::getDoubleValue() const
-{
-	xercesc::XSValue::Status status;
-	xercesc::XSValue *pValue;
-	const XMLCh *pText = getTextValue();
-
-	if (!pText)
-		return (double)0;
-
-	pValue = xercesc::XSValue::getActualValue(pText, xercesc::XSValue::DataType::dt_double, status);
-	if (!pValue || status != xercesc::XSValue::st_Init)
-		return (double)0;
-
-	return pValue->fData.fValue.f_double;
-}
-
-void Element::setValue(double d)
-{
-	std::wostringstream wos;
-
-	wos.imbue(std::locale::classic());
-	wos << std::setprecision(2) << std::fixed << d;
-	setValue(wos.str().data());
-}
-
-bool Element::empty() const
-{
-	return m_value.empty();
 }
 

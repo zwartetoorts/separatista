@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,37 +18,81 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
+#ifndef SEPARATISTA_LEAFELEMENT_H
+#define SEPARATISTA_LEAFELEMENT_H
+
+#include <ctime>
+#include <string>
 #include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMException.hpp>
 
-#include "branchelement.h"
-#include "leafelement.h"
-
-#ifndef SEPARATISTA_CASHACCOUNT_H
-#define SEPARATISTA_CASHACCOUNT_H
+#include "element.h"
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN AccountIdentification : public BranchElement
+	class SEPARATISTA_EXTERN LeafElement : public Element
 	{
 	public:
-		AccountIdentification();
+		LeafElement(const wchar_t *pTagName);
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		LeafElement m_IBAN;
+		/**
+		Clears the content of the node
+		*/
+		void clear();
+
+		/**
+		Returns the value of the text node
+		*/
+		const XMLCh* getTextValue() const;
+
+		/**
+		Set the value of a text node
+		*/
+		void setValue(const wchar_t *pValue);
+
+		/**
+		Returns the value of the text node converted to date
+		@return -1 on error
+		*/
+		time_t getDateValue() const;
+
+		/**
+		Set the value of a text node by a time_t
+		@param bWithTime Wether the time should be included or not
+		*/
+		void setValue(const time_t Value, bool bWithTime = false);
+
+		/**
+		Get the value of a text node converted to int
+		*/
+		int getIntValue() const;
+
+		/**
+		Set the value of a text node by an int
+		*/
+		void setValue(const int Value);
+
+		/**
+		Get the value of a text node converted to double
+		*/
+		double getDoubleValue() const;
+
+		/**
+		Set the value of a text node conveted to double
+		*/
+		void setValue(double d);
+
+		/**
+		Returns true if the element text is empty
+		*/
+		bool isEmpty() const;
+
+
+	protected:
+		std::wstring m_value;
 	};
-
-	class SEPARATISTA_EXTERN CashAccount : public BranchElement
-	{
-	public:
-		CashAccount(const wchar_t *pTag);
-
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
-
-		AccountIdentification m_Id;
-	};
-
 }
-
-#endif // SEPARATISTA_CONTROL_CASHACCOUNT_H
+#endif // SEPARATISTA_LEAFELEMENT_H

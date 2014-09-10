@@ -29,11 +29,12 @@
 
 #include "separatista.h"
 #include "customerdirectdebitinitiation.h"
+#include "leafelement.h"
 
 using namespace Separatista;
 
 InitgPty::InitgPty() :
-Element(TEXT("InitgPty")),
+BranchElement(TEXT("InitgPty")),
 m_Nm(TEXT("Nm"))
 {
 
@@ -41,7 +42,7 @@ m_Nm(TEXT("Nm"))
 
 xercesc::DOMElement* InitgPty::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 		m_Nm.toDOMDocument(pDocument, pElement);
@@ -50,7 +51,7 @@ xercesc::DOMElement* InitgPty::toDOMDocument(xercesc::DOMDocument *pDocument, xe
 }
 
 GrpHdr::GrpHdr() :
-Element(TEXT("GrpHdr")),
+BranchElement(TEXT("GrpHdr")),
 m_MsgId(TEXT("MsgId")),
 m_CreDtTm(TEXT("CreDtTm")),
 m_NbOfTxs(TEXT("NbOfTxs")),
@@ -62,7 +63,7 @@ m_InitgPty()
 
 xercesc::DOMElement* GrpHdr::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -77,7 +78,7 @@ xercesc::DOMElement* GrpHdr::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 }
 
 CstmrDrctDbtInitn::CstmrDrctDbtInitn() :
-Element(TEXT("CstmrDrctDbtInitn")),
+BranchElement(TEXT("CstmrDrctDbtInitn")),
 m_GrpHdr()
 {
 
@@ -95,7 +96,7 @@ CstmrDrctDbtInitn::~CstmrDrctDbtInitn()
 xercesc::DOMElement* CstmrDrctDbtInitn::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
 	std::vector<PmtInf*>::iterator it;
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{

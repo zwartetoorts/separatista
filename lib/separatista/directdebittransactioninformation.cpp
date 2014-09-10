@@ -24,7 +24,7 @@
 using namespace Separatista;
 
 PmtId::PmtId() :
-Element(TEXT("PmtId")),
+BranchElement(TEXT("PmtId")),
 m_EndToEndId(TEXT("EndToEndId"))
 {
 
@@ -32,7 +32,7 @@ m_EndToEndId(TEXT("EndToEndId"))
 
 xercesc::DOMElement* PmtId::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 		m_EndToEndId.toDOMDocument(pDocument, pElement);
@@ -41,7 +41,7 @@ xercesc::DOMElement* PmtId::toDOMDocument(xercesc::DOMDocument *pDocument, xerce
 }
 
 MndtRltdInf::MndtRltdInf() :
-Element(TEXT("MndtRltdInf")),
+BranchElement(TEXT("MndtRltdInf")),
 m_MndtId(TEXT("MndtId")),
 m_DtOfSgntr(TEXT("DtOfSgntr"))
 {
@@ -50,7 +50,7 @@ m_DtOfSgntr(TEXT("DtOfSgntr"))
 
 xercesc::DOMElement* MndtRltdInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -62,7 +62,7 @@ xercesc::DOMElement* MndtRltdInf::toDOMDocument(xercesc::DOMDocument *pDocument,
 }
 
 DrctDbtTx::DrctDbtTx() :
-Element(TEXT("DrctDbtTx")),
+BranchElement(TEXT("DrctDbtTx")),
 m_MndtRltdInf()
 {
 
@@ -70,7 +70,7 @@ m_MndtRltdInf()
 
 xercesc::DOMElement* DrctDbtTx::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -81,7 +81,7 @@ xercesc::DOMElement* DrctDbtTx::toDOMDocument(xercesc::DOMDocument *pDocument, x
 }
 
 RmtInf::RmtInf() :
-Element(TEXT("RmtInf")),
+BranchElement(TEXT("RmtInf")),
 m_Ustrd(TEXT("Ustrd"))
 {
 
@@ -89,7 +89,7 @@ m_Ustrd(TEXT("Ustrd"))
 
 xercesc::DOMElement* RmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -100,7 +100,7 @@ xercesc::DOMElement* RmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 }
 
 DrctDbtTxInf::DrctDbtTxInf() :
-Element(TEXT("DrctDbtTxInf")),
+BranchElement(TEXT("DrctDbtTxInf")),
 m_PmtId(),
 m_InstdAmt(TEXT("InstdAmt")),
 m_DrctDbtTx(),
@@ -115,7 +115,7 @@ m_RmtInf()
 xercesc::DOMElement* DrctDbtTxInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
 	xercesc::DOMElement *pInstdAmt;
-	xercesc::DOMElement *pElement = Element::toDOMDocument(pDocument, pParent, true);
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
