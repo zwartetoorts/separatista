@@ -51,8 +51,26 @@ namespace Separatista
 		/// The error was caused by Separatista
 		Separatista,	
 		/// Xerces caused the error, thus xml related
-		Xerces
+		Xerces,
+		/// Error was caused by the platform
+		Platform,
+		/// Error was caused by the document
+		Document
 	} IOErrorCode;
+
+	/**
+		Supported Separatista document types
+	*/
+	typedef enum
+	{
+		DT_CustomerDirectDebitDocument = 1
+	} DocumentType;
+
+	class SeparatistaDocument
+	{
+	public:
+		virtual DocumentType getDocumentType() const = 0;
+	};
 
 	/// Initialization, initializes xerces
 	SEPARATISTA_EXTERN IOErrorCode Init();
@@ -66,8 +84,8 @@ namespace Separatista
 
 	SEPARATISTA_EXTERN void SetDebugMessage(const wchar_t *pMessage);
 #else
-#define Separatista::GetDebugMessage
-#define Separatista::SetDebugMessage
+#define Separatista::GetDebugMessage()
+#define Separatista::SetDebugMessage(pMessage)
 #endif
 
 }

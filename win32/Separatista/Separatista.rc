@@ -1,2 +1,3 @@
-PAIN_008_001_02_XSD XSD "..\..\schema\pain.008.001.02.xsd"
-PAIN_001_001_03_XSD XSD "..\..\schema\pain.001.001.03.xsd"
+urn:iso:std:iso:20022:tech:xsd:pain.008.001.02 XSD "..\..\schema\pain.008.001.02.xsd"
+//PAIN_008_001_02_XSD XSD "..\..\schema\pain.008.001.02.xsd"
+//PAIN_001_001_03_XSD XSD "..\..\schema\pain.001.001.03.xsd"

@@ -26,12 +26,16 @@
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
 #include <xercesc/dom/DOMConfiguration.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 
 #include "separatista.h"
 #include "customerdirectdebitinitiation.h"
 #include "leafelement.h"
+#include "documentreader.h"
 
 using namespace Separatista;
+
+const wchar_t* CstmrDrctDbtInitn::NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.02");
 
 InitgPty::InitgPty() :
 BranchElement(TEXT("InitgPty")),
@@ -163,7 +167,7 @@ IOErrorCode CstmrDrctDbtInitn::SaveAs(const wchar_t *pPath)
 	try
 	{
 		pDocument = pDomImpl->createDocument(
-			TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.02"),
+			CstmrDrctDbtInitn::NameSpaceURI,
 			TEXT("Document"),
 			NULL);
 
@@ -197,4 +201,31 @@ IOErrorCode CstmrDrctDbtInitn::SaveAs(const wchar_t *pPath)
 	}
 
 	return ret;
+}
+
+IOErrorCode CstmrDrctDbtInitn::Open(const wchar_t *pPath, bool bValidate)
+{
+	DocumentReader reader;
+	IOErrorCode ret = Success;
+	SeparatistaDocument *pDocument;
+
+	// Load schema if validating
+	if (bValidate)
+		ret = reader.loadSchema(CstmrDrctDbtInitn::NameSpaceURI);
+
+	if (ret == Success)
+	{
+		ret = reader.parseFile(pPath);
+		if (ret == Success)
+		{
+			pDocument = reader.getDocument();
+			if (pDocument->getDocumentType() == DT_CustomerDirectDebitDocument)
+			{
+				this = *pDocument;
+
+			}
+				
+		}
+	}
+
 }

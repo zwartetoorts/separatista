@@ -54,10 +54,15 @@ namespace Separatista
 
 	};
 
-	class SEPARATISTA_EXTERN CstmrDrctDbtInitn : public BranchElement, ElementListener
+	class SEPARATISTA_EXTERN CstmrDrctDbtInitn : public BranchElement, protected ElementListener, public SeparatistaDocument
 	{
 	public:
 		CstmrDrctDbtInitn();
+
+		/**
+			Load constructor. Will construct a CstmrDrctDbtInitn from a DOMDocument.
+		*/
+		CstmrDrctDbtInitn(const xercesc::DOMDocument *pDocument);
 
 		/**
 		Destructor, will delete all added PmtInf's
@@ -80,6 +85,21 @@ namespace Separatista
 			@return Error code
 		*/
 		IOErrorCode SaveAs(const wchar_t *pPath);
+
+		/**
+			Loads the DOM document from a local file path. The document may be validated.
+			@param pPath The path to read from
+			@param bValidate Turn validation on/off
+			@return Error code
+		*/
+		IOErrorCode Open(const wchar_t *pPath, bool bValidate);
+
+		/**
+			SeparatistaDocument interface
+		*/
+		DocumentType getDocumentType() const { return DT_CustomerDirectDebitDocument; };
+
+		static const wchar_t *NameSpaceURI;
 
 	private:
 		void calcSum();
