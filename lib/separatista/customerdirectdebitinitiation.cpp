@@ -18,6 +18,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <xercesc/dom/DOMException.hpp>
@@ -54,6 +55,14 @@ xercesc::DOMElement* InitgPty::toDOMDocument(xercesc::DOMDocument *pDocument, xe
 	return pElement;
 }
 
+void InitgPty::fromDOMDocument(const xercesc::DOMElement *pParent)
+{
+	const xercesc::DOMElement *pElement = getChildElement(pParent);
+
+	if (pElement)
+		m_Nm.fromDOMDocument(pElement);
+}
+
 GrpHdr::GrpHdr() :
 BranchElement(TEXT("GrpHdr")),
 m_MsgId(TEXT("MsgId")),
@@ -79,6 +88,20 @@ xercesc::DOMElement* GrpHdr::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 	}
 
 	return pElement;
+}
+
+void GrpHdr::fromDOMDocument(const xercesc::DOMElement *pParent)
+{
+	const xercesc::DOMElement *pElement = getChildElement(pParent);
+
+	if (pElement)
+	{
+		m_MsgId.fromDOMDocument(pElement);
+		m_CreDtTm.fromDOMDocument(pElement);
+		m_NbOfTxs.fromDOMDocument(pElement);
+		m_CtrlSum.fromDOMDocument(pElement);
+		m_InitgPty.fromDOMDocument(pElement);
+	}
 }
 
 CstmrDrctDbtInitn::CstmrDrctDbtInitn() :
@@ -111,6 +134,33 @@ xercesc::DOMElement* CstmrDrctDbtInitn::toDOMDocument(xercesc::DOMDocument *pDoc
 	}
 
 	return pElement;
+}
+
+void CstmrDrctDbtInitn::fromDOMDocument(const xercesc::DOMElement *pParent)
+{
+	const xercesc::DOMNodeList *pNodeList;
+	PmtInf *pPmtInf;
+	const xercesc::DOMElement *pElement = getChildElement(pParent);
+
+	if (pElement)
+	{
+		m_GrpHdr.fromDOMDocument(pElement);
+		
+		pNodeList = pElement->getChildNodes();
+		for (unsigned int i = 0; i < pNodeList->getLength(); i++)
+		{
+			if (pNodeList->item(i)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE &&
+				xercesc::XMLString::compareIString(pNodeList->item(i)->getNodeName(), TEXT("PmtInf")) != 0)
+			{
+				pPmtInf = new PmtInf();
+				if (pPmtInf)
+				{
+					pPmtInf->fromDOMDocument((const xercesc::DOMElement*)pNodeList->item(i));
+					AddPmtInf(pPmtInf);
+				}
+			}
+		}
+	}
 }
 
 void CstmrDrctDbtInitn::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
@@ -219,13 +269,9 @@ IOErrorCode CstmrDrctDbtInitn::Open(const wchar_t *pPath, bool bValidate)
 		if (ret == Success)
 		{
 			pDocument = reader.getDocument();
-			if (pDocument->getDocumentType() == DT_CustomerDirectDebitDocument)
-			{
-				this = *pDocument;
-
-			}
-				
+			if (pDocument && pDocument->getDocumentType() != DT_CustomerDirectDebitDocument)
+				ret = Document_Invalid;
 		}
 	}
-
+	return ret;
 }

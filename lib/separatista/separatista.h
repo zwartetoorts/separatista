@@ -47,15 +47,20 @@ namespace Separatista
 	*/
 	typedef enum
 	{
+		/// Ok
 		Success = 0,
-		/// The error was caused by Separatista
-		Separatista,	
+		/// Unknown error
+		Unknown,
+		/// Error was caused by the platform (os)
+		Platform,
 		/// Xerces caused the error, thus xml related
 		Xerces,
-		/// Error was caused by the platform
-		Platform,
+		/// The error was caused by Separatista, internally
+		Separatista,
 		/// Error was caused by the document
-		Document
+		Document_Invalid,
+		/// Path not found
+		Path_Invalid
 	} IOErrorCode;
 
 	/**

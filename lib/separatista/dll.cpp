@@ -82,9 +82,23 @@ IOErrorCode DocumentReader::loadSchema(const wchar_t *name)
 	if (!lpData)
 		return Platform;
 
-	xercesc::MemBufInputSource source((const XMLByte*)lpData, bytes, name);
-	if (m_pParser->loadGrammar(source, xercesc::Grammar::SchemaGrammarType, true))
-		return Success;
+	try
+	{
+		xercesc::MemBufInputSource source((const XMLByte*)lpData, bytes, name);
+		if (m_pParser->loadGrammar(source, xercesc::Grammar::SchemaGrammarType, true))
+		{
+			m_pParser->setValidationScheme(xercesc::XercesDOMParser::Val_Always);
+			m_pParser->useCachedGrammarInParse(true);
+			m_pParser->setLoadSchema(false);
+			m_pParser->setDoSchema(true);
+			m_pParser->setValidationConstraintFatal(true);
+			return Success;
+		}
+	}
+	catch (const xercesc::XMLException &e)
+	{
+		SetDebugMessage(e.getMessage());
+	}
 
 	return Xerces;
 }

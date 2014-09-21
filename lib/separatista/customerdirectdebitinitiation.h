@@ -36,6 +36,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(const xercesc::DOMElement *pParent);
+
 		LeafElement m_Nm;
 	};
 
@@ -44,7 +46,11 @@ namespace Separatista
 	public:
 		GrpHdr();
 
+		GrpHdr(const xercesc::DOMElement *pParent);
+
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+		void fromDOMDocument(const xercesc::DOMElement *pParent);
 
 		LeafElement m_MsgId;
 		LeafElement m_CreDtTm;
@@ -60,16 +66,13 @@ namespace Separatista
 		CstmrDrctDbtInitn();
 
 		/**
-			Load constructor. Will construct a CstmrDrctDbtInitn from a DOMDocument.
-		*/
-		CstmrDrctDbtInitn(const xercesc::DOMDocument *pDocument);
-
-		/**
 		Destructor, will delete all added PmtInf's
 		*/
 		~CstmrDrctDbtInitn();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent = NULL);
+
+		void fromDOMDocument(const xercesc::DOMElement* pParent);
 
 		void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 

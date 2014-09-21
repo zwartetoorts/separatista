@@ -54,6 +54,12 @@ namespace Separatista
 		virtual xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent) = 0;
 
 		/**
+			Tries to load it's value from the parent dom element.
+			@param pParent The parent element.
+		*/
+		virtual void fromDOMDocument(const xercesc::DOMElement *pParent) = 0;
+
+		/**
 			Set the elementlistener. Will be notified of changes to the element. If a previous elementlistener was registered, it
 			will be returned from this function. It's the caller's choise to store this listener and notify it of changes.
 			@param pElementListener The elementlistener to register.
@@ -86,6 +92,12 @@ namespace Separatista
 			@return Pointer to the newly created element, or NULL 
 		*/
 		xercesc::DOMElement* createElement(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+		/**
+			Get the child element from de parent element by previous set tagname.
+			@param pParent The parent element to get the child from.
+		*/
+		xercesc::DOMElement* getChildElement(const xercesc::DOMElement *pParent);
 
 		/// Tag name
 		const wchar_t *m_pTag;

@@ -52,6 +52,15 @@ xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument,
 	return pElement;
 }
 
+void LeafElement::fromDOMDocument(const xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement;
+
+	pElement = getChildElement(pParent);
+	if (pElement)
+		setValue(pElement->getTextContent());
+}
+
 void LeafElement::clear()
 {
 	m_value.clear();

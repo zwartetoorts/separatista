@@ -22,6 +22,7 @@
 #include <sstream>
 #include <iomanip>
 
+#include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/framework/psvi/XSValue.hpp>
 
@@ -64,6 +65,23 @@ xercesc::DOMElement* Element::createElement(xercesc::DOMDocument *pDocument, xer
 	}
 
 	return pElement;
+}
+
+xercesc::DOMElement* Element::getChildElement(const xercesc::DOMElement *pParent)
+{
+	xercesc::DOMNodeList *pNodeList;
+
+	pNodeList = pParent->getChildNodes();
+	if (pNodeList)
+	{
+		for (unsigned int i = 0; i < pNodeList->getLength(); i++)
+		{
+			if (pNodeList->item(i)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE && 
+					xercesc::XMLString::compareString(pNodeList->item(i)->getNodeName(), m_pTag) != 0)
+				return (xercesc::DOMElement*)pNodeList->item(i);
+		}
+	}
+	return NULL;
 }
 
 const wchar_t* Element::getTag() const

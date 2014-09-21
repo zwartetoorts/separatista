@@ -18,6 +18,11 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <vector>
+#include <string>
+
+#include <xercesc/sax/ErrorHandler.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 
@@ -28,12 +33,51 @@
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN DocumentReader
+	/**
+		Error with code and xerces message.
+	*/
+	typedef struct
+	{
+		typedef enum
+		{
+			ETC_WARNING,
+			ETC_ERROR,
+			ETC_FATALERROR
+		} ErrorCode;
+		ErrorCode errorCode;
+		std::wstring msg;
+	} ErrorType;
+
+	class SEPARATISTA_EXTERN DocumentReader : public xercesc::ErrorHandler
 	{
 	public:
 		DocumentReader();
 
+		/**
+			Destroys all messages in the error list.
+		*/
 		~DocumentReader();
+
+		/// Get the count of Errors from xerces
+		int getErrorCount() const;
+
+		/// Get the code for error a index
+		const ErrorType::ErrorCode getErrorCode(int index) const;
+
+		/// Get the message for error at index
+		const wchar_t* getErrorMessage(int index) const;
+
+		/// @see SAXParseException
+		void warning(const xercesc::SAXParseException &e);
+
+		/// @see SAXParseException
+		void error(const xercesc::SAXParseException &e);
+
+		/// @see SAXParseException
+		void fatalError(const xercesc::SAXParseException &e);
+
+		/// @see SAXParseException
+		void resetErrors();
 
 		/**
 			Platform specific implementation. Loads the schema for the namespace to the parser.
@@ -51,10 +95,15 @@ namespace Separatista
 		/**
 			Returns the document as SeparatistaDocument. This is a new instance that will be owned by the caller. The caller should free the object.
 		*/
-		SeparatistaDocument* DocumentReader::getDocument();
+		SeparatistaDocument* getDocument();
+
+	protected:
+		void appendError(ErrorType::ErrorCode etc, const xercesc::SAXParseException &e);
+
 	private:
 		xercesc::XercesDOMParser *m_pParser;
 		xercesc::DOMDocument *m_pDocument;
+		std::vector<ErrorType*> m_ErrorList;
 	};
 }
 

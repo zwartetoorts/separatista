@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <string>
+#include <sstream>
 #include <unordered_map>
 #include <windows.h>
 #include <xercesc/parsers/XercesDOMParser.hpp>
@@ -43,13 +45,25 @@ DocumentReader::~DocumentReader()
 		delete m_pParser;
 	if (m_pDocument)
 		m_pDocument->release();
+	resetErrors();
 }
 
 typedef SeparatistaDocument* (*SeparatistaDocumentCreatorFunc)(xercesc::DOMDocument *pDocument);
 
-template<class T> SeparatistaDocument* SeparatistaDocumentCreator(xercesc::DOMDocument *pDocument)
+template<class T> SeparatistaDocument* SeparatistaDocumentCreator(xercesc::DOMDocument *pDOMDocument)
 {
-	return new T(pDocument);
+	SeparatistaDocument *pDocument;
+	xercesc::DOMElement *pElement;
+
+	pDocument = new T();
+	if (pDocument)
+	{
+		pElement = pDOMDocument->getDocumentElement();
+		if (pElement)
+			pDocument->fromDOMDocument(pElement);
+	}
+	
+	return pDocument;
 }
 
 SeparatistaDocument* DocumentReader::getDocument()
@@ -57,6 +71,7 @@ SeparatistaDocument* DocumentReader::getDocument()
 	xercesc::DOMElement *pDocumentElement;
 	const XMLCh *pNamespaceURI;
 
+	// Insert new supported document types here...
 	std::unordered_map<std::wstring, SeparatistaDocumentCreatorFunc> documentCreatorMap(
 	{
 		{ CstmrDrctDbtInitn::NameSpaceURI, SeparatistaDocumentCreator<CstmrDrctDbtInitn> }
@@ -68,7 +83,7 @@ SeparatistaDocument* DocumentReader::getDocument()
 		return NULL;
 
 	// The document root element tag should be "Document"
-	if (xercesc::XMLString::compareString(L"Document", pDocumentElement->getTagName()) != 0)
+	if (xercesc::XMLString::compareString(TEXT("Document"), pDocumentElement->getTagName()) != 0)
 		return NULL;
 
 	// Find by namespace uri
@@ -82,3 +97,97 @@ SeparatistaDocument* DocumentReader::getDocument()
 
 	return NULL;
 }
+
+IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)
+{	
+	if (!m_pParser)
+		return Platform;
+
+	m_pParser->setErrorHandler(this);
+	m_pParser->setDoNamespaces(true);
+	
+	// Parse the file
+	try
+	{
+		m_pParser->parse(pPath);
+
+		// Get the document
+		if (m_pDocument)
+			m_pDocument->release();
+		m_pDocument = m_pParser->getDocument();
+	}
+	catch (const xercesc::XMLException &e)
+	{
+		SetDebugMessage(e.getMessage());
+		return Xerces;
+	}
+	catch (const xercesc::DOMException &e)
+	{
+		SetDebugMessage(e.getMessage());
+		return Document_Invalid;
+	}
+	catch (...)
+	{
+		return Unknown;
+	}
+
+	return Success;
+}
+
+int DocumentReader::getErrorCount() const
+{
+	return m_ErrorList.size();
+}
+
+const ErrorType::ErrorCode DocumentReader::getErrorCode(int index) const
+{
+	return m_ErrorList.at(index)->errorCode;
+}
+
+const wchar_t* DocumentReader::getErrorMessage(int index) const
+{
+	return m_ErrorList.at(index)->msg.data();
+
+}
+
+void DocumentReader::warning(const xercesc::SAXParseException &e)
+{
+	appendError(ErrorType::ETC_WARNING, e);
+}
+
+void DocumentReader::error(const xercesc::SAXParseException &e)
+{
+	appendError(ErrorType::ETC_ERROR, e);
+}
+
+void DocumentReader::fatalError(const xercesc::SAXParseException &e)
+{
+	appendError(ErrorType::ETC_FATALERROR, e);
+}
+
+void DocumentReader::resetErrors()
+{
+	std::vector<ErrorType*>::iterator it;
+
+	for (it = m_ErrorList.begin(); it != m_ErrorList.end(); it++)
+		delete *it;
+}
+
+void DocumentReader::appendError(ErrorType::ErrorCode etc, const xercesc::SAXParseException &e)
+{
+	std::wostringstream wos;
+	ErrorType *pError = new ErrorType;
+
+	pError->errorCode = etc;
+	wos
+		<< TEXT('(')
+		<< e.getLineNumber()
+		<< TEXT(',')
+		<< e.getColumnNumber()
+		<< TEXT(") ")
+		<< e.getMessage();
+
+	pError->msg = wos.str();
+	m_ErrorList.push_back(pError);
+}
+
