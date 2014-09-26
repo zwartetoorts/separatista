@@ -39,6 +39,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+
 		LeafElement m_Cd;
 	};
 
@@ -49,6 +51,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+
 		LeafElement m_Cd;
 	};
 
@@ -58,6 +62,8 @@ namespace Separatista
 		PmtTpInf();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		SvcLvl m_SvcLvl;
 		LclInstrm m_LclInstrm;
@@ -75,6 +81,8 @@ namespace Separatista
 		~PmtInf();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 		void elementDeleted(Element *pElement);

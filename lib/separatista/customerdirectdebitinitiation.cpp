@@ -55,12 +55,13 @@ xercesc::DOMElement* InitgPty::toDOMDocument(xercesc::DOMDocument *pDocument, xe
 	return pElement;
 }
 
-void InitgPty::fromDOMDocument(const xercesc::DOMElement *pParent)
+void InitgPty::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
-	const xercesc::DOMElement *pElement = getChildElement(pParent);
-
-	if (pElement)
-		m_Nm.fromDOMDocument(pElement);
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_Nm.fromDOMDocument(pElementIterator);
+	}
 }
 
 GrpHdr::GrpHdr() :
@@ -90,17 +91,16 @@ xercesc::DOMElement* GrpHdr::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 	return pElement;
 }
 
-void GrpHdr::fromDOMDocument(const xercesc::DOMElement *pParent)
+void GrpHdr::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
-	const xercesc::DOMElement *pElement = getChildElement(pParent);
-
-	if (pElement)
+	if (compareTag(pElementIterator))
 	{
-		m_MsgId.fromDOMDocument(pElement);
-		m_CreDtTm.fromDOMDocument(pElement);
-		m_NbOfTxs.fromDOMDocument(pElement);
-		m_CtrlSum.fromDOMDocument(pElement);
-		m_InitgPty.fromDOMDocument(pElement);
+		pElementIterator->nextElement();
+		m_MsgId.fromDOMDocument(pElementIterator);
+		m_CreDtTm.fromDOMDocument(pElementIterator);
+		m_NbOfTxs.fromDOMDocument(pElementIterator);
+		m_CtrlSum.fromDOMDocument(pElementIterator);
+		m_InitgPty.fromDOMDocument(pElementIterator);
 	}
 }
 
@@ -109,6 +109,13 @@ BranchElement(TEXT("CstmrDrctDbtInitn")),
 m_GrpHdr()
 {
 
+}
+
+CstmrDrctDbtInitn::CstmrDrctDbtInitn(xercesc::DOMDocument *pDocument) :
+BranchElement(TEXT("CstmrDrctDbtInitn")),
+m_GrpHdr()
+{
+	fromDOMDocument(&DOMDocumentIterator(pDocument));
 }
 
 CstmrDrctDbtInitn::~CstmrDrctDbtInitn()
@@ -136,29 +143,35 @@ xercesc::DOMElement* CstmrDrctDbtInitn::toDOMDocument(xercesc::DOMDocument *pDoc
 	return pElement;
 }
 
-void CstmrDrctDbtInitn::fromDOMDocument(const xercesc::DOMElement *pParent)
+void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator *pDocumentIterator)
 {
-	const xercesc::DOMNodeList *pNodeList;
 	PmtInf *pPmtInf;
-	const xercesc::DOMElement *pElement = getChildElement(pParent);
+	unsigned int pos;
+	xercesc::DOMElement *pElement;
 
-	if (pElement)
+	// First tag should be "document"
+	pElement = pDocumentIterator->getCurrentElement();
+	if (!pElement || xercesc::XMLString::compareString(pElement->getNodeName(), TEXT("Document")) != 0)
+		return;
+	pDocumentIterator->nextElement();
+
+	if (compareTag(pDocumentIterator))
 	{
-		m_GrpHdr.fromDOMDocument(pElement);
-		
-		pNodeList = pElement->getChildNodes();
-		for (unsigned int i = 0; i < pNodeList->getLength(); i++)
+		pDocumentIterator->nextElement();
+		m_GrpHdr.fromDOMDocument(pDocumentIterator);
+
+		while (pDocumentIterator->getCurrentElement() != NULL)
 		{
-			if (pNodeList->item(i)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE &&
-				xercesc::XMLString::compareIString(pNodeList->item(i)->getNodeName(), TEXT("PmtInf")) != 0)
+			pos = pDocumentIterator->getPosition();
+			pPmtInf = new PmtInf();
+			if (pPmtInf)
 			{
-				pPmtInf = new PmtInf();
-				if (pPmtInf)
-				{
-					pPmtInf->fromDOMDocument((const xercesc::DOMElement*)pNodeList->item(i));
-					AddPmtInf(pPmtInf);
-				}
+				pPmtInf->fromDOMDocument(pDocumentIterator);
+				AddPmtInf(pPmtInf);
 			}
+			// Check for dead loop
+			if (pos == pDocumentIterator->getPosition())
+				break;
 		}
 	}
 }
@@ -253,25 +266,3 @@ IOErrorCode CstmrDrctDbtInitn::SaveAs(const wchar_t *pPath)
 	return ret;
 }
 
-IOErrorCode CstmrDrctDbtInitn::Open(const wchar_t *pPath, bool bValidate)
-{
-	DocumentReader reader;
-	IOErrorCode ret = Success;
-	SeparatistaDocument *pDocument;
-
-	// Load schema if validating
-	if (bValidate)
-		ret = reader.loadSchema(CstmrDrctDbtInitn::NameSpaceURI);
-
-	if (ret == Success)
-	{
-		ret = reader.parseFile(pPath);
-		if (ret == Success)
-		{
-			pDocument = reader.getDocument();
-			if (pDocument && pDocument->getDocumentType() != DT_CustomerDirectDebitDocument)
-				ret = Document_Invalid;
-		}
-	}
-	return ret;
-}

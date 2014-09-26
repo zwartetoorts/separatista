@@ -37,6 +37,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+
 		LeafElement m_BIC;
 	};
 
@@ -46,6 +48,8 @@ namespace Separatista
 		BranchAndFinancialInstitutionIdentification(const wchar_t *pTag);
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		FinancialInstitutionIdentification m_FinancialInstitutionIdentification;
 	};

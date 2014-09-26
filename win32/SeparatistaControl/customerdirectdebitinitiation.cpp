@@ -23,6 +23,7 @@
 #include "dispatch.cpp"
 #include "util.h"
 #include "customerdirectdebitinitiation.h"
+#include "documentreader.h"
 
 CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
 :SepaControlDispatch<ICustomerDirectDebitInitiation>(NULL)
@@ -164,6 +165,71 @@ STDMETHODIMP CustomerDirectDebitInitiation::SaveAs(BSTR Path)
 
 	if (m_pCstmrDrctDbtInitn->SaveAs(Path) == Separatista::IOErrorCode::Success)
 		return S_OK;
+
+	return E_FAIL;
+}
+
+STDMETHODIMP CustomerDirectDebitInitiation::Open(LONG hWnd)
+{
+	if (!m_pCstmrDrctDbtInitn)
+		return E_UNEXPECTED;
+
+	OPENFILENAME ofn = { 0 };
+	WCHAR filename[MAX_PATH + 1];
+	std::wcscpy(filename, TEXT("sepa.xml"));
+
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = (HWND)hWnd;
+	ofn.hInstance = NULL;
+	ofn.lpstrFilter = TEXT("All files\0*.*\0");
+	ofn.lpstrCustomFilter = NULL;
+	ofn.nMaxCustFilter = 0;
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFile = filename;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.lpstrFileTitle = TEXT("Open a SEPA DirectDebit document from");
+	ofn.Flags = OFN_FILEMUSTEXIST;
+	ofn.nFileOffset = 0;
+	ofn.nFileExtension = 0;
+	ofn.lpstrDefExt = NULL;
+	ofn.pvReserved = NULL;
+	ofn.dwReserved = 0;
+	ofn.FlagsEx = 0;
+
+	if (GetOpenFileName(&ofn))
+		return OpenFrom(filename);
+
+	return S_OK;
+}
+
+STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path)
+{
+	Separatista::DocumentReader reader;
+	Separatista::SeparatistaDocument *pDocument;
+
+	if (!m_pCstmrDrctDbtInitn)
+		return E_UNEXPECTED;
+
+	reader.loadSchema(Separatista::CstmrDrctDbtInitn::NameSpaceURI);
+	if (reader.parseFile(Path) == Separatista::IOErrorCode::Success)
+	{
+		pDocument = reader.getDocument();
+		if (pDocument)
+		{
+			if (pDocument->getDocumentType() == Separatista::DocumentType::DT_CustomerDirectDebitDocument)
+			{
+				if (m_bOwnCstmrDrctDbtInitn && m_pCstmrDrctDbtInitn)
+					delete m_pCstmrDrctDbtInitn;
+				m_bOwnCstmrDrctDbtInitn = true;
+				m_pCstmrDrctDbtInitn = (Separatista::CstmrDrctDbtInitn*)pDocument;
+				return S_OK;
+			}
+			delete pDocument;
+		}
+	}
 
 	return E_FAIL;
 }

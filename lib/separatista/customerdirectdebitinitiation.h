@@ -19,6 +19,7 @@
 ***************************************************************************/
 
 #include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMNodeIterator.hpp>
 
 #include "separatista.h"
 #include "element.h"
@@ -36,7 +37,7 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		void fromDOMDocument(const xercesc::DOMElement *pParent);
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		LeafElement m_Nm;
 	};
@@ -50,7 +51,7 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		void fromDOMDocument(const xercesc::DOMElement *pParent);
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		LeafElement m_MsgId;
 		LeafElement m_CreDtTm;
@@ -66,13 +67,18 @@ namespace Separatista
 		CstmrDrctDbtInitn();
 
 		/**
+			Construct from a dom document.
+		*/
+		CstmrDrctDbtInitn(xercesc::DOMDocument *pDocument);
+
+		/**
 		Destructor, will delete all added PmtInf's
 		*/
 		~CstmrDrctDbtInitn();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent = NULL);
 
-		void fromDOMDocument(const xercesc::DOMElement* pParent);
+		void fromDOMDocument(DOMDocumentIterator *pDocumentIterator);
 
 		void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 
@@ -88,14 +94,6 @@ namespace Separatista
 			@return Error code
 		*/
 		IOErrorCode SaveAs(const wchar_t *pPath);
-
-		/**
-			Loads the DOM document from a local file path. The document may be validated.
-			@param pPath The path to read from
-			@param bValidate Turn validation on/off
-			@return Error code
-		*/
-		IOErrorCode Open(const wchar_t *pPath, bool bValidate);
 
 		/**
 			SeparatistaDocument interface

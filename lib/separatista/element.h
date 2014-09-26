@@ -27,8 +27,35 @@
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMException.hpp>
 
+#include "separatista.h"
+
 namespace Separatista
 {
+	/**
+		Class for enumerating a DOMDocument
+	*/
+	class SEPARATISTA_EXTERN DOMDocumentIterator
+	{
+	public:
+		DOMDocumentIterator(xercesc::DOMDocument *pDocument);
+
+		~DOMDocumentIterator();
+
+		xercesc::DOMElement* getCurrentElement() const;
+
+		xercesc::DOMElement* nextElement();
+
+		/**
+			Get the current position. Can be used to check for dead loops.
+		*/
+		unsigned int getPosition() const;
+
+	private:
+		xercesc::DOMNodeIterator *m_pNodeIterator;
+		xercesc::DOMNode *m_pCurrentNode;
+		unsigned int m_nPos;
+	};
+
 	// Forward decl
 	class Element;
 
@@ -54,10 +81,10 @@ namespace Separatista
 		virtual xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent) = 0;
 
 		/**
-			Tries to load it's value from the parent dom element.
-			@param pParent The parent element.
+			Tries to load it's value from the document iterator.
+			@param pDocumentIterator The document iterator to read from.
 		*/
-		virtual void fromDOMDocument(const xercesc::DOMElement *pParent) = 0;
+		virtual void fromDOMDocument(DOMDocumentIterator *pDocumentIterator) = 0;
 
 		/**
 			Set the elementlistener. Will be notified of changes to the element. If a previous elementlistener was registered, it
@@ -94,10 +121,9 @@ namespace Separatista
 		xercesc::DOMElement* createElement(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
 		/**
-			Get the child element from de parent element by previous set tagname.
-			@param pParent The parent element to get the child from.
+			Checks wether the position in a DOMDocumentIterator matches the current tag name.
 		*/
-		xercesc::DOMElement* getChildElement(const xercesc::DOMElement *pParent);
+		bool compareTag(const DOMDocumentIterator *DocumentIterator) const;
 
 		/// Tag name
 		const wchar_t *m_pTag;

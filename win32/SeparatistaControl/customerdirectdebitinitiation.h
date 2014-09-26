@@ -60,6 +60,8 @@ struct ICustomerDirectDebitInitiation : public IDispatch
 	STDMETHOD(AddPaymentInformation)(PaymentInformation *pPaymentInformation) PURE;
 	STDMETHOD(Save)(LONG hWnd = NULL) PURE;
 	STDMETHOD(SaveAs)(BSTR Path) PURE;
+	STDMETHOD(Open)(LONG hWnd = NULL) PURE;
+	STDMETHOD(OpenFrom)(BSTR Path) PURE;
 };
 
 struct __declspec(uuid("{4B8AC337-5E17-454D-A7EC-8955B07B99CC}")) ICustomerDirectDebitInitiation;
@@ -89,6 +91,8 @@ public:
 	STDMETHOD(AddPaymentInformation)(PaymentInformation *pPaymentInformation);
 	STDMETHOD(Save)(LONG hWnd);
 	STDMETHOD(SaveAs)(BSTR Path);
+	STDMETHOD(Open)(LONG hWnd = NULL);
+	STDMETHOD(OpenFrom)(BSTR Path);
 
 protected:
 	/**

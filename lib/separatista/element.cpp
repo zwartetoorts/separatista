@@ -22,6 +22,7 @@
 #include <sstream>
 #include <iomanip>
 
+#include <xercesc/dom/DOMNodeIterator.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/framework/psvi/XSValue.hpp>
@@ -30,6 +31,44 @@
 #include "element.h"
 
 using namespace Separatista;
+
+DOMDocumentIterator::DOMDocumentIterator(xercesc::DOMDocument *pDocument)
+{
+	m_pNodeIterator = pDocument->createNodeIterator(pDocument->getDocumentElement(), xercesc::DOMNodeFilter::SHOW_ELEMENT, NULL, true);
+	if (m_pNodeIterator)
+		m_pCurrentNode = m_pNodeIterator->nextNode();
+	else
+		m_pCurrentNode = NULL;
+
+	m_nPos = 0;
+}
+
+DOMDocumentIterator::~DOMDocumentIterator()
+{
+	if (m_pNodeIterator)
+		m_pNodeIterator->release();
+}
+
+xercesc::DOMElement* DOMDocumentIterator::getCurrentElement() const
+{
+	return (xercesc::DOMElement*)m_pCurrentNode;
+}
+
+xercesc::DOMElement* DOMDocumentIterator::nextElement()
+{
+	if (m_pNodeIterator)
+	{
+		m_pCurrentNode = m_pNodeIterator->nextNode();
+		m_nPos++;
+	}
+
+	return getCurrentElement();
+}
+
+unsigned int DOMDocumentIterator::getPosition() const
+{
+	return m_nPos;
+}
 
 Element::Element(const wchar_t *pName)
 {
@@ -67,23 +106,6 @@ xercesc::DOMElement* Element::createElement(xercesc::DOMDocument *pDocument, xer
 	return pElement;
 }
 
-xercesc::DOMElement* Element::getChildElement(const xercesc::DOMElement *pParent)
-{
-	xercesc::DOMNodeList *pNodeList;
-
-	pNodeList = pParent->getChildNodes();
-	if (pNodeList)
-	{
-		for (unsigned int i = 0; i < pNodeList->getLength(); i++)
-		{
-			if (pNodeList->item(i)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE && 
-					xercesc::XMLString::compareString(pNodeList->item(i)->getNodeName(), m_pTag) != 0)
-				return (xercesc::DOMElement*)pNodeList->item(i);
-		}
-	}
-	return NULL;
-}
-
 const wchar_t* Element::getTag() const
 {
 	return m_pTag;
@@ -101,3 +123,15 @@ void Element::onDeleted()
 		m_pElementListener->elementDeleted(this);
 }
 
+bool Element::compareTag(const DOMDocumentIterator *pDocumentIterator) const
+{
+	const xercesc::DOMElement *pElement = pDocumentIterator->getCurrentElement();
+
+	if (!pElement)
+		return false;
+
+	if (xercesc::XMLString::compareString(m_pTag, pElement->getNodeName()) == 0)
+		return true;
+
+	return false;
+}

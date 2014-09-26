@@ -38,7 +38,7 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
-		void fromDOMDocument(const xercesc::DOMElement *pParent);
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		/**
 		Clears the content of the node

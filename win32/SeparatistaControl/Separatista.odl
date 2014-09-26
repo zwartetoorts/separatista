@@ -455,6 +455,12 @@ library Separatista
 		[helpstring("Saves the document to the specified location")]
 		HRESULT __stdcall SaveAs(
 			[in] BSTR Path);
+		[helpstring("Shows the user a file open dialog and opens the document from the specified location.")]
+		HRESULT __stdcall Open(
+			[in, defaultvalue(NULL)] long hWnd);
+		[helpstring("Opens the document from the specified location")]
+		HRESULT __stdcall OpenFrom(
+			[in] BSTR Path);
 	};
 
 	[

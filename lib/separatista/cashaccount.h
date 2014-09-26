@@ -36,6 +36,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+
 		LeafElement m_IBAN;
 	};
 
@@ -46,6 +48,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+		
 		AccountIdentification m_Id;
 	};
 

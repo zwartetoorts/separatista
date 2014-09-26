@@ -36,6 +36,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+
 		LeafElement m_Prtry;
 	};
 
@@ -45,6 +47,8 @@ namespace Separatista
 		GenericPersonIdentification(const wchar_t *pTag);
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		LeafElement m_Id;
 		PersonIdentificationSchemeName m_SchmeNm;
@@ -57,6 +61,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+
 		GenericPersonIdentification m_Othr;
 	};
 
@@ -67,6 +73,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+
 		PersonIdentification m_PrvtId;
 	};
 
@@ -76,6 +84,8 @@ namespace Separatista
 		PartyIdentification(const wchar_t *pTag);
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		LeafElement m_Nm;
 		PartyChoice m_Id;

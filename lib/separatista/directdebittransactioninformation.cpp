@@ -40,6 +40,15 @@ xercesc::DOMElement* PmtId::toDOMDocument(xercesc::DOMDocument *pDocument, xerce
 	return pElement;
 }
 
+void PmtId::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_EndToEndId.fromDOMDocument(pElementIterator);
+	}
+}
+
 MndtRltdInf::MndtRltdInf() :
 BranchElement(TEXT("MndtRltdInf")),
 m_MndtId(TEXT("MndtId")),
@@ -61,6 +70,16 @@ xercesc::DOMElement* MndtRltdInf::toDOMDocument(xercesc::DOMDocument *pDocument,
 	return pElement;
 }
 
+void MndtRltdInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_MndtId.fromDOMDocument(pElementIterator);
+		m_DtOfSgntr.fromDOMDocument(pElementIterator);
+	}
+}
+
 DrctDbtTx::DrctDbtTx() :
 BranchElement(TEXT("DrctDbtTx")),
 m_MndtRltdInf()
@@ -80,6 +99,15 @@ xercesc::DOMElement* DrctDbtTx::toDOMDocument(xercesc::DOMDocument *pDocument, x
 	return pElement;
 }
 
+void DrctDbtTx::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_MndtRltdInf.fromDOMDocument(pElementIterator);
+	}
+}
+
 RmtInf::RmtInf() :
 BranchElement(TEXT("RmtInf")),
 m_Ustrd(TEXT("Ustrd"))
@@ -97,6 +125,15 @@ xercesc::DOMElement* RmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 	}
 
 	return pElement;
+}
+
+void RmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_Ustrd.fromDOMDocument(pElementIterator);
+	}
 }
 
 DrctDbtTxInf::DrctDbtTxInf() :
@@ -131,4 +168,19 @@ xercesc::DOMElement* DrctDbtTxInf::toDOMDocument(xercesc::DOMDocument *pDocument
 	}
 
 	return pElement;
+}
+
+void DrctDbtTxInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_PmtId.fromDOMDocument(pElementIterator);
+		m_InstdAmt.fromDOMDocument(pElementIterator);
+		m_DrctDbtTx.fromDOMDocument(pElementIterator);
+		m_DbtrAgt.fromDOMDocument(pElementIterator);
+		m_Dbtr.fromDOMDocument(pElementIterator);
+		m_DbtrAcct.fromDOMDocument(pElementIterator);
+		m_RmtInf.fromDOMDocument(pElementIterator);
+	}
 }

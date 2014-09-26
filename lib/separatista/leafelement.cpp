@@ -52,13 +52,13 @@ xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument,
 	return pElement;
 }
 
-void LeafElement::fromDOMDocument(const xercesc::DOMElement *pParent)
+void LeafElement::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
-	xercesc::DOMElement *pElement;
-
-	pElement = getChildElement(pParent);
-	if (pElement)
-		setValue(pElement->getTextContent());
+	if (compareTag(pElementIterator))
+	{
+		setValue(pElementIterator->getCurrentElement()->getTextContent());
+		pElementIterator->nextElement();
+	}
 }
 
 void LeafElement::clear()

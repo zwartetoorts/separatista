@@ -21,6 +21,10 @@
 #include "separatista.h"
 #include "paymentinformation.h"
 
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMNode.hpp>
+
 using namespace Separatista;
 
 SvcLvl::SvcLvl() :
@@ -40,6 +44,15 @@ xercesc::DOMElement* SvcLvl::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 	return pElement;
 }
 
+void SvcLvl::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_Cd.fromDOMDocument(pElementIterator);
+	}
+}
+
 LclInstrm::LclInstrm() :
 BranchElement(TEXT("LclInstrm")),
 m_Cd(TEXT("Cd"))
@@ -55,6 +68,15 @@ xercesc::DOMElement* LclInstrm::toDOMDocument(xercesc::DOMDocument *pDocument, x
 		m_Cd.toDOMDocument(pDocument, pElement);
 
 	return pElement;
+}
+
+void LclInstrm::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_Cd.fromDOMDocument(pElementIterator);
+	}
 }
 
 PmtTpInf::PmtTpInf() :
@@ -80,6 +102,16 @@ xercesc::DOMElement* PmtTpInf::toDOMDocument(xercesc::DOMDocument *pDocument, xe
 	return pElement;
 }
 
+void PmtTpInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		m_SvcLvl.fromDOMDocument(pElementIterator);
+		m_LclInstrm.fromDOMDocument(pElementIterator);
+		m_SeqTp.fromDOMDocument(pElementIterator);
+	}
+}
+
 AccountIdentification::AccountIdentification() :
 BranchElement(TEXT("Id")),
 m_IBAN(TEXT("IBAN"))
@@ -97,6 +129,15 @@ xercesc::DOMElement* AccountIdentification::toDOMDocument(xercesc::DOMDocument *
 	}
 
 	return pElement;
+}
+
+void AccountIdentification::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_IBAN.fromDOMDocument(pElementIterator);
+	}
 }
 
 CashAccount::CashAccount(const wchar_t *pTag) :
@@ -118,6 +159,15 @@ xercesc::DOMElement* CashAccount::toDOMDocument(xercesc::DOMDocument *pDocument,
 	return pElement;
 }
 
+void CashAccount::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_Id.fromDOMDocument(pElementIterator);
+	}
+}
+
 FinancialInstitutionIdentification::FinancialInstitutionIdentification() :
 BranchElement(TEXT("FinInstnId")),
 m_BIC(TEXT("BIC"))
@@ -135,6 +185,15 @@ xercesc::DOMElement* FinancialInstitutionIdentification::toDOMDocument(xercesc::
 	}
 
 	return pElement;
+}
+
+void FinancialInstitutionIdentification::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_BIC.fromDOMDocument(pElementIterator);
+	}
 }
 
 BranchAndFinancialInstitutionIdentification::BranchAndFinancialInstitutionIdentification(const wchar_t *pTag) :
@@ -156,6 +215,15 @@ xercesc::DOMElement* BranchAndFinancialInstitutionIdentification::toDOMDocument(
 	return pElement;
 }
 
+void BranchAndFinancialInstitutionIdentification::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_FinancialInstitutionIdentification.fromDOMDocument(pElementIterator);
+	}
+}
+
 PersonIdentificationSchemeName::PersonIdentificationSchemeName(const wchar_t *pTag) :
 BranchElement(pTag),
 m_Prtry(TEXT("Prtry"))
@@ -173,6 +241,15 @@ xercesc::DOMElement* PersonIdentificationSchemeName::toDOMDocument(xercesc::DOMD
 	}
 
 	return pElement;
+}
+
+void PersonIdentificationSchemeName::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_Prtry.fromDOMDocument(pElementIterator);
+	}
 }
 
 GenericPersonIdentification::GenericPersonIdentification(const wchar_t *pTag) :
@@ -196,6 +273,16 @@ xercesc::DOMElement* GenericPersonIdentification::toDOMDocument(xercesc::DOMDocu
 	return pElement;
 }
 
+void GenericPersonIdentification::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_Id.fromDOMDocument(pElementIterator);
+		m_SchmeNm.fromDOMDocument(pElementIterator);
+	}
+}
+
 PersonIdentification::PersonIdentification(const wchar_t *pTag) :
 BranchElement(pTag),
 m_Othr(TEXT("Othr"))
@@ -215,6 +302,15 @@ xercesc::DOMElement* PersonIdentification::toDOMDocument(xercesc::DOMDocument *p
 	return pElement;
 }
 
+void PersonIdentification::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_Othr.fromDOMDocument(pElementIterator);
+	}
+}
+
 PartyChoice::PartyChoice() :
 BranchElement(TEXT("Id")),
 m_PrvtId(TEXT("PrvtId"))
@@ -230,6 +326,15 @@ xercesc::DOMElement* PartyChoice::toDOMDocument(xercesc::DOMDocument *pDocument,
 		m_PrvtId.toDOMDocument(pDocument, pElement);
 
 	return pElement;
+}
+
+void PartyChoice::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_PrvtId.fromDOMDocument(pElementIterator);
+	}
 }
 
 PartyIdentification::PartyIdentification(const wchar_t *pTag) :
@@ -253,6 +358,16 @@ xercesc::DOMElement* PartyIdentification::toDOMDocument(xercesc::DOMDocument *pD
 	}
 
 	return pElement;
+}
+
+void PartyIdentification::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_Nm.fromDOMDocument(pElementIterator);
+		m_Id.fromDOMDocument(pElementIterator);
+	}
 }
 
 PmtInf::PmtInf() :
@@ -309,6 +424,41 @@ xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 	}
 
 	return pElement;
+}
+
+void PmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	unsigned int pos;
+	DrctDbtTxInf *pTxInf;
+	
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_PmtInfId.fromDOMDocument(pElementIterator);
+		m_PmtMtd.fromDOMDocument(pElementIterator);
+		m_NbOfTxs.fromDOMDocument(pElementIterator);
+		m_CtrlSum.fromDOMDocument(pElementIterator);
+		m_PmtTpInf.fromDOMDocument(pElementIterator);
+		m_ReqdColltnDt.fromDOMDocument(pElementIterator);
+		m_Cdtr.fromDOMDocument(pElementIterator);
+		m_CdtrAcct.fromDOMDocument(pElementIterator);
+		m_CdtrAgt.fromDOMDocument(pElementIterator);
+		m_ChrgBr.fromDOMDocument(pElementIterator);
+		m_CdtrSchmeId.fromDOMDocument(pElementIterator);
+
+		while (pElementIterator->getCurrentElement() != NULL)
+		{
+			pos = pElementIterator->getPosition();
+			pTxInf = new DrctDbtTxInf();
+			if (pTxInf)
+			{
+				AddDrctDbtTxInf(pTxInf);
+				pTxInf->fromDOMDocument(pElementIterator);
+			}
+			if (pos == pElementIterator->getPosition())
+				break;
+		}
+	}
 }
 
 void PmtInf::elementValueChanged(Element *pElement, const wchar_t *pNewValue)

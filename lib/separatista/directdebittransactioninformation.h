@@ -37,6 +37,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+
 		LeafElement m_EndToEndId;
 	};
 
@@ -46,6 +48,8 @@ namespace Separatista
 		MndtRltdInf();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		LeafElement m_MndtId;
 		LeafElement m_DtOfSgntr;
@@ -58,6 +62,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+
 		MndtRltdInf m_MndtRltdInf;
 	};
 
@@ -68,6 +74,8 @@ namespace Separatista
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
 
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+
 		LeafElement m_Ustrd;
 	};
 
@@ -77,6 +85,8 @@ namespace Separatista
 		DrctDbtTxInf();
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		PmtId m_PmtId;
 		LeafElement m_InstdAmt;

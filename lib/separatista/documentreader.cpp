@@ -43,8 +43,6 @@ DocumentReader::~DocumentReader()
 {
 	if (m_pParser)
 		delete m_pParser;
-	if (m_pDocument)
-		m_pDocument->release();
 	resetErrors();
 }
 
@@ -52,17 +50,7 @@ typedef SeparatistaDocument* (*SeparatistaDocumentCreatorFunc)(xercesc::DOMDocum
 
 template<class T> SeparatistaDocument* SeparatistaDocumentCreator(xercesc::DOMDocument *pDOMDocument)
 {
-	SeparatistaDocument *pDocument;
-	xercesc::DOMElement *pElement;
-
-	pDocument = new T();
-	if (pDocument)
-	{
-		pElement = pDOMDocument->getDocumentElement();
-		if (pElement)
-			pDocument->fromDOMDocument(pElement);
-	}
-	
+	SeparatistaDocument *pDocument = new T(pDOMDocument);
 	return pDocument;
 }
 
