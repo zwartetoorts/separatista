@@ -24,6 +24,7 @@
 #include "separatista.h"
 #include "element.h"
 #include "paymentinformation.h"
+#include "elementlist.h"
 
 #ifndef SEPARATISTA_CUSTOMERDIRECTDEBITINITIATION_H
 #define SEPARATISTA_CUSTOMERDIRECTDEBITINITIATION_H
@@ -87,6 +88,8 @@ namespace Separatista
 		GrpHdr m_GrpHdr;
 
 		void AddPmtInf(PmtInf *pPmtInf);
+
+		void getPmtInfs(ElementList &elementList);
 
 		/**
 			Writes the DOM document to a local file path

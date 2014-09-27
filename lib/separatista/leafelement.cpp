@@ -89,9 +89,15 @@ time_t LeafElement::getDateValue() const
 	if (!pText)
 		return -1;
 
+	// Try dateTime
 	pValue = xercesc::XSValue::getActualValue(pText, xercesc::XSValue::DataType::dt_dateTime, status);
 	if (!pValue || status != xercesc::XSValue::st_Init)
-		return -1;
+	{
+		// Try date only
+		pValue = xercesc::XSValue::getActualValue(pText, xercesc::XSValue::DataType::dt_date, status);
+		if (!pValue || status != xercesc::XSValue::st_Init)
+			return -1;
+	}
 
 	tm.tm_year = pValue->fData.fValue.f_datetime.f_year - 1900;
 	tm.tm_mon = pValue->fData.fValue.f_datetime.f_month - 1;

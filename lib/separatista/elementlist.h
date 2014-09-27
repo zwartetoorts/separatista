@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,55 +18,28 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "util.h"
-#include <comutil.h>
+#ifndef SEPARATISTA_ELEMENTLIST_H
+#define SEPARATISTA_ELEMENTLIST_H
 
-HRESULT VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency)
+#include <vector>
+
+#include "separatista.h"
+#include "element.h"
+
+namespace Separatista
 {
-	if (!pCurrency)
-		return E_UNEXPECTED;
+	class SEPARATISTA_EXTERN ElementList
+	{
+	public:
+		void addElement(Element *pElement);
 
-	*pvCurrency = _variant_t(pCurrency).Detach();
-	return S_OK;
+		size_t getElementCount() const;
+
+		Element* getElement(size_t index);
+	private:
+		std::vector<Element*> m_Elements;
+	};
+
 }
 
-HRESULT DateTypeFromStdTime(time_t t, DATE *pDate)
-{
-	SYSTEMTIME stime;
-	tm *pti;
-
-	// Convert time_t to tm
-	pti = localtime(&t);
-	if (!pti)
-		return E_FAIL;
-
-	// Set SYSTEMTIME
-	stime.wYear = pti->tm_year + 1900;
-	stime.wMonth = pti->tm_mon + 1;
-	stime.wDay = pti->tm_mday;
-	stime.wHour = pti->tm_hour;
-	stime.wMinute = pti->tm_min;
-	stime.wSecond = pti->tm_sec;
-	if (SystemTimeToVariantTime(&stime, pDate))
-		return S_OK;
-
-	return E_UNEXPECTED;
-}
-
-time_t StdTimeFromDateType(DATE Value)
-{
-	SYSTEMTIME stime;
-	tm ti;
-
-	// Convert Variant time to system time
-	if (!VariantTimeToSystemTime(Value, &stime))
-		return -1;
-
-	ti.tm_year = stime.wYear - 1900;
-	ti.tm_mon = stime.wMonth - 1;
-	ti.tm_mday = stime.wDay;
-	ti.tm_hour = stime.wHour;
-	ti.tm_min = stime.wMinute;
-	ti.tm_sec = stime.wSecond;
-	return mktime(&ti);
-}
+#endif // SEPARATISTA_ELEMENTLIT_H

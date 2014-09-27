@@ -105,9 +105,11 @@ class PaymentInformation : public SepaControlDispatch<IPaymentInformation>
 {
 public:
 	/**
-	@see SepaControllDispatch
+	@see SepaControlDispatch
 	*/
 	PaymentInformation(IUnknown *pParent = NULL);
+
+	PaymentInformation(Separatista::PmtInf *pPmtInf, IUnknown *pParent = NULL);
 
 	/**
 		If this object owns the underlaying Separatista object, it will be detached from the object. If this 

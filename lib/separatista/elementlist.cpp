@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,55 +18,21 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "util.h"
-#include <comutil.h>
+#include "elementlist.h"
 
-HRESULT VariantTypeFromCurrency(const char *pCurrency, VARIANT *pvCurrency)
+using namespace Separatista;
+
+void ElementList::addElement(Element *pElement)
 {
-	if (!pCurrency)
-		return E_UNEXPECTED;
-
-	*pvCurrency = _variant_t(pCurrency).Detach();
-	return S_OK;
+	m_Elements.push_back(pElement);
 }
 
-HRESULT DateTypeFromStdTime(time_t t, DATE *pDate)
+size_t ElementList::getElementCount() const
 {
-	SYSTEMTIME stime;
-	tm *pti;
-
-	// Convert time_t to tm
-	pti = localtime(&t);
-	if (!pti)
-		return E_FAIL;
-
-	// Set SYSTEMTIME
-	stime.wYear = pti->tm_year + 1900;
-	stime.wMonth = pti->tm_mon + 1;
-	stime.wDay = pti->tm_mday;
-	stime.wHour = pti->tm_hour;
-	stime.wMinute = pti->tm_min;
-	stime.wSecond = pti->tm_sec;
-	if (SystemTimeToVariantTime(&stime, pDate))
-		return S_OK;
-
-	return E_UNEXPECTED;
+	return m_Elements.size();
 }
 
-time_t StdTimeFromDateType(DATE Value)
+Element* ElementList::getElement(size_t index)
 {
-	SYSTEMTIME stime;
-	tm ti;
-
-	// Convert Variant time to system time
-	if (!VariantTimeToSystemTime(Value, &stime))
-		return -1;
-
-	ti.tm_year = stime.wYear - 1900;
-	ti.tm_mon = stime.wMonth - 1;
-	ti.tm_mday = stime.wDay;
-	ti.tm_hour = stime.wHour;
-	ti.tm_min = stime.wMinute;
-	ti.tm_sec = stime.wSecond;
-	return mktime(&ti);
+	return m_Elements.at(index);
 }

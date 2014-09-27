@@ -160,7 +160,8 @@ void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator *pDocumentIterator)
 		pDocumentIterator->nextElement();
 		m_GrpHdr.fromDOMDocument(pDocumentIterator);
 
-		while (pDocumentIterator->getCurrentElement() != NULL)
+		while (pDocumentIterator->getCurrentElement() != NULL &&
+			xercesc::XMLString::compareString(pDocumentIterator->getCurrentElement()->getNodeName(), TEXT("PmtInf")) == 0)
 		{
 			pos = pDocumentIterator->getPosition();
 			pPmtInf = new PmtInf();
@@ -198,6 +199,14 @@ void CstmrDrctDbtInitn::AddPmtInf(PmtInf *pPmtInf)
 	m_PmtInfs.push_back(pPmtInf);
 
 	calcSum();
+}
+
+void CstmrDrctDbtInitn::getPmtInfs(ElementList &elementList)
+{
+	std::vector<PmtInf*>::iterator it;
+
+	for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
+		elementList.addElement(*it);
 }
 
 void CstmrDrctDbtInitn::calcSum()

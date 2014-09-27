@@ -60,7 +60,9 @@ namespace Separatista
 		/// Error was caused by the document
 		Document_Invalid,
 		/// Path not found
-		Path_Invalid
+		Path_Invalid,
+		/// User interrupted something
+		User
 	} IOErrorCode;
 
 	/**

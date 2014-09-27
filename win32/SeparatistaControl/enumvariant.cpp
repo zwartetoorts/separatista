@@ -25,7 +25,7 @@
 #include "enumvariant.h"
 
 EnumVariant::EnumVariant()
-:SepaControlUnknown()
+:SepaControlUnknown<IEnumVARIANT>()
 {
 	m_uRefCount = 0;
 	m_pos = 0;
@@ -59,7 +59,10 @@ STDMETHODIMP EnumVariant::Next(unsigned long celt, VARIANT FAR* rgvar, unsigned 
 	if(rgvar == NULL)
 		return E_INVALIDARG;
 
-	for(ULONG l = 0; l < celt && m_pos < m_wpos; l++, m_pos++)
+	if ((m_pos + celt) > m_wpos)
+		return S_FALSE;
+
+	for (ULONG l = 0; l < celt && m_pos < m_wpos; l++, m_pos++)
 	{
 		// Init dest VARIANT and copy
 		VariantInit(&rgvar[l]);
@@ -69,9 +72,6 @@ STDMETHODIMP EnumVariant::Next(unsigned long celt, VARIANT FAR* rgvar, unsigned 
 		if (pceltFetched)
 			*pceltFetched = l;
 	}
-
-	if (m_pos >= m_wpos)
-		return S_FALSE;
 
 	return S_OK;
 }

@@ -58,11 +58,14 @@ struct ICustomerDirectDebitInitiation : public IDispatch
 	STDMETHOD(GetInititiatingPartyName)(BSTR* pValue) PURE;
 	STDMETHOD(SetInititiatingPartyName)(BSTR Value) PURE;
 	STDMETHOD(AddPaymentInformation)(PaymentInformation *pPaymentInformation) PURE;
-	STDMETHOD(Save)(LONG hWnd = NULL) PURE;
-	STDMETHOD(SaveAs)(BSTR Path) PURE;
-	STDMETHOD(Open)(LONG hWnd = NULL) PURE;
-	STDMETHOD(OpenFrom)(BSTR Path) PURE;
-};
+	STDMETHOD(Save)(LONG hWnd, Separatista::IOErrorCode *pErrorCode) PURE;
+	STDMETHOD(SaveAs)(BSTR Path, Separatista::IOErrorCode *pErrorCode) PURE;
+	STDMETHOD(Open)(LONG hWnd, Separatista::IOErrorCode *pErrorCode) PURE;
+	STDMETHOD(OpenFrom)(BSTR Path, Separatista::IOErrorCode *pErrorCode) PURE;
+
+
+	STDMETHOD(_NewEnum)(IUnknown **ppUnk) PURE;
+}; 
 
 struct __declspec(uuid("{4B8AC337-5E17-454D-A7EC-8955B07B99CC}")) ICustomerDirectDebitInitiation;
 
@@ -89,11 +92,12 @@ public:
 	STDMETHOD(GetInititiatingPartyName)(BSTR* pValue);
 	STDMETHOD(SetInititiatingPartyName)(BSTR Value);
 	STDMETHOD(AddPaymentInformation)(PaymentInformation *pPaymentInformation);
-	STDMETHOD(Save)(LONG hWnd);
-	STDMETHOD(SaveAs)(BSTR Path);
-	STDMETHOD(Open)(LONG hWnd = NULL);
-	STDMETHOD(OpenFrom)(BSTR Path);
+	STDMETHOD(Save)(LONG hWnd, Separatista::IOErrorCode *pErrorCode);
+	STDMETHOD(SaveAs)(BSTR Path, Separatista::IOErrorCode *pErrorCode);
+	STDMETHOD(Open)(LONG hWnd, Separatista::IOErrorCode *pErrorCode);
+	STDMETHOD(OpenFrom)(BSTR Path, Separatista::IOErrorCode *pErrorCode);
 
+	STDMETHOD(_NewEnum)(IUnknown **ppUnk);
 protected:
 	/**
 	Destructor

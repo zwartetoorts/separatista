@@ -106,6 +106,7 @@ void PmtTpInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
 	if (compareTag(pElementIterator))
 	{
+		pElementIterator->nextElement();
 		m_SvcLvl.fromDOMDocument(pElementIterator);
 		m_LclInstrm.fromDOMDocument(pElementIterator);
 		m_SeqTp.fromDOMDocument(pElementIterator);
@@ -446,14 +447,15 @@ void PmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 		m_ChrgBr.fromDOMDocument(pElementIterator);
 		m_CdtrSchmeId.fromDOMDocument(pElementIterator);
 
-		while (pElementIterator->getCurrentElement() != NULL)
+		while (pElementIterator->getCurrentElement() != NULL &&
+			xercesc::XMLString::compareString(pElementIterator->getCurrentElement()->getNodeName(), TEXT("DrctDbtTxInf")) == 0)
 		{
 			pos = pElementIterator->getPosition();
 			pTxInf = new DrctDbtTxInf();
 			if (pTxInf)
 			{
-				AddDrctDbtTxInf(pTxInf);
 				pTxInf->fromDOMDocument(pElementIterator);
+				AddDrctDbtTxInf(pTxInf);
 			}
 			if (pos == pElementIterator->getPosition())
 				break;

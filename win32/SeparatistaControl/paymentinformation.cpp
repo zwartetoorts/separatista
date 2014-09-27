@@ -31,6 +31,13 @@ SepaControlDispatch<IPaymentInformation>(pParent)
 	m_bOwnPmtInf = true;
 }
 
+PaymentInformation::PaymentInformation(Separatista::PmtInf *pPmtInf, IUnknown *pParent) :
+SepaControlDispatch<IPaymentInformation>(pParent)
+{
+	m_pPmtInf = pPmtInf;
+	m_bOwnPmtInf = false;
+}
+
 PaymentInformation::~PaymentInformation()
 {
 	if (m_bOwnPmtInf)

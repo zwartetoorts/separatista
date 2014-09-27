@@ -409,6 +409,17 @@ library Separatista
 		interface IDispatch;
 	};
 
+	typedef enum
+	{
+		IOERR_SUCCESS = 0,
+		IOERR_UNKNOWN,
+		IOERR_PLATFORM,
+		IOERR_XERCES,
+		IOERR_SEPARATISTA,
+		IOERR_DOCUMENT_INVALID,
+		IOERR_USER
+	} IOErrorCode;
+
 	/**
 		CustomerDirectDebitInitiation
 	*/
@@ -451,16 +462,25 @@ library Separatista
 			[in] IPaymentInformation *pPaymentInformation);
 		[helpstring("Shows the user a file open dialog and saves the document to the specified location.")]
 		HRESULT __stdcall Save(
-			[in, defaultvalue(NULL)] long hWnd);
+			[in, defaultvalue(NULL)] long hWnd,
+			[out, retval] IOErrorCode *errorCode);
 		[helpstring("Saves the document to the specified location")]
 		HRESULT __stdcall SaveAs(
-			[in] BSTR Path);
+			[in] BSTR Path,
+			[out, retval] IOErrorCode *errorCode);
 		[helpstring("Shows the user a file open dialog and opens the document from the specified location.")]
 		HRESULT __stdcall Open(
-			[in, defaultvalue(NULL)] long hWnd);
+			[in, defaultvalue(NULL)] long hWnd,
+			[out, retval] IOErrorCode *errorCode);
 		[helpstring("Opens the document from the specified location")]
 		HRESULT __stdcall OpenFrom(
-			[in] BSTR Path);
+			[in] BSTR Path,
+			[out, retval] IOErrorCode *errorCode);
+
+		[propget, id(DISPID_NEWENUM),
+			restricted, helpstring("Get the PaymentInformation enumerator")]
+		HRESULT __stdcall _NewEnum(
+			[out, retval] IUnknown **ppUnk);
 	};
 
 	[

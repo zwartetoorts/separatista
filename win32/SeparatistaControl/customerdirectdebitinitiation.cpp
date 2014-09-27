@@ -19,11 +19,13 @@
 ***************************************************************************/
 
 #include <comutil.h>
+#include <separatista/elementlist.h>
 
 #include "dispatch.cpp"
 #include "util.h"
 #include "customerdirectdebitinitiation.h"
 #include "documentreader.h"
+#include "enumvariant.h"
 
 CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
 :SepaControlDispatch<ICustomerDirectDebitInitiation>(NULL)
@@ -122,7 +124,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::AddPaymentInformation(PaymentInforma
 	return S_OK;
 }
 
-STDMETHODIMP CustomerDirectDebitInitiation::Save(LONG hWnd)
+STDMETHODIMP CustomerDirectDebitInitiation::Save(LONG hWnd, Separatista::IOErrorCode *pErrorCode)
 {
 	if (!m_pCstmrDrctDbtInitn)
 		return E_UNEXPECTED;
@@ -153,23 +155,25 @@ STDMETHODIMP CustomerDirectDebitInitiation::Save(LONG hWnd)
 	ofn.FlagsEx = 0;
 
 	if (GetSaveFileName(&ofn))
-		return SaveAs(filename);
+		return SaveAs(filename, pErrorCode);
+	else
+		*pErrorCode = Separatista::User;
 
 	return S_OK;
 }
 
-STDMETHODIMP CustomerDirectDebitInitiation::SaveAs(BSTR Path)
+STDMETHODIMP CustomerDirectDebitInitiation::SaveAs(BSTR Path, Separatista::IOErrorCode *pErrorCode)
 {
 	if (!m_pCstmrDrctDbtInitn)
 		return E_UNEXPECTED;
 
-	if (m_pCstmrDrctDbtInitn->SaveAs(Path) == Separatista::IOErrorCode::Success)
+	if ((*pErrorCode = m_pCstmrDrctDbtInitn->SaveAs(Path)) == Separatista::IOErrorCode::Success)
 		return S_OK;
 
 	return E_FAIL;
 }
 
-STDMETHODIMP CustomerDirectDebitInitiation::Open(LONG hWnd)
+STDMETHODIMP CustomerDirectDebitInitiation::Open(LONG hWnd, Separatista::IOErrorCode *pErrorCode)
 {
 	if (!m_pCstmrDrctDbtInitn)
 		return E_UNEXPECTED;
@@ -200,21 +204,25 @@ STDMETHODIMP CustomerDirectDebitInitiation::Open(LONG hWnd)
 	ofn.FlagsEx = 0;
 
 	if (GetOpenFileName(&ofn))
-		return OpenFrom(filename);
+		return OpenFrom(filename, pErrorCode);
+	else
+		*pErrorCode = Separatista::User;
 
 	return S_OK;
 }
 
-STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path)
+STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOErrorCode *pErrorCode)
 {
 	Separatista::DocumentReader reader;
 	Separatista::SeparatistaDocument *pDocument;
+
+	*pErrorCode = Separatista::Unknown;
 
 	if (!m_pCstmrDrctDbtInitn)
 		return E_UNEXPECTED;
 
 	reader.loadSchema(Separatista::CstmrDrctDbtInitn::NameSpaceURI);
-	if (reader.parseFile(Path) == Separatista::IOErrorCode::Success)
+	if ((*pErrorCode = reader.parseFile(Path)) == Separatista::IOErrorCode::Success)
 	{
 		pDocument = reader.getDocument();
 		if (pDocument)
@@ -227,9 +235,37 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path)
 				m_pCstmrDrctDbtInitn = (Separatista::CstmrDrctDbtInitn*)pDocument;
 				return S_OK;
 			}
+			*pErrorCode = Separatista::Document_Invalid;
 			delete pDocument;
 		}
 	}
 
 	return E_FAIL;
+}
+
+STDMETHODIMP CustomerDirectDebitInitiation::_NewEnum(IUnknown **ppUnk)
+{
+	EnumVariant *pEnumVariant;
+	PaymentInformation *pPaymentInformation;
+	Separatista::ElementList list;
+
+	if (!m_pCstmrDrctDbtInitn)
+		return E_UNEXPECTED;
+
+	pEnumVariant = new EnumVariant();
+	if (!pEnumVariant)
+		return E_OUTOFMEMORY;
+	pEnumVariant->AddRef();
+
+	// Add all PaymentInformations to the enumvariant
+	m_pCstmrDrctDbtInitn->getPmtInfs(list);
+	for (unsigned int i = 0; i < list.getElementCount(); i++)
+	{
+		pPaymentInformation = new PaymentInformation((Separatista::PmtInf*)list.getElement(i), this);
+		pPaymentInformation->AddRef();
+		pEnumVariant->Add(_variant_t(pPaymentInformation).Detach());
+	}
+
+	*ppUnk = pEnumVariant;
+	return S_OK;
 }
