@@ -209,6 +209,19 @@ void CstmrDrctDbtInitn::getPmtInfs(ElementList &elementList)
 		elementList.addElement(*it);
 }
 
+PmtInf* CstmrDrctDbtInitn::getPmtInfById(const wchar_t *pId)
+{
+	std::vector<PmtInf*>::iterator it;
+
+	for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
+	{
+		if (xercesc::XMLString::compareString(pId, (*it)->m_PmtInfId.getTextValue()) == 0)
+			return (*it);
+	}
+
+	return NULL;
+}
+
 void CstmrDrctDbtInitn::calcSum()
 {
 	// Calc both sum and count of transactions

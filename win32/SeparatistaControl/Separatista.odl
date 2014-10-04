@@ -477,6 +477,12 @@ library Separatista
 			[in] BSTR Path,
 			[out, retval] IOErrorCode *errorCode);
 
+		[propget, id(DISPID_VALUE),
+			helpstring("Get the PaymentInformation by id")]
+		HRESULT __stdcall PaymentInformationById(
+			[in] BSTR PaymentInformationIdentification,
+			[out, retval] IPaymentInformation **ppPaymentInformation);
+
 		[propget, id(DISPID_NEWENUM),
 			restricted, helpstring("Get the PaymentInformation enumerator")]
 		HRESULT __stdcall _NewEnum(

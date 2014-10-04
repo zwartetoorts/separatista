@@ -63,7 +63,7 @@ struct ICustomerDirectDebitInitiation : public IDispatch
 	STDMETHOD(Open)(LONG hWnd, Separatista::IOErrorCode *pErrorCode) PURE;
 	STDMETHOD(OpenFrom)(BSTR Path, Separatista::IOErrorCode *pErrorCode) PURE;
 
-
+	STDMETHOD(PaymentInformationById)(BSTR PaymentInformationIdentification, PaymentInformation **ppPaymentInformation) PURE;
 	STDMETHOD(_NewEnum)(IUnknown **ppUnk) PURE;
 }; 
 
@@ -97,6 +97,7 @@ public:
 	STDMETHOD(Open)(LONG hWnd, Separatista::IOErrorCode *pErrorCode);
 	STDMETHOD(OpenFrom)(BSTR Path, Separatista::IOErrorCode *pErrorCode);
 
+	STDMETHOD(PaymentInformationById)(BSTR PaymentInformationIdentification, PaymentInformation **ppPaymentInformation);
 	STDMETHOD(_NewEnum)(IUnknown **ppUnk);
 protected:
 	/**

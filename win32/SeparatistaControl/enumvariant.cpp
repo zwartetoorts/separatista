@@ -59,7 +59,7 @@ STDMETHODIMP EnumVariant::Next(unsigned long celt, VARIANT FAR* rgvar, unsigned 
 	if(rgvar == NULL)
 		return E_INVALIDARG;
 
-	if ((m_pos + celt) > m_wpos)
+	if ((m_pos + celt) > m_wpos && pceltFetched == NULL)
 		return S_FALSE;
 
 	for (ULONG l = 0; l < celt && m_pos < m_wpos; l++, m_pos++)

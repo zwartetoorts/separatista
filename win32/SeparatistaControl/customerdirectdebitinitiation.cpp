@@ -243,6 +243,25 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 	return E_FAIL;
 }
 
+STDMETHODIMP CustomerDirectDebitInitiation::PaymentInformationById(BSTR PaymentInformationIdentification, PaymentInformation **ppPaymentInformation)
+{
+	Separatista::PmtInf *pPmtInf;
+
+	if (!m_pCstmrDrctDbtInitn)
+		return E_UNEXPECTED;
+
+	pPmtInf = m_pCstmrDrctDbtInitn->getPmtInfById(PaymentInformationIdentification);
+	if (pPmtInf)
+	{
+		*ppPaymentInformation = new PaymentInformation(pPmtInf, this);
+		(*ppPaymentInformation)->AddRef();
+	}
+	else
+		*ppPaymentInformation = NULL;
+
+	return S_OK;
+}
+
 STDMETHODIMP CustomerDirectDebitInitiation::_NewEnum(IUnknown **ppUnk)
 {
 	EnumVariant *pEnumVariant;
@@ -262,7 +281,6 @@ STDMETHODIMP CustomerDirectDebitInitiation::_NewEnum(IUnknown **ppUnk)
 	for (unsigned int i = 0; i < list.getElementCount(); i++)
 	{
 		pPaymentInformation = new PaymentInformation((Separatista::PmtInf*)list.getElement(i), this);
-		pPaymentInformation->AddRef();
 		pEnumVariant->Add(_variant_t(pPaymentInformation).Detach());
 	}
 

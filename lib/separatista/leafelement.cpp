@@ -115,6 +115,9 @@ void LeafElement::setValue(const time_t Value, bool bWithTime)
 	char buffer[64];
 
 	ptm = std::localtime(&Value);
+	if (!ptm)
+		return;
+
 	if (bWithTime)
 		strftime(buffer, 64, "%Y-%m-%dT%H:%M:%S", ptm);
 	else

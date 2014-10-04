@@ -91,6 +91,8 @@ namespace Separatista
 
 		void getPmtInfs(ElementList &elementList);
 
+		PmtInf* getPmtInfById(const wchar_t *pId);
+
 		/**
 			Writes the DOM document to a local file path
 			@param pPath The path to write to

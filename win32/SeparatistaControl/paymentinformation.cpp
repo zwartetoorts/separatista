@@ -229,10 +229,16 @@ STDMETHODIMP PaymentInformation::GetRequestedCollectionDate(DATE *pValue)
 
 STDMETHODIMP PaymentInformation::SetRequestedCollectionDate(DATE Value)
 {
+	std::time_t t;
+
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_ReqdColltnDt.setValue(StdTimeFromDateType(Value));
+	t = StdTimeFromDateType(Value);
+	if (t == -1)
+		return E_FAIL;
+
+	m_pPmtInf->m_ReqdColltnDt.setValue(t);
 
 	return S_OK;
 }
