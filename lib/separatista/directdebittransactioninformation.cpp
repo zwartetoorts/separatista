@@ -18,6 +18,10 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMNodeIterator.hpp>
+
 #include "separatista.h"
 #include "directdebittransactioninformation.h"
 
@@ -30,9 +34,9 @@ m_EndToEndId(TEXT("EndToEndId"))
 
 }
 
-xercesc::DOMElement* PmtId::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+DOMElement* PmtId::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
+	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 		m_EndToEndId.toDOMDocument(pDocument, pElement);
@@ -57,9 +61,9 @@ m_DtOfSgntr(TEXT("DtOfSgntr"))
 	m_DtOfSgntr.setValue(std::time(NULL));
 }
 
-xercesc::DOMElement* MndtRltdInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+DOMElement* MndtRltdInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
+	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -87,9 +91,9 @@ m_MndtRltdInf()
 
 }
 
-xercesc::DOMElement* DrctDbtTx::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+DOMElement* DrctDbtTx::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
+	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -115,9 +119,9 @@ m_Ustrd(TEXT("Ustrd"))
 
 }
 
-xercesc::DOMElement* RmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+DOMElement* RmtInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
+	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -149,10 +153,10 @@ m_RmtInf()
 
 }
 
-xercesc::DOMElement* DrctDbtTxInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+DOMElement* DrctDbtTxInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
-	xercesc::DOMElement *pInstdAmt;
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
+	DOMElement *pInstdAmt;
+	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{

@@ -26,8 +26,13 @@
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/sax/ErrorHandler.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 
 #include "separatista.h"
+#include "xerces_types.h"
 #include "documentreader.h"
 #include "customerdirectdebitinitiation.h"
 

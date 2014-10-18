@@ -23,11 +23,9 @@
 
 #include <ctime>
 #include <string>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMException.hpp>
 
 #include "separatista.h"
+#include "xerces_types.h"
 
 namespace Separatista
 {
@@ -37,13 +35,13 @@ namespace Separatista
 	class SEPARATISTA_EXTERN DOMDocumentIterator
 	{
 	public:
-		DOMDocumentIterator(xercesc::DOMDocument *pDocument);
+		DOMDocumentIterator(DOMDocument *pDocument);
 
 		~DOMDocumentIterator();
 
-		xercesc::DOMElement* getCurrentElement() const;
+		DOMElement* getCurrentElement() const;
 
-		xercesc::DOMElement* nextElement();
+		DOMElement* nextElement();
 
 		/**
 			Get the current position. Can be used to check for dead loops.
@@ -51,8 +49,8 @@ namespace Separatista
 		unsigned int getPosition() const;
 
 	private:
-		xercesc::DOMNodeIterator *m_pNodeIterator;
-		xercesc::DOMNode *m_pCurrentNode;
+		DOMNodeIterator *m_pNodeIterator;
+		DOMNode *m_pCurrentNode;
 		unsigned int m_nPos;
 	};
 
@@ -78,7 +76,7 @@ namespace Separatista
 			@return Pointer to the new created DOMElement, or NULL
 			@see createElement
 		*/
-		virtual xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent) = 0;
+		virtual DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent) = 0;
 
 		/**
 			Tries to load it's value from the document iterator.
@@ -118,7 +116,7 @@ namespace Separatista
 			@param pParent The parent DOMElement to append the element to.
 			@return Pointer to the newly created element, or NULL 
 		*/
-		xercesc::DOMElement* createElement(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* createElement(DOMDocument *pDocument, DOMElement *pParent);
 
 		/**
 			Checks wether the position in a DOMDocumentIterator matches the current tag name.

@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,41 +18,39 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
+#ifndef SEPARATISTA_XERCES_TYPES_H
+#define SEPARATISTA_XERCES_TYPES_H
 
-#include "xerces_types.h"
-#include "branchelement.h"
-#include "leafelement.h"
-
-#ifndef SEPARATISTA_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
-#define SEPARATISTA_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
+#ifdef XERCES_HAS_CPP_NAMESPACE
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMNodeIterator.hpp>
+#include <xercesc/dom/DOMNode.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
+#include <xercesc/dom/DOMErrorHandler.hpp>
+#endif
 
 namespace Separatista
 {
-
-	class SEPARATISTA_EXTERN FinancialInstitutionIdentification : public BranchElement
-	{
-	public:
-		FinancialInstitutionIdentification();
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
-
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
-
-		LeafElement m_BIC;
-	};
-
-	class SEPARATISTA_EXTERN BranchAndFinancialInstitutionIdentification : public BranchElement
-	{
-	public:
-		BranchAndFinancialInstitutionIdentification(const wchar_t *pTag);
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
-
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
-
-		FinancialInstitutionIdentification m_FinancialInstitutionIdentification;
-	};
+#ifdef XERCES_HAS_CPP_NAMESPACE
+	typedef xercesc::DOMDocument DOMDocument;
+	typedef xercesc::DOMElement DOMElement;
+	typedef xercesc::DOMNodeIterator DOMNodeIterator;
+	typedef xercesc::DOMNode DOMNode;
+	typedef xercesc::XercesDOMParser XercesDOMParser;
+	typedef xercesc::SAXParseException SAXParseException;
+	typedef xercesc::ErrorHandler ErrorHandler;
+#else
+	class DOMDocument;
+	class DOMElement;
+	class DOMNodeIterator;
+	class DOMNode;
+	class XercesDOMParser;
+	class SAXParseException;
+	class ErrorHandler;
+#endif
 
 }
-#endif // SEPARATISTA_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
+
+#endif // SEPARATISTA_XERCES_TYPES_H

@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
@@ -45,9 +47,9 @@ m_Nm(TEXT("Nm"))
 
 }
 
-xercesc::DOMElement* InitgPty::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+DOMElement* InitgPty::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
+	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 		m_Nm.toDOMDocument(pDocument, pElement);
@@ -75,9 +77,9 @@ m_InitgPty()
 
 }
 
-xercesc::DOMElement* GrpHdr::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+DOMElement* GrpHdr::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
+	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -111,7 +113,7 @@ m_GrpHdr()
 
 }
 
-CstmrDrctDbtInitn::CstmrDrctDbtInitn(xercesc::DOMDocument *pDocument) :
+CstmrDrctDbtInitn::CstmrDrctDbtInitn(Separatista::DOMDocument *pDocument) :
 BranchElement(TEXT("CstmrDrctDbtInitn")),
 m_GrpHdr()
 {
@@ -127,10 +129,10 @@ CstmrDrctDbtInitn::~CstmrDrctDbtInitn()
 		delete (*it);
 }
 
-xercesc::DOMElement* CstmrDrctDbtInitn::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+DOMElement* CstmrDrctDbtInitn::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
 	std::vector<PmtInf*>::iterator it;
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
+	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
@@ -147,7 +149,7 @@ void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator *pDocumentIterator)
 {
 	PmtInf *pPmtInf;
 	unsigned int pos;
-	xercesc::DOMElement *pElement;
+	DOMElement *pElement;
 
 	// First tag should be "document"
 	pElement = pDocumentIterator->getCurrentElement();
@@ -243,7 +245,7 @@ IOErrorCode CstmrDrctDbtInitn::SaveAs(const wchar_t *pPath)
 {
 	// Create a DOM Document
 	xercesc::DOMImplementation *pDomImpl = xercesc::DOMImplementationRegistry::getDOMImplementation(TEXT("LS"));
-	xercesc::DOMDocument *pDocument;
+	DOMDocument *pDocument;
 	IOErrorCode ret;
 
 	if (!pDomImpl)

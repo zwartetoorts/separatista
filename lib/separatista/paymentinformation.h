@@ -19,9 +19,9 @@
 ***************************************************************************/
 
 #include <vector>
-#include <xercesc/dom/DOMDocument.hpp>
 
 #include "separatista.h"
+#include "xerces_types.h"
 #include "directdebittransactioninformation.h"
 #include "branchandfinancialinstitutionidentification.h"
 #include "partyidentification.h"
@@ -37,7 +37,7 @@ namespace Separatista
 	public:
 		SvcLvl();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -49,7 +49,7 @@ namespace Separatista
 	public:
 		LclInstrm();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -61,7 +61,7 @@ namespace Separatista
 	public:
 		PmtTpInf();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -80,7 +80,7 @@ namespace Separatista
 		*/
 		~PmtInf();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 

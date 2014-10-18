@@ -18,7 +18,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <xercesc/dom/DOMDocument.hpp>
+#include "xerces_types.h"
 #include "branchelement.h"
 #include "leafelement.h"
 #include "branchandfinancialinstitutionidentification.h"
@@ -35,7 +35,7 @@ namespace Separatista
 	public:
 		PmtId();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -47,7 +47,7 @@ namespace Separatista
 	public:
 		MndtRltdInf();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -60,7 +60,7 @@ namespace Separatista
 	public:
 		DrctDbtTx();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -72,7 +72,7 @@ namespace Separatista
 	public:
 		RmtInf();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -84,7 +84,7 @@ namespace Separatista
 	public:
 		DrctDbtTxInf();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 

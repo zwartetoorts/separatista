@@ -22,10 +22,14 @@
 #include <sstream>
 #include <iomanip>
 
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMNodeIterator.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/framework/psvi/XSValue.hpp>
 
-#include "separatista.h"
 #include "leafelement.h"
 
 using namespace Separatista;

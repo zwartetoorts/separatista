@@ -18,10 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-
 #include "separatista.h"
+#include "xerces_types.h"
 #include "element.h"
 #include "paymentinformation.h"
 #include "elementlist.h"
@@ -36,7 +34,7 @@ namespace Separatista
 	public:
 		InitgPty();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -48,9 +46,9 @@ namespace Separatista
 	public:
 		GrpHdr();
 
-		GrpHdr(const xercesc::DOMElement *pParent);
+		GrpHdr(const DOMElement *pParent);
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -70,14 +68,14 @@ namespace Separatista
 		/**
 			Construct from a dom document.
 		*/
-		CstmrDrctDbtInitn(xercesc::DOMDocument *pDocument);
+		CstmrDrctDbtInitn(DOMDocument *pDocument);
 
 		/**
 		Destructor, will delete all added PmtInf's
 		*/
 		~CstmrDrctDbtInitn();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent = NULL);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent = NULL);
 
 		void fromDOMDocument(DOMDocumentIterator *pDocumentIterator);
 

@@ -18,12 +18,15 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "separatista.h"
-#include "paymentinformation.h"
-
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/dom/DOMNode.hpp>
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+
+#include "separatista.h"
+#include "paymentinformation.h"
 
 using namespace Separatista;
 

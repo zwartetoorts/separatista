@@ -23,10 +23,9 @@
 
 #include <ctime>
 #include <string>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMException.hpp>
 
+#include "separatista.h"
+#include "xerces_types.h"
 #include "element.h"
 
 namespace Separatista
@@ -36,7 +35,7 @@ namespace Separatista
 	public:
 		LeafElement(const wchar_t *pTagName);
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -48,7 +47,7 @@ namespace Separatista
 		/**
 		Returns the value of the text node
 		*/
-		const XMLCh* getTextValue() const;
+		const wchar_t* getTextValue() const;
 
 		/**
 		Set the value of a text node

@@ -18,9 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <xercesc/dom/DOMDocument.hpp>
-
 #include "separatista.h"
+#include "xerces_types.h"
 #include "branchelement.h"
 #include "leafelement.h"
 
@@ -34,7 +33,7 @@ namespace Separatista
 	public:
 		PersonIdentificationSchemeName::PersonIdentificationSchemeName(const wchar_t *pTag);
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -46,7 +45,7 @@ namespace Separatista
 	public:
 		GenericPersonIdentification(const wchar_t *pTag);
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -59,7 +58,7 @@ namespace Separatista
 	public:
 		PersonIdentification(const wchar_t *pTag);
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -71,7 +70,7 @@ namespace Separatista
 	public:
 		PartyChoice();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -83,7 +82,7 @@ namespace Separatista
 	public:
 		PartyIdentification(const wchar_t *pTag);
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 

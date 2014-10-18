@@ -107,6 +107,7 @@
     <ClInclude Include="..\..\lib\separatista\partyidentification.h" />
     <ClInclude Include="..\..\lib\separatista\paymentinformation.h" />
     <ClInclude Include="..\..\lib\separatista\separatista.h" />
+    <ClInclude Include="..\..\lib\separatista\xerces_types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\separatista\branchelement.cpp" />

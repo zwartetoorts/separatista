@@ -21,12 +21,8 @@
 #include <vector>
 #include <string>
 
-#include <xercesc/sax/ErrorHandler.hpp>
-#include <xercesc/sax/SAXParseException.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-
 #include "separatista.h"
+#include "xerces_types.h"
 
 #ifndef SEPARATISTA_DOCUMENTREADER_H
 #define SEPARATISTA_DOCUMENTREADER_H
@@ -48,7 +44,7 @@ namespace Separatista
 		std::wstring msg;
 	} ErrorType;
 
-	class SEPARATISTA_EXTERN DocumentReader : public xercesc::ErrorHandler
+	class SEPARATISTA_EXTERN DocumentReader : public ErrorHandler
 	{
 	public:
 		DocumentReader();
@@ -68,13 +64,13 @@ namespace Separatista
 		const wchar_t* getErrorMessage(int index) const;
 
 		/// @see SAXParseException
-		void warning(const xercesc::SAXParseException &e);
+		void warning(const SAXParseException &e);
 
 		/// @see SAXParseException
-		void error(const xercesc::SAXParseException &e);
+		void error(const SAXParseException &e);
 
 		/// @see SAXParseException
-		void fatalError(const xercesc::SAXParseException &e);
+		void fatalError(const SAXParseException &e);
 
 		/// @see SAXParseException
 		void resetErrors();
@@ -98,11 +94,11 @@ namespace Separatista
 		SeparatistaDocument* getDocument();
 
 	protected:
-		void appendError(ErrorType::ErrorCode etc, const xercesc::SAXParseException &e);
+		void appendError(ErrorType::ErrorCode etc, const SAXParseException &e);
 
 	private:
-		xercesc::XercesDOMParser *m_pParser;
-		xercesc::DOMDocument *m_pDocument;
+		XercesDOMParser *m_pParser;
+		DOMDocument *m_pDocument;
 		std::vector<ErrorType*> m_ErrorList;
 	};
 }

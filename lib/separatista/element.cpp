@@ -22,6 +22,9 @@
 #include <sstream>
 #include <iomanip>
 
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMNodeIterator.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/util/XMLDateTime.hpp>
@@ -32,7 +35,7 @@
 
 using namespace Separatista;
 
-DOMDocumentIterator::DOMDocumentIterator(xercesc::DOMDocument *pDocument)
+DOMDocumentIterator::DOMDocumentIterator(DOMDocument *pDocument)
 {
 	m_pNodeIterator = pDocument->createNodeIterator(pDocument->getDocumentElement(), xercesc::DOMNodeFilter::SHOW_ELEMENT, NULL, true);
 	if (m_pNodeIterator)

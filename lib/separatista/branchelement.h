@@ -23,10 +23,9 @@
 
 #include <ctime>
 #include <string>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMException.hpp>
 
+#include "separatista.h"
+#include  "xerces_types.h"
 #include "element.h"
 
 namespace Separatista

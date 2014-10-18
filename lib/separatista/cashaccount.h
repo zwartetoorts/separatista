@@ -19,8 +19,8 @@
 ***************************************************************************/
 
 #include <windows.h>
-#include <xercesc/dom/DOMDocument.hpp>
 
+#include "xerces_types.h"
 #include "branchelement.h"
 #include "leafelement.h"
 
@@ -34,7 +34,7 @@ namespace Separatista
 	public:
 		AccountIdentification();
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
@@ -46,7 +46,7 @@ namespace Separatista
 	public:
 		CashAccount(const wchar_t *pTag);
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 		
