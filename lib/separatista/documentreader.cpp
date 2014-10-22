@@ -38,6 +38,45 @@
 
 using namespace Separatista;
 
+/**
+	Private wrapper for mapping xerces class ErrorHandler.
+*/
+
+class DocumentReaderErrorHandler : public xercesc::ErrorHandler
+{
+public:
+	DocumentReader *m_pDocumentReader;
+
+	DocumentReaderErrorHandler(DocumentReader *pDocumentReader)
+	{
+		m_pDocumentReader = pDocumentReader; 
+	};
+
+	/// @see SAXParseException
+	void warning(const SAXParseException &e)
+	{
+		m_pDocumentReader->warning(e);
+	};
+
+	/// @see SAXParseException
+	void error(const SAXParseException &e)
+	{
+		m_pDocumentReader->error(e);
+	};
+
+	/// @see SAXParseException
+	void fatalError(const SAXParseException &e)
+	{
+		m_pDocumentReader->fatalError(e);
+	};
+
+	/// @see SAXParseException
+	void resetErrors()
+	{
+		m_pDocumentReader->resetErrors();
+	};
+};
+
 DocumentReader::DocumentReader()
 {
 	m_pParser = new xercesc::XercesDOMParser();
@@ -96,7 +135,7 @@ IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)
 	if (!m_pParser)
 		return Platform;
 
-	m_pParser->setErrorHandler(this);
+	m_pParser->setErrorHandler(&DocumentReaderErrorHandler(this));
 	m_pParser->setDoNamespaces(true);
 	
 	// Parse the file

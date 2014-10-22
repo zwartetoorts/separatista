@@ -44,7 +44,7 @@ namespace Separatista
 		std::wstring msg;
 	} ErrorType;
 
-	class SEPARATISTA_EXTERN DocumentReader : public ErrorHandler
+	class SEPARATISTA_EXTERN DocumentReader
 	{
 	public:
 		DocumentReader();
