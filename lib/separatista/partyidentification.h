@@ -18,8 +18,11 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <windows.h>
+
 #include "separatista.h"
 #include "xerces_types.h"
+#include "choiceelement.h"
 #include "branchelement.h"
 #include "leafelement.h"
 
@@ -28,10 +31,10 @@
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN PersonIdentificationSchemeName : public BranchElement
+	class SEPARATISTA_EXTERN PersonIdentificationSchemeName1Choice : public ChoiceElement
 	{
 	public:
-		PersonIdentificationSchemeName::PersonIdentificationSchemeName(const wchar_t *pTag);
+		PersonIdentificationSchemeName1Choice::PersonIdentificationSchemeName1Choice(const wchar_t *pTag);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
@@ -40,54 +43,54 @@ namespace Separatista
 		LeafElement m_Prtry;
 	};
 
-	class SEPARATISTA_EXTERN GenericPersonIdentification : public BranchElement
+	class SEPARATISTA_EXTERN GenericPersonIdentification1 : public BranchElement
 	{
 	public:
-		GenericPersonIdentification(const wchar_t *pTag);
+		GenericPersonIdentification1(const wchar_t *pTag);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		LeafElement m_Id;
-		PersonIdentificationSchemeName m_SchmeNm;
+		PersonIdentificationSchemeName1Choice m_SchmeNm;
 	};
 
-	class SEPARATISTA_EXTERN PersonIdentification : public BranchElement
+	class SEPARATISTA_EXTERN PersonIdentification5 : public BranchElement
 	{
 	public:
-		PersonIdentification(const wchar_t *pTag);
+		PersonIdentification5(const wchar_t *pTag);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		GenericPersonIdentification m_Othr;
+		GenericPersonIdentification1 m_Othr;
 	};
 
-	class SEPARATISTA_EXTERN PartyChoice : public BranchElement
+	class SEPARATISTA_EXTERN Party11Choice : public ChoiceElement
 	{
 	public:
-		PartyChoice();
+		Party11Choice();
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		PersonIdentification m_PrvtId;
+		PersonIdentification5 m_PrvtId;
 	};
 
-	class SEPARATISTA_EXTERN PartyIdentification : public BranchElement
+	class SEPARATISTA_EXTERN PartyIdentification43 : public BranchElement
 	{
 	public:
-		PartyIdentification(const wchar_t *pTag);
+		PartyIdentification43(const wchar_t *pTag);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		LeafElement m_Nm;
-		PartyChoice m_Id;
+		Party11Choice m_Id;
 	};
 }
 #endif // SEPARATISTA_PARTYIDENTIFICATION_H

@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,42 +18,24 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
+#include <string>
+#include <sstream>
+#include <iomanip>
 
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMNodeIterator.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+
+#include "separatista.h"
 #include "xerces_types.h"
-#include "branchelement.h"
-#include "leafelement.h"
-#include "choiceelement.h" 
+#include "choiceelement.h"
 
-#ifndef SEPARATISTA_CASHACCOUNT_H
-#define SEPARATISTA_CASHACCOUNT_H
+using namespace Separatista;
 
-namespace Separatista
+ChoiceElement::ChoiceElement(const wchar_t *pTagName) :
+Element(pTagName)
 {
-	class SEPARATISTA_EXTERN AccountIdentification4Choice : public ChoiceElement
-	{
-	public:
-		AccountIdentification4Choice();
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
-
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
-
-		LeafElement m_IBAN;
-	};
-
-	class SEPARATISTA_EXTERN CashAccount24 : public BranchElement
-	{
-	public:
-		CashAccount24(const wchar_t *pTag);
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
-
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
-		
-		AccountIdentification4Choice m_Id;
-	};
 
 }
-
-#endif // SEPARATISTA_CONTROL_CASHACCOUNT_H

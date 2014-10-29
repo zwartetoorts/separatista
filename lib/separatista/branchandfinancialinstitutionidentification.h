@@ -30,10 +30,10 @@
 namespace Separatista
 {
 
-	class SEPARATISTA_EXTERN FinancialInstitutionIdentification : public BranchElement
+	class SEPARATISTA_EXTERN FinancialInstitutionIdentification8 : public BranchElement
 	{
 	public:
-		FinancialInstitutionIdentification();
+		FinancialInstitutionIdentification8();
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
@@ -42,16 +42,16 @@ namespace Separatista
 		LeafElement m_BIC;
 	};
 
-	class SEPARATISTA_EXTERN BranchAndFinancialInstitutionIdentification : public BranchElement
+	class SEPARATISTA_EXTERN BranchAndFinancialInstitutionIdentification5 : public BranchElement
 	{
 	public:
-		BranchAndFinancialInstitutionIdentification(const wchar_t *pTag);
+		BranchAndFinancialInstitutionIdentification5(const wchar_t *pTag);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		FinancialInstitutionIdentification m_FinancialInstitutionIdentification;
+		FinancialInstitutionIdentification8 m_FinancialInstitutionIdentification;
 	};
 
 }

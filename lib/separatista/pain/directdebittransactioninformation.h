@@ -93,9 +93,9 @@ namespace Separatista
 			PmtId m_PmtId;
 			LeafElement m_InstdAmt;
 			DrctDbtTx m_DrctDbtTx;
-			BranchAndFinancialInstitutionIdentification m_DbtrAgt;
-			PartyIdentification m_Dbtr;
-			CashAccount m_DbtrAcct;
+			BranchAndFinancialInstitutionIdentification5 m_DbtrAgt;
+			PartyIdentification43 m_Dbtr;
+			CashAccount24 m_DbtrAcct;
 			RmtInf m_RmtInf;
 		};
 	}

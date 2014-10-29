@@ -97,11 +97,11 @@ namespace Separatista
 			LeafElement m_CtrlSum;
 			PmtTpInf m_PmtTpInf;
 			LeafElement m_ReqdColltnDt;
-			PartyIdentification m_Cdtr;
-			CashAccount m_CdtrAcct;
-			BranchAndFinancialInstitutionIdentification m_CdtrAgt;
+			PartyIdentification43 m_Cdtr;
+			CashAccount24 m_CdtrAcct;
+			BranchAndFinancialInstitutionIdentification5 m_CdtrAgt;
 			LeafElement m_ChrgBr;
-			PartyIdentification m_CdtrSchmeId;
+			PartyIdentification43 m_CdtrSchmeId;
 
 		private:
 			void calcSums();

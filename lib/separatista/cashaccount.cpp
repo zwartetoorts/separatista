@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,42 +18,65 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 
-#include "xerces_types.h"
-#include "branchelement.h"
-#include "leafelement.h"
-#include "choiceelement.h" 
+#include "cashaccount.h"
 
-#ifndef SEPARATISTA_CASHACCOUNT_H
-#define SEPARATISTA_CASHACCOUNT_H
+using namespace Separatista;
 
-namespace Separatista
+AccountIdentification4Choice::AccountIdentification4Choice() :
+ChoiceElement(TEXT("Id")),
+m_IBAN(TEXT("IBAN"))
 {
-	class SEPARATISTA_EXTERN AccountIdentification4Choice : public ChoiceElement
-	{
-	public:
-		AccountIdentification4Choice();
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
-
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
-
-		LeafElement m_IBAN;
-	};
-
-	class SEPARATISTA_EXTERN CashAccount24 : public BranchElement
-	{
-	public:
-		CashAccount24(const wchar_t *pTag);
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
-
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
-		
-		AccountIdentification4Choice m_Id;
-	};
 
 }
 
-#endif // SEPARATISTA_CONTROL_CASHACCOUNT_H
+xercesc::DOMElement* AccountIdentification4Choice::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
+
+	if (pElement)
+	{
+		m_IBAN.toDOMDocument(pDocument, pElement);
+	}
+
+	return pElement;
+}
+
+void AccountIdentification4Choice::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_IBAN.fromDOMDocument(pElementIterator);
+	}
+}
+
+CashAccount24::CashAccount24(const wchar_t *pTag) :
+BranchElement(pTag),
+m_Id()
+{
+
+}
+
+xercesc::DOMElement* CashAccount24::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+{
+	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
+
+	if (pElement)
+	{
+		m_Id.toDOMDocument(pDocument, pElement);
+	}
+
+	return pElement;
+}
+
+void CashAccount24::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+{
+	if (compareTag(pElementIterator))
+	{
+		pElementIterator->nextElement();
+		m_Id.fromDOMDocument(pElementIterator);
+	}
+}
