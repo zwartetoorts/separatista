@@ -32,81 +32,83 @@
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN SvcLvl : public BranchElement
+	namespace pain_008_001
 	{
-	public:
-		SvcLvl();
+		class SEPARATISTA_EXTERN SvcLvl : public BranchElement
+		{
+		public:
+			SvcLvl();
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		LeafElement m_Cd;
-	};
+			LeafElement m_Cd;
+		};
 
-	class SEPARATISTA_EXTERN LclInstrm : public BranchElement
-	{
-	public:
-		LclInstrm();
+		class SEPARATISTA_EXTERN LclInstrm : public BranchElement
+		{
+		public:
+			LclInstrm();
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		LeafElement m_Cd;
-	};
+			LeafElement m_Cd;
+		};
 
-	class SEPARATISTA_EXTERN PmtTpInf : public BranchElement
-	{
-	public:
-		PmtTpInf();
+		class SEPARATISTA_EXTERN PmtTpInf : public BranchElement
+		{
+		public:
+			PmtTpInf();
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		SvcLvl m_SvcLvl;
-		LclInstrm m_LclInstrm;
-		LeafElement m_SeqTp;
-	};
+			SvcLvl m_SvcLvl;
+			LclInstrm m_LclInstrm;
+			LeafElement m_SeqTp;
+		};
 
-	class SEPARATISTA_EXTERN PmtInf : public BranchElement, ElementListener
-	{
-	public:
-		PmtInf();
+		class SEPARATISTA_EXTERN PmtInf : public BranchElement, ElementListener
+		{
+		public:
+			PmtInf();
 
-		/**
-		Destructor, will delete all added DrctDbtTxInf's
-		*/
-		~PmtInf();
+			/**
+			Destructor, will delete all added DrctDbtTxInf's
+			*/
+			~PmtInf();
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
-		void elementDeleted(Element *pElement);
+			void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
+			void elementDeleted(Element *pElement);
 
-		void AddDrctDbtTxInf(DrctDbtTxInf *pDrctDbtTxInf);
+			void AddDrctDbtTxInf(DrctDbtTxInf *pDrctDbtTxInf);
 
-		LeafElement m_PmtInfId;
-		LeafElement m_PmtMtd;
-		LeafElement m_NbOfTxs;
-		LeafElement m_CtrlSum;
-		PmtTpInf m_PmtTpInf;
-		LeafElement m_ReqdColltnDt;
-		PartyIdentification m_Cdtr;
-		CashAccount m_CdtrAcct;
-		BranchAndFinancialInstitutionIdentification m_CdtrAgt;
-		LeafElement m_ChrgBr;
-		PartyIdentification m_CdtrSchmeId;
+			LeafElement m_PmtInfId;
+			LeafElement m_PmtMtd;
+			LeafElement m_NbOfTxs;
+			LeafElement m_CtrlSum;
+			PmtTpInf m_PmtTpInf;
+			LeafElement m_ReqdColltnDt;
+			PartyIdentification m_Cdtr;
+			CashAccount m_CdtrAcct;
+			BranchAndFinancialInstitutionIdentification m_CdtrAgt;
+			LeafElement m_ChrgBr;
+			PartyIdentification m_CdtrSchmeId;
 
-	private:
-		void calcSums();
+		private:
+			void calcSums();
 
-		std::vector<DrctDbtTxInf*> m_DrctDbtTxInfs;
-	};
-
+			std::vector<DrctDbtTxInf*> m_DrctDbtTxInfs;
+		};
+	}
 }
 
 #endif // SEPARATISTA_PAYMENTINFORMATION_H

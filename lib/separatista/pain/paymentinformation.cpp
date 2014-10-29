@@ -29,6 +29,7 @@
 #include "paymentinformation.h"
 
 using namespace Separatista;
+using namespace Separatista::pain_008_001;
 
 SvcLvl::SvcLvl() :
 BranchElement(TEXT("SvcLvl")),

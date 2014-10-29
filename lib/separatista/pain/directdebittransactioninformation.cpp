@@ -26,6 +26,7 @@
 #include "directdebittransactioninformation.h"
 
 using namespace Separatista;
+using namespace Separatista::pain_008_001;
 
 PmtId::PmtId() :
 BranchElement(TEXT("PmtId")),

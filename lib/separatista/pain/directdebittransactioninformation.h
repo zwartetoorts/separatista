@@ -30,73 +30,75 @@
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN PmtId : public BranchElement
+	namespace pain_008_001
 	{
-	public:
-		PmtId();
+		class SEPARATISTA_EXTERN PmtId : public BranchElement
+		{
+		public:
+			PmtId();
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		LeafElement m_EndToEndId;
-	};
+			LeafElement m_EndToEndId;
+		};
 
-	class SEPARATISTA_EXTERN MndtRltdInf : public BranchElement
-	{
-	public:
-		MndtRltdInf();
+		class SEPARATISTA_EXTERN MndtRltdInf : public BranchElement
+		{
+		public:
+			MndtRltdInf();
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		LeafElement m_MndtId;
-		LeafElement m_DtOfSgntr;
-	};
+			LeafElement m_MndtId;
+			LeafElement m_DtOfSgntr;
+		};
 
-	class SEPARATISTA_EXTERN DrctDbtTx : public BranchElement
-	{
-	public:
-		DrctDbtTx();
+		class SEPARATISTA_EXTERN DrctDbtTx : public BranchElement
+		{
+		public:
+			DrctDbtTx();
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		MndtRltdInf m_MndtRltdInf;
-	};
+			MndtRltdInf m_MndtRltdInf;
+		};
 
-	class SEPARATISTA_EXTERN RmtInf : public BranchElement
-	{
-	public:
-		RmtInf();
+		class SEPARATISTA_EXTERN RmtInf : public BranchElement
+		{
+		public:
+			RmtInf();
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		LeafElement m_Ustrd;
-	};
+			LeafElement m_Ustrd;
+		};
 
-	class SEPARATISTA_EXTERN DrctDbtTxInf : public BranchElement
-	{
-	public:
-		DrctDbtTxInf();
+		class SEPARATISTA_EXTERN DrctDbtTxInf : public BranchElement
+		{
+		public:
+			DrctDbtTxInf();
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
-		PmtId m_PmtId;
-		LeafElement m_InstdAmt;
-		DrctDbtTx m_DrctDbtTx;
-		BranchAndFinancialInstitutionIdentification m_DbtrAgt;
-		PartyIdentification m_Dbtr;
-		CashAccount m_DbtrAcct;
-		RmtInf m_RmtInf;
-	};
-
+			PmtId m_PmtId;
+			LeafElement m_InstdAmt;
+			DrctDbtTx m_DrctDbtTx;
+			BranchAndFinancialInstitutionIdentification m_DbtrAgt;
+			PartyIdentification m_Dbtr;
+			CashAccount m_DbtrAcct;
+			RmtInf m_RmtInf;
+		};
+	}
 }
 
 #endif

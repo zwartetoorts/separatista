@@ -34,7 +34,7 @@
 #include "separatista.h"
 #include "xerces_types.h"
 #include "documentreader.h"
-#include "customerdirectdebitinitiation.h"
+#include "pain/customerdirectdebitinitiation.h"
 
 using namespace Separatista;
 
@@ -106,7 +106,7 @@ SeparatistaDocument* DocumentReader::getDocument()
 	// Insert new supported document types here...
 	std::unordered_map<std::wstring, SeparatistaDocumentCreatorFunc> documentCreatorMap(
 	{
-		{ CstmrDrctDbtInitn::NameSpaceURI, SeparatistaDocumentCreator<CstmrDrctDbtInitn> }
+		{ pain_008_001::CstmrDrctDbtInitn::NameSpaceURI, SeparatistaDocumentCreator<pain_008_001::CstmrDrctDbtInitn> }
 	});
 
 	// Get the document root element

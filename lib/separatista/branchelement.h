@@ -25,7 +25,7 @@
 #include <string>
 
 #include "separatista.h"
-#include  "xerces_types.h"
+#include "xerces_types.h"
 #include "element.h"
 
 namespace Separatista

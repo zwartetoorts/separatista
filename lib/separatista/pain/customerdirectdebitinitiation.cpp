@@ -32,11 +32,12 @@
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
 #include "separatista.h"
-#include "customerdirectdebitinitiation.h"
+#include "pain/customerdirectdebitinitiation.h" 
 #include "leafelement.h"
 #include "documentreader.h"
 
 using namespace Separatista;
+using namespace Separatista::pain_008_001;
 
 const wchar_t* CstmrDrctDbtInitn::NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.02");
 
