@@ -21,7 +21,7 @@
 #include "windows.h"
 
 #include "dispatch.h"
-#include "iban/iban.h"
+#include "separatista/iban/iban.h"
 
 #ifndef SEPARATISTA_CONTROL_IBAN_H
 #define SEPARATISTA_CONTROL_IBAN_H

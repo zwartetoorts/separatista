@@ -20,11 +20,11 @@
 
 #include <windows.h>
 #include <separatista/separatista.h>
-#include <separatista/paymentinformation.h>
+#include <separatista/pain/paymentinformation.h>
 
 #include "directdebittransactioninformation.h"
 #include "dispatch.h"
-#include "element.h"
+#include "separatista/element.h"
 
 #ifndef SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
 #define SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
@@ -109,7 +109,7 @@ public:
 	*/
 	PaymentInformation(IUnknown *pParent = NULL);
 
-	PaymentInformation(Separatista::PmtInf *pPmtInf, IUnknown *pParent = NULL);
+	PaymentInformation(Separatista::pain_008_001::PmtInf *pPmtInf, IUnknown *pParent = NULL);
 
 	/**
 		If this object owns the underlaying Separatista object, it will be detached from the object. If this 
@@ -147,12 +147,12 @@ public:
 	STDMETHOD(AddDirectDebitTransactionInformation)(DirectDebitTransactionInformation *pDirectDebitTransactionInformation);
 
 	// PaymentInformation methods
-	Separatista::PmtInf* GetPmtInf() const;
+	Separatista::pain_008_001::PmtInf* GetPmtInf() const;
 protected:
 	~PaymentInformation();
 
 private:
-	Separatista::PmtInf *m_pPmtInf;
+	Separatista::pain_008_001::PmtInf *m_pPmtInf;
 	bool m_bOwnPmtInf;
 };
 

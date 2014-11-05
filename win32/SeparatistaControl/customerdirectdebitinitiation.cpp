@@ -24,13 +24,13 @@
 #include "dispatch.cpp"
 #include "util.h"
 #include "customerdirectdebitinitiation.h"
-#include "documentreader.h"
+#include "separatista/documentreader.h"
 #include "enumvariant.h"
 
 CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
 :SepaControlDispatch<ICustomerDirectDebitInitiation>(NULL)
 {
-	m_pCstmrDrctDbtInitn = new Separatista::CstmrDrctDbtInitn();
+	m_pCstmrDrctDbtInitn = new Separatista::pain_008_001::CstmrDrctDbtInitn();
 	m_bOwnCstmrDrctDbtInitn = true;
 }
 
@@ -221,7 +221,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 	if (!m_pCstmrDrctDbtInitn)
 		return E_UNEXPECTED;
 
-	reader.loadSchema(Separatista::CstmrDrctDbtInitn::NameSpaceURI);
+	reader.loadSchema(Separatista::pain_008_001::CstmrDrctDbtInitn::NameSpaceURI);
 	if ((*pErrorCode = reader.parseFile(Path)) == Separatista::IOErrorCode::Success)
 	{
 		pDocument = reader.getDocument();
@@ -232,7 +232,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 				if (m_bOwnCstmrDrctDbtInitn && m_pCstmrDrctDbtInitn)
 					delete m_pCstmrDrctDbtInitn;
 				m_bOwnCstmrDrctDbtInitn = true;
-				m_pCstmrDrctDbtInitn = (Separatista::CstmrDrctDbtInitn*)pDocument;
+				m_pCstmrDrctDbtInitn = (Separatista::pain_008_001::CstmrDrctDbtInitn*)pDocument;
 				return S_OK;
 			}
 			*pErrorCode = Separatista::Document_Invalid;
@@ -245,7 +245,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 
 STDMETHODIMP CustomerDirectDebitInitiation::PaymentInformationById(BSTR PaymentInformationIdentification, PaymentInformation **ppPaymentInformation)
 {
-	Separatista::PmtInf *pPmtInf;
+	Separatista::pain_008_001::PmtInf *pPmtInf;
 
 	if (!m_pCstmrDrctDbtInitn)
 		return E_UNEXPECTED;
@@ -280,7 +280,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::_NewEnum(IUnknown **ppUnk)
 	m_pCstmrDrctDbtInitn->getPmtInfs(list);
 	for (unsigned int i = 0; i < list.getElementCount(); i++)
 	{
-		pPaymentInformation = new PaymentInformation((Separatista::PmtInf*)list.getElement(i), this);
+		pPaymentInformation = new PaymentInformation((Separatista::pain_008_001::PmtInf*)list.getElement(i), this);
 		pEnumVariant->Add(_variant_t(pPaymentInformation).Detach());
 	}
 

@@ -53,7 +53,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SEPARATISTA_BUILDINGDLL;_CRT_SECURE_NO_WARNINGS;XERCES_STATIC_LIBRARY;SEPARATISTA_IBAN_USINGDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\xerces-c-3.1.1\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\lib;..\..\..\xerces-c-3.1.1\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -81,14 +81,18 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SEPARATISTA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SEPARATISTA_BUILDINGDLL;SEPARATISTA_IBAN_USINGDLL;XERCES_STATIC_LIBRARY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\lib;..\..\..\xerces-c-3.1.1\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(Outdir);..\..\..\xerces-c-3.1.1\Build\Win32\VC10\Static Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>separatistaIBAN.lib;xerces-c_static_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -98,27 +102,32 @@
     <ClInclude Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.h" />
     <ClInclude Include="..\..\lib\separatista\branchelement.h" />
     <ClInclude Include="..\..\lib\separatista\cashaccount.h" />
-    <ClInclude Include="..\..\lib\separatista\customerdirectdebitinitiation.h" />
-    <ClInclude Include="..\..\lib\separatista\directdebittransactioninformation.h" />
+    <ClInclude Include="..\..\lib\separatista\choiceelement.h" />
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />
     <ClInclude Include="..\..\lib\separatista\element.h" />
     <ClInclude Include="..\..\lib\separatista\elementlist.h" />
     <ClInclude Include="..\..\lib\separatista\leafelement.h" />
+    <ClInclude Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.h" />
+    <ClInclude Include="..\..\lib\separatista\pain\directdebittransactioninformation.h" />
+    <ClInclude Include="..\..\lib\separatista\pain\paymentinformation.h" />
     <ClInclude Include="..\..\lib\separatista\partyidentification.h" />
-    <ClInclude Include="..\..\lib\separatista\paymentinformation.h" />
     <ClInclude Include="..\..\lib\separatista\separatista.h" />
     <ClInclude Include="..\..\lib\separatista\xerces_types.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\branchelement.cpp" />
-    <ClCompile Include="..\..\lib\separatista\customerdirectdebitinitiation.cpp" />
-    <ClCompile Include="..\..\lib\separatista\directdebittransactioninformation.cpp" />
+    <ClCompile Include="..\..\lib\separatista\cashaccount.cpp" />
+    <ClCompile Include="..\..\lib\separatista\choiceelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
     <ClCompile Include="..\..\lib\separatista\documentreader.cpp" />
     <ClCompile Include="..\..\lib\separatista\element.cpp" />
     <ClCompile Include="..\..\lib\separatista\elementlist.cpp" />
     <ClCompile Include="..\..\lib\separatista\leafelement.cpp" />
-    <ClCompile Include="..\..\lib\separatista\paymentinformation.cpp" />
+    <ClCompile Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.cpp" />
+    <ClCompile Include="..\..\lib\separatista\pain\directdebittransactioninformation.cpp" />
+    <ClCompile Include="..\..\lib\separatista\pain\paymentinformation.cpp" />
+    <ClCompile Include="..\..\lib\separatista\partyidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\separatista.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

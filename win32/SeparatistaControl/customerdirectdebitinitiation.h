@@ -21,7 +21,7 @@
 #include <vector>
 #include <windows.h>
 #include <separatista/separatista.h>
-#include <separatista/customerdirectdebitinitiation.h>
+#include <separatista/pain/customerdirectdebitinitiation.h>
 
 #include "dispatch.h"
 #include "paymentinformation.h"
@@ -106,7 +106,7 @@ protected:
 	~CustomerDirectDebitInitiation();
 
 private:
-	Separatista::CstmrDrctDbtInitn *m_pCstmrDrctDbtInitn;
+	Separatista::pain_008_001::CstmrDrctDbtInitn *m_pCstmrDrctDbtInitn;
 	bool m_bOwnCstmrDrctDbtInitn;
 };
 

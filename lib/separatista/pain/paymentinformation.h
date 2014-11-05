@@ -20,12 +20,12 @@
 
 #include <vector>
 
-#include "separatista.h"
-#include "xerces_types.h"
-#include "directdebittransactioninformation.h"
-#include "branchandfinancialinstitutionidentification.h"
-#include "partyidentification.h"
-#include "cashaccount.h"
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/pain/directdebittransactioninformation.h"
+#include "separatista/branchandfinancialinstitutionidentification.h"
+#include "separatista/partyidentification.h"
+#include "separatista/cashaccount.h"
 
 #ifndef SEPARATISTA_PAYMENTINFORMATION_H
 #define SEPARATISTA_PAYMENTINFORMATION_H

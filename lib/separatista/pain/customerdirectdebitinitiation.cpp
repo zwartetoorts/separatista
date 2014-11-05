@@ -31,10 +31,10 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
-#include "separatista.h"
-#include "pain/customerdirectdebitinitiation.h" 
-#include "leafelement.h"
-#include "documentreader.h"
+#include "separatista/separatista.h"
+#include "separatista/pain/customerdirectdebitinitiation.h" 
+#include "separatista/leafelement.h"
+#include "separatista/documentreader.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;

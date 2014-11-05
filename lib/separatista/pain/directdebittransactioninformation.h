@@ -18,12 +18,12 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "xerces_types.h"
-#include "branchelement.h"
-#include "leafelement.h"
-#include "branchandfinancialinstitutionidentification.h"
-#include "partyidentification.h"
-#include "cashaccount.h"
+#include "separatista/xerces_types.h"
+#include "separatista/branchelement.h"
+#include "separatista/leafelement.h"
+#include "separatista/branchandfinancialinstitutionidentification.h"
+#include "separatista/partyidentification.h"
+#include "separatista/cashaccount.h"
 
 #ifndef SEPARATISTA_DIRECTDEBITTRANSACTIONINFORMATION_H
 #define SEPARATISTA_DIRECTDEBITTRANSACTIONINFORMATION_H

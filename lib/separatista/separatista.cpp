@@ -47,6 +47,8 @@ void Separatista::Terminate()
 	xercesc::XMLPlatformUtils::Terminate();
 }
 
+#ifndef NDEBUG
+
 const wchar_t* Separatista::GetDebugMessage()
 {
 	return g_pDebugMessage;
@@ -56,4 +58,6 @@ void Separatista::SetDebugMessage(const wchar_t *pMsg)
 {
 	g_pDebugMessage = pMsg;
 }
+
+#endif
 

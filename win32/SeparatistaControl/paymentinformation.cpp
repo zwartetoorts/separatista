@@ -27,11 +27,11 @@
 PaymentInformation::PaymentInformation(IUnknown *pParent) :
 SepaControlDispatch<IPaymentInformation>(pParent)
 {
-	m_pPmtInf = new Separatista::PmtInf();
+	m_pPmtInf = new Separatista::pain_008_001::PmtInf();
 	m_bOwnPmtInf = true;
 }
 
-PaymentInformation::PaymentInformation(Separatista::PmtInf *pPmtInf, IUnknown *pParent) :
+PaymentInformation::PaymentInformation(Separatista::pain_008_001::PmtInf *pPmtInf, IUnknown *pParent) :
 SepaControlDispatch<IPaymentInformation>(pParent)
 {
 	m_pPmtInf = pPmtInf;
@@ -49,7 +49,7 @@ void PaymentInformation::Detach()
 	m_bOwnPmtInf = false;
 }
 
-Separatista::PmtInf* PaymentInformation::GetPmtInf() const
+Separatista::pain_008_001::PmtInf* PaymentInformation::GetPmtInf() const
 {
 	return m_pPmtInf;
 }

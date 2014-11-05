@@ -26,7 +26,7 @@
 #include <unordered_map>
 #include <ctime>
 
-#include "iban/iban.h"
+#include "separatista/iban/iban.h"
 
 #ifdef MT940S_BUILDINGDLL
 #	define MT940S_EXTERN __declspec(dllexport)

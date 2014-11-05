@@ -25,8 +25,8 @@
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 
-#include "separatista.h"
-#include "paymentinformation.h"
+#include "separatista/separatista.h"
+#include "separatista/pain/paymentinformation.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;

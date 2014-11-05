@@ -91,8 +91,8 @@ namespace Separatista
 
 	SEPARATISTA_EXTERN void SetDebugMessage(const wchar_t *pMessage);
 #else
-#define Separatista::GetDebugMessage()
-#define Separatista::SetDebugMessage(pMessage)
+#define GetDebugMessage() NULL
+#define SetDebugMessage(pMessage)
 #endif
 
 }

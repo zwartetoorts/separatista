@@ -27,7 +27,7 @@
 DirectDebitTransactionInformation::DirectDebitTransactionInformation(IUnknown *pParent) :
 SepaControlDispatch<IDirectDebitTransactionInformation>(pParent)
 {
-	m_pDrctDbtTxInf = new Separatista::DrctDbtTxInf();
+	m_pDrctDbtTxInf = new Separatista::pain_008_001::DrctDbtTxInf();
 	m_bOwnDrctDbtTxInf = true;
 }
 
@@ -42,7 +42,7 @@ void DirectDebitTransactionInformation::Detach()
 	m_bOwnDrctDbtTxInf = false;
 }
 
-Separatista::DrctDbtTxInf* DirectDebitTransactionInformation::getDrctDbtTxInf() const
+Separatista::pain_008_001::DrctDbtTxInf* DirectDebitTransactionInformation::getDrctDbtTxInf() const
 {
 	return m_pDrctDbtTxInf;
 }

@@ -22,8 +22,8 @@
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMNodeIterator.hpp>
 
-#include "separatista.h"
-#include "directdebittransactioninformation.h"
+#include "separatista/separatista.h"
+#include "separatista/pain/directdebittransactioninformation.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;

@@ -20,7 +20,7 @@
 
 #include <windows.h>
 #include <separatista/separatista.h>
-#include <separatista/directdebittransactioninformation.h>
+#include <separatista/pain/directdebittransactioninformation.h>
 
 #include "dispatch.h"
 
@@ -82,7 +82,7 @@ public:
 	void Detach();
 
 
-	Separatista::DrctDbtTxInf* getDrctDbtTxInf() const;
+	Separatista::pain_008_001::DrctDbtTxInf* getDrctDbtTxInf() const;
 
 	// COM Methods
 	STDMETHOD(GetPaymentIdentificationEndToEndId)(BSTR *pValue);
@@ -105,7 +105,7 @@ protected:
 	~DirectDebitTransactionInformation();
 
 private:
-	Separatista::DrctDbtTxInf *m_pDrctDbtTxInf;
+	Separatista::pain_008_001::DrctDbtTxInf *m_pDrctDbtTxInf;
 	bool m_bOwnDrctDbtTxInf;
 
 };

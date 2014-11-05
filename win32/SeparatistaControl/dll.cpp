@@ -55,7 +55,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 	case DLL_PROCESS_ATTACH:
 		// Init Separatista
 		if (Separatista::Init() != Separatista::IOErrorCode::Success)
-			OutputDebugString(Separatista::GetDebugMessage());
+			//OutputDebugString(GetDebugMessage());
+			OutputDebugString(TEXT("Error"));
 
 		// Save the Dll path
 		do{

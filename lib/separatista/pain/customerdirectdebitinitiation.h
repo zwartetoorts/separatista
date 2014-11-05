@@ -18,11 +18,11 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "separatista.h"
-#include "xerces_types.h"
-#include "element.h"
-#include "pain/paymentinformation.h"
-#include "elementlist.h"
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/element.h"
+#include "separatista/pain/paymentinformation.h"
+#include "separatista/elementlist.h"
 
 #ifndef SEPARATISTA_CUSTOMERDIRECTDEBITINITIATION_H
 #define SEPARATISTA_CUSTOMERDIRECTDEBITINITIATION_H

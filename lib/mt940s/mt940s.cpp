@@ -23,7 +23,7 @@
 #include <string>
 
 #include "mt940s.h"
-#include "iban/iban.h"
+#include "separatista/iban/iban.h"
 
 using namespace std;
 using namespace Separatista;
