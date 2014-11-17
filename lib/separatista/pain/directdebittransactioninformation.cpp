@@ -24,6 +24,7 @@
 
 #include "separatista/separatista.h"
 #include "separatista/pain/directdebittransactioninformation.h"
+#include "separatista/debug/debug.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
@@ -32,11 +33,12 @@ PmtId::PmtId() :
 BranchElement(TEXT("PmtId")),
 m_EndToEndId(TEXT("EndToEndId"))
 {
-
+	DEBUG_METHOD
 }
 
 DOMElement* PmtId::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
+	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -47,6 +49,7 @@ DOMElement* PmtId::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement
 
 void PmtId::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -59,11 +62,13 @@ BranchElement(TEXT("MndtRltdInf")),
 m_MndtId(TEXT("MndtId")),
 m_DtOfSgntr(TEXT("DtOfSgntr"))
 {
+	DEBUG_METHOD
 	m_DtOfSgntr.setValue(std::time(NULL));
 }
 
 DOMElement* MndtRltdInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
+	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -77,6 +82,7 @@ DOMElement* MndtRltdInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOME
 
 void MndtRltdInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -89,11 +95,12 @@ DrctDbtTx::DrctDbtTx() :
 BranchElement(TEXT("DrctDbtTx")),
 m_MndtRltdInf()
 {
-
+	DEBUG_METHOD
 }
 
 DOMElement* DrctDbtTx::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
+	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -106,6 +113,7 @@ DOMElement* DrctDbtTx::toDOMDocument(Separatista::DOMDocument *pDocument, DOMEle
 
 void DrctDbtTx::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -117,11 +125,12 @@ RmtInf::RmtInf() :
 BranchElement(TEXT("RmtInf")),
 m_Ustrd(TEXT("Ustrd"))
 {
-
+	DEBUG_METHOD
 }
 
 DOMElement* RmtInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
+	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -134,6 +143,7 @@ DOMElement* RmtInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElemen
 
 void RmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -151,11 +161,12 @@ m_Dbtr(TEXT("Dbtr")),
 m_DbtrAcct(TEXT("DbtrAcct")),
 m_RmtInf()
 {
-
+	DEBUG_METHOD
 }
 
 DOMElement* DrctDbtTxInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
+	DEBUG_METHOD
 	DOMElement *pInstdAmt;
 	DOMElement *pElement = createElement(pDocument, pParent);
 
@@ -177,6 +188,7 @@ DOMElement* DrctDbtTxInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOM
 
 void DrctDbtTxInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();

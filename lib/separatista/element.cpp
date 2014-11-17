@@ -32,11 +32,13 @@
 
 #include "separatista.h"
 #include "element.h"
+#include "debug/debug.h"
 
 using namespace Separatista;
 
-DOMDocumentIterator::DOMDocumentIterator(DOMDocument *pDocument)
+DOMDocumentIterator::DOMDocumentIterator(Separatista::DOMDocument *pDocument)
 {
+	DEBUG_METHOD
 	m_pNodeIterator = pDocument->createNodeIterator(pDocument->getDocumentElement(), xercesc::DOMNodeFilter::SHOW_ELEMENT, NULL, true);
 	if (m_pNodeIterator)
 		m_pCurrentNode = m_pNodeIterator->nextNode();
@@ -48,17 +50,20 @@ DOMDocumentIterator::DOMDocumentIterator(DOMDocument *pDocument)
 
 DOMDocumentIterator::~DOMDocumentIterator()
 {
+	DEBUG_METHOD
 	if (m_pNodeIterator)
 		m_pNodeIterator->release();
 }
 
 xercesc::DOMElement* DOMDocumentIterator::getCurrentElement() const
 {
+	DEBUG_METHOD
 	return (xercesc::DOMElement*)m_pCurrentNode;
 }
 
 xercesc::DOMElement* DOMDocumentIterator::nextElement()
 {
+	DEBUG_METHOD
 	if (m_pNodeIterator)
 	{
 		m_pCurrentNode = m_pNodeIterator->nextNode();
@@ -70,21 +75,25 @@ xercesc::DOMElement* DOMDocumentIterator::nextElement()
 
 unsigned int DOMDocumentIterator::getPosition() const
 {
+	DEBUG_METHOD
 	return m_nPos;
 }
 
 Element::Element(const wchar_t *pName)
 {
+	DEBUG_METHOD
 	m_pTag = pName;
 	m_pElementListener = NULL;
 }
 
 Element::~Element()
 {
+	DEBUG_METHOD
 }
 
 ElementListener* Element::setElementListener(ElementListener *pElementListener)
 {
+	DEBUG_METHOD
 	ElementListener *pOld = m_pElementListener;
 	m_pElementListener = pElementListener;
 	return pOld;
@@ -92,6 +101,7 @@ ElementListener* Element::setElementListener(ElementListener *pElementListener)
 
 xercesc::DOMElement* Element::createElement(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement;
 
 	try
@@ -102,7 +112,7 @@ xercesc::DOMElement* Element::createElement(xercesc::DOMDocument *pDocument, xer
 	}
 	catch (const xercesc::DOMException &e)
 	{
-		SetDebugMessage(e.getMessage());
+		LOG(e.getMessage());
 		return NULL;
 	}
 
@@ -111,23 +121,27 @@ xercesc::DOMElement* Element::createElement(xercesc::DOMDocument *pDocument, xer
 
 const wchar_t* Element::getTag() const
 {
+	DEBUG_METHOD
 	return m_pTag;
 }
 
 void Element::onValueChanged(const wchar_t *pNewValue)
 {
+	DEBUG_METHOD
 	if (m_pElementListener)
 		m_pElementListener->elementValueChanged(this, pNewValue);
 }
 
 void Element::onDeleted()
 {
+	DEBUG_METHOD
 	if (m_pElementListener)
 		m_pElementListener->elementDeleted(this);
 }
 
 bool Element::compareTag(const DOMDocumentIterator *pDocumentIterator) const
 {
+	DEBUG_METHOD
 	const xercesc::DOMElement *pElement = pDocumentIterator->getCurrentElement();
 
 	if (!pElement)

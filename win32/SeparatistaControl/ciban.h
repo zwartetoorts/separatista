@@ -22,6 +22,7 @@
 
 #include "dispatch.h"
 #include "separatista/iban/iban.h"
+#include "separatista/debug/debug.h"
 
 #ifndef SEPARATISTA_CONTROL_IBAN_H
 #define SEPARATISTA_CONTROL_IBAN_H

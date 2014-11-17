@@ -23,6 +23,7 @@
 
 #include <windows.h>
 
+#include "separatista/debug/debug.h"
 #include "unknown.h"
 
 template <class T>

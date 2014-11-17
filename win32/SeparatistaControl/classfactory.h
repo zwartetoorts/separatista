@@ -23,6 +23,7 @@
 
 #include <windows.h>
 #include "unknown.cpp"
+#include "separatista/debug/debug.h"
 
 /**
 	Component creation function, used as an easy way to create an instance

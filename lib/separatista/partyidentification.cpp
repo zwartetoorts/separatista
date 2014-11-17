@@ -22,6 +22,7 @@
 #include <xercesc/dom/DOMElement.hpp>
 
 #include "partyidentification.h"
+#include "debug/debug.h"
 
 using namespace Separatista;
 
@@ -29,11 +30,12 @@ PersonIdentificationSchemeName1Choice::PersonIdentificationSchemeName1Choice(con
 ChoiceElement(pTag),
 m_Prtry(TEXT("Prtry"))
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* PersonIdentificationSchemeName1Choice::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -46,6 +48,7 @@ xercesc::DOMElement* PersonIdentificationSchemeName1Choice::toDOMDocument(xerces
 
 void PersonIdentificationSchemeName1Choice::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -58,11 +61,12 @@ BranchElement(pTag),
 m_Id(TEXT("Id")),
 m_SchmeNm(TEXT("SchmeNm"))
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* GenericPersonIdentification1::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -76,6 +80,7 @@ xercesc::DOMElement* GenericPersonIdentification1::toDOMDocument(xercesc::DOMDoc
 
 void GenericPersonIdentification1::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -88,11 +93,12 @@ PersonIdentification5::PersonIdentification5(const wchar_t *pTag) :
 BranchElement(pTag),
 m_Othr(TEXT("Othr"))
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* PersonIdentification5::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -105,6 +111,7 @@ xercesc::DOMElement* PersonIdentification5::toDOMDocument(xercesc::DOMDocument *
 
 void PersonIdentification5::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -116,11 +123,12 @@ Party11Choice::Party11Choice() :
 ChoiceElement(TEXT("Id")),
 m_PrvtId(TEXT("PrvtId"))
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* Party11Choice::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -131,6 +139,7 @@ xercesc::DOMElement* Party11Choice::toDOMDocument(xercesc::DOMDocument *pDocumen
 
 void Party11Choice::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -143,11 +152,12 @@ BranchElement(pTag),
 m_Nm(TEXT("Nm")),
 m_Id()
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* PartyIdentification43::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -163,6 +173,7 @@ xercesc::DOMElement* PartyIdentification43::toDOMDocument(xercesc::DOMDocument *
 
 void PartyIdentification43::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();

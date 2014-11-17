@@ -22,6 +22,7 @@
 #define SEPARATISTA_UNKNOWN_H
 
 #include <windows.h>
+#include "separatista/debug/debug.h"
 
 template <class T>
 class SepaControlUnknown : public T

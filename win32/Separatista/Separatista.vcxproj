@@ -51,14 +51,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SEPARATISTA_BUILDINGDLL;_CRT_SECURE_NO_WARNINGS;XERCES_STATIC_LIBRARY;SEPARATISTA_IBAN_USINGDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SEPARATISTA_BUILDINGDLL;_CRT_SECURE_NO_WARNINGS;XERCES_STATIC_LIBRARY;SEPARATISTA_IBAN_USINGDLL;SEPARATISTADEBUG_USINGDLL;SEPARATISTA_DEBUG;SEPARATISTA_DEBUG_NEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\lib;..\..\..\xerces-c-3.1.1\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>separatistaiban.lib;xerces-c_static_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>separatistaiban.lib;separatistadebug.lib;xerces-c_static_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <AdditionalLibraryDirectories>..\..\..\xerces-c-3.1.1\Build\Win32\VC10\Static Debug;$(OutDir)</AdditionalLibraryDirectories>

@@ -18,11 +18,12 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "separatista.h"
-
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/XMLString.hpp>
+
+#include "debug/debug.h"
+#include "separatista.h"
 
 using namespace Separatista;
 
@@ -30,6 +31,7 @@ static const wchar_t* g_pDebugMessage = NULL;
 
 IOErrorCode Separatista::Init()
 {
+	DEBUG_METHOD
 	try
 	{
 		xercesc::XMLPlatformUtils::Initialize();
@@ -44,20 +46,7 @@ IOErrorCode Separatista::Init()
 
 void Separatista::Terminate()
 {
+	DEBUG_METHOD
 	xercesc::XMLPlatformUtils::Terminate();
 }
-
-#ifndef NDEBUG
-
-const wchar_t* Separatista::GetDebugMessage()
-{
-	return g_pDebugMessage;
-}
-
-void Separatista::SetDebugMessage(const wchar_t *pMsg)
-{
-	g_pDebugMessage = pMsg;
-}
-
-#endif
 

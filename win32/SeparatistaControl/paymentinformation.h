@@ -25,6 +25,7 @@
 #include "directdebittransactioninformation.h"
 #include "dispatch.h"
 #include "separatista/element.h"
+#include "separatista/debug/debug.h"
 
 #ifndef SEPARATISTA_CONTROL_PAYMENTINFORMATION_H
 #define SEPARATISTA_CONTROL_PAYMENTINFORMATION_H

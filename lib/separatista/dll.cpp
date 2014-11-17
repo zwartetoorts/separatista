@@ -24,6 +24,7 @@
 
 #include "separatista.h"
 #include "documentreader.h"
+#include "debug/debug.h"
 
 using namespace Separatista;
 
@@ -36,10 +37,13 @@ HMODULE g_hinstDll = 0;
 	DllMain
 */
 
-BOOL WINAPI DllMain(HINSTANCE hinstDll,
+BOOL WINAPI DllMain(
+	HINSTANCE hinstDll,
 	DWORD fdwReason,
 	LPVOID lpvReserved)
 {
+	DEBUG_METHOD
+
 	// Get reason
 	switch (fdwReason)
 	{
@@ -48,6 +52,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 		g_hinstDll = hinstDll;
 		break;
 	case DLL_PROCESS_DETACH:
+		Separatista::Debug::MemDebug::reportMemoryLeaks();
 		break;
 	}
 
@@ -58,6 +63,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 
 IOErrorCode DocumentReader::loadSchema(const wchar_t *name)
 {
+	DEBUG_METHOD
 	HRSRC hResInfo;
 	HGLOBAL hResource;
 	LPVOID lpData;
@@ -97,7 +103,7 @@ IOErrorCode DocumentReader::loadSchema(const wchar_t *name)
 	}
 	catch (const xercesc::XMLException &e)
 	{
-		SetDebugMessage(e.getMessage());
+		LOG(e.getMessage());
 	}
 
 	return Xerces;

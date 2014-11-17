@@ -23,6 +23,7 @@
 
 #include <windows.h>
 #include <ctime>
+#include "separatista/debug/debug.h"
 
 /**
 	Creates a new currency variant from string.

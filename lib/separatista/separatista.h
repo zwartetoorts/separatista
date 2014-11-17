@@ -34,12 +34,6 @@
 #	define SEPARATISTA_EXTERN
 #endif
 
-#if defined(SEPARATISTA_DEBUG) || defined(_DEBUG) || !defined(NDEBUG)
-#define SEPARATISTA_DEBUG
-#else
-#undef SEPARATISTA_DEBUG 
-#endif
-
 namespace Separatista
 {
 	/**
@@ -84,17 +78,6 @@ namespace Separatista
 
 	/// Termination
 	SEPARATISTA_EXTERN void Terminate();
-
-#ifdef SEPARATISTA_DEBUG
-	/// Get Xerces debug messages
-	SEPARATISTA_EXTERN const wchar_t* GetDebugMessage();
-
-	SEPARATISTA_EXTERN void SetDebugMessage(const wchar_t *pMessage);
-#else
-#define GetDebugMessage() NULL
-#define SetDebugMessage(pMessage)
-#endif
-
 }
 
 #endif // SEPARATISTA_H

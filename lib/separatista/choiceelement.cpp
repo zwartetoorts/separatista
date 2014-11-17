@@ -31,11 +31,12 @@
 #include "separatista.h"
 #include "xerces_types.h"
 #include "choiceelement.h"
+#include "debug/debug.h"
 
 using namespace Separatista;
 
 ChoiceElement::ChoiceElement(const wchar_t *pTagName) :
 Element(pTagName)
 {
-
+	DEBUG_METHOD
 }

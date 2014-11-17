@@ -21,6 +21,7 @@
 #include <windows.h>
 #include <separatista/separatista.h>
 #include <separatista/pain/directdebittransactioninformation.h>
+#include "separatista/debug/debug.h"
 
 #include "dispatch.h"
 

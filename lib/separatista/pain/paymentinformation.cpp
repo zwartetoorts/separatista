@@ -27,6 +27,7 @@
 
 #include "separatista/separatista.h"
 #include "separatista/pain/paymentinformation.h"
+#include "separatista/debug/debug.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
@@ -35,11 +36,12 @@ SvcLvl::SvcLvl() :
 BranchElement(TEXT("SvcLvl")),
 m_Cd(TEXT("Cd"))
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* SvcLvl::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -50,6 +52,7 @@ xercesc::DOMElement* SvcLvl::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 
 void SvcLvl::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -61,11 +64,12 @@ LclInstrm::LclInstrm() :
 BranchElement(TEXT("LclInstrm")),
 m_Cd(TEXT("Cd"))
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* LclInstrm::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -76,6 +80,7 @@ xercesc::DOMElement* LclInstrm::toDOMDocument(xercesc::DOMDocument *pDocument, x
 
 void LclInstrm::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -89,11 +94,12 @@ m_SvcLvl(),
 m_LclInstrm(),
 m_SeqTp(TEXT("SeqTp"))
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* PmtTpInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -108,6 +114,7 @@ xercesc::DOMElement* PmtTpInf::toDOMDocument(xercesc::DOMDocument *pDocument, xe
 
 void PmtTpInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -131,6 +138,7 @@ m_CdtrAgt(TEXT("CdtrAgt")),
 m_ChrgBr(TEXT("ChrgBr")),
 m_CdtrSchmeId(TEXT("CdtrSchmeId"))
 {
+	DEBUG_METHOD
 	// Set some default values
 	m_NbOfTxs.setValue(0);
 	m_CtrlSum.setValue(0.0);
@@ -141,6 +149,7 @@ m_CdtrSchmeId(TEXT("CdtrSchmeId"))
 
 PmtInf::~PmtInf()
 {
+	DEBUG_METHOD
 	std::vector<DrctDbtTxInf*>::iterator it;
 
 	for (it = m_DrctDbtTxInfs.begin(); it != m_DrctDbtTxInfs.end(); it++)
@@ -149,6 +158,7 @@ PmtInf::~PmtInf()
 
 xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	std::vector<DrctDbtTxInf*>::iterator it;
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
@@ -175,6 +185,7 @@ xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 
 void PmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	unsigned int pos;
 	DrctDbtTxInf *pTxInf;
 	
@@ -211,16 +222,19 @@ void PmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 
 void PmtInf::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
 {
+	DEBUG_METHOD
 	calcSums();
 }
 
 void PmtInf::elementDeleted(Element *pElement)
 {
+	DEBUG_METHOD
 	calcSums();
 }
 
 void PmtInf::AddDrctDbtTxInf(DrctDbtTxInf *pDrctDbtTxInf)
 {
+	DEBUG_METHOD
 	// Set listeners
 	pDrctDbtTxInf->m_InstdAmt.setElementListener(this);
 
@@ -230,6 +244,7 @@ void PmtInf::AddDrctDbtTxInf(DrctDbtTxInf *pDrctDbtTxInf)
 
 void PmtInf::calcSums()
 {
+	DEBUG_METHOD
 	std::vector<DrctDbtTxInf*>::iterator it;
 	int ntx = 0;
 	double sum = 0.0;

@@ -22,6 +22,7 @@
 #define SEPARATISTA_REGISTRYKEY_H
 
 #include <windows.h>
+#include "separatista/debug/debug.h"
 
 class RegistryKey
 {

@@ -22,6 +22,7 @@
 #include <vector>
 #include <array>
 #include "unknown.cpp"
+#include "separatista/debug/debug.h"
 
 #ifndef SEPARATISTA_ENUMVARIANT_H
 #define SEPARATISTA_ENUMVARIANT_H

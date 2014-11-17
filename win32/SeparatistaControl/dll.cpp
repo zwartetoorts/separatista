@@ -47,6 +47,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 					DWORD fdwReason,
 					LPVOID lpvReserved)
 {
+
 	DWORD dwPathLen = 0;
 	DWORD dwPathRet;
 
@@ -55,11 +56,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 	case DLL_PROCESS_ATTACH:
 		// Init Separatista
 		if (Separatista::Init() != Separatista::IOErrorCode::Success)
-			//OutputDebugString(GetDebugMessage());
-			OutputDebugString(TEXT("Error"));
-
+			return FALSE;
+			
 		// Save the Dll path
-		do{
+		do
+		{
 			if(g_lpszDllPath)
 				delete g_lpszDllPath;
 			dwPathLen += MAX_PATH;

@@ -24,6 +24,7 @@
 #include <windows.h>
 
 #include "mt940s/mt940s.h"
+#include "separatista/debug/debug.h"
 
 // {6B20C63D-F57B-4755-9D58-11D93D7EC908}
 DEFINE_GUID(SepaControlTypeLib, 

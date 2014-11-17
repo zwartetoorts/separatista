@@ -35,6 +35,7 @@
 #include "separatista/pain/customerdirectdebitinitiation.h" 
 #include "separatista/leafelement.h"
 #include "separatista/documentreader.h"
+#include "separatista/debug/debug.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
@@ -45,11 +46,12 @@ InitgPty::InitgPty() :
 BranchElement(TEXT("InitgPty")),
 m_Nm(TEXT("Nm"))
 {
-
+	DEBUG_METHOD
 }
 
 DOMElement* InitgPty::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
+	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -60,6 +62,7 @@ DOMElement* InitgPty::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElem
 
 void InitgPty::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -75,11 +78,12 @@ m_NbOfTxs(TEXT("NbOfTxs")),
 m_CtrlSum(TEXT("CtrlSum")),
 m_InitgPty()
 {
-
+	DEBUG_METHOD
 }
 
 DOMElement* GrpHdr::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
+	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -96,6 +100,7 @@ DOMElement* GrpHdr::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElemen
 
 void GrpHdr::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -111,18 +116,20 @@ CstmrDrctDbtInitn::CstmrDrctDbtInitn() :
 BranchElement(TEXT("CstmrDrctDbtInitn")),
 m_GrpHdr()
 {
-
+	DEBUG_METHOD
 }
 
 CstmrDrctDbtInitn::CstmrDrctDbtInitn(Separatista::DOMDocument *pDocument) :
 BranchElement(TEXT("CstmrDrctDbtInitn")),
 m_GrpHdr()
 {
+	DEBUG_METHOD
 	fromDOMDocument(&DOMDocumentIterator(pDocument));
 }
 
 CstmrDrctDbtInitn::~CstmrDrctDbtInitn()
 {
+	DEBUG_METHOD
 	// Delete all PmtInfs
 	std::vector<PmtInf*>::iterator it;
 
@@ -132,6 +139,7 @@ CstmrDrctDbtInitn::~CstmrDrctDbtInitn()
 
 DOMElement* CstmrDrctDbtInitn::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
 {
+	DEBUG_METHOD
 	std::vector<PmtInf*>::iterator it;
 	DOMElement *pElement = createElement(pDocument, pParent);
 
@@ -148,6 +156,7 @@ DOMElement* CstmrDrctDbtInitn::toDOMDocument(Separatista::DOMDocument *pDocument
 
 void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator *pDocumentIterator)
 {
+	DEBUG_METHOD
 	PmtInf *pPmtInf;
 	unsigned int pos;
 	DOMElement *pElement;
@@ -182,16 +191,19 @@ void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator *pDocumentIterator)
 
 void CstmrDrctDbtInitn::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
 {
+	DEBUG_METHOD
 	calcSum();
 }
 
 void CstmrDrctDbtInitn::elementDeleted(Element *pElement)
 {
+	DEBUG_METHOD
 	calcSum();
 }
 
 void CstmrDrctDbtInitn::AddPmtInf(PmtInf *pPmtInf)
 {
+	DEBUG_METHOD
 	// Set listeners
 	pPmtInf->m_NbOfTxs.setElementListener(this);
 	pPmtInf->m_CtrlSum.setElementListener(this);
@@ -206,6 +218,7 @@ void CstmrDrctDbtInitn::AddPmtInf(PmtInf *pPmtInf)
 
 void CstmrDrctDbtInitn::getPmtInfs(ElementList &elementList)
 {
+	DEBUG_METHOD
 	std::vector<PmtInf*>::iterator it;
 
 	for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
@@ -214,6 +227,7 @@ void CstmrDrctDbtInitn::getPmtInfs(ElementList &elementList)
 
 PmtInf* CstmrDrctDbtInitn::getPmtInfById(const wchar_t *pId)
 {
+	DEBUG_METHOD
 	std::vector<PmtInf*>::iterator it;
 
 	for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
@@ -227,6 +241,7 @@ PmtInf* CstmrDrctDbtInitn::getPmtInfById(const wchar_t *pId)
 
 void CstmrDrctDbtInitn::calcSum()
 {
+	DEBUG_METHOD
 	// Calc both sum and count of transactions
 	std::vector<PmtInf*>::iterator it;
 	int ntx = 0;
@@ -244,6 +259,7 @@ void CstmrDrctDbtInitn::calcSum()
 
 IOErrorCode CstmrDrctDbtInitn::SaveAs(const wchar_t *pPath)
 {
+	DEBUG_METHOD
 	// Create a DOM Document
 	xercesc::DOMImplementation *pDomImpl = xercesc::DOMImplementationRegistry::getDOMImplementation(TEXT("LS"));
 	DOMDocument *pDocument;

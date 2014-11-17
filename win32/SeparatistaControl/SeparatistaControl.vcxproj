@@ -51,14 +51,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SEPARATISTA_IBAN_USINGDLL;SEPARATISTA_USINGDLL;_CRT_SECURE_NO_WARNINGS;XERCES_STATIC_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SEPARATISTA_IBAN_USINGDLL;SEPARATISTA_USINGDLL;_CRT_SECURE_NO_WARNINGS;XERCES_STATIC_LIBRARY;SEPARATISTADEBUG_USINGDLL;SEPARATISTA_DEBUG;SEPARATISTA_DEBUG_NEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\lib\separatista;..\..\lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>separatista.lib;separatistaiban.lib;mt940s.lib;shlwapi.lib;comsuppwd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>separatista.lib;separatistaiban.lib;separatistadebug.lib;mt940s.lib;shlwapi.lib;comsuppwd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>SeparatistaControl.def</ModuleDefinitionFile>
     </Link>

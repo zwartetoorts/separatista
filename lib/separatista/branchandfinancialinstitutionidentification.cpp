@@ -22,6 +22,7 @@
 #include <xercesc/dom/DOMElement.hpp>
 
 #include "branchandfinancialinstitutionidentification.h"
+#include "debug/debug.h"
 
 using namespace Separatista;
 
@@ -29,11 +30,12 @@ FinancialInstitutionIdentification8::FinancialInstitutionIdentification8() :
 BranchElement(TEXT("FinInstnId")),
 m_BIC(TEXT("BIC"))
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* FinancialInstitutionIdentification8::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -46,6 +48,7 @@ xercesc::DOMElement* FinancialInstitutionIdentification8::toDOMDocument(xercesc:
 
 void FinancialInstitutionIdentification8::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -57,11 +60,12 @@ BranchAndFinancialInstitutionIdentification5::BranchAndFinancialInstitutionIdent
 BranchElement(pTag),
 m_FinancialInstitutionIdentification()
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* BranchAndFinancialInstitutionIdentification5::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -74,6 +78,7 @@ xercesc::DOMElement* BranchAndFinancialInstitutionIdentification5::toDOMDocument
 
 void BranchAndFinancialInstitutionIdentification5::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();

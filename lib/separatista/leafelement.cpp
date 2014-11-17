@@ -31,17 +31,19 @@
 #include <xercesc/framework/psvi/XSValue.hpp>
 
 #include "leafelement.h"
+#include "debug/debug.h"
 
 using namespace Separatista;
 
 LeafElement::LeafElement(const wchar_t *pTagName) :
 Element(pTagName)
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement;
 
 	// Check for value
@@ -58,6 +60,8 @@ xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument,
 
 void LeafElement::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
+
 	if (compareTag(pElementIterator))
 	{
 		setValue(pElementIterator->getCurrentElement()->getTextContent());
@@ -67,23 +71,30 @@ void LeafElement::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 
 void LeafElement::clear()
 {
+	DEBUG_METHOD
+
 	m_value.clear();
 	onDeleted();
 }
 
 const wchar_t* LeafElement::getTextValue() const
 {
+	DEBUG_METHOD
+
 	return m_value.data();
 }
 
 void LeafElement::setValue(const wchar_t *pValue)
 {
+	DEBUG_METHOD
+
 	m_value = pValue;
 	onValueChanged(pValue);
 }
 
 time_t LeafElement::getDateValue() const
 {
+	DEBUG_METHOD
 	xercesc::XSValue::Status status;
 	xercesc::XSValue *pValue;
 	std::tm tm;
@@ -115,6 +126,7 @@ time_t LeafElement::getDateValue() const
 
 void LeafElement::setValue(const time_t Value, bool bWithTime)
 {
+	DEBUG_METHOD
 	tm *ptm;
 	char buffer[64];
 
@@ -138,6 +150,7 @@ void LeafElement::setValue(const time_t Value, bool bWithTime)
 
 int LeafElement::getIntValue() const
 {
+	DEBUG_METHOD
 	xercesc::XSValue::Status status;
 	xercesc::XSValue *pValue;
 	const XMLCh *pText = getTextValue();
@@ -154,6 +167,7 @@ int LeafElement::getIntValue() const
 
 void LeafElement::setValue(const int Value)
 {
+	DEBUG_METHOD
 	std::wstring w = std::to_wstring(Value);
 
 	setValue(w.data());
@@ -161,6 +175,7 @@ void LeafElement::setValue(const int Value)
 
 double LeafElement::getDoubleValue() const
 {
+	DEBUG_METHOD
 	xercesc::XSValue::Status status;
 	xercesc::XSValue *pValue;
 	const XMLCh *pText = getTextValue();
@@ -177,6 +192,7 @@ double LeafElement::getDoubleValue() const
 
 void LeafElement::setValue(double d)
 {
+	DEBUG_METHOD
 	std::wostringstream wos;
 
 	wos.imbue(std::locale::classic());
@@ -186,6 +202,7 @@ void LeafElement::setValue(double d)
 
 bool LeafElement::isEmpty() const
 {
+	DEBUG_METHOD
 	return m_value.empty();
 }
 

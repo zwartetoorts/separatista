@@ -31,11 +31,12 @@
 #include "separatista.h"
 #include "xerces_types.h"
 #include "branchelement.h"
+#include "debug/debug.h"
 
 using namespace Separatista;
 
 BranchElement::BranchElement(const wchar_t *pTagName) :
 Element(pTagName)
 {
-
+	DEBUG_METHOD
 }

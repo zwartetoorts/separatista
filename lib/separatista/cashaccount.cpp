@@ -22,6 +22,7 @@
 #include <xercesc/dom/DOMElement.hpp>
 
 #include "cashaccount.h"
+#include "debug/debug.h"
 
 using namespace Separatista;
 
@@ -29,11 +30,12 @@ AccountIdentification4Choice::AccountIdentification4Choice() :
 ChoiceElement(TEXT("Id")),
 m_IBAN(TEXT("IBAN"))
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* AccountIdentification4Choice::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -46,6 +48,7 @@ xercesc::DOMElement* AccountIdentification4Choice::toDOMDocument(xercesc::DOMDoc
 
 void AccountIdentification4Choice::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
@@ -57,11 +60,12 @@ CashAccount24::CashAccount24(const wchar_t *pTag) :
 BranchElement(pTag),
 m_Id()
 {
-
+	DEBUG_METHOD
 }
 
 xercesc::DOMElement* CashAccount24::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
@@ -74,6 +78,7 @@ xercesc::DOMElement* CashAccount24::toDOMDocument(xercesc::DOMDocument *pDocumen
 
 void CashAccount24::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 {
+	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();

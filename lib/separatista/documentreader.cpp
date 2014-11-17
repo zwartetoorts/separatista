@@ -35,6 +35,7 @@
 #include "xerces_types.h"
 #include "documentreader.h"
 #include "pain/customerdirectdebitinitiation.h"
+#include "debug/debug.h"
 
 using namespace Separatista;
 
@@ -49,42 +50,49 @@ public:
 
 	DocumentReaderErrorHandler(DocumentReader *pDocumentReader)
 	{
+		DEBUG_METHOD
 		m_pDocumentReader = pDocumentReader; 
 	};
 
 	/// @see SAXParseException
 	void warning(const SAXParseException &e)
 	{
+		DEBUG_METHOD
 		m_pDocumentReader->warning(e);
 	};
 
 	/// @see SAXParseException
 	void error(const SAXParseException &e)
 	{
+		DEBUG_METHOD
 		m_pDocumentReader->error(e);
 	};
 
 	/// @see SAXParseException
 	void fatalError(const SAXParseException &e)
 	{
+		DEBUG_METHOD
 		m_pDocumentReader->fatalError(e);
 	};
 
 	/// @see SAXParseException
 	void resetErrors()
 	{
+		DEBUG_METHOD
 		m_pDocumentReader->resetErrors();
 	};
 };
 
 DocumentReader::DocumentReader()
 {
+	DEBUG_METHOD
 	m_pParser = new xercesc::XercesDOMParser();
 	m_pDocument = NULL;
 }
 
 DocumentReader::~DocumentReader()
 {
+	DEBUG_METHOD
 	if (m_pParser)
 		delete m_pParser;
 	resetErrors();
@@ -94,12 +102,14 @@ typedef SeparatistaDocument* (*SeparatistaDocumentCreatorFunc)(xercesc::DOMDocum
 
 template<class T> SeparatistaDocument* SeparatistaDocumentCreator(xercesc::DOMDocument *pDOMDocument)
 {
+	DEBUG_METHOD
 	SeparatistaDocument *pDocument = new T(pDOMDocument);
 	return pDocument;
 }
 
 SeparatistaDocument* DocumentReader::getDocument()
 {
+	DEBUG_METHOD
 	xercesc::DOMElement *pDocumentElement;
 	const XMLCh *pNamespaceURI;
 
@@ -132,6 +142,7 @@ SeparatistaDocument* DocumentReader::getDocument()
 
 IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)
 {	
+	DEBUG_METHOD
 	if (!m_pParser)
 		return Platform;
 
@@ -150,12 +161,12 @@ IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)
 	}
 	catch (const xercesc::XMLException &e)
 	{
-		SetDebugMessage(e.getMessage());
+		LOG(e.getMessage());
 		return Xerces;
 	}
 	catch (const xercesc::DOMException &e)
 	{
-		SetDebugMessage(e.getMessage());
+		LOG(e.getMessage());
 		return Document_Invalid;
 	}
 	catch (...)
@@ -168,37 +179,44 @@ IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)
 
 int DocumentReader::getErrorCount() const
 {
+	DEBUG_METHOD
 	return m_ErrorList.size();
 }
 
 const ErrorType::ErrorCode DocumentReader::getErrorCode(int index) const
 {
+	DEBUG_METHOD
 	return m_ErrorList.at(index)->errorCode;
 }
 
 const wchar_t* DocumentReader::getErrorMessage(int index) const
 {
+	DEBUG_METHOD
 	return m_ErrorList.at(index)->msg.data();
 
 }
 
 void DocumentReader::warning(const xercesc::SAXParseException &e)
 {
+	DEBUG_METHOD
 	appendError(ErrorType::ETC_WARNING, e);
 }
 
 void DocumentReader::error(const xercesc::SAXParseException &e)
 {
+	DEBUG_METHOD
 	appendError(ErrorType::ETC_ERROR, e);
 }
 
 void DocumentReader::fatalError(const xercesc::SAXParseException &e)
 {
+	DEBUG_METHOD
 	appendError(ErrorType::ETC_FATALERROR, e);
 }
 
 void DocumentReader::resetErrors()
 {
+	DEBUG_METHOD
 	std::vector<ErrorType*>::iterator it;
 
 	for (it = m_ErrorList.begin(); it != m_ErrorList.end(); it++)
@@ -207,6 +225,7 @@ void DocumentReader::resetErrors()
 
 void DocumentReader::appendError(ErrorType::ErrorCode etc, const xercesc::SAXParseException &e)
 {
+	DEBUG_METHOD
 	std::wostringstream wos;
 	ErrorType *pError = new ErrorType;
 
