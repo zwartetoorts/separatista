@@ -52,7 +52,6 @@ BOOL WINAPI DllMain(
 		g_hinstDll = hinstDll;
 		break;
 	case DLL_PROCESS_DETACH:
-		Separatista::Debug::MemDebug::reportMemoryLeaks();
 		break;
 	}
 
