@@ -78,16 +78,17 @@ namespace Separatista
 		class SEPARATISTADEBUG_EXTERN MemDebug
 		{
 		public:
-			MemDebug() { };
+			MemDebug() 
+			{ 
+				std::wcscpy(m_TypeName, TEXT("Unknown"));
+			};
 
 			MemDebug(const wchar_t *pFilename, int nLine) :
 				m_pFilename(pFilename),
-				m_nLine(nLine) { };
-
-			/**
-				Add a new memory block to the internal watch ist.
-			*/
-			static void addMemory(void *ptr);
+				m_nLine(nLine)
+			{ 
+				std::wcscpy(m_TypeName, TEXT("Unknown"));
+			};
 
 			/**
 				Sets filename, lineno and type name of a memory block in the internal list.
@@ -112,7 +113,7 @@ namespace Separatista
 			*/
 			static BOOL exit();
 		private:
-			const char *m_pTypeName;
+			wchar_t m_TypeName[100];
 			const wchar_t *m_pFilename;
 			int m_nLine;
 
@@ -131,13 +132,17 @@ namespace Separatista
 	}
 }
 
+#ifdef SEPARATISTA_DEBUG_NEW
+
+// Prevent internal use of new from being trapped
+#ifndef SEPARATISTADEBUG_BUILDINGDLL
+
 inline void* operator new(size_t size)
 {
 	void *p = std::malloc(size);
 	if (p == NULL)
 		throw std::bad_alloc();
 	
-	Separatista::Debug::MemDebug::addMemory(p);
 	return p;
 }
 
@@ -147,7 +152,6 @@ inline void* operator new[](size_t size)
 	if (p == NULL)
 		throw std::bad_alloc();
 
-	Separatista::Debug::MemDebug::addMemory(p);
 	return p;
 }
 
@@ -164,6 +168,9 @@ inline void operator delete [](void *ptr)
 }
 
 #define new Separatista::Debug::MemDebug(TEXT(__FILE__), __LINE__) * new
+
+#endif // !defined SEPARATISTADEBUG_BUILDINGDLL
+#endif // !defined SEPARATISTA_DEBUG_NEW
 
 #else // !defined SEPARATISTA_DEBUG
 

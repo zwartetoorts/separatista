@@ -80,34 +80,26 @@ void Separatista::Debug::DebugLogger::log(const wchar_t *pMessage, const wchar_t
 
 std::unordered_map<void*, Separatista::Debug::MemDebug> *Separatista::Debug::MemDebug::g_memMap = NULL;
 
-void Separatista::Debug::MemDebug::addMemory(void *ptr)
-{
-	DEBUG_METHOD
-	std::pair<void*, MemDebug> p(ptr, MemDebug(TEXT(__FILE__), __LINE__));
-	g_memMap->insert(p);
-}
-
 void Separatista::Debug::MemDebug::trackMemory(void *ptr, const MemDebug &memDebug, const char *pTypeName)
 {
-	DEBUG_METHOD
-	(*g_memMap)[ptr] = memDebug;
-	(*g_memMap)[ptr].m_pTypeName = pTypeName;
+	if (g_memMap)
+	{
+		g_memMap->emplace(ptr, memDebug);
+		std::mbstowcs((*g_memMap)[ptr].m_TypeName, pTypeName, 100);
+		(*g_memMap)[ptr].m_TypeName[99] = TEXT('\0');
+	}
 }
 
 void Separatista::Debug::MemDebug::releaseMemory(void *ptr)
 {
 	std::wostringstream wos;
-	DEBUG_METHOD
+
+	if (!g_memMap)
+		return;
 
 	// Check if key exists
-	if (g_memMap->find(ptr) == g_memMap->end())
-	{
-		wos.setf(std::ios::hex, std::ios::basefield);
-		wos << TEXT("WARNING: Freeing unallocated object at: ") << ptr;
-		OutputDebugString(wos.str().data());
-		return;
-	}
-	g_memMap->erase(ptr);
+	if (g_memMap->find(ptr) != g_memMap->end())
+		g_memMap->erase(ptr);
 }
 
 BOOL Separatista::Debug::MemDebug::init()
@@ -121,26 +113,28 @@ BOOL Separatista::Debug::MemDebug::init()
 
 BOOL Separatista::Debug::MemDebug::exit()
 {
-	std::wostringstream wos;
+	std::unordered_map<void *, MemDebug>* memMap;
 	DEBUG_METHOD
 
-	if (!g_memMap->empty())
+	memMap = g_memMap;
+	g_memMap = NULL;
+	if (!memMap->empty())
 	{
-		OutputDebugString(TEXT("WARNING: MEMORY LEAKS DETECTED !!!!!"));
+		OutputDebugString(TEXT("WARNING: MEMORY LEAKS DETECTED !!!!!\r\n"));
 
-		for (std::unordered_map<void*, Separatista::Debug::MemDebug>::iterator it = g_memMap->begin();
-			it != g_memMap->end(); it++)
+		for (auto& x : *memMap)
 		{
-			wos.clear();
+			std::wostringstream wos;
 			wos.setf(std::ios::hex, std::ios::basefield);
-			wos << (*it).first;
+			wos << x.first;
 			wos.setf(std::ios::dec);
-			wos << TEXT(" object allocated in ") << (*it).second.m_pFilename << TEXT(" at line ") << (*it).second.m_nLine;
+			wos << TEXT(" ") << x.second.m_TypeName;
+			wos << TEXT(" object allocated in ") << x.second.m_pFilename << TEXT(" at line ") << x.second.m_nLine << TEXT("\r\n");
 			OutputDebugString(wos.str().data());
 		}
-		g_memMap->clear();
+		memMap->clear();
 	}
-	delete g_memMap;
+	delete memMap;
 	return TRUE;
 }
 
