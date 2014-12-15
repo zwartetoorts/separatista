@@ -36,10 +36,10 @@ BOOL WINAPI DllMain(
 	switch (fdwReason)
 	{
 		case DLL_PROCESS_ATTACH:
-			return Separatista::Debug::MemDebug::init();
+			return Separatista::Debug::MemDebug::init() ? TRUE : FALSE;
 			break;
 		case DLL_PROCESS_DETACH:
-			Separatista::Debug::MemDebug::exit();
+			return Separatista::Debug::MemDebug::exit() ? TRUE : FALSE ;
 			break;
 	}
 

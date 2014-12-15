@@ -106,12 +106,12 @@ namespace Separatista
 			/**
 				Init
 			*/
-			static BOOL init();
+			static bool init();
 
 			/**
 				Reports all memory leaks
 			*/
-			static BOOL exit();
+			static bool exit();
 		private:
 			wchar_t m_TypeName[100];
 			const wchar_t *m_pFilename;

@@ -102,16 +102,16 @@ void Separatista::Debug::MemDebug::releaseMemory(void *ptr)
 		g_memMap->erase(ptr);
 }
 
-BOOL Separatista::Debug::MemDebug::init()
+bool Separatista::Debug::MemDebug::init()
 {
 	DEBUG_METHOD
 	g_memMap = new std::unordered_map < void*, MemDebug >;
 	if (!g_memMap)
-		return FALSE;
-	return TRUE;
+		return false;
+	return true;
 }
 
-BOOL Separatista::Debug::MemDebug::exit()
+bool Separatista::Debug::MemDebug::exit()
 {
 	std::unordered_map<void *, MemDebug>* memMap;
 	DEBUG_METHOD
@@ -135,7 +135,7 @@ BOOL Separatista::Debug::MemDebug::exit()
 		memMap->clear();
 	}
 	delete memMap;
-	return TRUE;
+	return true;
 }
 
 #endif // defined SEPARATISTA_DEBUG_NEW
