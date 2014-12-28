@@ -98,6 +98,11 @@ namespace Separatista
 		*/
 		const wchar_t* getTag() const;
 
+		/**
+			Checks wether the position in a DOMDocumentIterator matches the current tag name.
+		*/
+		bool compareTag(const DOMDocumentIterator *DocumentIterator) const;
+
 	protected:
 		/**
 		Construct a new Element
@@ -117,11 +122,6 @@ namespace Separatista
 			@return Pointer to the newly created element, or NULL 
 		*/
 		DOMElement* createElement(DOMDocument *pDocument, DOMElement *pParent);
-
-		/**
-			Checks wether the position in a DOMDocumentIterator matches the current tag name.
-		*/
-		bool compareTag(const DOMDocumentIterator *DocumentIterator) const;
 
 		/// Tag name
 		const wchar_t *m_pTag;

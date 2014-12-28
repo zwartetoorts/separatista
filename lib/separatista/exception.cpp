@@ -18,47 +18,30 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
+#include <sstream>
 
-#include "cashaccount.h"
+#include "separatista.h"
+#include "exception.h"
 #include "debug/debug.h"
 
 using namespace Separatista;
 
-AccountIdentification4Choice::AccountIdentification4Choice() :
-ChoiceElement<1>(TEXT("Id"), { &m_IBAN }),
-m_IBAN(TEXT("IBAN"))
+Exception::Exception()
 {
-	DEBUG_METHOD
+
 }
 
-CashAccount24::CashAccount24(const wchar_t *pTag) :
-BranchElement(pTag),
-m_Id()
+#ifdef SEPARATISTA_DEBUG
+Exception::Exception(const wchar_t *pPath, int line)
 {
-	DEBUG_METHOD
+	m_msg = TEXT("Exception thrown: ");
+	m_msg += pPath;
+	m_msg += TEXT(" line ");
+	m_msg += line;
 }
 
-xercesc::DOMElement* CashAccount24::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+const wchar_t* Exception::getMessage() const
 {
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
-	{
-		m_Id.toDOMDocument(pDocument, pElement);
-	}
-
-	return pElement;
+	return m_msg.data();
 }
-
-void CashAccount24::fromDOMDocument(DOMDocumentIterator *pElementIterator)
-{
-	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_Id.fromDOMDocument(pElementIterator);
-	}
-}
+#endif

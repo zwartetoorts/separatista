@@ -106,6 +106,7 @@
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />
     <ClInclude Include="..\..\lib\separatista\element.h" />
     <ClInclude Include="..\..\lib\separatista\elementlist.h" />
+    <ClInclude Include="..\..\lib\separatista\exception.h" />
     <ClInclude Include="..\..\lib\separatista\leafelement.h" />
     <ClInclude Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.h" />
     <ClInclude Include="..\..\lib\separatista\pain\directdebittransactioninformation.h" />
@@ -123,6 +124,7 @@
     <ClCompile Include="..\..\lib\separatista\documentreader.cpp" />
     <ClCompile Include="..\..\lib\separatista\element.cpp" />
     <ClCompile Include="..\..\lib\separatista\elementlist.cpp" />
+    <ClCompile Include="..\..\lib\separatista\exception.cpp" />
     <ClCompile Include="..\..\lib\separatista\leafelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\directdebittransactioninformation.cpp" />

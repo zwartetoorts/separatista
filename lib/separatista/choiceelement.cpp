@@ -21,6 +21,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <utility>
 
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
@@ -35,8 +36,9 @@
 
 using namespace Separatista;
 
-ChoiceElement::ChoiceElement(const wchar_t *pTagName) :
-Element(pTagName)
-{
-	DEBUG_METHOD
-}
+//ChoiceElement::ChoiceElement(const wchar_t *pTagName, std::initializer_list<Element*> pChoices) :
+//Element(pTagName)
+//{
+//	DEBUG_METHOD
+//	
+//}

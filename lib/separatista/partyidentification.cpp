@@ -27,33 +27,11 @@
 using namespace Separatista;
 
 PersonIdentificationSchemeName1Choice::PersonIdentificationSchemeName1Choice(const wchar_t *pTag) :
-ChoiceElement(pTag),
+ChoiceElement(pTag, { &m_Cd, &m_Prtry }),
+m_Cd(TEXT("Cd")),
 m_Prtry(TEXT("Prtry"))
 {
 	DEBUG_METHOD
-}
-
-xercesc::DOMElement* PersonIdentificationSchemeName1Choice::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
-{
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
-	{
-		m_Prtry.toDOMDocument(pDocument, pElement);
-	}
-
-	return pElement;
-}
-
-void PersonIdentificationSchemeName1Choice::fromDOMDocument(DOMDocumentIterator *pElementIterator)
-{
-	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_Prtry.fromDOMDocument(pElementIterator);
-	}
 }
 
 GenericPersonIdentification1::GenericPersonIdentification1(const wchar_t *pTag) :
@@ -120,31 +98,10 @@ void PersonIdentification5::fromDOMDocument(DOMDocumentIterator *pElementIterato
 }
 
 Party11Choice::Party11Choice() :
-ChoiceElement(TEXT("Id")),
+ChoiceElement(TEXT("Id"), { &m_PrvtId }),
 m_PrvtId(TEXT("PrvtId"))
 {
 	DEBUG_METHOD
-}
-
-xercesc::DOMElement* Party11Choice::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
-{
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
-		m_PrvtId.toDOMDocument(pDocument, pElement);
-
-	return pElement;
-}
-
-void Party11Choice::fromDOMDocument(DOMDocumentIterator *pElementIterator)
-{
-	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_PrvtId.fromDOMDocument(pElementIterator);
-	}
 }
 
 PartyIdentification43::PartyIdentification43(const wchar_t *pTag) :

@@ -18,47 +18,37 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
+#ifndef SEPARATISTA_EXCEPTION_H
+#define SEPARATISTA_EXCEPTION_H
 
-#include "cashaccount.h"
-#include "debug/debug.h"
+#include <string>
 
-using namespace Separatista;
+#include "separatista.h"
 
-AccountIdentification4Choice::AccountIdentification4Choice() :
-ChoiceElement<1>(TEXT("Id"), { &m_IBAN }),
-m_IBAN(TEXT("IBAN"))
+#ifdef SEPARATISTA_DEBUG
+#	define SEPARATISTA_EXCEPTION TEXT(__FILE__), __LINE__
+#	define SEPARATISTA_REPORT(e) LOG(e.getMessage())
+#else
+#	define SEPARATISTA_EXCEPTION 
+#	define SEPARATISTA_REPORT(e) 
+#endif // defined SEPARATISTA_DEBUG
+
+namespace Separatista
 {
-	DEBUG_METHOD
-}
-
-CashAccount24::CashAccount24(const wchar_t *pTag) :
-BranchElement(pTag),
-m_Id()
-{
-	DEBUG_METHOD
-}
-
-xercesc::DOMElement* CashAccount24::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
-{
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
+	class SEPARATISTA_EXTERN Exception
 	{
-		m_Id.toDOMDocument(pDocument, pElement);
-	}
+	public:
+		Exception();
+#ifdef SEPARATISTA_DEBUG
+		Exception(const wchar_t *pPath, int line);
 
-	return pElement;
+		const wchar_t* getMessage() const;
+#endif
+	private:
+#ifdef SEPARATISTA_DEBUG
+		std::wstring m_msg;
+#endif
+	};
 }
 
-void CashAccount24::fromDOMDocument(DOMDocumentIterator *pElementIterator)
-{
-	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_Id.fromDOMDocument(pElementIterator);
-	}
-}
+#endif // !defined SEPARATISTA_EXCEPTION_H

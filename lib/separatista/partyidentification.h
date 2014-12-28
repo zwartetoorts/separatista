@@ -31,15 +31,12 @@
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN PersonIdentificationSchemeName1Choice : public ChoiceElement
+	class SEPARATISTA_EXTERN PersonIdentificationSchemeName1Choice : public ChoiceElement<2>
 	{
 	public:
 		PersonIdentificationSchemeName1Choice::PersonIdentificationSchemeName1Choice(const wchar_t *pTag);
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
-
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
-
+		LeafElement m_Cd;
 		LeafElement m_Prtry;
 	};
 
@@ -68,14 +65,10 @@ namespace Separatista
 		GenericPersonIdentification1 m_Othr;
 	};
 
-	class SEPARATISTA_EXTERN Party11Choice : public ChoiceElement
+	class SEPARATISTA_EXTERN Party11Choice : public ChoiceElement<1>
 	{
 	public:
 		Party11Choice();
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
-
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		PersonIdentification5 m_PrvtId;
 	};

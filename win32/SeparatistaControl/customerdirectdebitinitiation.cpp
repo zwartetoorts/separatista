@@ -167,8 +167,15 @@ STDMETHODIMP CustomerDirectDebitInitiation::SaveAs(BSTR Path, Separatista::IOErr
 	if (!m_pCstmrDrctDbtInitn)
 		return E_UNEXPECTED;
 
-	if ((*pErrorCode = m_pCstmrDrctDbtInitn->SaveAs(Path)) == Separatista::IOErrorCode::Success)
-		return S_OK;
+	try
+	{
+		if ((*pErrorCode = m_pCstmrDrctDbtInitn->SaveAs(Path)) == Separatista::IOErrorCode::Success)
+			return S_OK;
+	}
+	catch (const Separatista::InvalidChoiceException e)
+	{
+		SEPARATISTA_REPORT(e)
+	}
 
 	return E_FAIL;
 }

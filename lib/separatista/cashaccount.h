@@ -30,14 +30,10 @@
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN AccountIdentification4Choice : public ChoiceElement
+	class SEPARATISTA_EXTERN AccountIdentification4Choice : public ChoiceElement<1>
 	{
 	public:
 		AccountIdentification4Choice();
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
-
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
 
 		LeafElement m_IBAN;
 	};
