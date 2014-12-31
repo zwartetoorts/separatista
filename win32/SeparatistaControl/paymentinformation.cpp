@@ -278,6 +278,7 @@ STDMETHODIMP PaymentInformation::SetCreditorAccountIdentificationIBAN(BSTR Value
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
+	m_pPmtInf->m_CdtrAcct.m_Id.choose(&m_pPmtInf->m_CdtrAcct.m_Id.m_IBAN);
 	m_pPmtInf->m_CdtrAcct.m_Id.m_IBAN.setValue(Value);
 
 	return S_OK;
@@ -338,6 +339,7 @@ STDMETHODIMP PaymentInformation::SetCreditorSchemeIdentification(BSTR Value)
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
+	m_pPmtInf->m_CdtrSchmeId.m_Id.choose(&m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId);
 	m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_Id.setValue(Value);
 
 	return S_OK;

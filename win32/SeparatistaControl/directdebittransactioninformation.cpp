@@ -181,6 +181,7 @@ STDMETHODIMP DirectDebitTransactionInformation::SetDebtorAccountIBAN(BSTR Value)
 	if (!m_pDrctDbtTxInf)
 		return E_UNEXPECTED;
 
+	m_pDrctDbtTxInf->m_DbtrAcct.m_Id.choose(&m_pDrctDbtTxInf->m_DbtrAcct.m_Id.m_IBAN);
 	m_pDrctDbtTxInf->m_DbtrAcct.m_Id.m_IBAN.setValue(Value);
 
 	return S_OK;

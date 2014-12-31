@@ -50,30 +50,30 @@ namespace Separatista
 	*/
 
 	template <size_t T>
-	class SEPARATISTA_EXTERN ChoiceElement : public Element
+	class ChoiceElement : public Element
 	{
 	public:
 		ChoiceElement(const wchar_t *pTagName, std::initializer_list<Element*> pChoices) :
 			Element(pTagName)
 			{
-				m_nIndex = -1;
+				m_pChosenElement = NULL;
 				std::copy(pChoices.begin(), pChoices.end(), m_pChoices.begin());
 			};
 
 		/**
-			@throws InvalidValueException if the chosen element isn't a child of this element.
+			@return The element created or NULL if no element was choosen.
 		*/
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent)
 		{
-			if (m_nIndex == -1)
-				throw InvalidChoiceException(SEPARATISTA_EXCEPTION);
+			if (!m_pChosenElement)
+				return NULL;
 
 			DOMElement *pElement = createElement(pDocument, pParent);
 
 			if (pElement)
 			{
-				m_pChoices[m_nIndex]->toDOMDocument(pDocument, pElement);
+				m_pChosenElement->toDOMDocument(pDocument, pElement);
 			}
 
 			return pElement;
@@ -84,12 +84,12 @@ namespace Separatista
 			if (compareTag(pDocumentIterator))
 			{
 				pDocumentIterator->nextElement();
-				for (size_t i = 0; i < T; i++)
+				for (auto it = m_pChoices.begin(); it != m_pChoices.end(); it++)
 				{
-					if (m_pChoices[i]->compareTag(pDocumentIterator))
+					if ((*it)->compareTag(pDocumentIterator))
 					{
-						m_nIndex = i;
-						m_pChoices[i]->fromDOMDocument(pDocumentIterator);
+						m_pChosenElement = *it;
+						m_pChosenElement->fromDOMDocument(pDocumentIterator);
 						break;
 					}
 				}
@@ -98,37 +98,36 @@ namespace Separatista
 		
 		/**
 			Choose the child element to be the chosen one.
-			@param pChildElement Make sure this actually a child element of the choice element.
-			@throws InvalidValueException if the chosen element isn't a child of this element.
+			@param pChildElement Make sure this actually a child element of the choice element. Can be NULL,
+			this means this element won't be outputted on toDOMDocument.
+			@throws InvalidChoiceException if the chosen element isn't a child of this element.
 		*/
 		void choose(Element *pChildElement)
 		{
-			for (size_t i = 0; i < T; i++)
+			for (auto it = m_pChoices.begin(); it != m_pChoices.end(); it++)
 			{
-				if (m_pChoices[i] == pChildElement)
+				if (*it == pChildElement)
 				{
-					m_nIndex = i;
+					m_pChosenElement = pChildElement;
 					return;
 				}
 			}
+
 			throw InvalidChoiceException(SEPARATISTA_EXCEPTION);
 		};
 
 		/**
 			Returns the chosen element.
-			@return The chosen element.
-			@throws InvalidValueException if the chosen element isn't a child of this element.
+			@return The chosen element or NULL if no choice was registered.
 		*/
 		Element* getChoice()
 		{
-			if (m_nIndex == -1)
-				throw InvalidChoiceException(SEPARATISTA_EXCEPTION);
-			return m_pChoices[m_nIndex];
+			return m_pChosenElement;
 		};
 
 	private:
 		/// The chosen element 
-		size_t m_nIndex;
+		Element *m_pChosenElement;
 		/// Array containing all choices
 		std::array<Element*, T> m_pChoices;
 

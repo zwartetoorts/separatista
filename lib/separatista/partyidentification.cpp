@@ -119,10 +119,8 @@ xercesc::DOMElement* PartyIdentification43::toDOMDocument(xercesc::DOMDocument *
 
 	if (pElement)
 	{
-		if (!m_Nm.isEmpty())
-			m_Nm.toDOMDocument(pDocument, pElement);
-		else
-			m_Id.toDOMDocument(pDocument, pElement);
+		m_Nm.toDOMDocument(pDocument, pElement);
+		m_Id.toDOMDocument(pDocument, pElement);
 	}
 
 	return pElement;
