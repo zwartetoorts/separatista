@@ -46,6 +46,12 @@ IBAN& IBAN::operator =(const char *iban)
 	return *this;
 }
 
+IBAN& IBAN::operator =(const wchar_t *pIBAN)
+{
+	set(pIBAN);
+	return *this;
+}
+
 const char* IBAN::getIBAN()
 {
 	format();
@@ -96,6 +102,11 @@ void IBAN::set(const char* iban)
 			++pos;
 		}
 	}
+}
+
+void IBAN::set(const wchar_t *pIBAN)
+{
+
 }
 
 int translate_table(const char c)

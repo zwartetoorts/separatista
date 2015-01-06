@@ -26,28 +26,26 @@
 #include "separatista.h"
 
 #ifdef SEPARATISTA_DEBUG
-#	define SEPARATISTA_EXCEPTION TEXT(__FILE__), __LINE__
-#	define SEPARATISTA_REPORT(e) LOG(e.getMessage())
+#	define SEPARATISTA_EXCEPTION(msg) TEXT(msg), TEXT(__FILE__), __LINE__
 #else
-#	define SEPARATISTA_EXCEPTION 
-#	define SEPARATISTA_REPORT(e) 
+#	define SEPARATISTA_EXCEPTION(msg) TEXT(msg)
 #endif // defined SEPARATISTA_DEBUG
+
+#define SEPARATISTA_REPORT(e) LOG(e.getMessage())
 
 namespace Separatista
 {
 	class SEPARATISTA_EXTERN Exception
 	{
 	public:
-		Exception();
+		Exception(const wchar_t *pMessage);
 #ifdef SEPARATISTA_DEBUG
-		Exception(const wchar_t *pPath, int line);
+		Exception(const wchar_t *pMessage, const wchar_t *pPath, int line);
 
+#endif
 		const wchar_t* getMessage() const;
-#endif
 	private:
-#ifdef SEPARATISTA_DEBUG
 		std::wstring m_msg;
-#endif
 	};
 }
 

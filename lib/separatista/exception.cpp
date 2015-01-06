@@ -26,22 +26,27 @@
 
 using namespace Separatista;
 
-Exception::Exception()
+Exception::Exception(const wchar_t *pMessage)
 {
-
+	m_msg = TEXT("Exception thrown: ");
+	m_msg += pMessage;
 }
 
 #ifdef SEPARATISTA_DEBUG
-Exception::Exception(const wchar_t *pPath, int line)
+
+Exception::Exception(const wchar_t *pMessage, const wchar_t *pPath, int line)
 {
 	m_msg = TEXT("Exception thrown: ");
 	m_msg += pPath;
 	m_msg += TEXT(" line ");
 	m_msg += line;
+	m_msg += TEXT(": ");
+	m_msg += pMessage;
 }
 
 const wchar_t* Exception::getMessage() const
 {
 	return m_msg.data();
 }
-#endif
+
+#endif // !defined SEPARATISTA_DEBUG

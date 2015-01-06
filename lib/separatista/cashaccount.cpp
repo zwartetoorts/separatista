@@ -28,7 +28,7 @@ using namespace Separatista;
 
 AccountIdentification4Choice::AccountIdentification4Choice() :
 ChoiceElement<1>(TEXT("Id"), { &m_IBAN }),
-m_IBAN(TEXT("IBAN"))
+m_IBAN(TEXT("IBAN"), IBANValidator())
 {
 	DEBUG_METHOD
 }

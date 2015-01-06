@@ -28,7 +28,7 @@ using namespace Separatista;
 
 FinancialInstitutionIdentification8::FinancialInstitutionIdentification8() :
 BranchElement(TEXT("FinInstnId")),
-m_BIC(TEXT("BIC"))
+m_BIC(TEXT("BIC"), BICValidator())
 {
 	DEBUG_METHOD
 }

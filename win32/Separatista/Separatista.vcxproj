@@ -113,6 +113,7 @@
     <ClInclude Include="..\..\lib\separatista\pain\paymentinformation.h" />
     <ClInclude Include="..\..\lib\separatista\partyidentification.h" />
     <ClInclude Include="..\..\lib\separatista\separatista.h" />
+    <ClInclude Include="..\..\lib\separatista\validator.h" />
     <ClInclude Include="..\..\lib\separatista\xerces_types.h" />
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +132,7 @@
     <ClCompile Include="..\..\lib\separatista\pain\paymentinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\partyidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\separatista.cpp" />
+    <ClCompile Include="..\..\lib\separatista\validator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

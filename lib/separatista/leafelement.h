@@ -27,13 +27,14 @@
 #include "separatista.h"
 #include "xerces_types.h"
 #include "element.h"
+#include "validator.h"
 
 namespace Separatista
 {
 	class SEPARATISTA_EXTERN LeafElement : public Element
 	{
 	public:
-		LeafElement(const wchar_t *pTagName);
+		LeafElement(const wchar_t *pTagName, const Validator &validator);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
 
@@ -94,6 +95,9 @@ namespace Separatista
 
 	protected:
 		std::wstring m_value;
+		Validator m_validator;
 	};
 }
+
+
 #endif // SEPARATISTA_LEAFELEMENT_H

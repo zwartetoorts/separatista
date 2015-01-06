@@ -37,10 +37,10 @@ namespace Separatista
 	class InvalidChoiceException : public Exception
 	{
 	public:
-		InvalidChoiceException() {};
+		InvalidChoiceException(const wchar_t *pMessage) : Exception(pMessage) { };
 
 #ifdef SEPARATISTA_DEBUG
-		InvalidChoiceException(const wchar_t *pPath, int line) : Exception(pPath, line) {};
+		InvalidChoiceException(const wchar_t *pMessage, const wchar_t *pPath, int line) : Exception(pMessage, pPath, line) { };
 #endif
 	};
 
@@ -113,7 +113,7 @@ namespace Separatista
 				}
 			}
 
-			throw InvalidChoiceException(SEPARATISTA_EXCEPTION);
+			throw InvalidChoiceException(SEPARATISTA_EXCEPTION("Choosen element not a child element"));
 		};
 
 		/**

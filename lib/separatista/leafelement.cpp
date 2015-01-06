@@ -35,10 +35,11 @@
 
 using namespace Separatista;
 
-LeafElement::LeafElement(const wchar_t *pTagName) :
-Element(pTagName)
+LeafElement::LeafElement(const wchar_t *pTagName, const Validator &validator) :
+Element(pTagName),
+m_validator(validator)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 }
 
 xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
@@ -88,6 +89,7 @@ void LeafElement::setValue(const wchar_t *pValue)
 {
 	DEBUG_METHOD
 
+	m_pfnValidate(pValue);
 	m_value = pValue;
 	onValueChanged(pValue);
 }

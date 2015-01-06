@@ -55,10 +55,20 @@ public:
 	IBAN& operator = (const char *iban);
 
 	/**
+		Set the value from a wide char string
+	*/
+	IBAN& operator = (const wchar_t *pIBAN);
+
+	/**
 		Sets the value from a string, no error checking is applied
 	*/
 	void set(const char *iban);
 	
+	/**
+		Sets the value from a wide string, no error checking is applied
+	*/
+	void set(const wchar_t *pIBAN);
+
 	/**
 		Returns the formatted IBAN. 
 		@return Pointer to a internal buffer. The buffer is only valid until the next call to this object is made.

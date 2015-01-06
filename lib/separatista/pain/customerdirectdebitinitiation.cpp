@@ -36,6 +36,7 @@
 #include "separatista/leafelement.h"
 #include "separatista/documentreader.h"
 #include "separatista/debug/debug.h"
+#include "separatista/validator.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
@@ -44,7 +45,7 @@ const wchar_t* CstmrDrctDbtInitn::NameSpaceURI = TEXT("urn:iso:std:iso:20022:tec
 
 InitgPty::InitgPty() :
 BranchElement(TEXT("InitgPty")),
-m_Nm(TEXT("Nm"))
+m_Nm(TEXT("Nm"), Max35TextValidator())
 {
 	DEBUG_METHOD
 }
@@ -72,10 +73,10 @@ void InitgPty::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 
 GrpHdr::GrpHdr() :
 BranchElement(TEXT("GrpHdr")),
-m_MsgId(TEXT("MsgId")),
-m_CreDtTm(TEXT("CreDtTm")),
-m_NbOfTxs(TEXT("NbOfTxs")),
-m_CtrlSum(TEXT("CtrlSum")),
+m_MsgId(TEXT("MsgId"), Max35TextValidator()),
+m_CreDtTm(TEXT("CreDtTm"), ISODateTimeValidator()),
+m_NbOfTxs(TEXT("NbOfTxs"), Max15NumericTextValidator()),
+m_CtrlSum(TEXT("CtrlSum"), DecimalNumberValidator()),
 m_InitgPty()
 {
 	DEBUG_METHOD
