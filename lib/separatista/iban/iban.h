@@ -36,10 +36,13 @@
 #	define IBAN_EXTERN
 #endif
 
+/// Max length of the account part of IBAN
+#define SEPARATISTA_IBAN_MAX_ACCOUNT 30
+
 namespace Separatista 
 {
 
-typedef char IBANCC[2];
+typedef wchar_t IBANCC[2];
 
 class IBAN_EXTERN IBAN
 {
@@ -108,13 +111,20 @@ protected:
 	*/
 	void format(bool seperator = true);
 
+	/**
+		C string equivalent of format
+		@see format
+	*/
+	void mbformat(bool separator = true);
+
 private:
 	IBANCC m_countryCode;
 	IBANCC m_controlSum;
-	char m_accountNumber[30];
-	int m_accountNumberLength;
+	wchar_t m_accountNumber[SEPARATISTA_IBAN_MAX_ACCOUNT];
+	size_t m_accountNumberLength;
 
-	std::string m_formatted;
+	std::string m_mbformatted;
+	std::wstring m_formatted;
 };
 
 }

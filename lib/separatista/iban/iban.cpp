@@ -21,6 +21,8 @@
 #include "separatista/debug/debug.h"
 #include "iban.h"
 
+#include <cwchar>
+#include <cstdlib>
 #include <string>
 #include <sstream>
 
@@ -34,10 +36,10 @@ IBAN::IBAN()
 void IBAN::Clear()
 {
 	m_accountNumberLength = 0;
-	m_countryCode[0] = ' ';
-	m_countryCode[1] = ' ';
-	m_controlSum[0] = ' ';
-	m_controlSum[1] = ' ';
+	m_countryCode[0] = TEXT(' ');
+	m_countryCode[1] = TEXT(' ');
+	m_controlSum[0] = TEXT(' ');
+	m_controlSum[1] = TEXT(' ');
 }
 
 IBAN& IBAN::operator =(const char *iban)
@@ -54,14 +56,13 @@ IBAN& IBAN::operator =(const wchar_t *pIBAN)
 
 const char* IBAN::getIBAN()
 {
-	format();
-	return m_formatted.c_str();
+	mbformat();
+	return m_mbformatted.data();
 }
 
 IBAN::operator const char* ()
 {
-	format();
-	return m_formatted.c_str();
+	return getIBAN();
 }
 
 const IBANCC& IBAN::getControlSum() const
@@ -76,12 +77,22 @@ const IBANCC& IBAN::getCountryCode() const
 
 void IBAN::set(const char* iban)
 {
-	std::string value = iban;
-	
+	// Convert to wchar_t
+	wchar_t buffer[SEPARATISTA_IBAN_MAX_ACCOUNT + 1];
+
+	mbstowcs(buffer, iban, SEPARATISTA_IBAN_MAX_ACCOUNT);
+	buffer[SEPARATISTA_IBAN_MAX_ACCOUNT] = TEXT('\0');
+	set(buffer);
+}
+
+void IBAN::set(const wchar_t *pIBAN)
+{
+	std::wstring value = pIBAN;
+
 	int pos = 0;
 
 	// Iterate over the characters
-	for (std::string::iterator it = value.begin(); it != value.end(); ++it)
+	for (auto it = value.begin(); it != value.end(); ++it)
 	{
 		// Skip white space
 		if (*it != ' ')
@@ -104,14 +115,9 @@ void IBAN::set(const char* iban)
 	}
 }
 
-void IBAN::set(const wchar_t *pIBAN)
+int translate_table(const wchar_t c)
 {
-
-}
-
-int translate_table(const char c)
-{
-	static const char* table = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	static const wchar_t* table = TEXT("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
 	for (int i = 0; i < 36; i++)
 		if (table[i] == c)
@@ -125,7 +131,7 @@ bool IBAN::Check() const
 	std::ostringstream ss;
 	
 	// Build value
-	for (int i = 0; i < m_accountNumberLength; i++)
+	for (size_t i = 0; i < m_accountNumberLength; i++)
 	{
 		// Account number
 		ss << translate_table(m_accountNumber[i]);
@@ -138,7 +144,7 @@ bool IBAN::Check() const
 
 	val = ss.str();
 	int sum = 0, c;
-	for (std::string::iterator it = val.begin(); it != val.end(); it++)
+	for (auto it = val.begin(); it != val.end(); it++)
 	{
 		c = *it;
 		c -= '0';
@@ -161,11 +167,30 @@ void IBAN::format(bool seperator)
 	m_formatted += m_controlSum[1];
 
 	// Group by 4
-	for (int i = 0; i < m_accountNumberLength; i++)
+	for (size_t i = 0; i < m_accountNumberLength; i++)
 	{
 		// Space every 4 characters
 		if (seperator && i % 4 == 0)
-			m_formatted += ' ';
+			m_formatted += TEXT(' ');
 		m_formatted += m_accountNumber[i];
+	}
+}
+
+void IBAN::mbformat(bool seperator)
+{
+	m_mbformatted.clear();
+
+	m_mbformatted += std::wctob(m_countryCode[0]);
+	m_mbformatted += std::wctob(m_countryCode[1]);
+	m_mbformatted += std::wctob(m_controlSum[0]);
+	m_mbformatted += std::wctob(m_controlSum[1]);
+
+	// Group by 4
+	for (size_t i = 0; i < m_accountNumberLength; i++)
+	{
+		// Space every 4 characters
+		if (seperator && i % 4 == 0)
+			m_mbformatted += TEXT(' ');
+		m_mbformatted += std::wctob(m_accountNumber[i]);
 	}
 }
