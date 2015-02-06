@@ -37,7 +37,7 @@ using namespace Separatista;
 
 LeafElement::LeafElement(const wchar_t *pTagName, const Validator &validator) :
 Element(pTagName),
-m_validator(validator)
+m_pValidator(&validator)
 {
 	DEBUG_METHOD;
 }
@@ -89,7 +89,7 @@ void LeafElement::setValue(const wchar_t *pValue)
 {
 	DEBUG_METHOD
 
-	m_pfnValidate(pValue);
+	m_pValidator->validate(pValue);
 	m_value = pValue;
 	onValueChanged(pValue);
 }

@@ -50,7 +50,7 @@ namespace Separatista
 			@param pValue The value to validate as string.
 			@throws InvalidValueException
 		*/
-		virtual void validate(const wchar_t *pValue) = 0;
+		virtual void validate(const wchar_t *pValue) const = 0;
 
 		static void validateMaxText(const wchar_t *pValue, size_t max);
 
@@ -72,63 +72,63 @@ namespace Separatista
 	class SEPARATISTA_EXTERN Max35TextValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// ISODateTimeValidator
 	class SEPARATISTA_EXTERN ISODateTimeValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// Max15NumericText
 	class SEPARATISTA_EXTERN Max15NumericTextValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// DecimalNumber
 	class SEPARATISTA_EXTERN DecimalNumberValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// Max140Text
 	class SEPARATISTA_EXTERN Max140TextValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// PaymentMethod2CodeValidator
 	class SEPARATISTA_EXTERN PaymentMethod2CodeValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// ISODateValidator
 	class SEPARATISTA_EXTERN ISODateValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// ChargeBearerType1CodeValidator
 	class SEPARATISTA_EXTERN ChargeBearerType1CodeValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// ExternalServiceLevel1CodeValidator
 	class SEPARATISTA_EXTERN ExternalServiceLevel1CodeValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// ExternalLocalInstrumentCodeValidator
@@ -138,35 +138,35 @@ namespace Separatista
 	class SEPARATISTA_EXTERN SequenceType3CodeValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// ActiveOrHistoricCurrencyAndAmountValidator
 	class SEPARATISTA_EXTERN ActiveOrHistoricCurrencyAndAmountValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 	
 	/// ExternalPersonIdentification1Code
 	class SEPARATISTA_EXTERN ExternalPersonIdentification1Code : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// IBANValidator
 	class SEPARATISTA_EXTERN IBANValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 
 	/// BICValidator
 	class SEPARATISTA_EXTERN BICValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue);
+		void validate(const wchar_t *pValue) const;
 	};
 }
 

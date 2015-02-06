@@ -144,14 +144,14 @@ void Validator::validateEnum(const wchar_t *pValue, std::initializer_list<const 
 }
 
 
-void Max35TextValidator::validate(const wchar_t *pValue)
+void Max35TextValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 
 	validateMaxText(pValue, 35);
 }
 
-void ISODateTimeValidator::validate(const wchar_t *pValue)
+void ISODateTimeValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD
 
@@ -167,7 +167,7 @@ void ISODateTimeValidator::validate(const wchar_t *pValue)
 	}
 }
 
-void Max15NumericTextValidator::validate(const wchar_t *pValue)
+void Max15NumericTextValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD
 
@@ -175,7 +175,7 @@ void Max15NumericTextValidator::validate(const wchar_t *pValue)
 	validateNumeric(pValue);
 }
 
-void DecimalNumberValidator::validate(const wchar_t *pValue)
+void DecimalNumberValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 
@@ -183,21 +183,21 @@ void DecimalNumberValidator::validate(const wchar_t *pValue)
 	validateTotalDigits(pValue, 0, 18);
 }
 
-void Max140TextValidator::validate(const wchar_t *pValue)
+void Max140TextValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD
 
 	validateMaxText(pValue, 140);
 }
 
-void PaymentMethod2CodeValidator::validate(const wchar_t *pValue)
+void PaymentMethod2CodeValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 
 	validateEnum(pValue, { TEXT("DD") });
 }
 
-void ISODateValidator::validate(const wchar_t *pValue)
+void ISODateValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 
@@ -213,7 +213,7 @@ void ISODateValidator::validate(const wchar_t *pValue)
 	}
 }
 
-void ChargeBearerType1CodeValidator::validate(const wchar_t *pValue)
+void ChargeBearerType1CodeValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 
@@ -227,14 +227,14 @@ void ChargeBearerType1CodeValidator::validate(const wchar_t *pValue)
 		});
 }
 
-void ExternalServiceLevel1CodeValidator::validate(const wchar_t *pValue)
+void ExternalServiceLevel1CodeValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 
 	validateMaxText(pValue, 4);
 }
 
-void SequenceType3CodeValidator::validate(const wchar_t *pValue)
+void SequenceType3CodeValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 
@@ -249,7 +249,7 @@ void SequenceType3CodeValidator::validate(const wchar_t *pValue)
 		});
 }
 
-void ActiveOrHistoricCurrencyAndAmountValidator::validate(const wchar_t *pValue)
+void ActiveOrHistoricCurrencyAndAmountValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 
@@ -257,14 +257,14 @@ void ActiveOrHistoricCurrencyAndAmountValidator::validate(const wchar_t *pValue)
 	validateTotalDigits(pValue, 0, 18);
 }
 
-void ExternalPersonIdentification1Code::validate(const wchar_t *pValue)
+void ExternalPersonIdentification1Code::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 
 	validateMaxText(pValue, 35);
 }
 
-void IBANValidator::validate(const wchar_t *pValue)
+void IBANValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 
@@ -275,7 +275,7 @@ void IBANValidator::validate(const wchar_t *pValue)
 		throw InvalidValueException(SEPARATISTA_EXCEPTION("Invalid IBAN"));
 }
 
-void BICValidator::validate(const wchar_t *pValue)
+void BICValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 }

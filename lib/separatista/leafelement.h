@@ -95,7 +95,7 @@ namespace Separatista
 
 	protected:
 		std::wstring m_value;
-		Validator m_validator;
+		const Validator *m_pValidator;
 	};
 }
 

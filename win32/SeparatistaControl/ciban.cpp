@@ -68,7 +68,7 @@ STDMETHODIMP CIBAN::SetIBAN(BSTR iban)
 		m_bOwnIBAN = true;
 	}
 
-	*m_pIBAN = _bstr_t(iban);
+	*m_pIBAN = _bstr_t(iban).Detach();
 	return S_OK;
 }
 
