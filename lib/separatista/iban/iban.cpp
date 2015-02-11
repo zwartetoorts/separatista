@@ -92,10 +92,11 @@ void IBAN::set(const wchar_t *pIBAN)
 	int pos = 0;
 
 	// Iterate over the characters
+	Clear();
 	for (auto it = value.begin(); it != value.end(); ++it)
 	{
 		// Skip white space
-		if (*it != ' ')
+		if (*it != TEXT(' '))
 		{
 			char c = toupper(*it);
 			if (pos < 2)

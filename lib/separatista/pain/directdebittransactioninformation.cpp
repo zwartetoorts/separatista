@@ -31,7 +31,7 @@ using namespace Separatista::pain_008_001;
 
 PmtId::PmtId() :
 BranchElement(TEXT("PmtId")),
-m_EndToEndId(TEXT("EndToEndId"), Max35TextValidator())
+m_EndToEndId(TEXT("EndToEndId"), Validators.Max35TextValidator)
 {
 	DEBUG_METHOD
 }
@@ -59,8 +59,8 @@ void PmtId::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 
 MndtRltdInf::MndtRltdInf() :
 BranchElement(TEXT("MndtRltdInf")),
-m_MndtId(TEXT("MndtId"), Max35TextValidator()),
-m_DtOfSgntr(TEXT("DtOfSgntr"), ISODateValidator())
+m_MndtId(TEXT("MndtId"), Validators.Max35TextValidator),
+m_DtOfSgntr(TEXT("DtOfSgntr"), Validators.ISODateValidator)
 {
 	DEBUG_METHOD
 	m_DtOfSgntr.setValue(std::time(NULL));
@@ -123,7 +123,7 @@ void DrctDbtTx::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 
 RmtInf::RmtInf() :
 BranchElement(TEXT("RmtInf")),
-m_Ustrd(TEXT("Ustrd"), Max140TextValidator())
+m_Ustrd(TEXT("Ustrd"), Validators.Max140TextValidator)
 {
 	DEBUG_METHOD
 }
@@ -154,7 +154,7 @@ void RmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 DrctDbtTxInf::DrctDbtTxInf() :
 BranchElement(TEXT("DrctDbtTxInf")),
 m_PmtId(),
-m_InstdAmt(TEXT("InstdAmt"), ActiveOrHistoricCurrencyAndAmountValidator()),
+m_InstdAmt(TEXT("InstdAmt"), Validators.ActiveOrHistoricCurrencyAndAmountValidator),
 m_DrctDbtTx(),
 m_DbtrAgt(TEXT("DbtrAgt")),
 m_Dbtr(TEXT("Dbtr")),

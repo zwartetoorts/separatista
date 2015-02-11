@@ -100,6 +100,7 @@
     <ClInclude Include="mt940srecordset.h" />
     <ClInclude Include="paymentinformation.h" />
     <ClInclude Include="registrykey.h" />
+    <ClInclude Include="supporterrorinfo.h" />
     <ClInclude Include="unknown.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>

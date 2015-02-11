@@ -19,10 +19,12 @@
 ***************************************************************************/
 
 #include <comutil.h>
+#include <comdef.h>
 
 #include "directdebittransactioninformation.h"
 #include "dispatch.cpp"
 #include "util.h"
+#include "supporterrorinfo.h"
 
 DirectDebitTransactionInformation::DirectDebitTransactionInformation(IUnknown *pParent) :
 SepaControlDispatch<IDirectDebitTransactionInformation>(pParent)
@@ -35,6 +37,22 @@ DirectDebitTransactionInformation::~DirectDebitTransactionInformation()
 {
 	if (m_bOwnDrctDbtTxInf)
 		delete m_pDrctDbtTxInf;
+}
+
+STDMETHODIMP DirectDebitTransactionInformation::QueryInterface(REFIID riid, void** ppvObject)
+{
+	SepaSupportErrorInfo *pSupportErrorInfo;
+
+	if (IsEqualIID(riid, IID_ISupportErrorInfo))
+	{
+		pSupportErrorInfo = new SepaSupportErrorInfo();
+		if (!pSupportErrorInfo)
+			return E_OUTOFMEMORY;
+		pSupportErrorInfo->AddRef();
+		*ppvObject = pSupportErrorInfo;
+		return S_OK;
+	}
+	return SepaControlDispatch<IDirectDebitTransactionInformation>::QueryInterface(riid, ppvObject);
 }
 
 void DirectDebitTransactionInformation::Detach()
@@ -181,8 +199,31 @@ STDMETHODIMP DirectDebitTransactionInformation::SetDebtorAccountIBAN(BSTR Value)
 	if (!m_pDrctDbtTxInf)
 		return E_UNEXPECTED;
 
-	m_pDrctDbtTxInf->m_DbtrAcct.m_Id.choose(&m_pDrctDbtTxInf->m_DbtrAcct.m_Id.m_IBAN);
-	m_pDrctDbtTxInf->m_DbtrAcct.m_Id.m_IBAN.setValue(Value);
+	try
+	{
+		m_pDrctDbtTxInf->m_DbtrAcct.m_Id.choose(&m_pDrctDbtTxInf->m_DbtrAcct.m_Id.m_IBAN);
+		m_pDrctDbtTxInf->m_DbtrAcct.m_Id.m_IBAN.setValue(Value);
+	}
+	catch (Separatista::InvalidValueException &ive)
+	{
+		ICreateErrorInfo *pCreateErrorInfo;
+		IErrorInfo *pErrorInfo;
+
+		if (SUCCEEDED(CreateErrorInfo(&pCreateErrorInfo)))
+		{
+			pCreateErrorInfo->SetDescription(_bstr_t(ive.getMessage()).Detach());
+			pCreateErrorInfo->SetGUID(__uuidof(this));
+			pCreateErrorInfo->SetSource(_bstr_t(TEXT("Separatista.DirectDebitTransactionInformation")).Detach());
+
+			if (SUCCEEDED(pCreateErrorInfo->QueryInterface(IID_IErrorInfo, (LPVOID*)&pErrorInfo)))
+			{
+				SetErrorInfo(0, pErrorInfo);
+				pErrorInfo->Release();
+			}
+			pCreateErrorInfo->Release();
+			return DISP_E_EXCEPTION;
+		}
+	}
 
 	return S_OK;
 }

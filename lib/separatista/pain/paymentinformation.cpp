@@ -34,7 +34,7 @@ using namespace Separatista::pain_008_001;
 
 SvcLvl::SvcLvl() :
 BranchElement(TEXT("SvcLvl")),
-m_Cd(TEXT("Cd"), ExternalServiceLevel1CodeValidator())
+m_Cd(TEXT("Cd"), Validators.ExternalServiceLevel1CodeValidator)
 {
 	DEBUG_METHOD
 }
@@ -62,7 +62,7 @@ void SvcLvl::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 
 LclInstrm::LclInstrm() :
 BranchElement(TEXT("LclInstrm")),
-m_Cd(TEXT("Cd"), ExternalLocalInstrumentCodeValidator())
+m_Cd(TEXT("Cd"), Validators.ExternalLocalInstrumentCodeValidator)
 {
 	DEBUG_METHOD
 }
@@ -92,7 +92,7 @@ PmtTpInf::PmtTpInf() :
 BranchElement(TEXT("PmtTpInf")),
 m_SvcLvl(),
 m_LclInstrm(),
-m_SeqTp(TEXT("SeqTp"), SequenceType3CodeValidator())
+m_SeqTp(TEXT("SeqTp"), Validators.SequenceType3CodeValidator)
 {
 	DEBUG_METHOD
 }
@@ -126,16 +126,16 @@ void PmtTpInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 
 PmtInf::PmtInf() :
 BranchElement(TEXT("PmtInf")),
-m_PmtInfId(TEXT("PmtInfId"), Max35TextValidator()),
-m_PmtMtd(TEXT("PmtMtd"), PaymentMethod2CodeValidator()),
-m_NbOfTxs(TEXT("NbOfTxs"), Max15NumericTextValidator()),
-m_CtrlSum(TEXT("CtrlSum"), DecimalNumberValidator()),
+m_PmtInfId(TEXT("PmtInfId"), Validators.Max35TextValidator),
+m_PmtMtd(TEXT("PmtMtd"), Validators.PaymentMethod2CodeValidator),
+m_NbOfTxs(TEXT("NbOfTxs"), Validators.Max15NumericTextValidator),
+m_CtrlSum(TEXT("CtrlSum"), Validators.DecimalNumberValidator),
 m_PmtTpInf(),
-m_ReqdColltnDt(TEXT("ReqdColltnDt"), ISODateValidator()),
+m_ReqdColltnDt(TEXT("ReqdColltnDt"), Validators.ISODateValidator),
 m_Cdtr(TEXT("Cdtr")),
 m_CdtrAcct(TEXT("CdtrAcct")),
 m_CdtrAgt(TEXT("CdtrAgt")),
-m_ChrgBr(TEXT("ChrgBr"), ChargeBearerType1CodeValidator()),
+m_ChrgBr(TEXT("ChrgBr"), Validators.ChargeBearerType1CodeValidator),
 m_CdtrSchmeId(TEXT("CdtrSchmeId"))
 {
 	DEBUG_METHOD

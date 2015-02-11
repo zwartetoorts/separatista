@@ -149,7 +149,7 @@ namespace Separatista
 	};
 	
 	/// ExternalPersonIdentification1Code
-	class SEPARATISTA_EXTERN ExternalPersonIdentification1Code : public Validator
+	class SEPARATISTA_EXTERN ExternalPersonIdentification1CodeValidator : public Validator
 	{
 	public:
 		void validate(const wchar_t *pValue) const;
@@ -168,6 +168,27 @@ namespace Separatista
 	public:
 		void validate(const wchar_t *pValue) const;
 	};
+
+	typedef struct
+	{
+		Max35TextValidator Max35TextValidator;
+		ISODateTimeValidator ISODateTimeValidator;
+		Max15NumericTextValidator Max15NumericTextValidator;
+		DecimalNumberValidator DecimalNumberValidator;
+		Max140TextValidator Max140TextValidator;
+		PaymentMethod2CodeValidator PaymentMethod2CodeValidator;
+		ISODateValidator ISODateValidator;
+		ChargeBearerType1CodeValidator ChargeBearerType1CodeValidator;
+		ExternalServiceLevel1CodeValidator ExternalServiceLevel1CodeValidator;
+		ExternalLocalInstrumentCodeValidator ExternalLocalInstrumentCodeValidator;
+		SequenceType3CodeValidator SequenceType3CodeValidator;
+		ActiveOrHistoricCurrencyAndAmountValidator ActiveOrHistoricCurrencyAndAmountValidator;
+		ExternalPersonIdentification1CodeValidator ExternalPersonIdentification1CodeValidator;
+		IBANValidator IBANValidator;
+		BICValidator BICValidator;
+	} _Validators;
+
+	static const _Validators Validators;
 }
 
 #endif // !defined SEPARATISTA_VALIDATOR_H

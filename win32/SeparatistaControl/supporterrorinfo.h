@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2014 by Okkel Klaver   *
+*   Copyright (C) 2013 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,47 +18,21 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
+#include <windows.h>
+#include <OleAuto.h>
+#include "unknown.cpp"
+#include "separatista/debug/debug.h"
 
-#include "cashaccount.h"
-#include "debug/debug.h"
+#ifndef SEPARATISTA_SUPPORTERRORINFO_H
+#define SEPARATISTA_SUPPORTERRORINFO_H
 
-using namespace Separatista;
-
-AccountIdentification4Choice::AccountIdentification4Choice() :
-ChoiceElement<1>(TEXT("Id"), { &m_IBAN }),
-m_IBAN(TEXT("IBAN"), Validators.IBANValidator)
+class SepaSupportErrorInfo : public SepaControlUnknown < ISupportErrorInfo >
 {
-	DEBUG_METHOD
-}
-
-CashAccount24::CashAccount24(const wchar_t *pTag) :
-BranchElement(pTag),
-m_Id()
-{
-	DEBUG_METHOD
-}
-
-xercesc::DOMElement* CashAccount24::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
-{
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
+public:
+	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid)
 	{
-		m_Id.toDOMDocument(pDocument, pElement);
+		return S_OK;
 	}
+};
 
-	return pElement;
-}
-
-void CashAccount24::fromDOMDocument(DOMDocumentIterator *pElementIterator)
-{
-	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_Id.fromDOMDocument(pElementIterator);
-	}
-}
+#endif // !defined SEPARATISTA_SUPPORTERRORINFO_H

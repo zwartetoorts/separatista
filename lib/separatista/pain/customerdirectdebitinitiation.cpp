@@ -45,7 +45,7 @@ const wchar_t* CstmrDrctDbtInitn::NameSpaceURI = TEXT("urn:iso:std:iso:20022:tec
 
 InitgPty::InitgPty() :
 BranchElement(TEXT("InitgPty")),
-m_Nm(TEXT("Nm"), Max35TextValidator())
+m_Nm(TEXT("Nm"), Validators.Max35TextValidator)
 {
 	DEBUG_METHOD
 }
@@ -73,10 +73,10 @@ void InitgPty::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 
 GrpHdr::GrpHdr() :
 BranchElement(TEXT("GrpHdr")),
-m_MsgId(TEXT("MsgId"), Max35TextValidator()),
-m_CreDtTm(TEXT("CreDtTm"), ISODateTimeValidator()),
-m_NbOfTxs(TEXT("NbOfTxs"), Max15NumericTextValidator()),
-m_CtrlSum(TEXT("CtrlSum"), DecimalNumberValidator()),
+m_MsgId(TEXT("MsgId"), Validators.Max35TextValidator),
+m_CreDtTm(TEXT("CreDtTm"), Validators.ISODateTimeValidator),
+m_NbOfTxs(TEXT("NbOfTxs"), Validators.Max15NumericTextValidator),
+m_CtrlSum(TEXT("CtrlSum"), Validators.DecimalNumberValidator),
 m_InitgPty()
 {
 	DEBUG_METHOD

@@ -283,6 +283,7 @@ library Separatista
 	coclass DirectDebitTransactionInformation
 	{
 		[default] interface IDirectDebitTransactionInformation;
+		interface ISupportErrorInfo;
 		interface IDispatch;
 	};
 

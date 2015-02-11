@@ -82,10 +82,12 @@ public:
 	*/
 	void Detach();
 
-
 	Separatista::pain_008_001::DrctDbtTxInf* getDrctDbtTxInf() const;
 
 	// COM Methods
+	// Subclass for ISupportErrorInfo
+	STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject);
+
 	STDMETHOD(GetPaymentIdentificationEndToEndId)(BSTR *pValue);
 	STDMETHOD(SetPaymentIdentificationEndToEndId)(BSTR Value);
 	STDMETHOD(GetInstructedAmount)(VARIANT *pValue);

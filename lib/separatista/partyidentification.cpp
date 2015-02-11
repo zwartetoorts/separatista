@@ -28,15 +28,15 @@ using namespace Separatista;
 
 PersonIdentificationSchemeName1Choice::PersonIdentificationSchemeName1Choice(const wchar_t *pTag) :
 ChoiceElement(pTag, { &m_Cd, &m_Prtry }),
-m_Cd(TEXT("Cd"), ExternalPersonIdentification1Code()),
-m_Prtry(TEXT("Prtry"), Max35TextValidator())
+m_Cd(TEXT("Cd"), Validators.ExternalPersonIdentification1CodeValidator),
+m_Prtry(TEXT("Prtry"), Validators.Max35TextValidator)
 {
 	DEBUG_METHOD
 }
 
 GenericPersonIdentification1::GenericPersonIdentification1(const wchar_t *pTag) :
 BranchElement(pTag),
-m_Id(TEXT("Id"), Max35TextValidator()),
+m_Id(TEXT("Id"), Validators.Max35TextValidator),
 m_SchmeNm(TEXT("SchmeNm"))
 {
 	DEBUG_METHOD
@@ -106,7 +106,7 @@ m_PrvtId(TEXT("PrvtId"))
 
 PartyIdentification43::PartyIdentification43(const wchar_t *pTag) :
 BranchElement(pTag),
-m_Nm(TEXT("Nm"), Max140TextValidator()),
+m_Nm(TEXT("Nm"), Validators.Max140TextValidator),
 m_Id()
 {
 	DEBUG_METHOD

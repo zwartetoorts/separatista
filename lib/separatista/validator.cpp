@@ -29,6 +29,25 @@
 
 using namespace Separatista;
 
+const _Validators Validators =
+{
+	Max35TextValidator(),
+	ISODateTimeValidator(),
+	Max15NumericTextValidator(),
+	DecimalNumberValidator(),
+	Max140TextValidator(),
+	PaymentMethod2CodeValidator(),
+	ISODateValidator(),
+	ChargeBearerType1CodeValidator(),
+	ExternalServiceLevel1CodeValidator(),
+	ExternalLocalInstrumentCodeValidator(),
+	SequenceType3CodeValidator(),
+	ActiveOrHistoricCurrencyAndAmountValidator(),
+	ExternalPersonIdentification1CodeValidator(),
+	IBANValidator(),
+	BICValidator()
+};
+
 std::array<wchar_t, 10> Validator::m_numericDigits =
 {
 	TEXT('0'),
@@ -257,7 +276,7 @@ void ActiveOrHistoricCurrencyAndAmountValidator::validate(const wchar_t *pValue)
 	validateTotalDigits(pValue, 0, 18);
 }
 
-void ExternalPersonIdentification1Code::validate(const wchar_t *pValue) const
+void ExternalPersonIdentification1CodeValidator::validate(const wchar_t *pValue) const
 {
 	DEBUG_METHOD;
 

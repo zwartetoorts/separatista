@@ -22,9 +22,11 @@
 #define SEPADISPATCH_CPP
 
 #include <windows.h>
+#include <comutil.h>
 #include "dll.h"
 #include "unknown.cpp"
 #include "dispatch.h"
+#include "separatista/validator.h"
 
 template <class T> SepaControlDispatch<T>::SepaControlDispatch(IUnknown *pParent)
 :SepaControlUnknown(pParent)

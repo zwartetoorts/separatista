@@ -28,25 +28,30 @@ using namespace Separatista;
 
 Exception::Exception(const wchar_t *pMessage)
 {
-	m_msg = TEXT("Exception thrown: ");
-	m_msg += pMessage;
+	m_msg = pMessage;
 }
 
 #ifdef SEPARATISTA_DEBUG
 
 Exception::Exception(const wchar_t *pMessage, const wchar_t *pPath, int line)
 {
-	m_msg = TEXT("Exception thrown: ");
-	m_msg += pPath;
-	m_msg += TEXT(" line ");
-	m_msg += line;
-	m_msg += TEXT(": ");
-	m_msg += pMessage;
+	std::wostringstream wos;
+
+	wos << TEXT("Exception thrown from ");
+	wos << pPath;
+	wos << TEXT(" @ line ");
+	wos.setf(std::ios::dec);
+	wos << line;
+	wos << TEXT(": ");
+	wos << pMessage;
+
+	m_msg = wos.str();
 }
+
+#endif // !defined SEPARATISTA_DEBUG
 
 const wchar_t* Exception::getMessage() const
 {
 	return m_msg.data();
 }
 
-#endif // !defined SEPARATISTA_DEBUG
