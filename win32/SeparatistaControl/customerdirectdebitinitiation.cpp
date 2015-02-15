@@ -26,6 +26,7 @@
 #include "customerdirectdebitinitiation.h"
 #include "separatista/documentreader.h"
 #include "enumvariant.h"
+#include "supporterrorinfo.h"
 
 CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
 :SepaControlDispatch<ICustomerDirectDebitInitiation>(NULL)
@@ -38,6 +39,22 @@ CustomerDirectDebitInitiation::~CustomerDirectDebitInitiation()
 {
 	if (m_bOwnCstmrDrctDbtInitn && m_pCstmrDrctDbtInitn)
 		delete m_pCstmrDrctDbtInitn;
+}
+
+STDMETHODIMP CustomerDirectDebitInitiation::QueryInterface(REFIID riid, void** ppvObject)
+{
+	SepaControlSupportErrorInfo *pSupportErrorInfo;
+
+	if (IsEqualIID(riid, IID_ISupportErrorInfo))
+	{
+		pSupportErrorInfo = new SepaControlSupportErrorInfo();
+		if (!pSupportErrorInfo)
+			return E_OUTOFMEMORY;
+		pSupportErrorInfo->AddRef();
+		*ppvObject = pSupportErrorInfo;
+		return S_OK;
+	}
+	return SepaControlDispatch<ICustomerDirectDebitInitiation>::QueryInterface(riid, ppvObject);
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::GetMessageIdentification(BSTR *pValue)
@@ -55,7 +72,14 @@ STDMETHODIMP CustomerDirectDebitInitiation::SetMessageIdentification(BSTR Value)
 	if (!m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
-	m_pCstmrDrctDbtInitn->m_GrpHdr.m_MsgId.setValue(Value);
+	try
+	{
+		m_pCstmrDrctDbtInitn->m_GrpHdr.m_MsgId.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -73,7 +97,14 @@ STDMETHODIMP CustomerDirectDebitInitiation::SetCreationDateTime(DATE Value)
 	if (!m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
-	m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.setValue(StdTimeFromDateType(Value), true);
+	try
+	{
+		m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.setValue(StdTimeFromDateType(Value), true);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -110,7 +141,15 @@ STDMETHODIMP CustomerDirectDebitInitiation::SetInititiatingPartyName(BSTR Value)
 	if (!m_pCstmrDrctDbtInitn)
 		return E_FAIL;
 
-	m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.setValue(Value);
+	try
+	{
+		m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
+	
 	return S_OK;
 }
 
@@ -174,7 +213,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::SaveAs(BSTR Path, Separatista::IOErr
 	}
 	catch (const Separatista::InvalidChoiceException e)
 	{
-		SEPARATISTA_REPORT(e)
+		return SetErrorInfo(e);
 	}
 
 	return E_FAIL;

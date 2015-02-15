@@ -120,4 +120,25 @@ template <class T> HRESULT SepaControlDispatch<T>::Invoke(DISPID dispIdMember, c
 	return m_pTypeInfo->Invoke(this, dispIdMember, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
 }
 
+template <class T> HRESULT SepaControlDispatch<T>::SetErrorInfo(const Separatista::Exception &e) const
+{
+	ICreateErrorInfo *pCreateErrorInfo;
+	IErrorInfo *pErrorInfo;
+
+	if (SUCCEEDED(CreateErrorInfo(&pCreateErrorInfo)))
+	{
+		pCreateErrorInfo->SetDescription(_bstr_t(e.getMessage()).Detach());
+		pCreateErrorInfo->SetGUID(__uuidof(this));
+		pCreateErrorInfo->SetSource(_bstr_t(TEXT("Separatista")).Detach());
+
+		if (SUCCEEDED(pCreateErrorInfo->QueryInterface(IID_IErrorInfo, (LPVOID*)&pErrorInfo)))
+		{
+			::SetErrorInfo(0, pErrorInfo);
+			pErrorInfo->Release();
+		}
+		pCreateErrorInfo->Release();
+	}
+	return DISP_E_EXCEPTION;
+}
+
 #endif // !defined SEPADISPATCH_CPP

@@ -24,6 +24,7 @@
 #include <windows.h>
 
 #include "separatista/debug/debug.h"
+#include "separatista/exception.h"
 #include "unknown.h"
 
 template <class T>
@@ -49,6 +50,11 @@ public:
 	HRESULT STDMETHODCALLTYPE Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr);
 protected:
 	virtual ~SepaControlDispatch();
+
+	/**
+		Handle Separatista Exceptions by setting errorinfo
+	*/
+	HRESULT SetErrorInfo(const Separatista::Exception &e) const;
 
 	ITypeLib* m_pTypeLib;
 	ITypeInfo* m_pTypeInfo;

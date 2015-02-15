@@ -23,6 +23,7 @@
 #include "paymentinformation.h"
 #include "dispatch.cpp"
 #include "util.h"
+#include "supporterrorinfo.h"
 
 PaymentInformation::PaymentInformation(IUnknown *pParent) :
 SepaControlDispatch<IPaymentInformation>(pParent)
@@ -49,6 +50,22 @@ void PaymentInformation::Detach()
 	m_bOwnPmtInf = false;
 }
 
+STDMETHODIMP PaymentInformation::QueryInterface(REFIID riid, void** ppvObject)
+{
+	SepaControlSupportErrorInfo *pSupportErrorInfo;
+
+	if (IsEqualIID(riid, IID_ISupportErrorInfo))
+	{
+		pSupportErrorInfo = new SepaControlSupportErrorInfo();
+		if (!pSupportErrorInfo)
+			return E_OUTOFMEMORY;
+		pSupportErrorInfo->AddRef();
+		*ppvObject = pSupportErrorInfo;
+		return S_OK;
+	}
+	return SepaControlDispatch<IPaymentInformation>::QueryInterface(riid, ppvObject);
+}
+
 Separatista::pain_008_001::PmtInf* PaymentInformation::GetPmtInf() const
 {
 	return m_pPmtInf;
@@ -68,7 +85,15 @@ STDMETHODIMP PaymentInformation::SetPaymentInformationIdentification(BSTR Value)
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_PmtInfId.setValue(Value);
+	try
+	{
+		m_pPmtInf->m_PmtInfId.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
+	
 	return S_OK;
 }
 
@@ -87,7 +112,14 @@ STDMETHODIMP PaymentInformation::SetPaymentMethod(BSTR Value)
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_PmtMtd.setValue(Value);
+	try
+	{
+		m_pPmtInf->m_PmtMtd.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -127,7 +159,14 @@ STDMETHODIMP PaymentInformation::SetPaymentTypeInformationServiceLevelCode(BSTR 
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_PmtTpInf.m_SvcLvl.m_Cd.setValue(Value);
+	try
+	{
+		m_pPmtInf->m_PmtTpInf.m_SvcLvl.m_Cd.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -155,19 +194,26 @@ STDMETHODIMP PaymentInformation::SetPaymentTypeInformationLocalIntrumentCode(IPa
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	switch (Value)
+	try
 	{
-	case IPaymentInformation::LC_CORE:
-		m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.setValue(TEXT("CORE"));
-		break;
-	case IPaymentInformation::LC_COR1:
-		m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.setValue(TEXT("COR1"));
-		break;
-	case IPaymentInformation::LC_B2B:
-		m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.setValue(TEXT("B2B"));
-		break;
-	default:
-		m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.clear();
+		switch (Value)
+		{
+		case IPaymentInformation::LC_CORE:
+			m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.setValue(TEXT("CORE"));
+			break;
+		case IPaymentInformation::LC_COR1:
+			m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.setValue(TEXT("COR1"));
+			break;
+		case IPaymentInformation::LC_B2B:
+			m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.setValue(TEXT("B2B"));
+			break;
+		default:
+			m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.clear();
+		}
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
 	}
 
 	return S_OK;
@@ -198,22 +244,29 @@ STDMETHODIMP PaymentInformation::SetPaymentTypeInformationSequenceType(IPaymentI
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	switch (Value)
+	try
 	{
-	case IPaymentInformation::ST_FNAL:
-		m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("FNAL"));
-		break;
-	case IPaymentInformation::ST_FRST:
-		m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("FRST"));
-		break;
-	case IPaymentInformation::ST_OOFF:
-		m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("OOFF"));
-		break;
-	case IPaymentInformation::ST_RCUR:
-		m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("RCUR"));
-		break;
-	default:
-		return E_UNEXPECTED;
+		switch (Value)
+		{
+		case IPaymentInformation::ST_FNAL:
+			m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("FNAL"));
+			break;
+		case IPaymentInformation::ST_FRST:
+			m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("FRST"));
+			break;
+		case IPaymentInformation::ST_OOFF:
+			m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("OOFF"));
+			break;
+		case IPaymentInformation::ST_RCUR:
+			m_pPmtInf->m_PmtTpInf.m_SeqTp.setValue(TEXT("RCUR"));
+			break;
+		default:
+			return E_UNEXPECTED;
+		}
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
 	}
 
 	return S_OK;
@@ -238,7 +291,14 @@ STDMETHODIMP PaymentInformation::SetRequestedCollectionDate(DATE Value)
 	if (t == -1)
 		return E_FAIL;
 
-	m_pPmtInf->m_ReqdColltnDt.setValue(t);
+	try
+	{
+		m_pPmtInf->m_ReqdColltnDt.setValue(t);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -258,7 +318,14 @@ STDMETHODIMP PaymentInformation::SetCreditorName(BSTR Value)
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_Cdtr.m_Nm.setValue(Value);
+	try
+	{
+		m_pPmtInf->m_Cdtr.m_Nm.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -278,8 +345,19 @@ STDMETHODIMP PaymentInformation::SetCreditorAccountIdentificationIBAN(BSTR Value
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_CdtrAcct.m_Id.choose(&m_pPmtInf->m_CdtrAcct.m_Id.m_IBAN);
-	m_pPmtInf->m_CdtrAcct.m_Id.m_IBAN.setValue(Value);
+	try
+	{
+		m_pPmtInf->m_CdtrAcct.m_Id.choose(&m_pPmtInf->m_CdtrAcct.m_Id.m_IBAN);
+		m_pPmtInf->m_CdtrAcct.m_Id.m_IBAN.setValue(Value);
+	}
+	catch (const Separatista::InvalidChoiceException &ce)
+	{
+		return SetErrorInfo(ce);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -299,7 +377,14 @@ STDMETHODIMP PaymentInformation::SetCreditorAgentFinancialInstitutionIdentificat
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_CdtrAgt.m_FinancialInstitutionIdentification.m_BIC.setValue(Value);
+	try
+	{
+		m_pPmtInf->m_CdtrAgt.m_FinancialInstitutionIdentification.m_BIC.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -319,7 +404,14 @@ STDMETHODIMP PaymentInformation::SetChargeBearer(BSTR Value)
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_ChrgBr.setValue(Value);
+	try
+	{
+		m_pPmtInf->m_ChrgBr.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -339,8 +431,19 @@ STDMETHODIMP PaymentInformation::SetCreditorSchemeIdentification(BSTR Value)
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_CdtrSchmeId.m_Id.choose(&m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId);
-	m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_Id.setValue(Value);
+	try
+	{
+		m_pPmtInf->m_CdtrSchmeId.m_Id.choose(&m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId);
+		m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_Id.setValue(Value);
+	}
+	catch (const Separatista::InvalidChoiceException &ce)
+	{
+		return SetErrorInfo(ce);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -360,7 +463,14 @@ STDMETHODIMP PaymentInformation::SetCreditorSchemeIdentificationSchemeName(BSTR 
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(Value);
+	try
+	{
+		m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }

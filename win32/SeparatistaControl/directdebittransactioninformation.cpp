@@ -41,11 +41,11 @@ DirectDebitTransactionInformation::~DirectDebitTransactionInformation()
 
 STDMETHODIMP DirectDebitTransactionInformation::QueryInterface(REFIID riid, void** ppvObject)
 {
-	SepaSupportErrorInfo *pSupportErrorInfo;
+	SepaControlSupportErrorInfo *pSupportErrorInfo;
 
 	if (IsEqualIID(riid, IID_ISupportErrorInfo))
 	{
-		pSupportErrorInfo = new SepaSupportErrorInfo();
+		pSupportErrorInfo = new SepaControlSupportErrorInfo();
 		if (!pSupportErrorInfo)
 			return E_OUTOFMEMORY;
 		pSupportErrorInfo->AddRef();
@@ -80,7 +80,14 @@ STDMETHODIMP DirectDebitTransactionInformation::SetPaymentIdentificationEndToEnd
 	if (!m_pDrctDbtTxInf)
 		return E_UNEXPECTED;
 
-	m_pDrctDbtTxInf->m_PmtId.m_EndToEndId.setValue(Value);
+	try
+	{
+		m_pDrctDbtTxInf->m_PmtId.m_EndToEndId.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -100,8 +107,14 @@ STDMETHODIMP DirectDebitTransactionInformation::SetInstructedAmount(VARIANT Valu
 	if (!m_pDrctDbtTxInf)
 		return E_UNEXPECTED;
 
-
-	m_pDrctDbtTxInf->m_InstdAmt.setValue((double)_variant_t(Value));
+	try
+	{
+		m_pDrctDbtTxInf->m_InstdAmt.setValue((double)_variant_t(Value));
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -121,7 +134,14 @@ STDMETHODIMP DirectDebitTransactionInformation::SetMandateIdentification(BSTR Va
 	if (!m_pDrctDbtTxInf)
 		return E_UNEXPECTED;
 
-	m_pDrctDbtTxInf->m_DrctDbtTx.m_MndtRltdInf.m_MndtId.setValue(Value);
+	try
+	{
+		m_pDrctDbtTxInf->m_DrctDbtTx.m_MndtRltdInf.m_MndtId.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -139,7 +159,14 @@ STDMETHODIMP DirectDebitTransactionInformation::SetDateOfSignature(DATE Value)
 	if (!m_pDrctDbtTxInf)
 		return E_UNEXPECTED;
 
-	m_pDrctDbtTxInf->m_DrctDbtTx.m_MndtRltdInf.m_DtOfSgntr.setValue(StdTimeFromDateType(Value));
+	try
+	{
+		m_pDrctDbtTxInf->m_DrctDbtTx.m_MndtRltdInf.m_DtOfSgntr.setValue(StdTimeFromDateType(Value));
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -159,7 +186,14 @@ STDMETHODIMP DirectDebitTransactionInformation::SetDebtorAgentFinancialInstituti
 	if (!m_pDrctDbtTxInf)
 		return E_UNEXPECTED;
 
-	m_pDrctDbtTxInf->m_DbtrAgt.m_FinancialInstitutionIdentification.m_BIC.setValue(Value);
+	try
+	{
+		m_pDrctDbtTxInf->m_DbtrAgt.m_FinancialInstitutionIdentification.m_BIC.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -179,7 +213,14 @@ STDMETHODIMP DirectDebitTransactionInformation::SetDebtorName(BSTR Value)
 	if (!m_pDrctDbtTxInf)
 		return E_UNEXPECTED;
 
-	m_pDrctDbtTxInf->m_Dbtr.m_Nm.setValue(Value);
+	try
+	{
+		m_pDrctDbtTxInf->m_Dbtr.m_Nm.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }
@@ -204,26 +245,15 @@ STDMETHODIMP DirectDebitTransactionInformation::SetDebtorAccountIBAN(BSTR Value)
 		m_pDrctDbtTxInf->m_DbtrAcct.m_Id.choose(&m_pDrctDbtTxInf->m_DbtrAcct.m_Id.m_IBAN);
 		m_pDrctDbtTxInf->m_DbtrAcct.m_Id.m_IBAN.setValue(Value);
 	}
-	catch (Separatista::InvalidValueException &ive)
+	catch (const Separatista::InvalidValueException &ive)
 	{
-		ICreateErrorInfo *pCreateErrorInfo;
-		IErrorInfo *pErrorInfo;
-
-		if (SUCCEEDED(CreateErrorInfo(&pCreateErrorInfo)))
-		{
-			pCreateErrorInfo->SetDescription(_bstr_t(ive.getMessage()).Detach());
-			pCreateErrorInfo->SetGUID(__uuidof(this));
-			pCreateErrorInfo->SetSource(_bstr_t(TEXT("Separatista.DirectDebitTransactionInformation")).Detach());
-
-			if (SUCCEEDED(pCreateErrorInfo->QueryInterface(IID_IErrorInfo, (LPVOID*)&pErrorInfo)))
-			{
-				SetErrorInfo(0, pErrorInfo);
-				pErrorInfo->Release();
-			}
-			pCreateErrorInfo->Release();
-			return DISP_E_EXCEPTION;
-		}
+		return SetErrorInfo(ive);
 	}
+	catch (const Separatista::InvalidChoiceException &e)
+	{
+		return SetErrorInfo(e);
+	}
+
 
 	return S_OK;
 }
@@ -243,7 +273,14 @@ STDMETHODIMP DirectDebitTransactionInformation::SetRemittanceInformationUnstruct
 	if (!m_pDrctDbtTxInf)
 		return E_UNEXPECTED;
 
-	m_pDrctDbtTxInf->m_RmtInf.m_Ustrd.setValue(Value);
+	try
+	{
+		m_pDrctDbtTxInf->m_RmtInf.m_Ustrd.setValue(Value);
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
 
 	return S_OK;
 }

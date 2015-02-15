@@ -26,7 +26,7 @@
 #ifndef SEPARATISTA_SUPPORTERRORINFO_H
 #define SEPARATISTA_SUPPORTERRORINFO_H
 
-class SepaSupportErrorInfo : public SepaControlUnknown < ISupportErrorInfo >
+class SepaControlSupportErrorInfo : public SepaControlUnknown < ISupportErrorInfo >
 {
 public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid)

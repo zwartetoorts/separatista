@@ -407,6 +407,7 @@ library Separatista
 	coclass PaymentInformation
 	{
 		[default] interface IPaymentInformation;
+		interface ISupportErrorInfo;
 		interface IDispatch;
 	};
 
@@ -497,6 +498,7 @@ library Separatista
 	coclass CustomerDirectDebitInitiation
 	{
 		[default] interface ICustomerDirectDebitInitiation;
+		interface ISupportErrorInfo;
 		interface IDispatch;
 	};
 

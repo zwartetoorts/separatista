@@ -84,6 +84,10 @@ public:
 	*/
 	CustomerDirectDebitInitiation();
 
+	// COM methods
+	// Subclass for ISupportErrorInfo
+	STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject);
+
 	STDMETHOD(GetMessageIdentification)(BSTR* pValue);
 	STDMETHOD(SetMessageIdentification)(BSTR Value);
 	STDMETHOD(GetCreationDateTime)(DATE *pValue);

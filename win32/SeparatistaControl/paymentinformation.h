@@ -119,6 +119,9 @@ public:
 	void Detach();
 
 	// COM methods
+	// Subclass for ISupportErrorInfo
+	STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject);
+
 	STDMETHOD(GetPaymentInformationIdentification)(BSTR *pValue);
 	STDMETHOD(SetPaymentInformationIdentification)(BSTR Value);
 	STDMETHOD(GetPaymentMethod)(BSTR *pValue);
