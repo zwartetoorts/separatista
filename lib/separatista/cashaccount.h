@@ -43,9 +43,9 @@ namespace Separatista
 	public:
 		CashAccount24(const wchar_t *pTag);
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 		
 		AccountIdentification4Choice m_Id;
 	};

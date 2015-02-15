@@ -40,25 +40,25 @@ m_Id()
 	DEBUG_METHOD
 }
 
-xercesc::DOMElement* CashAccount24::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* CashAccount24::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		m_Id.toDOMDocument(pDocument, pElement);
+		m_Id.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void CashAccount24::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void CashAccount24::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_Id.fromDOMDocument(pElementIterator);
+		m_Id.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }

@@ -37,9 +37,9 @@ namespace Separatista
 		public:
 			PmtId();
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			LeafElement m_EndToEndId;
 		};
@@ -49,9 +49,9 @@ namespace Separatista
 		public:
 			MndtRltdInf();
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			LeafElement m_MndtId;
 			LeafElement m_DtOfSgntr;
@@ -62,9 +62,9 @@ namespace Separatista
 		public:
 			DrctDbtTx();
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			MndtRltdInf m_MndtRltdInf;
 		};
@@ -74,9 +74,9 @@ namespace Separatista
 		public:
 			RmtInf();
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			LeafElement m_Ustrd;
 		};
@@ -86,9 +86,9 @@ namespace Separatista
 		public:
 			DrctDbtTxInf();
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			PmtId m_PmtId;
 			LeafElement m_InstdAmt;

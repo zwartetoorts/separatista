@@ -42,7 +42,7 @@ m_pValidator(&validator)
 	DEBUG_METHOD;
 }
 
-xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	xercesc::DOMElement *pElement;
@@ -59,13 +59,13 @@ xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument,
 	return pElement;
 }
 
-void LeafElement::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void LeafElement::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 
 	if (compareTag(pElementIterator))
 	{
-		setValue(pElementIterator->getCurrentElement()->getTextContent());
+		setValue(pElementIterator->getCurrentElement()->getTextContent(), errorOptions);
 		pElementIterator->nextElement();
 	}
 }
@@ -85,13 +85,34 @@ const wchar_t* LeafElement::getTextValue() const
 	return m_value.data();
 }
 
-void LeafElement::setValue(const wchar_t *pValue)
+void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 
-	m_pValidator->validate(pValue);
-	m_value = pValue;
-	onValueChanged(pValue);
+	switch (errorOptions)
+	{
+	case Element::AcceptValue:
+		m_value = pValue;
+		break;
+	case Element::ClearValue:
+		try
+		{
+			m_pValidator->validate(pValue);
+			m_value = pValue;
+			onValueChanged(pValue);
+		}
+		catch (const InvalidValueException &e)
+		{
+			m_value.clear();
+			onDeleted();
+		}
+		break;
+	case Element::ThrowExceptions:
+	default:
+		m_pValidator->validate(pValue);
+		m_value = pValue;
+		onValueChanged(pValue);
+	}
 }
 
 time_t LeafElement::getDateValue() const
@@ -126,7 +147,7 @@ time_t LeafElement::getDateValue() const
 	return std::mktime(&tm);
 }
 
-void LeafElement::setValue(const time_t Value, bool bWithTime)
+void LeafElement::setValue(const time_t Value, bool bWithTime, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	tm *ptm;
@@ -144,7 +165,7 @@ void LeafElement::setValue(const time_t Value, bool bWithTime)
 	XMLCh *xmlch = xercesc::XMLString::transcode(buffer);
 	if (xmlch)
 	{
-		setValue(xmlch);
+		setValue(xmlch, errorOptions);
 		xercesc::XMLString::release(&xmlch);
 	}
 
@@ -167,12 +188,12 @@ int LeafElement::getIntValue() const
 	return pValue->fData.fValue.f_int;
 }
 
-void LeafElement::setValue(const int Value)
+void LeafElement::setValue(const int Value, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	std::wstring w = std::to_wstring(Value);
 
-	setValue(w.data());
+	setValue(w.data(), errorOptions);
 }
 
 double LeafElement::getDoubleValue() const
@@ -192,14 +213,14 @@ double LeafElement::getDoubleValue() const
 	return pValue->fData.fValue.f_double;
 }
 
-void LeafElement::setValue(double d)
+void LeafElement::setValue(const double d, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	std::wostringstream wos;
 
 	wos.imbue(std::locale::classic());
 	wos << std::setprecision(2) << std::fixed << d;
-	setValue(wos.str().data());
+	setValue(wos.str().data(), errorOptions);
 }
 
 bool LeafElement::isEmpty() const

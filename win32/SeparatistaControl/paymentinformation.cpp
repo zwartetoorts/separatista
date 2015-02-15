@@ -465,7 +465,12 @@ STDMETHODIMP PaymentInformation::SetCreditorSchemeIdentificationSchemeName(BSTR 
 
 	try
 	{
+		m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_SchmeNm.choose(&m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry);
 		m_pPmtInf->m_CdtrSchmeId.m_Id.m_PrvtId.m_Othr.m_SchmeNm.m_Prtry.setValue(Value);
+	}
+	catch (const Separatista::InvalidChoiceException &ce)
+	{
+		return SetErrorInfo(ce);
 	}
 	catch (const Separatista::InvalidValueException &e)
 	{

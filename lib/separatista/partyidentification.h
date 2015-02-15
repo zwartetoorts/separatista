@@ -45,9 +45,9 @@ namespace Separatista
 	public:
 		GenericPersonIdentification1(const wchar_t *pTag);
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 		LeafElement m_Id;
 		PersonIdentificationSchemeName1Choice m_SchmeNm;
@@ -58,9 +58,9 @@ namespace Separatista
 	public:
 		PersonIdentification5(const wchar_t *pTag);
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 		GenericPersonIdentification1 m_Othr;
 	};
@@ -78,9 +78,9 @@ namespace Separatista
 	public:
 		PartyIdentification43(const wchar_t *pTag);
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 		LeafElement m_Nm;
 		Party11Choice m_Id;

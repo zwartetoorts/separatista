@@ -35,9 +35,9 @@ namespace Separatista
 	public:
 		FinancialInstitutionIdentification8();
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 		LeafElement m_BIC;
 	};
@@ -47,9 +47,9 @@ namespace Separatista
 	public:
 		BranchAndFinancialInstitutionIdentification5(const wchar_t *pTag);
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 		FinancialInstitutionIdentification8 m_FinancialInstitutionIdentification;
 	};

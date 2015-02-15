@@ -36,9 +36,9 @@ namespace Separatista
 		public:
 			InitgPty();
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			LeafElement m_Nm;
 		};
@@ -50,9 +50,9 @@ namespace Separatista
 
 			GrpHdr(const DOMElement *pParent);
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			LeafElement m_MsgId;
 			LeafElement m_CreDtTm;
@@ -77,9 +77,9 @@ namespace Separatista
 			*/
 			~CstmrDrctDbtInitn();
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent = NULL);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent = NULL, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pDocumentIterator);
+			void fromDOMDocument(DOMDocumentIterator *pDocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 

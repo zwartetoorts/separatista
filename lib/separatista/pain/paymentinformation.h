@@ -39,9 +39,9 @@ namespace Separatista
 		public:
 			SvcLvl();
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			LeafElement m_Cd;
 		};
@@ -51,9 +51,9 @@ namespace Separatista
 		public:
 			LclInstrm();
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			LeafElement m_Cd;
 		};
@@ -63,9 +63,9 @@ namespace Separatista
 		public:
 			PmtTpInf();
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			SvcLvl m_SvcLvl;
 			LclInstrm m_LclInstrm;
@@ -82,9 +82,9 @@ namespace Separatista
 			*/
 			~PmtInf();
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 			void elementDeleted(Element *pElement);

@@ -50,24 +50,24 @@ m_Nm(TEXT("Nm"), Validators.Max35TextValidator)
 	DEBUG_METHOD
 }
 
-DOMElement* InitgPty::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
+DOMElement* InitgPty::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
-		m_Nm.toDOMDocument(pDocument, pElement);
+		m_Nm.toDOMDocument(pDocument, pElement, errorOptions);
 
 	return pElement;
 }
 
-void InitgPty::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void InitgPty::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_Nm.fromDOMDocument(pElementIterator);
+		m_Nm.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -82,34 +82,34 @@ m_InitgPty()
 	DEBUG_METHOD
 }
 
-DOMElement* GrpHdr::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
+DOMElement* GrpHdr::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		m_MsgId.toDOMDocument(pDocument, pElement);
-		m_CreDtTm.toDOMDocument(pDocument, pElement);
-		m_NbOfTxs.toDOMDocument(pDocument, pElement);
-		m_CtrlSum.toDOMDocument(pDocument, pElement);
-		m_InitgPty.toDOMDocument(pDocument, pElement);
+		m_MsgId.toDOMDocument(pDocument, pElement, errorOptions);
+		m_CreDtTm.toDOMDocument(pDocument, pElement, errorOptions);
+		m_NbOfTxs.toDOMDocument(pDocument, pElement, errorOptions);
+		m_CtrlSum.toDOMDocument(pDocument, pElement, errorOptions);
+		m_InitgPty.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void GrpHdr::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void GrpHdr::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_MsgId.fromDOMDocument(pElementIterator);
-		m_CreDtTm.fromDOMDocument(pElementIterator);
-		m_NbOfTxs.fromDOMDocument(pElementIterator);
-		m_CtrlSum.fromDOMDocument(pElementIterator);
-		m_InitgPty.fromDOMDocument(pElementIterator);
+		m_MsgId.fromDOMDocument(pElementIterator, errorOptions);
+		m_CreDtTm.fromDOMDocument(pElementIterator, errorOptions);
+		m_NbOfTxs.fromDOMDocument(pElementIterator, errorOptions);
+		m_CtrlSum.fromDOMDocument(pElementIterator, errorOptions);
+		m_InitgPty.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -138,7 +138,7 @@ CstmrDrctDbtInitn::~CstmrDrctDbtInitn()
 		delete (*it);
 }
 
-DOMElement* CstmrDrctDbtInitn::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
+DOMElement* CstmrDrctDbtInitn::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	std::vector<PmtInf*>::iterator it;
@@ -149,13 +149,13 @@ DOMElement* CstmrDrctDbtInitn::toDOMDocument(Separatista::DOMDocument *pDocument
 		m_GrpHdr.toDOMDocument(pDocument, pElement);
 
 		for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
-			(*it)->toDOMDocument(pDocument, pElement);
+			(*it)->toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator *pDocumentIterator)
+void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator *pDocumentIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	PmtInf *pPmtInf;
@@ -171,7 +171,7 @@ void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator *pDocumentIterator)
 	if (compareTag(pDocumentIterator))
 	{
 		pDocumentIterator->nextElement();
-		m_GrpHdr.fromDOMDocument(pDocumentIterator);
+		m_GrpHdr.fromDOMDocument(pDocumentIterator, errorOptions);
 
 		while (pDocumentIterator->getCurrentElement() != NULL &&
 			xercesc::XMLString::compareString(pDocumentIterator->getCurrentElement()->getNodeName(), TEXT("PmtInf")) == 0)
@@ -180,7 +180,7 @@ void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator *pDocumentIterator)
 			pPmtInf = new PmtInf();
 			if (pPmtInf)
 			{
-				pPmtInf->fromDOMDocument(pDocumentIterator);
+				pPmtInf->fromDOMDocument(pDocumentIterator, errorOptions);
 				AddPmtInf(pPmtInf);
 			}
 			// Check for dead loop

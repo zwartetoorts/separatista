@@ -36,9 +36,9 @@ namespace Separatista
 	public:
 		LeafElement(const wchar_t *pTagName, const Validator &validator);
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent);
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-		void fromDOMDocument(DOMDocumentIterator *pElementIterator);
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/**
 		Clears the content of the node
@@ -53,7 +53,7 @@ namespace Separatista
 		/**
 		Set the value of a text node
 		*/
-		void setValue(const wchar_t *pValue);
+		void setValue(const wchar_t *pValue, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/**
 		Returns the value of the text node converted to date
@@ -65,7 +65,7 @@ namespace Separatista
 		Set the value of a text node by a time_t
 		@param bWithTime Wether the time should be included or not
 		*/
-		void setValue(const time_t Value, bool bWithTime = false);
+		void setValue(const time_t Value, bool bWithTime = false, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/**
 		Get the value of a text node converted to int
@@ -75,7 +75,7 @@ namespace Separatista
 		/**
 		Set the value of a text node by an int
 		*/
-		void setValue(const int Value);
+		void setValue(const int Value, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/**
 		Get the value of a text node converted to double
@@ -85,7 +85,7 @@ namespace Separatista
 		/**
 		Set the value of a text node conveted to double
 		*/
-		void setValue(double d);
+		void setValue(const double d, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/**
 		Returns true if the element text is empty

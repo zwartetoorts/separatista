@@ -36,24 +36,24 @@ m_EndToEndId(TEXT("EndToEndId"), Validators.Max35TextValidator)
 	DEBUG_METHOD
 }
 
-DOMElement* PmtId::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
+DOMElement* PmtId::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
-		m_EndToEndId.toDOMDocument(pDocument, pElement);
+		m_EndToEndId.toDOMDocument(pDocument, pElement, errorOptions);
 
 	return pElement;
 }
 
-void PmtId::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void PmtId::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_EndToEndId.fromDOMDocument(pElementIterator);
+		m_EndToEndId.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -66,28 +66,28 @@ m_DtOfSgntr(TEXT("DtOfSgntr"), Validators.ISODateValidator)
 	m_DtOfSgntr.setValue(std::time(NULL));
 }
 
-DOMElement* MndtRltdInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
+DOMElement* MndtRltdInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		m_MndtId.toDOMDocument(pDocument, pElement);
-		m_DtOfSgntr.toDOMDocument(pDocument, pElement);
+		m_MndtId.toDOMDocument(pDocument, pElement, errorOptions);
+		m_DtOfSgntr.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void MndtRltdInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void MndtRltdInf::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_MndtId.fromDOMDocument(pElementIterator);
-		m_DtOfSgntr.fromDOMDocument(pElementIterator);
+		m_MndtId.fromDOMDocument(pElementIterator, errorOptions);
+		m_DtOfSgntr.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -98,26 +98,26 @@ m_MndtRltdInf()
 	DEBUG_METHOD
 }
 
-DOMElement* DrctDbtTx::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
+DOMElement* DrctDbtTx::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		m_MndtRltdInf.toDOMDocument(pDocument, pElement);
+		m_MndtRltdInf.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void DrctDbtTx::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void DrctDbtTx::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_MndtRltdInf.fromDOMDocument(pElementIterator);
+		m_MndtRltdInf.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -128,26 +128,26 @@ m_Ustrd(TEXT("Ustrd"), Validators.Max140TextValidator)
 	DEBUG_METHOD
 }
 
-DOMElement* RmtInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
+DOMElement* RmtInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		m_Ustrd.toDOMDocument(pDocument, pElement);
+		m_Ustrd.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void RmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void RmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_Ustrd.fromDOMDocument(pElementIterator);
+		m_Ustrd.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -164,7 +164,7 @@ m_RmtInf()
 	DEBUG_METHOD
 }
 
-DOMElement* DrctDbtTxInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent)
+DOMElement* DrctDbtTxInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	DOMElement *pInstdAmt;
@@ -172,32 +172,32 @@ DOMElement* DrctDbtTxInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOM
 
 	if (pElement)
 	{
-		m_PmtId.toDOMDocument(pDocument, pElement);
-		pInstdAmt = m_InstdAmt.toDOMDocument(pDocument, pElement);
+		m_PmtId.toDOMDocument(pDocument, pElement, errorOptions);
+		pInstdAmt = m_InstdAmt.toDOMDocument(pDocument, pElement, errorOptions);
 		if (pInstdAmt)
 			pInstdAmt->setAttribute(TEXT("Ccy"), TEXT("EUR"));
-		m_DrctDbtTx.toDOMDocument(pDocument, pElement);
-		m_DbtrAgt.toDOMDocument(pDocument, pElement);
-		m_Dbtr.toDOMDocument(pDocument, pElement);
-		m_DbtrAcct.toDOMDocument(pDocument, pElement);
-		m_RmtInf.toDOMDocument(pDocument, pElement);
+		m_DrctDbtTx.toDOMDocument(pDocument, pElement, errorOptions);
+		m_DbtrAgt.toDOMDocument(pDocument, pElement, errorOptions);
+		m_Dbtr.toDOMDocument(pDocument, pElement, errorOptions);
+		m_DbtrAcct.toDOMDocument(pDocument, pElement, errorOptions);
+		m_RmtInf.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void DrctDbtTxInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void DrctDbtTxInf::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_PmtId.fromDOMDocument(pElementIterator);
-		m_InstdAmt.fromDOMDocument(pElementIterator);
-		m_DrctDbtTx.fromDOMDocument(pElementIterator);
-		m_DbtrAgt.fromDOMDocument(pElementIterator);
-		m_Dbtr.fromDOMDocument(pElementIterator);
-		m_DbtrAcct.fromDOMDocument(pElementIterator);
-		m_RmtInf.fromDOMDocument(pElementIterator);
+		m_PmtId.fromDOMDocument(pElementIterator, errorOptions);
+		m_InstdAmt.fromDOMDocument(pElementIterator, errorOptions);
+		m_DrctDbtTx.fromDOMDocument(pElementIterator, errorOptions);
+		m_DbtrAgt.fromDOMDocument(pElementIterator, errorOptions);
+		m_Dbtr.fromDOMDocument(pElementIterator, errorOptions);
+		m_DbtrAcct.fromDOMDocument(pElementIterator, errorOptions);
+		m_RmtInf.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }

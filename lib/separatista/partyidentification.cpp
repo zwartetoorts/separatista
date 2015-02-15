@@ -42,28 +42,28 @@ m_SchmeNm(TEXT("SchmeNm"))
 	DEBUG_METHOD
 }
 
-xercesc::DOMElement* GenericPersonIdentification1::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* GenericPersonIdentification1::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		m_Id.toDOMDocument(pDocument, pElement);
-		m_SchmeNm.toDOMDocument(pDocument, pElement);
+		m_Id.toDOMDocument(pDocument, pElement, errorOptions);
+		m_SchmeNm.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void GenericPersonIdentification1::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void GenericPersonIdentification1::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_Id.fromDOMDocument(pElementIterator);
-		m_SchmeNm.fromDOMDocument(pElementIterator);
+		m_Id.fromDOMDocument(pElementIterator, errorOptions);
+		m_SchmeNm.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -74,26 +74,26 @@ m_Othr(TEXT("Othr"))
 	DEBUG_METHOD
 }
 
-xercesc::DOMElement* PersonIdentification5::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* PersonIdentification5::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		m_Othr.toDOMDocument(pDocument, pElement);
+		m_Othr.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void PersonIdentification5::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void PersonIdentification5::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_Othr.fromDOMDocument(pElementIterator);
+		m_Othr.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -112,27 +112,27 @@ m_Id()
 	DEBUG_METHOD
 }
 
-xercesc::DOMElement* PartyIdentification43::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* PartyIdentification43::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		m_Nm.toDOMDocument(pDocument, pElement);
-		m_Id.toDOMDocument(pDocument, pElement);
+		m_Nm.toDOMDocument(pDocument, pElement, errorOptions);
+		m_Id.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void PartyIdentification43::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void PartyIdentification43::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_Nm.fromDOMDocument(pElementIterator);
-		m_Id.fromDOMDocument(pElementIterator);
+		m_Nm.fromDOMDocument(pElementIterator, errorOptions);
+		m_Id.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }

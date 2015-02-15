@@ -70,23 +70,37 @@ namespace Separatista
 		~Element();
 
 		/**
+			Options how to handle errors when reading (fromDOMDocument) or writing (toDOMDocument) 
+			Separatista files.
+		*/
+		enum ErrorOptions
+		{
+			/// Throw exceptions, default
+			ThrowExceptions = 0,
+			/// Leave an empty value for the node
+			ClearValue,
+			/// Accept erronous values
+			AcceptValue
+		};
+
+		/**
 			Abstract method to call to write an element to a DOMDocument.
 			@param pDocument The DOMDocument to create the element for.
 			@param pParent The DOMElement to append the element to.
 			@return Pointer to the new created DOMElement, or NULL
 			@see createElement
 		*/
-		virtual DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent) = 0;
+		virtual DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions) = 0;
 
 		/**
 			Tries to load it's value from the document iterator.
 			@param pDocumentIterator The document iterator to read from.
 		*/
-		virtual void fromDOMDocument(DOMDocumentIterator *pDocumentIterator) = 0;
+		virtual void fromDOMDocument(DOMDocumentIterator *pDocumentIterator, const ErrorOptions errorOptions = ThrowExceptions) = 0;
 
 		/**
 			Set the elementlistener. Will be notified of changes to the element. If a previous elementlistener was registered, it
-			will be returned from this function. It's the caller's choise to store this listener and notify it of changes.
+			will be returned from this function. It's the caller's choice to store this listener and notify it of changes.
 			@param pElementListener The elementlistener to register.
 			@return A pointer to a previous registered elementlistener or NULL if none was registered.
 			@see ElementListener

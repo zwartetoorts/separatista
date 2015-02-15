@@ -39,24 +39,24 @@ m_Cd(TEXT("Cd"), Validators.ExternalServiceLevel1CodeValidator)
 	DEBUG_METHOD
 }
 
-xercesc::DOMElement* SvcLvl::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* SvcLvl::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
-		m_Cd.toDOMDocument(pDocument, pElement);
+		m_Cd.toDOMDocument(pDocument, pElement, errorOptions);
 
 	return pElement;
 }
 
-void SvcLvl::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void SvcLvl::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_Cd.fromDOMDocument(pElementIterator);
+		m_Cd.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -67,24 +67,24 @@ m_Cd(TEXT("Cd"), Validators.ExternalLocalInstrumentCodeValidator)
 	DEBUG_METHOD
 }
 
-xercesc::DOMElement* LclInstrm::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* LclInstrm::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
-		m_Cd.toDOMDocument(pDocument, pElement);
+		m_Cd.toDOMDocument(pDocument, pElement, errorOptions);
 
 	return pElement;
 }
 
-void LclInstrm::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void LclInstrm::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_Cd.fromDOMDocument(pElementIterator);
+		m_Cd.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -97,30 +97,30 @@ m_SeqTp(TEXT("SeqTp"), Validators.SequenceType3CodeValidator)
 	DEBUG_METHOD
 }
 
-xercesc::DOMElement* PmtTpInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* PmtTpInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		m_SvcLvl.toDOMDocument(pDocument, pElement);
-		m_LclInstrm.toDOMDocument(pDocument, pElement);
-		m_SeqTp.toDOMDocument(pDocument, pElement);
+		m_SvcLvl.toDOMDocument(pDocument, pElement, errorOptions);
+		m_LclInstrm.toDOMDocument(pDocument, pElement, errorOptions);
+		m_SeqTp.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void PmtTpInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void PmtTpInf::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_SvcLvl.fromDOMDocument(pElementIterator);
-		m_LclInstrm.fromDOMDocument(pElementIterator);
-		m_SeqTp.fromDOMDocument(pElementIterator);
+		m_SvcLvl.fromDOMDocument(pElementIterator, errorOptions);
+		m_LclInstrm.fromDOMDocument(pElementIterator, errorOptions);
+		m_SeqTp.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -156,7 +156,7 @@ PmtInf::~PmtInf()
 		delete (*it);
 }
 
-xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	std::vector<DrctDbtTxInf*>::iterator it;
@@ -164,26 +164,26 @@ xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 
 	if (pElement)
 	{
-		m_PmtInfId.toDOMDocument(pDocument, pElement);
-		m_PmtMtd.toDOMDocument(pDocument, pElement);
-		m_NbOfTxs.toDOMDocument(pDocument, pElement);
-		m_CtrlSum.toDOMDocument(pDocument, pElement);
-		m_PmtTpInf.toDOMDocument(pDocument, pElement);
-		m_ReqdColltnDt.toDOMDocument(pDocument, pElement);
-		m_Cdtr.toDOMDocument(pDocument, pElement);
-		m_CdtrAcct.toDOMDocument(pDocument, pElement);
-		m_CdtrAgt.toDOMDocument(pDocument, pElement);
-		m_ChrgBr.toDOMDocument(pDocument, pElement);
-		m_CdtrSchmeId.toDOMDocument(pDocument, pElement);
+		m_PmtInfId.toDOMDocument(pDocument, pElement, errorOptions);
+		m_PmtMtd.toDOMDocument(pDocument, pElement, errorOptions);
+		m_NbOfTxs.toDOMDocument(pDocument, pElement, errorOptions);
+		m_CtrlSum.toDOMDocument(pDocument, pElement, errorOptions);
+		m_PmtTpInf.toDOMDocument(pDocument, pElement, errorOptions);
+		m_ReqdColltnDt.toDOMDocument(pDocument, pElement, errorOptions);
+		m_Cdtr.toDOMDocument(pDocument, pElement, errorOptions);
+		m_CdtrAcct.toDOMDocument(pDocument, pElement, errorOptions);
+		m_CdtrAgt.toDOMDocument(pDocument, pElement, errorOptions);
+		m_ChrgBr.toDOMDocument(pDocument, pElement, errorOptions);
+		m_CdtrSchmeId.toDOMDocument(pDocument, pElement, errorOptions);
 
 		for (it = m_DrctDbtTxInfs.begin(); it != m_DrctDbtTxInfs.end(); it++)
-			(*it)->toDOMDocument(pDocument, pElement);
+			(*it)->toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void PmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void PmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	unsigned int pos;
@@ -192,17 +192,17 @@ void PmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_PmtInfId.fromDOMDocument(pElementIterator);
-		m_PmtMtd.fromDOMDocument(pElementIterator);
-		m_NbOfTxs.fromDOMDocument(pElementIterator);
-		m_CtrlSum.fromDOMDocument(pElementIterator);
-		m_PmtTpInf.fromDOMDocument(pElementIterator);
-		m_ReqdColltnDt.fromDOMDocument(pElementIterator);
-		m_Cdtr.fromDOMDocument(pElementIterator);
-		m_CdtrAcct.fromDOMDocument(pElementIterator);
-		m_CdtrAgt.fromDOMDocument(pElementIterator);
-		m_ChrgBr.fromDOMDocument(pElementIterator);
-		m_CdtrSchmeId.fromDOMDocument(pElementIterator);
+		m_PmtInfId.fromDOMDocument(pElementIterator, errorOptions);
+		m_PmtMtd.fromDOMDocument(pElementIterator, errorOptions);
+		m_NbOfTxs.fromDOMDocument(pElementIterator, errorOptions);
+		m_CtrlSum.fromDOMDocument(pElementIterator, errorOptions);
+		m_PmtTpInf.fromDOMDocument(pElementIterator, errorOptions);
+		m_ReqdColltnDt.fromDOMDocument(pElementIterator, errorOptions);
+		m_Cdtr.fromDOMDocument(pElementIterator, errorOptions);
+		m_CdtrAcct.fromDOMDocument(pElementIterator, errorOptions);
+		m_CdtrAgt.fromDOMDocument(pElementIterator, errorOptions);
+		m_ChrgBr.fromDOMDocument(pElementIterator, errorOptions);
+		m_CdtrSchmeId.fromDOMDocument(pElementIterator, errorOptions);
 
 		while (pElementIterator->getCurrentElement() != NULL &&
 			xercesc::XMLString::compareString(pElementIterator->getCurrentElement()->getNodeName(), TEXT("DrctDbtTxInf")) == 0)
@@ -211,7 +211,7 @@ void PmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator)
 			pTxInf = new DrctDbtTxInf();
 			if (pTxInf)
 			{
-				pTxInf->fromDOMDocument(pElementIterator);
+				pTxInf->fromDOMDocument(pElementIterator, errorOptions);
 				AddDrctDbtTxInf(pTxInf);
 			}
 			if (pos == pElementIterator->getPosition())

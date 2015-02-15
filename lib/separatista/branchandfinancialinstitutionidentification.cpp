@@ -33,26 +33,26 @@ m_BIC(TEXT("BIC"), Validators.BICValidator)
 	DEBUG_METHOD
 }
 
-xercesc::DOMElement* FinancialInstitutionIdentification8::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* FinancialInstitutionIdentification8::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		m_BIC.toDOMDocument(pDocument, pElement);
+		m_BIC.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void FinancialInstitutionIdentification8::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void FinancialInstitutionIdentification8::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_BIC.fromDOMDocument(pElementIterator);
+		m_BIC.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
@@ -63,25 +63,25 @@ m_FinancialInstitutionIdentification()
 	DEBUG_METHOD
 }
 
-xercesc::DOMElement* BranchAndFinancialInstitutionIdentification5::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* BranchAndFinancialInstitutionIdentification5::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{
-		m_FinancialInstitutionIdentification.toDOMDocument(pDocument, pElement);
+		m_FinancialInstitutionIdentification.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
 }
 
-void BranchAndFinancialInstitutionIdentification5::fromDOMDocument(DOMDocumentIterator *pElementIterator)
+void BranchAndFinancialInstitutionIdentification5::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_FinancialInstitutionIdentification.fromDOMDocument(pElementIterator);
+		m_FinancialInstitutionIdentification.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }

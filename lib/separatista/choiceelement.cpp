@@ -36,9 +36,3 @@
 
 using namespace Separatista;
 
-//ChoiceElement::ChoiceElement(const wchar_t *pTagName, std::initializer_list<Element*> pChoices) :
-//Element(pTagName)
-//{
-//	DEBUG_METHOD
-//	
-//}

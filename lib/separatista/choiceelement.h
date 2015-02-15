@@ -31,6 +31,7 @@
 #include "xerces_types.h"
 #include "element.h"
 #include "exception.h"
+#include "debug/debug.h"
 
 namespace Separatista
 {
@@ -45,8 +46,7 @@ namespace Separatista
 	};
 
 	/**
-		Choice elements require to choose a child element to be written on save.
-		Separatista subclasses always have a default choice set in their constructor.
+		Choice elements require to choose a child element to be written on save. If unset, the element won't be outputted.
 	*/
 
 	template <size_t T>
@@ -56,6 +56,8 @@ namespace Separatista
 		ChoiceElement(const wchar_t *pTagName, std::initializer_list<Element*> pChoices) :
 			Element(pTagName)
 			{
+				DEBUG_METHOD
+
 				m_pChosenElement = NULL;
 				std::copy(pChoices.begin(), pChoices.end(), m_pChoices.begin());
 			};
@@ -64,8 +66,10 @@ namespace Separatista
 			@return The element created or NULL if no element was choosen.
 		*/
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent)
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions)
 		{
+			DEBUG_METHOD
+
 			if (!m_pChosenElement)
 				return NULL;
 
@@ -73,14 +77,16 @@ namespace Separatista
 
 			if (pElement)
 			{
-				m_pChosenElement->toDOMDocument(pDocument, pElement);
+				m_pChosenElement->toDOMDocument(pDocument, pElement, errorOptions);
 			}
 
 			return pElement;
 		};
 
-		void fromDOMDocument(DOMDocumentIterator *pDocumentIterator)
+		void fromDOMDocument(DOMDocumentIterator *pDocumentIterator, const ErrorOptions errorOptions = ThrowExceptions)
 		{
+			DEBUG_METHOD
+
 			if (compareTag(pDocumentIterator))
 			{
 				pDocumentIterator->nextElement();
@@ -89,7 +95,7 @@ namespace Separatista
 					if ((*it)->compareTag(pDocumentIterator))
 					{
 						m_pChosenElement = *it;
-						m_pChosenElement->fromDOMDocument(pDocumentIterator);
+						m_pChosenElement->fromDOMDocument(pDocumentIterator, errorOptions);
 						break;
 					}
 				}
@@ -104,6 +110,8 @@ namespace Separatista
 		*/
 		void choose(Element *pChildElement)
 		{
+			DEBUG_METHOD
+
 			for (auto it = m_pChoices.begin(); it != m_pChoices.end(); it++)
 			{
 				if (*it == pChildElement)
@@ -122,6 +130,8 @@ namespace Separatista
 		*/
 		Element* getChoice()
 		{
+			DEBUG_METHOD
+
 			return m_pChosenElement;
 		};
 
