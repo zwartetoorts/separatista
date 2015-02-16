@@ -41,9 +41,9 @@
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-const wchar_t* CstmrDrctDbtInitn::NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.02");
+const wchar_t* CstmrDrctDbtInitn::NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001");
 
-InitgPty::InitgPty() :
+/*InitgPty::InitgPty() :
 BranchElement(TEXT("InitgPty")),
 m_Nm(TEXT("Nm"), Validators.Max35TextValidator)
 {
@@ -70,14 +70,14 @@ void InitgPty::fromDOMDocument(DOMDocumentIterator *pElementIterator, const Erro
 		m_Nm.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
-
+*/
 GrpHdr::GrpHdr() :
 BranchElement(TEXT("GrpHdr")),
 m_MsgId(TEXT("MsgId"), Validators.Max35TextValidator),
 m_CreDtTm(TEXT("CreDtTm"), Validators.ISODateTimeValidator),
 m_NbOfTxs(TEXT("NbOfTxs"), Validators.Max15NumericTextValidator),
 m_CtrlSum(TEXT("CtrlSum"), Validators.DecimalNumberValidator),
-m_InitgPty()
+m_InitgPty(TEXT("InitgPty"))
 {
 	DEBUG_METHOD
 }

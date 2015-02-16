@@ -22,6 +22,7 @@
 #include "separatista/xerces_types.h"
 #include "separatista/element.h"
 #include "separatista/pain/paymentinformation.h"
+#include "separatista/partyidentification.h"
 #include "separatista/elementlist.h"
 
 #ifndef SEPARATISTA_CUSTOMERDIRECTDEBITINITIATION_H
@@ -31,17 +32,17 @@ namespace Separatista
 {
 	namespace pain_008_001
 	{
-		class SEPARATISTA_EXTERN InitgPty : public BranchElement
-		{
-		public:
-			InitgPty();
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-			LeafElement m_Nm;
-		};
+//		class SEPARATISTA_EXTERN InitgPty : public BranchElement
+//		{
+//		public:
+//			InitgPty();
+//
+//			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
+//
+//			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
+//
+//			LeafElement m_Nm;
+//		};
 
 		class SEPARATISTA_EXTERN GrpHdr : public BranchElement
 		{
@@ -58,7 +59,7 @@ namespace Separatista
 			LeafElement m_CreDtTm;
 			LeafElement m_NbOfTxs;
 			LeafElement m_CtrlSum;
-			InitgPty m_InitgPty;
+			PartyIdentification43 m_InitgPty;
 
 		};
 
