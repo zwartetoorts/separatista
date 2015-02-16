@@ -109,9 +109,14 @@
     <ClInclude Include="..\..\lib\separatista\exception.h" />
     <ClInclude Include="..\..\lib\separatista\leafelement.h" />
     <ClInclude Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.h" />
+    <ClInclude Include="..\..\lib\separatista\pain\directdebittransaction.h" />
     <ClInclude Include="..\..\lib\separatista\pain\directdebittransactioninformation.h" />
+    <ClInclude Include="..\..\lib\separatista\pain\groupheader.h" />
+    <ClInclude Include="..\..\lib\separatista\pain\mandaterelatedinformation.h" />
     <ClInclude Include="..\..\lib\separatista\pain\paymentinformation.h" />
+    <ClInclude Include="..\..\lib\separatista\pain\paymenttypeinformation.h" />
     <ClInclude Include="..\..\lib\separatista\partyidentification.h" />
+    <ClInclude Include="..\..\lib\separatista\remittanceinformation.h" />
     <ClInclude Include="..\..\lib\separatista\separatista.h" />
     <ClInclude Include="..\..\lib\separatista\validator.h" />
     <ClInclude Include="..\..\lib\separatista\xerces_types.h" />
@@ -128,9 +133,14 @@
     <ClCompile Include="..\..\lib\separatista\exception.cpp" />
     <ClCompile Include="..\..\lib\separatista\leafelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.cpp" />
+    <ClCompile Include="..\..\lib\separatista\pain\directdebittransaction.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\directdebittransactioninformation.cpp" />
+    <ClCompile Include="..\..\lib\separatista\pain\groupheader.cpp" />
+    <ClCompile Include="..\..\lib\separatista\pain\mandaterelatedinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\paymentinformation.cpp" />
+    <ClCompile Include="..\..\lib\separatista\pain\paymenttypeinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\partyidentification.cpp" />
+    <ClCompile Include="..\..\lib\separatista\remittanceinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\separatista.cpp" />
     <ClCompile Include="..\..\lib\separatista\validator.cpp" />
   </ItemGroup>

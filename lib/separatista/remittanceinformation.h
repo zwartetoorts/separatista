@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,60 +18,27 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <vector>
-
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
-#include "separatista/pain/directdebittransactioninformation.h"
-#include "separatista/branchandfinancialinstitutionidentification.h"
+#include "separatista/element.h"
 #include "separatista/partyidentification.h"
-#include "separatista/cashaccount.h"
-#include "separatista/pain/paymenttypeinformation.h"
 
-#ifndef SEPARATISTA_PAIN_PAYMENTINFORMATION_H
-#define SEPARATISTA_PAIN_PAYMENTINFORMATION_H
+#ifndef SEPARATISTA_REMITTANCEINFORMATION_H
+#define SEPARATISTA_REMITTANCEINFORMATION_H
 
 namespace Separatista
 {
-	namespace pain_008_001
+	class SEPARATISTA_EXTERN RmtInf : public BranchElement
 	{
-		class SEPARATISTA_EXTERN PmtInf : public BranchElement, ElementListener
-		{
-		public:
-			PmtInf();
+	public:
+		RmtInf();
 
-			/**
-			Destructor, will delete all added DrctDbtTxInf's
-			*/
-			~PmtInf();
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
+		void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
-			void elementDeleted(Element *pElement);
-
-			void AddDrctDbtTxInf(DrctDbtTxInf *pDrctDbtTxInf);
-
-			LeafElement m_PmtInfId;
-			LeafElement m_PmtMtd;
-			LeafElement m_NbOfTxs;
-			LeafElement m_CtrlSum;
-			PmtTpInf m_PmtTpInf;
-			LeafElement m_ReqdColltnDt;
-			PartyIdentification43 m_Cdtr;
-			CashAccount24 m_CdtrAcct;
-			BranchAndFinancialInstitutionIdentification5 m_CdtrAgt;
-			LeafElement m_ChrgBr;
-			PartyIdentification43 m_CdtrSchmeId;
-
-		private:
-			void calcSums();
-
-			std::vector<DrctDbtTxInf*> m_DrctDbtTxInfs;
-		};
-	}
+		LeafElement m_Ustrd;
+	};
 }
 
-#endif // SEPARATISTA_PAIN_PAYMENTINFORMATION_H
+#endif // !defined SEPARATISTA_REMITTANCEINFORMATION_H

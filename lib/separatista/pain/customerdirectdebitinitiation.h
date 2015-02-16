@@ -22,47 +22,17 @@
 #include "separatista/xerces_types.h"
 #include "separatista/element.h"
 #include "separatista/pain/paymentinformation.h"
+#include "separatista/pain/groupheader.h"
 #include "separatista/partyidentification.h"
 #include "separatista/elementlist.h"
 
-#ifndef SEPARATISTA_CUSTOMERDIRECTDEBITINITIATION_H
-#define SEPARATISTA_CUSTOMERDIRECTDEBITINITIATION_H
+#ifndef SEPARATISTA_PAIN_CUSTOMERDIRECTDEBITINITIATION_H
+#define SEPARATISTA_PAIN_CUSTOMERDIRECTDEBITINITIATION_H
 
 namespace Separatista
 {
 	namespace pain_008_001
 	{
-//		class SEPARATISTA_EXTERN InitgPty : public BranchElement
-//		{
-//		public:
-//			InitgPty();
-//
-//			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-//
-//			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
-//
-//			LeafElement m_Nm;
-//		};
-
-		class SEPARATISTA_EXTERN GrpHdr : public BranchElement
-		{
-		public:
-			GrpHdr();
-
-			GrpHdr(const DOMElement *pParent);
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-			LeafElement m_MsgId;
-			LeafElement m_CreDtTm;
-			LeafElement m_NbOfTxs;
-			LeafElement m_CtrlSum;
-			PartyIdentification43 m_InitgPty;
-
-		};
-
 		class SEPARATISTA_EXTERN CstmrDrctDbtInitn : public BranchElement, protected ElementListener, public SeparatistaDocument
 		{
 		public:
@@ -116,4 +86,4 @@ namespace Separatista
 	}
 }
 
-#endif // SEPARATISTA_CUSTOMERDIRECTDEBITINITIATION_H
+#endif // SEPARATISTA_PAIN_CUSTOMERDIRECTDEBITINITIATION_H

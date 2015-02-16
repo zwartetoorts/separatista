@@ -24,9 +24,12 @@
 #include "separatista/branchandfinancialinstitutionidentification.h"
 #include "separatista/partyidentification.h"
 #include "separatista/cashaccount.h"
+#include "separatista/remittanceinformation.h"
+#include "separatista/pain/mandaterelatedinformation.h"
+#include "separatista/pain/directdebittransaction.h"
 
-#ifndef SEPARATISTA_DIRECTDEBITTRANSACTIONINFORMATION_H
-#define SEPARATISTA_DIRECTDEBITTRANSACTIONINFORMATION_H
+#ifndef SEPARATISTA_PAIN_DIRECTDEBITTRANSACTIONINFORMATION_H
+#define SEPARATISTA_PAIN_DIRECTDEBITTRANSACTIONINFORMATION_H
 
 namespace Separatista
 {
@@ -42,43 +45,6 @@ namespace Separatista
 			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			LeafElement m_EndToEndId;
-		};
-
-		class SEPARATISTA_EXTERN MndtRltdInf : public BranchElement
-		{
-		public:
-			MndtRltdInf();
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-			LeafElement m_MndtId;
-			LeafElement m_DtOfSgntr;
-		};
-
-		class SEPARATISTA_EXTERN DrctDbtTx : public BranchElement
-		{
-		public:
-			DrctDbtTx();
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-			MndtRltdInf m_MndtRltdInf;
-		};
-
-		class SEPARATISTA_EXTERN RmtInf : public BranchElement
-		{
-		public:
-			RmtInf();
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-			LeafElement m_Ustrd;
 		};
 
 		class SEPARATISTA_EXTERN DrctDbtTxInf : public BranchElement
@@ -101,4 +67,5 @@ namespace Separatista
 	}
 }
 
-#endif
+#endif // !defined SEPARATISTA_PAIN_DIRECTDEBITTRANSACTIONINFORMATION_H
+ 
