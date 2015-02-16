@@ -39,7 +39,7 @@ namespace Separatista
 
 		void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
-		LeafElement m_BIC;
+		LeafElement m_BICFI;
 	};
 
 	class SEPARATISTA_EXTERN BranchAndFinancialInstitutionIdentification5 : public BranchElement

@@ -367,7 +367,7 @@ STDMETHODIMP PaymentInformation::GetCreditorAgentFinancialInstitutionIdentificat
 	if (!m_pPmtInf)
 		return E_UNEXPECTED;
 
-	*pValue = _bstr_t(m_pPmtInf->m_CdtrAgt.m_FinancialInstitutionIdentification.m_BIC.getTextValue()).Detach();
+	*pValue = _bstr_t(m_pPmtInf->m_CdtrAgt.m_FinancialInstitutionIdentification.m_BICFI.getTextValue()).Detach();
 
 	return S_OK;
 }
@@ -379,7 +379,7 @@ STDMETHODIMP PaymentInformation::SetCreditorAgentFinancialInstitutionIdentificat
 
 	try
 	{
-		m_pPmtInf->m_CdtrAgt.m_FinancialInstitutionIdentification.m_BIC.setValue(Value);
+		m_pPmtInf->m_CdtrAgt.m_FinancialInstitutionIdentification.m_BICFI.setValue(Value);
 	}
 	catch (const Separatista::InvalidValueException &e)
 	{

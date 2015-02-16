@@ -28,7 +28,7 @@ using namespace Separatista;
 
 FinancialInstitutionIdentification8::FinancialInstitutionIdentification8() :
 BranchElement(TEXT("FinInstnId")),
-m_BIC(TEXT("BIC"), Validators.BICValidator)
+m_BICFI(TEXT("BICFI"), Validators.BICValidator)
 {
 	DEBUG_METHOD
 }
@@ -40,7 +40,7 @@ xercesc::DOMElement* FinancialInstitutionIdentification8::toDOMDocument(xercesc:
 
 	if (pElement)
 	{
-		m_BIC.toDOMDocument(pDocument, pElement, errorOptions);
+		m_BICFI.toDOMDocument(pDocument, pElement, errorOptions);
 	}
 
 	return pElement;
@@ -52,7 +52,7 @@ void FinancialInstitutionIdentification8::fromDOMDocument(DOMDocumentIterator *p
 	if (compareTag(pElementIterator))
 	{
 		pElementIterator->nextElement();
-		m_BIC.fromDOMDocument(pElementIterator, errorOptions);
+		m_BICFI.fromDOMDocument(pElementIterator, errorOptions);
 	}
 }
 
