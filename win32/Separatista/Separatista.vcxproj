@@ -103,6 +103,7 @@
     <ClInclude Include="..\..\lib\separatista\branchelement.h" />
     <ClInclude Include="..\..\lib\separatista\cashaccount.h" />
     <ClInclude Include="..\..\lib\separatista\choiceelement.h" />
+    <ClInclude Include="..\..\lib\separatista\documentiterator.h" />
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />
     <ClInclude Include="..\..\lib\separatista\element.h" />
     <ClInclude Include="..\..\lib\separatista\elementlist.h" />
@@ -127,6 +128,7 @@
     <ClCompile Include="..\..\lib\separatista\cashaccount.cpp" />
     <ClCompile Include="..\..\lib\separatista\choiceelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
+    <ClCompile Include="..\..\lib\separatista\documentiterator.cpp" />
     <ClCompile Include="..\..\lib\separatista\documentreader.cpp" />
     <ClCompile Include="..\..\lib\separatista\element.cpp" />
     <ClCompile Include="..\..\lib\separatista\elementlist.cpp" />

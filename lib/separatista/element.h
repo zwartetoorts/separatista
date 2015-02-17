@@ -26,34 +26,10 @@
 
 #include "separatista.h"
 #include "xerces_types.h"
+#include "separatista/documentiterator.h"
 
 namespace Separatista
 {
-	/**
-		Class for enumerating a DOMDocument
-	*/
-	class SEPARATISTA_EXTERN DOMDocumentIterator
-	{
-	public:
-		DOMDocumentIterator(DOMDocument *pDocument);
-
-		~DOMDocumentIterator();
-
-		DOMElement* getCurrentElement() const;
-
-		DOMElement* nextElement();
-
-		/**
-			Get the current position. Can be used to check for dead loops.
-		*/
-		unsigned int getPosition() const;
-
-	private:
-		DOMNodeIterator *m_pNodeIterator;
-		DOMNode *m_pCurrentNode;
-		unsigned int m_nPos;
-	};
-
 	// Forward decl
 	class Element;
 

@@ -83,6 +83,9 @@
     <ClInclude Include="..\..\lib\separatista\pain\directdebittransaction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\lib\separatista\documentiterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\separatista\element.cpp">
@@ -146,6 +149,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\separatista\pain\directdebittransaction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\separatista\documentiterator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

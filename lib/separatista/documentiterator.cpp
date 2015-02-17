@@ -31,81 +31,51 @@
 #include <xercesc/framework/psvi/XSValue.hpp>
 
 #include "separatista.h"
-#include "element.h"
+#include "documentiterator.h"
 #include "debug/debug.h"
 
 using namespace Separatista;
 
-Element::Element(const wchar_t *pName)
+DOMDocumentIterator::DOMDocumentIterator(Separatista::DOMDocument *pDocument)
 {
 	DEBUG_METHOD
-	m_pTag = pName;
-	m_pElementListener = NULL;
+	m_pNodeIterator = pDocument->createNodeIterator(pDocument->getDocumentElement(), xercesc::DOMNodeFilter::SHOW_ELEMENT, NULL, true);
+	
+	if (m_pNodeIterator)
+		m_pCurrentNode = m_pNodeIterator->nextNode();
+	else
+		m_pCurrentNode = NULL;
+
+	m_nPos = 0;
 }
 
-Element::~Element()
+DOMDocumentIterator::~DOMDocumentIterator()
 {
 	DEBUG_METHOD
+	if (m_pNodeIterator)
+		m_pNodeIterator->release();
 }
 
-ElementListener* Element::setElementListener(ElementListener *pElementListener)
+xercesc::DOMElement* DOMDocumentIterator::getCurrentElement() const
 {
 	DEBUG_METHOD
-	ElementListener *pOld = m_pElementListener;
-	m_pElementListener = pElementListener;
-	return pOld;
+	return (xercesc::DOMElement*)m_pCurrentNode;
 }
 
-xercesc::DOMElement* Element::createElement(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
+xercesc::DOMElement* DOMDocumentIterator::nextElement()
 {
 	DEBUG_METHOD
-	xercesc::DOMElement *pElement;
-
-	try
+	if (m_pNodeIterator)
 	{
-		pElement = pDocument->createElementNS(pParent->getNamespaceURI(), m_pTag);
-		if (pElement)
-			pParent->appendChild(pElement);
-	}
-	catch (const xercesc::DOMException &e)
-	{
-		LOG(e.getMessage());
-		return NULL;
+		m_pCurrentNode = m_pNodeIterator->nextNode();
+		m_nPos++;
 	}
 
-	return pElement;
+	return getCurrentElement();
 }
 
-const wchar_t* Element::getTag() const
+unsigned int DOMDocumentIterator::getPosition() const
 {
 	DEBUG_METHOD
-	return m_pTag;
-}
-
-void Element::onValueChanged(const wchar_t *pNewValue)
-{
-	DEBUG_METHOD
-	if (m_pElementListener)
-		m_pElementListener->elementValueChanged(this, pNewValue);
-}
-
-void Element::onDeleted()
-{
-	DEBUG_METHOD
-	if (m_pElementListener)
-		m_pElementListener->elementDeleted(this);
-}
-
-bool Element::compareTag(const DOMDocumentIterator *pDocumentIterator) const
-{
-	DEBUG_METHOD
-	const xercesc::DOMElement *pElement = pDocumentIterator->getCurrentElement();
-
-	if (!pElement)
-		return false;
-
-	if (xercesc::XMLString::compareString(m_pTag, pElement->getNodeName()) == 0)
-		return true;
-
-	return false;
+	return m_nPos;
 }
