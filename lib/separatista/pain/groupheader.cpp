@@ -25,6 +25,7 @@
 #include "separatista/pain/groupheader.h"
 #include "separatista/debug/debug.h"
 #include "separatista/validator.h"
+#include "separatista/documentiterator.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
@@ -57,16 +58,13 @@ DOMElement* GrpHdr::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElemen
 	return pElement;
 }
 
-void GrpHdr::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void GrpHdr::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_MsgId.fromDOMDocument(pElementIterator, errorOptions);
-		m_CreDtTm.fromDOMDocument(pElementIterator, errorOptions);
-		m_NbOfTxs.fromDOMDocument(pElementIterator, errorOptions);
-		m_CtrlSum.fromDOMDocument(pElementIterator, errorOptions);
-		m_InitgPty.fromDOMDocument(pElementIterator, errorOptions);
-	}
+	
+	elementIterator.fromDOMDocument(m_MsgId, errorOptions);
+	elementIterator.fromDOMDocument(m_CreDtTm, errorOptions);
+	elementIterator.fromDOMDocument(m_NbOfTxs, errorOptions);
+	elementIterator.fromDOMDocument(m_CtrlSum, errorOptions);
+	elementIterator.fromDOMDocument(m_InitgPty, errorOptions);
 }

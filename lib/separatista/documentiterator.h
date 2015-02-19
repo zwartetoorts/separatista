@@ -24,8 +24,10 @@
 #include <ctime>
 #include <string>
 
-#include "separatista.h"
-#include "xerces_types.h"
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/element.h"
+#include "separatista/leafelement.h"
 
 namespace Separatista
 {
@@ -35,23 +37,37 @@ namespace Separatista
 	class SEPARATISTA_EXTERN DOMDocumentIterator
 	{
 	public:
-		DOMDocumentIterator(DOMDocument *pDocument);
-
-		~DOMDocumentIterator();
-
-		DOMElement* getCurrentElement() const;
-
-		DOMElement* nextElement();
+		/**
+			Constructor, sets the internal element pointer to the root document element.
+		*/
+		DOMDocumentIterator(Separatista::DOMDocument *pDocument);
 
 		/**
-		Get the current position. Can be used to check for dead loops.
+			Searches for the next sibbling with the same tag as element. Will call fromDOMDocument on this element if the element was found.
+			@throws A MissingElementException if the element wasn't optional and throwing was requested.
 		*/
-		unsigned int getPosition() const;
+		void fromDOMDocument(Element &element, const Element::ErrorOptions errorOptions);
+
+		/**
+		Searches for the next sibbling with the same tag as element. Will call fromDOMDocument on this element if the element was found.
+		@throws A MissingElementException if the element wasn't optional and throwing was requested.
+		*/
+		void fromDOMDocument(LeafElement &leafElement, const Element::ErrorOptions errorOptions);
+
+		/**
+			Returns the text value of the current element.
+		*/
+		const wchar_t *getTextValue() const;
+
+		/**
+			Checks if there are no more elements left to iterate
+		*/
+		bool isDone() const;
+	protected:
+		DOMElement *findElement(Element &element);
 
 	private:
-		DOMNodeIterator *m_pNodeIterator;
-		DOMNode *m_pCurrentNode;
-		unsigned int m_nPos;
+		DOMElement *m_pElement;
 	};
 
 }

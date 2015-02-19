@@ -47,7 +47,7 @@ namespace Separatista
 
 			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
+			void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 			void elementDeleted(Element *pElement);

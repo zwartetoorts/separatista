@@ -25,6 +25,7 @@
 #include "separatista/remittanceinformation.h"
 #include "separatista/debug/debug.h"
 #include "separatista/validator.h"
+#include "separatista/documentiterator.h"
 
 using namespace Separatista;
 
@@ -48,13 +49,10 @@ DOMElement* RmtInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElemen
 	return pElement;
 }
 
-void RmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void RmtInf::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-		if (compareTag(pElementIterator))
-		{
-			pElementIterator->nextElement();
-			m_Ustrd.fromDOMDocument(pElementIterator, errorOptions);
-		}
+	
+	elementIterator.fromDOMDocument(m_Ustrd, errorOptions);
 }
 

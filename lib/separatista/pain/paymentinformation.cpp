@@ -28,6 +28,7 @@
 #include "separatista/separatista.h"
 #include "separatista/pain/paymentinformation.h"
 #include "separatista/debug/debug.h"
+#include "separatista/documentiterator.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
@@ -91,39 +92,39 @@ xercesc::DOMElement* PmtInf::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 	return pElement;
 }
 
-void PmtInf::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void PmtInf::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	unsigned int pos;
 	DrctDbtTxInf *pTxInf;
 	
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_PmtInfId.fromDOMDocument(pElementIterator, errorOptions);
-		m_PmtMtd.fromDOMDocument(pElementIterator, errorOptions);
-		m_NbOfTxs.fromDOMDocument(pElementIterator, errorOptions);
-		m_CtrlSum.fromDOMDocument(pElementIterator, errorOptions);
-		m_PmtTpInf.fromDOMDocument(pElementIterator, errorOptions);
-		m_ReqdColltnDt.fromDOMDocument(pElementIterator, errorOptions);
-		m_Cdtr.fromDOMDocument(pElementIterator, errorOptions);
-		m_CdtrAcct.fromDOMDocument(pElementIterator, errorOptions);
-		m_CdtrAgt.fromDOMDocument(pElementIterator, errorOptions);
-		m_ChrgBr.fromDOMDocument(pElementIterator, errorOptions);
-		m_CdtrSchmeId.fromDOMDocument(pElementIterator, errorOptions);
+	elementIterator.fromDOMDocument(m_PmtInfId, errorOptions);
+	elementIterator.fromDOMDocument(m_PmtMtd, errorOptions);
+	elementIterator.fromDOMDocument(m_NbOfTxs, errorOptions);
+	elementIterator.fromDOMDocument(m_CtrlSum, errorOptions);
+	elementIterator.fromDOMDocument(m_PmtTpInf, errorOptions);
+	elementIterator.fromDOMDocument(m_ReqdColltnDt, errorOptions);
+	elementIterator.fromDOMDocument(m_Cdtr, errorOptions);
+	elementIterator.fromDOMDocument(m_CdtrAcct, errorOptions);
+	elementIterator.fromDOMDocument(m_CdtrAgt, errorOptions);
+	elementIterator.fromDOMDocument(m_ChrgBr, errorOptions);
+	elementIterator.fromDOMDocument(m_CdtrSchmeId, errorOptions);
 
-		while (pElementIterator->getCurrentElement() != NULL &&
-			xercesc::XMLString::compareString(pElementIterator->getCurrentElement()->getNodeName(), TEXT("DrctDbtTxInf")) == 0)
+	while (!elementIterator.isDone())
+	{
+		pTxInf = new DrctDbtTxInf();
+		if (pTxInf)
 		{
-			pos = pElementIterator->getPosition();
-			pTxInf = new DrctDbtTxInf();
-			if (pTxInf)
+			try
 			{
-				pTxInf->fromDOMDocument(pElementIterator, errorOptions);
+				elementIterator.fromDOMDocument(*pTxInf, errorOptions);
 				AddDrctDbtTxInf(pTxInf);
 			}
-			if (pos == pElementIterator->getPosition())
-				break;
+			// Should be, MissingElementException. PmtInf should be mandatory.
+			catch (const Exception &e)
+			{
+				delete pTxInf;
+				throw(e);
+			}
 		}
 	}
 }

@@ -95,17 +95,3 @@ void Element::onDeleted()
 	if (m_pElementListener)
 		m_pElementListener->elementDeleted(this);
 }
-
-bool Element::compareTag(const DOMDocumentIterator *pDocumentIterator) const
-{
-	DEBUG_METHOD
-	const xercesc::DOMElement *pElement = pDocumentIterator->getCurrentElement();
-
-	if (!pElement)
-		return false;
-
-	if (xercesc::XMLString::compareString(m_pTag, pElement->getNodeName()) == 0)
-		return true;
-
-	return false;
-}

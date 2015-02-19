@@ -25,6 +25,7 @@
 #include "separatista/pain/directdebittransaction.h"
 #include "separatista/debug/debug.h"
 #include "separatista/validator.h"
+#include "separatista/documentiterator.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
@@ -49,13 +50,10 @@ DOMElement* DrctDbtTx::toDOMDocument(Separatista::DOMDocument *pDocument, DOMEle
 	return pElement;
 }
 
-void DrctDbtTx::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void DrctDbtTx::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-		if (compareTag(pElementIterator))
-		{
-			pElementIterator->nextElement();
-			m_MndtRltdInf.fromDOMDocument(pElementIterator, errorOptions);
-		}
+
+	elementIterator.fromDOMDocument(m_MndtRltdInf, errorOptions);
 }
 

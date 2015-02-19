@@ -62,15 +62,15 @@ std::array<wchar_t, 10> Validator::m_numericDigits =
 	TEXT('9')
 };
 
-void Validator::validateMaxText(const wchar_t *pValue, size_t max)
+void Validator::validateMaxText(const wchar_t *pValue, size_t max, Element *pElement)
 {
 	DEBUG_METHOD;
 	
 	if (std::wcslen(pValue) > max)
-		throw InvalidValueException(SEPARATISTA_EXCEPTION("Text too long"));
+		throw InvalidValueException(SEPARATISTA_EXCEPTION("Text too long"), pElement, pValue);
 }
 
-void Validator::validateNumeric(const wchar_t *pValue)
+void Validator::validateNumeric(const wchar_t *pValue, Element *pElement)
 {
 	DEBUG_METHOD;
 
@@ -82,11 +82,11 @@ void Validator::validateNumeric(const wchar_t *pValue)
 		st))
 	{
 		if (st != xercesc::XSValue::st_Init)
-			throw InvalidValueException(SEPARATISTA_EXCEPTION("Not a numeric value"));
+			throw InvalidValueException(SEPARATISTA_EXCEPTION("Not a numeric value"), pElement, pValue);
 	}
 }
 
-void Validator::isDigit(const wchar_t c)
+void Validator::isDigit(const wchar_t c, Element *pElement)
 {
 	DEBUG_METHOD;
 	for (auto it = m_numericDigits.begin(); it != m_numericDigits.end(); it++)
@@ -94,10 +94,10 @@ void Validator::isDigit(const wchar_t c)
 		if (*it == c)
 			return;
 	}
-	throw InvalidValueException(SEPARATISTA_EXCEPTION("Not a valid digit"));
+	throw InvalidValueException(SEPARATISTA_EXCEPTION("Not a valid digit"), pElement, NULL);
 }
 
-void Validator::validateFractionDigits(const wchar_t *pValue, size_t min, size_t max)
+void Validator::validateFractionDigits(const wchar_t *pValue, size_t min, size_t max, Element *pElement)
 {
 	DEBUG_METHOD;
 
@@ -111,22 +111,22 @@ void Validator::validateFractionDigits(const wchar_t *pValue, size_t min, size_t
 		if (c == TEXT('.'))
 		{
 			if (dot)
-				throw InvalidValueException(SEPARATISTA_EXCEPTION("Too many dot's in fraction"));
+				throw InvalidValueException(SEPARATISTA_EXCEPTION("Too many dot's in fraction"), pElement, pValue);
 			else
 				dot = true;
 		}
 		else
 		{
-			isDigit(c);
+			isDigit(c, pElement);
 			if (++fc > max)
-				throw InvalidValueException(SEPARATISTA_EXCEPTION("Too many fraction digits"));
+				throw InvalidValueException(SEPARATISTA_EXCEPTION("Too many fraction digits"), pElement, pValue);
 		}
 	}
 	if (fc < min)
-		throw InvalidValueException(SEPARATISTA_EXCEPTION("Too few fraction digits"));
+		throw InvalidValueException(SEPARATISTA_EXCEPTION("Too few fraction digits"), pElement, pValue);
 }
 
-void Validator::validateTotalDigits(const wchar_t *pValue, size_t min, size_t max)
+void Validator::validateTotalDigits(const wchar_t *pValue, size_t min, size_t max, Element *pElement)
 {
 	DEBUG_METHOD;
 
@@ -139,18 +139,18 @@ void Validator::validateTotalDigits(const wchar_t *pValue, size_t min, size_t ma
 			break;
 		else
 		{
-			isDigit(c);
+			isDigit(c, pElement);
 			++td;
 		}
 	}
 	if (td < min)
-		throw InvalidValueException(SEPARATISTA_EXCEPTION("Too few digits in value"));
+		throw InvalidValueException(SEPARATISTA_EXCEPTION("Too few digits in value"), pElement, pValue);
 	else if (td > max)
-		throw InvalidValueException(SEPARATISTA_EXCEPTION("Too many digits in value"));
+		throw InvalidValueException(SEPARATISTA_EXCEPTION("Too many digits in value"), pElement, pValue);
 
 }
 
-void Validator::validateEnum(const wchar_t *pValue, std::initializer_list<const wchar_t*> pPossibleValues)
+void Validator::validateEnum(const wchar_t *pValue, std::initializer_list<const wchar_t*> pPossibleValues, Element *pElement)
 {
 	DEBUG_METHOD;
 
@@ -159,18 +159,18 @@ void Validator::validateEnum(const wchar_t *pValue, std::initializer_list<const 
 		if (std::wcscmp(*it, pValue) == 0)
 			return;
 	}
-	throw InvalidValueException(SEPARATISTA_EXCEPTION("Not one of the pre-defined values"));
+	throw InvalidValueException(SEPARATISTA_EXCEPTION("Not one of the pre-defined values"), pElement, pValue);
 }
 
 
-void Max35TextValidator::validate(const wchar_t *pValue) const
+void Max35TextValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 
-	validateMaxText(pValue, 35);
+	validateMaxText(pValue, 35, pElement);
 }
 
-void ISODateTimeValidator::validate(const wchar_t *pValue) const
+void ISODateTimeValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD
 
@@ -182,41 +182,41 @@ void ISODateTimeValidator::validate(const wchar_t *pValue) const
 		st))
 	{
 		if (st != xercesc::XSValue::st_Init)
-			throw InvalidValueException(SEPARATISTA_EXCEPTION("Wrong date format"));
+			throw InvalidValueException(SEPARATISTA_EXCEPTION("Wrong date format"), pElement, pValue);
 	}
 }
 
-void Max15NumericTextValidator::validate(const wchar_t *pValue) const
+void Max15NumericTextValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD
 
-	validateMaxText(pValue, 15);
-	validateNumeric(pValue);
+	validateMaxText(pValue, 15, pElement);
+	validateNumeric(pValue, pElement);
 }
 
-void DecimalNumberValidator::validate(const wchar_t *pValue) const
+void DecimalNumberValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 
-	validateFractionDigits(pValue, 0, 17);
-	validateTotalDigits(pValue, 0, 18);
+	validateFractionDigits(pValue, 0, 17, pElement);
+	validateTotalDigits(pValue, 0, 18, pElement);
 }
 
-void Max140TextValidator::validate(const wchar_t *pValue) const
+void Max140TextValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD
 
-	validateMaxText(pValue, 140);
+	validateMaxText(pValue, 140, pElement);
 }
 
-void PaymentMethod2CodeValidator::validate(const wchar_t *pValue) const
+void PaymentMethod2CodeValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 
-	validateEnum(pValue, { TEXT("DD") });
+	validateEnum(pValue, { TEXT("DD") }, pElement);
 }
 
-void ISODateValidator::validate(const wchar_t *pValue) const
+void ISODateValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 
@@ -228,11 +228,11 @@ void ISODateValidator::validate(const wchar_t *pValue) const
 		st))
 	{
 		if (st != xercesc::XSValue::st_Init)
-			throw InvalidValueException(SEPARATISTA_EXCEPTION("Not a date value"));
+			throw InvalidValueException(SEPARATISTA_EXCEPTION("Not a date value"), pElement, pValue);
 	}
 }
 
-void ChargeBearerType1CodeValidator::validate(const wchar_t *pValue) const
+void ChargeBearerType1CodeValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 
@@ -243,17 +243,17 @@ void ChargeBearerType1CodeValidator::validate(const wchar_t *pValue) const
 			TEXT("CRED"),
 			TEXT("SHAR"),
 			TEXT("SLEV")
-		});
+		}, pElement);
 }
 
-void ExternalServiceLevel1CodeValidator::validate(const wchar_t *pValue) const
+void ExternalServiceLevel1CodeValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 
-	validateMaxText(pValue, 4);
+	validateMaxText(pValue, 4, pElement);
 }
 
-void SequenceType3CodeValidator::validate(const wchar_t *pValue) const
+void SequenceType3CodeValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 
@@ -265,25 +265,25 @@ void SequenceType3CodeValidator::validate(const wchar_t *pValue) const
 			TEXT("FNAL"),
 			TEXT("OOFF"),
 			TEXT("RPRE")
-		});
+		}, pElement);
 }
 
-void ActiveOrHistoricCurrencyAndAmountValidator::validate(const wchar_t *pValue) const
+void ActiveOrHistoricCurrencyAndAmountValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 
-	validateFractionDigits(pValue, 0, 5);
-	validateTotalDigits(pValue, 0, 18);
+	validateFractionDigits(pValue, 0, 5, pElement);
+	validateTotalDigits(pValue, 0, 18, pElement);
 }
 
-void ExternalPersonIdentification1CodeValidator::validate(const wchar_t *pValue) const
+void ExternalPersonIdentification1CodeValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 
-	validateMaxText(pValue, 35);
+	validateMaxText(pValue, 35, pElement);
 }
 
-void IBANValidator::validate(const wchar_t *pValue) const
+void IBANValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 
@@ -291,10 +291,10 @@ void IBANValidator::validate(const wchar_t *pValue) const
 	
 	iban = pValue;
 	if (!iban.Check())
-		throw InvalidValueException(SEPARATISTA_EXCEPTION("Invalid IBAN"));
+		throw InvalidValueException(SEPARATISTA_EXCEPTION("Invalid IBAN"), pElement, pValue);
 }
 
-void BICValidator::validate(const wchar_t *pValue) const
+void BICValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 }

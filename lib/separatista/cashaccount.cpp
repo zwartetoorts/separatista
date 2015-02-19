@@ -22,6 +22,7 @@
 #include <xercesc/dom/DOMElement.hpp>
 
 #include "cashaccount.h"
+#include "documentiterator.h"
 #include "debug/debug.h"
 
 using namespace Separatista;
@@ -53,12 +54,8 @@ xercesc::DOMElement* CashAccount24::toDOMDocument(xercesc::DOMDocument *pDocumen
 	return pElement;
 }
 
-void CashAccount24::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void CashAccount24::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_Id.fromDOMDocument(pElementIterator, errorOptions);
-	}
+	elementIterator.fromDOMDocument(m_Id, errorOptions);
 }

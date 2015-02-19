@@ -27,6 +27,7 @@
 #include "separatista/remittanceinformation.h"
 #include "separatista/pain/mandaterelatedinformation.h"
 #include "separatista/pain/directdebittransaction.h"
+#include "separatista/documentiterator.h"
 
 #ifndef SEPARATISTA_PAIN_DIRECTDEBITTRANSACTIONINFORMATION_H
 #define SEPARATISTA_PAIN_DIRECTDEBITTRANSACTIONINFORMATION_H
@@ -42,7 +43,7 @@ namespace Separatista
 
 			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
+			void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			LeafElement m_EndToEndId;
 		};
@@ -54,7 +55,7 @@ namespace Separatista
 
 			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions = ThrowExceptions);
+			void fromDOMDocument(DOMDocumentIterator &lementIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			PmtId m_PmtId;
 			LeafElement m_InstdAmt;

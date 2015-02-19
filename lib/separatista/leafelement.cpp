@@ -32,6 +32,7 @@
 
 #include "leafelement.h"
 #include "debug/debug.h"
+#include "documentiterator.h"
 
 using namespace Separatista;
 
@@ -59,15 +60,11 @@ xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument,
 	return pElement;
 }
 
-void LeafElement::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void LeafElement::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 
-	if (compareTag(pElementIterator))
-	{
-		setValue(pElementIterator->getCurrentElement()->getTextContent(), errorOptions);
-		pElementIterator->nextElement();
-	}
+	setValue(elementIterator.getTextValue(), errorOptions);
 }
 
 void LeafElement::clear()
@@ -97,7 +94,7 @@ void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOption
 	case Element::ClearValue:
 		try
 		{
-			m_pValidator->validate(pValue);
+			m_pValidator->validate(pValue, this);
 			m_value = pValue;
 			onValueChanged(pValue);
 		}
@@ -109,7 +106,7 @@ void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOption
 		break;
 	case Element::ThrowExceptions:
 	default:
-		m_pValidator->validate(pValue);
+		m_pValidator->validate(pValue, this);
 		m_value = pValue;
 		onValueChanged(pValue);
 	}

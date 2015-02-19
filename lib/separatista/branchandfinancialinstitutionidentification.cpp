@@ -22,6 +22,7 @@
 #include <xercesc/dom/DOMElement.hpp>
 
 #include "branchandfinancialinstitutionidentification.h"
+#include "documentiterator.h"
 #include "debug/debug.h"
 
 using namespace Separatista;
@@ -46,14 +47,10 @@ xercesc::DOMElement* FinancialInstitutionIdentification8::toDOMDocument(xercesc:
 	return pElement;
 }
 
-void FinancialInstitutionIdentification8::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void FinancialInstitutionIdentification8::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_BICFI.fromDOMDocument(pElementIterator, errorOptions);
-	}
+	elementIterator.fromDOMDocument(m_BICFI, errorOptions);
 }
 
 BranchAndFinancialInstitutionIdentification5::BranchAndFinancialInstitutionIdentification5(const wchar_t *pTag) :
@@ -76,12 +73,9 @@ xercesc::DOMElement* BranchAndFinancialInstitutionIdentification5::toDOMDocument
 	return pElement;
 }
 
-void BranchAndFinancialInstitutionIdentification5::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void BranchAndFinancialInstitutionIdentification5::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_FinancialInstitutionIdentification.fromDOMDocument(pElementIterator, errorOptions);
-	}
+
+	elementIterator.fromDOMDocument(m_FinancialInstitutionIdentification, errorOptions);
 }

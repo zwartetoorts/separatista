@@ -23,6 +23,7 @@
 
 #include "partyidentification.h"
 #include "debug/debug.h"
+#include "separatista/documentiterator.h"
 
 using namespace Separatista;
 
@@ -56,15 +57,12 @@ xercesc::DOMElement* GenericPersonIdentification1::toDOMDocument(xercesc::DOMDoc
 	return pElement;
 }
 
-void GenericPersonIdentification1::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void GenericPersonIdentification1::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_Id.fromDOMDocument(pElementIterator, errorOptions);
-		m_SchmeNm.fromDOMDocument(pElementIterator, errorOptions);
-	}
+	
+	elementIterator.fromDOMDocument(m_Id, errorOptions);
+	elementIterator.fromDOMDocument(m_SchmeNm, errorOptions);
 }
 
 PersonIdentification5::PersonIdentification5(const wchar_t *pTag) :
@@ -87,14 +85,11 @@ xercesc::DOMElement* PersonIdentification5::toDOMDocument(xercesc::DOMDocument *
 	return pElement;
 }
 
-void PersonIdentification5::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void PersonIdentification5::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_Othr.fromDOMDocument(pElementIterator, errorOptions);
-	}
+	
+	elementIterator.fromDOMDocument(m_Othr, errorOptions);
 }
 
 Party11Choice::Party11Choice() :
@@ -126,13 +121,10 @@ xercesc::DOMElement* PartyIdentification43::toDOMDocument(xercesc::DOMDocument *
 	return pElement;
 }
 
-void PartyIdentification43::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void PartyIdentification43::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_Nm.fromDOMDocument(pElementIterator, errorOptions);
-		m_Id.fromDOMDocument(pElementIterator, errorOptions);
-	}
+
+	elementIterator.fromDOMDocument(m_Nm, errorOptions);
+	elementIterator.fromDOMDocument(m_Id, errorOptions);
 }

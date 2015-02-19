@@ -26,12 +26,12 @@
 
 #include "separatista.h"
 #include "xerces_types.h"
-#include "separatista/documentiterator.h"
 
 namespace Separatista
 {
 	// Forward decl
 	class Element;
+	class DOMDocumentIterator;
 
 	class ElementListener
 	{
@@ -70,9 +70,9 @@ namespace Separatista
 
 		/**
 			Tries to load it's value from the document iterator.
-			@param pDocumentIterator The document iterator to read from.
+			@param DocumentIterator The document iterator to call to continue reading or get value from.
 		*/
-		virtual void fromDOMDocument(DOMDocumentIterator *pDocumentIterator, const ErrorOptions errorOptions = ThrowExceptions) = 0;
+		virtual void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions) = 0;
 
 		/**
 			Set the elementlistener. Will be notified of changes to the element. If a previous elementlistener was registered, it
@@ -87,11 +87,6 @@ namespace Separatista
 			Returns the tag name
 		*/
 		const wchar_t* getTag() const;
-
-		/**
-			Checks wether the position in a DOMDocumentIterator matches the current tag name.
-		*/
-		bool compareTag(const DOMDocumentIterator *DocumentIterator) const;
 
 	protected:
 		/**

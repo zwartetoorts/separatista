@@ -37,6 +37,7 @@
 #include "separatista/documentreader.h"
 #include "separatista/debug/debug.h"
 #include "separatista/validator.h"
+#include "separatista/documentiterator.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
@@ -50,12 +51,13 @@ m_GrpHdr()
 	DEBUG_METHOD
 }
 
-CstmrDrctDbtInitn::CstmrDrctDbtInitn(Separatista::DOMDocument *pDocument) :
+CstmrDrctDbtInitn::CstmrDrctDbtInitn(Separatista::DOMDocument *pDocument, const ErrorOptions errorOptions) :
 BranchElement(TEXT("CstmrDrctDbtInitn")),
 m_GrpHdr()
 {
 	DEBUG_METHOD
-	fromDOMDocument(&DOMDocumentIterator(pDocument));
+	DOMDocumentIterator it(pDocument);
+	it.fromDOMDocument(*this, errorOptions);
 }
 
 CstmrDrctDbtInitn::~CstmrDrctDbtInitn()
@@ -85,37 +87,29 @@ DOMElement* CstmrDrctDbtInitn::toDOMDocument(Separatista::DOMDocument *pDocument
 	return pElement;
 }
 
-void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator *pDocumentIterator, const ErrorOptions errorOptions)
+void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator &documentIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
 	PmtInf *pPmtInf;
-	unsigned int pos;
-	DOMElement *pElement;
+	
+	documentIterator.fromDOMDocument(m_GrpHdr, errorOptions);
 
-	// First tag should be "document"
-	pElement = pDocumentIterator->getCurrentElement();
-	if (!pElement || xercesc::XMLString::compareString(pElement->getNodeName(), TEXT("Document")) != 0)
-		return;
-	pDocumentIterator->nextElement();
-
-	if (compareTag(pDocumentIterator))
+	while (!documentIterator.isDone())
 	{
-		pDocumentIterator->nextElement();
-		m_GrpHdr.fromDOMDocument(pDocumentIterator, errorOptions);
-
-		while (pDocumentIterator->getCurrentElement() != NULL &&
-			xercesc::XMLString::compareString(pDocumentIterator->getCurrentElement()->getNodeName(), TEXT("PmtInf")) == 0)
+		pPmtInf = new PmtInf();
+		if (pPmtInf)
 		{
-			pos = pDocumentIterator->getPosition();
-			pPmtInf = new PmtInf();
-			if (pPmtInf)
+			try
 			{
-				pPmtInf->fromDOMDocument(pDocumentIterator, errorOptions);
+				documentIterator.fromDOMDocument(*pPmtInf, errorOptions);
 				AddPmtInf(pPmtInf);
 			}
-			// Check for dead loop
-			if (pos == pDocumentIterator->getPosition())
-				break;
+			// Should be, MissingElementException. PmtInf should be mandatory.
+			catch (const Exception &e)
+			{
+				delete pPmtInf;
+				throw(e);
+			}
 		}
 	}
 }

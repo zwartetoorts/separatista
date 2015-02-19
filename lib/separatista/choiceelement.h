@@ -83,23 +83,11 @@ namespace Separatista
 			return pElement;
 		};
 
-		void fromDOMDocument(DOMDocumentIterator *pDocumentIterator, const ErrorOptions errorOptions = ThrowExceptions)
+		void fromDOMDocument(DOMDocumentIterator &documentIterator, const ErrorOptions errorOptions = ThrowExceptions)
 		{
 			DEBUG_METHOD
 
-			if (compareTag(pDocumentIterator))
-			{
-				pDocumentIterator->nextElement();
-				for (auto it = m_pChoices.begin(); it != m_pChoices.end(); it++)
-				{
-					if ((*it)->compareTag(pDocumentIterator))
-					{
-						m_pChosenElement = *it;
-						m_pChosenElement->fromDOMDocument(pDocumentIterator, errorOptions);
-						break;
-					}
-				}
-			}
+			//: TODO
 		};
 		
 		/**

@@ -40,8 +40,8 @@ namespace Separatista
 
 			/**
 				Construct from a dom document.
-				*/
-			CstmrDrctDbtInitn(DOMDocument *pDocument);
+			*/
+			CstmrDrctDbtInitn(DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
 
 			/**
 			Destructor, will delete all added PmtInf's
@@ -50,7 +50,7 @@ namespace Separatista
 
 			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent = NULL, const ErrorOptions errorOptions = ThrowExceptions);
 
-			void fromDOMDocument(DOMDocumentIterator *pDocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
+			void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 			void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 

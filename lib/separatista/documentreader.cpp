@@ -143,10 +143,12 @@ SeparatistaDocument* DocumentReader::getDocument()
 IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)
 {	
 	DEBUG_METHOD
+	DocumentReaderErrorHandler handler(this);
+
 	if (!m_pParser)
 		return Platform;
 
-	m_pParser->setErrorHandler(&DocumentReaderErrorHandler(this));
+	m_pParser->setErrorHandler(&handler);
 	m_pParser->setDoNamespaces(true);
 	
 	// Parse the file

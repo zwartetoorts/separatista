@@ -25,6 +25,7 @@
 #include "separatista/pain/mandaterelatedinformation.h"
 #include "separatista/debug/debug.h"
 #include "separatista/validator.h"
+#include "separatista/documentiterator.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
@@ -52,13 +53,10 @@ DOMElement* MndtRltdInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOME
 	return pElement;
 }
 
-void MndtRltdInf::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void MndtRltdInf::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_MndtId.fromDOMDocument(pElementIterator, errorOptions);
-		m_DtOfSgntr.fromDOMDocument(pElementIterator, errorOptions);
-	}
+	
+	elementIterator.fromDOMDocument(m_MndtId, errorOptions);
+	elementIterator.fromDOMDocument(m_DtOfSgntr, errorOptions);
 }

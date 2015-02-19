@@ -25,6 +25,7 @@
 #include "separatista/pain/paymenttypeinformation.h"
 #include "separatista/debug/debug.h"
 #include "separatista/validator.h"
+#include "separatista/documentiterator.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
@@ -47,14 +48,11 @@ xercesc::DOMElement* SvcLvl::toDOMDocument(xercesc::DOMDocument *pDocument, xerc
 	return pElement;
 }
 
-void SvcLvl::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void SvcLvl::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_Cd.fromDOMDocument(pElementIterator, errorOptions);
-	}
+	
+	elementIterator.fromDOMDocument(m_Cd, errorOptions);
 }
 
 LclInstrm::LclInstrm() :
@@ -75,14 +73,10 @@ xercesc::DOMElement* LclInstrm::toDOMDocument(xercesc::DOMDocument *pDocument, x
 	return pElement;
 }
 
-void LclInstrm::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void LclInstrm::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_Cd.fromDOMDocument(pElementIterator, errorOptions);
-	}
+	elementIterator.fromDOMDocument(m_Cd, errorOptions);
 }
 
 PmtTpInf::PmtTpInf() :
@@ -109,14 +103,11 @@ xercesc::DOMElement* PmtTpInf::toDOMDocument(xercesc::DOMDocument *pDocument, xe
 	return pElement;
 }
 
-void PmtTpInf::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void PmtTpInf::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_SvcLvl.fromDOMDocument(pElementIterator, errorOptions);
-		m_LclInstrm.fromDOMDocument(pElementIterator, errorOptions);
-		m_SeqTp.fromDOMDocument(pElementIterator, errorOptions);
-	}
+	
+	elementIterator.fromDOMDocument(m_SvcLvl, errorOptions);
+	elementIterator.fromDOMDocument(m_LclInstrm, errorOptions);
+	elementIterator.fromDOMDocument(m_SeqTp, errorOptions);
 }

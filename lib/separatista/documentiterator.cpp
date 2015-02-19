@@ -38,44 +38,64 @@ using namespace Separatista;
 
 DOMDocumentIterator::DOMDocumentIterator(Separatista::DOMDocument *pDocument)
 {
-	DEBUG_METHOD
-	m_pNodeIterator = pDocument->createNodeIterator(pDocument->getDocumentElement(), xercesc::DOMNodeFilter::SHOW_ELEMENT, NULL, true);
-	
-	if (m_pNodeIterator)
-		m_pCurrentNode = m_pNodeIterator->nextNode();
-	else
-		m_pCurrentNode = NULL;
-
-	m_nPos = 0;
+	// Move to first sepa element
+	m_pElement = pDocument->getDocumentElement();
+	if (m_pElement)
+		m_pElement = m_pElement->getFirstElementChild();
 }
 
-DOMDocumentIterator::~DOMDocumentIterator()
+DOMElement* DOMDocumentIterator::findElement(Element &element)
 {
-	DEBUG_METHOD
-	if (m_pNodeIterator)
-		m_pNodeIterator->release();
-}
+	DOMElement *pElement;
 
-xercesc::DOMElement* DOMDocumentIterator::getCurrentElement() const
-{
-	DEBUG_METHOD
-	return (xercesc::DOMElement*)m_pCurrentNode;
-}
-
-xercesc::DOMElement* DOMDocumentIterator::nextElement()
-{
-	DEBUG_METHOD
-	if (m_pNodeIterator)
+	// Enumerate all sibblings to find element
+	for (pElement = m_pElement; pElement != NULL; pElement = pElement->getNextElementSibling())
 	{
-		m_pCurrentNode = m_pNodeIterator->nextNode();
-		m_nPos++;
+		// Compare tags
+		if (std::wcscmp(pElement->getTagName(), element.getTag()) == 0)
+			return pElement;
 	}
 
-	return getCurrentElement();
+	// Element wasn't found, check if it is allowed to be missing
+	//TODO: implement exception throwing
+	return NULL;
 }
 
-unsigned int DOMDocumentIterator::getPosition() const
+void DOMDocumentIterator::fromDOMDocument(Element &element, const Element::ErrorOptions errorOptions)
 {
-	DEBUG_METHOD
-	return m_nPos;
+	// This version should call fromDOMDocument with the first child
+	DOMElement *pElement;
+
+	pElement = findElement(element);
+	if (pElement)
+	{
+		m_pElement = pElement->getFirstElementChild();
+		element.fromDOMDocument(*this, errorOptions);
+		m_pElement = pElement->getNextElementSibling();
+	}
+}
+
+void DOMDocumentIterator::fromDOMDocument(LeafElement &element, const Element::ErrorOptions errorOptions)
+{
+	// This version should call fromDOMDocument with the current element, so the value can be read
+	DOMElement *pElement;
+
+	pElement = findElement(element);
+	if (pElement)
+	{
+		element.fromDOMDocument(*this, errorOptions);
+		m_pElement = pElement->getNextElementSibling();
+	}
+}
+
+const wchar_t *DOMDocumentIterator::getTextValue() const
+{
+	if (m_pElement)
+		return m_pElement->getTextContent();
+	return NULL;
+}
+
+bool DOMDocumentIterator::isDone() const
+{
+	return m_pElement == NULL ? true : false;
 }

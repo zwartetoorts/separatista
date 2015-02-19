@@ -29,16 +29,40 @@
 
 namespace Separatista
 {
-	/// Invalid value exception
+	/// Invalid value exception, thrown when an element can't accept a value.
 	class SEPARATISTA_EXTERN InvalidValueException : public Exception
 	{
 	public:
-		InvalidValueException(const wchar_t *pMessage) : Exception(pMessage) { };
+		InvalidValueException(const wchar_t *pMessage, Element *pSource, const wchar_t *pValue) : Exception(pMessage) 
+		{ 
+			m_pSource = pSource;
+			m_pValue = pValue;
+		};
 
 #ifdef SEPARATISTA_DEBUG
-		InvalidValueException(const wchar_t *pMessage, const wchar_t *pPath, int nLine) :
-			Exception(pMessage, pPath, nLine) { };
+		InvalidValueException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, Element *pSource, const wchar_t *pValue) :
+			Exception(pMessage, pPath, nLine)
+		{
+			m_pSource = pSource;
+			m_pValue = pValue;
+		};
 #endif
+
+		/// Returns the target element 
+		Element* getSourceElement() const
+		{
+			return m_pSource;
+		};
+
+		/// Returns the erronous value
+		const wchar_t* getValue() const
+		{
+			return m_pValue;
+		};
+
+	private:
+		Element *m_pSource;
+		const wchar_t *m_pValue;
 	};
 
 	/// Validator interface
@@ -50,21 +74,21 @@ namespace Separatista
 			@param pValue The value to validate as string.
 			@throws InvalidValueException
 		*/
-		virtual void validate(const wchar_t *pValue) const = 0;
+		virtual void validate(const wchar_t *pValue, Element *pElement) const = 0;
 
-		static void validateMaxText(const wchar_t *pValue, size_t max);
+		static void validateMaxText(const wchar_t *pValue, size_t max, Element *pElement);
 
-		static void validateFractionDigits(const wchar_t *pValue, size_t mix, size_t max);
+		static void validateFractionDigits(const wchar_t *pValue, size_t mix, size_t max, Element *pElement);
 
-		static void validateTotalDigits(const wchar_t *pValue, size_t min, size_t max);
+		static void validateTotalDigits(const wchar_t *pValue, size_t min, size_t max, Element *pElement);
 
-		static void validateNumeric(const wchar_t *pValue);
+		static void validateNumeric(const wchar_t *pValue, Element *pElement);
 
-		static void validateEnum(const wchar_t *pValue, std::initializer_list<const wchar_t*> pPossibleValues);
+		static void validateEnum(const wchar_t *pValue, std::initializer_list<const wchar_t*> pPossibleValues, Element *pElement);
+
+		static void isDigit(const wchar_t c, Element *pElement);
 
 	private:
-		static void isDigit(const wchar_t c);
-
 		static std::array<wchar_t, 10> m_numericDigits;
 	};
 
@@ -72,63 +96,63 @@ namespace Separatista
 	class SEPARATISTA_EXTERN Max35TextValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// ISODateTimeValidator
 	class SEPARATISTA_EXTERN ISODateTimeValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// Max15NumericText
 	class SEPARATISTA_EXTERN Max15NumericTextValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// DecimalNumber
 	class SEPARATISTA_EXTERN DecimalNumberValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// Max140Text
 	class SEPARATISTA_EXTERN Max140TextValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// PaymentMethod2CodeValidator
 	class SEPARATISTA_EXTERN PaymentMethod2CodeValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// ISODateValidator
 	class SEPARATISTA_EXTERN ISODateValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// ChargeBearerType1CodeValidator
 	class SEPARATISTA_EXTERN ChargeBearerType1CodeValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// ExternalServiceLevel1CodeValidator
 	class SEPARATISTA_EXTERN ExternalServiceLevel1CodeValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// ExternalLocalInstrumentCodeValidator
@@ -138,35 +162,35 @@ namespace Separatista
 	class SEPARATISTA_EXTERN SequenceType3CodeValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// ActiveOrHistoricCurrencyAndAmountValidator
 	class SEPARATISTA_EXTERN ActiveOrHistoricCurrencyAndAmountValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 	
 	/// ExternalPersonIdentification1Code
 	class SEPARATISTA_EXTERN ExternalPersonIdentification1CodeValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// IBANValidator
 	class SEPARATISTA_EXTERN IBANValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	/// BICValidator
 	class SEPARATISTA_EXTERN BICValidator : public Validator
 	{
 	public:
-		void validate(const wchar_t *pValue) const;
+		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
 	typedef struct

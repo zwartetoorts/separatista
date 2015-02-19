@@ -25,6 +25,7 @@
 #include "separatista/separatista.h"
 #include "separatista/pain/directdebittransactioninformation.h"
 #include "separatista/debug/debug.h"
+#include "separatista/documentiterator.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
@@ -47,14 +48,11 @@ DOMElement* PmtId::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement
 	return pElement;
 }
 
-void PmtId::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void PmtId::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_EndToEndId.fromDOMDocument(pElementIterator, errorOptions);
-	}
+	
+	elementIterator.fromDOMDocument(m_EndToEndId, errorOptions);
 }
 
 DrctDbtTxInf::DrctDbtTxInf() :
@@ -92,18 +90,15 @@ DOMElement* DrctDbtTxInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOM
 	return pElement;
 }
 
-void DrctDbtTxInf::fromDOMDocument(DOMDocumentIterator *pElementIterator, const ErrorOptions errorOptions)
+void DrctDbtTxInf::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-	if (compareTag(pElementIterator))
-	{
-		pElementIterator->nextElement();
-		m_PmtId.fromDOMDocument(pElementIterator, errorOptions);
-		m_InstdAmt.fromDOMDocument(pElementIterator, errorOptions);
-		m_DrctDbtTx.fromDOMDocument(pElementIterator, errorOptions);
-		m_DbtrAgt.fromDOMDocument(pElementIterator, errorOptions);
-		m_Dbtr.fromDOMDocument(pElementIterator, errorOptions);
-		m_DbtrAcct.fromDOMDocument(pElementIterator, errorOptions);
-		m_RmtInf.fromDOMDocument(pElementIterator, errorOptions);
-	}
+	
+	elementIterator.fromDOMDocument(m_PmtId, errorOptions);
+	elementIterator.fromDOMDocument(m_InstdAmt, errorOptions);
+	elementIterator.fromDOMDocument(m_DrctDbtTx, errorOptions);
+	elementIterator.fromDOMDocument(m_DbtrAgt, errorOptions);
+	elementIterator.fromDOMDocument(m_Dbtr, errorOptions);
+	elementIterator.fromDOMDocument(m_DbtrAcct, errorOptions);
+	elementIterator.fromDOMDocument(m_RmtInf, errorOptions);
 }
