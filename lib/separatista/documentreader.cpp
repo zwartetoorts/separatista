@@ -139,16 +139,7 @@ SeparatistaDocument* DocumentReader::getDocument()
 		return NULL;
 
 	if ((func = documentCreatorMap[pNamespaceURI]) != NULL)
-	{
-		// Release the DOM Document
-		Separatista::SeparatistaDocument *pSeparatistaDocument = func(m_pDocument);
-		if (pSeparatistaDocument)
-		{
-			m_pDocument->release();
-			m_pDocument = NULL;
-		}
-		return pSeparatistaDocument;
-	}
+		return func(m_pDocument);
 
 	return NULL;
 }

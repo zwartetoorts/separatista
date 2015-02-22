@@ -28,6 +28,7 @@
 #include "separatista/xerces_types.h"
 #include "separatista/element.h"
 #include "separatista/leafelement.h"
+#include "separatista/choiceelement.h"
 
 namespace Separatista
 {

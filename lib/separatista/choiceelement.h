@@ -27,11 +27,12 @@
 #include <initializer_list>
 #include <algorithm>
 
-#include "separatista.h"
-#include "xerces_types.h"
-#include "element.h"
-#include "exception.h"
-#include "debug/debug.h"
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/element.h"
+#include "separatista/exception.h"
+#include "separatista/debug/debug.h"
+#include "separatista/documentiterator.h" 
 
 namespace Separatista
 {
@@ -83,13 +84,6 @@ namespace Separatista
 			return pElement;
 		};
 
-		void fromDOMDocument(DOMDocumentIterator &documentIterator, const ErrorOptions errorOptions = ThrowExceptions)
-		{
-			DEBUG_METHOD
-
-			//: TODO
-		};
-		
 		/**
 			Choose the child element to be the chosen one.
 			@param pChildElement Make sure this actually a child element of the choice element. Can be NULL,
