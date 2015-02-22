@@ -90,6 +90,8 @@ namespace Separatista
 
 		/**
 			Returns the document as SeparatistaDocument. This is a new instance that will be owned by the caller. The caller should free the object.
+			@throws InvalidValueException 
+			@throws InvalidChoiceException
 		*/
 		SeparatistaDocument* getDocument();
 

@@ -56,6 +56,12 @@ protected:
 	*/
 	HRESULT SetErrorInfo(const Separatista::Exception &e) const;
 
+	/**
+		Handle Separatista Exceptions by setting errorinfo text
+	*/
+	HRESULT SetErrorInfo(const wchar_t *pMessage) const;
+
+
 	ITypeLib* m_pTypeLib;
 	ITypeInfo* m_pTypeInfo;
 };

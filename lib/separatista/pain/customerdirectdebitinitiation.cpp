@@ -221,7 +221,6 @@ IOErrorCode CstmrDrctDbtInitn::SaveAs(const wchar_t *pPath)
 		}
 		else
 			ret = IOErrorCode::Separatista;
-
 	}
 	catch (const xercesc::DOMException &e)
 	{

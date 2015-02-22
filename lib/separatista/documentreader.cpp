@@ -119,6 +119,10 @@ SeparatistaDocument* DocumentReader::getDocument()
 		{ pain_008_001::CstmrDrctDbtInitn::NameSpaceURI, SeparatistaDocumentCreator<pain_008_001::CstmrDrctDbtInitn> }
 	});
 
+	// Check for document
+	if (!m_pDocument)
+		return NULL;
+
 	// Get the document root element
 	pDocumentElement = m_pDocument->getDocumentElement();
 	if (!pDocumentElement)
@@ -135,7 +139,16 @@ SeparatistaDocument* DocumentReader::getDocument()
 		return NULL;
 
 	if ((func = documentCreatorMap[pNamespaceURI]) != NULL)
-		return func(m_pDocument);
+	{
+		// Release the DOM Document
+		Separatista::SeparatistaDocument *pSeparatistaDocument = func(m_pDocument);
+		if (pSeparatistaDocument)
+		{
+			m_pDocument->release();
+			m_pDocument = NULL;
+		}
+		return pSeparatistaDocument;
+	}
 
 	return NULL;
 }
@@ -176,7 +189,7 @@ IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)
 		return Unknown;
 	}
 
-	return Success;
+	return m_pDocument ? Success : Document_Invalid;
 }
 
 int DocumentReader::getErrorCount() const
@@ -233,9 +246,9 @@ void DocumentReader::appendError(ErrorType::ErrorCode etc, const xercesc::SAXPar
 
 	pError->errorCode = etc;
 	wos
-		<< TEXT('(')
+		<< TEXT("@(")
 		<< e.getLineNumber()
-		<< TEXT(',')
+		<< TEXT(", ")
 		<< e.getColumnNumber()
 		<< TEXT(") ")
 		<< e.getMessage();

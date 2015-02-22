@@ -18,6 +18,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <sstream>
 #include <comutil.h>
 #include <separatista/elementlist.h>
 
@@ -260,7 +261,9 @@ STDMETHODIMP CustomerDirectDebitInitiation::Open(LONG hWnd, Separatista::IOError
 STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOErrorCode *pErrorCode)
 {
 	Separatista::DocumentReader reader;
-	Separatista::SeparatistaDocument *pDocument;
+	Separatista::SeparatistaDocument *pDocument = NULL;
+	std::wostringstream wos;
+	int i;
 
 	*pErrorCode = Separatista::Unknown;
 
@@ -270,23 +273,61 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 	reader.loadSchema(Separatista::pain_008_001::CstmrDrctDbtInitn::NameSpaceURI);
 	if ((*pErrorCode = reader.parseFile(Path)) == Separatista::IOErrorCode::Success)
 	{
-		pDocument = reader.getDocument();
-		if (pDocument)
+		try
 		{
-			if (pDocument->getDocumentType() == Separatista::DocumentType::DT_CustomerDirectDebitDocument)
+			pDocument = reader.getDocument();
+			if (pDocument)
 			{
-				if (m_bOwnCstmrDrctDbtInitn && m_pCstmrDrctDbtInitn)
-					delete m_pCstmrDrctDbtInitn;
-				m_bOwnCstmrDrctDbtInitn = true;
-				m_pCstmrDrctDbtInitn = (Separatista::pain_008_001::CstmrDrctDbtInitn*)pDocument;
-				return S_OK;
+				if (pDocument->getDocumentType() == Separatista::DocumentType::DT_CustomerDirectDebitDocument)
+				{
+					if (m_bOwnCstmrDrctDbtInitn && m_pCstmrDrctDbtInitn)
+						delete m_pCstmrDrctDbtInitn;
+					m_bOwnCstmrDrctDbtInitn = true;
+					m_pCstmrDrctDbtInitn = (Separatista::pain_008_001::CstmrDrctDbtInitn*)pDocument;
+					return S_OK;
+				}
+				delete pDocument;
 			}
-			*pErrorCode = Separatista::Document_Invalid;
-			delete pDocument;
 		}
+		catch (const Separatista::Exception &e)
+		{
+			if (pDocument)
+				delete pDocument;
+			*pErrorCode = Separatista::Separatista;
+			return SetErrorInfo(e);
+		}
+		*pErrorCode = Separatista::Document_Invalid;
 	}
 
-	return E_FAIL;
+	// Format first 10 errors, and report how many more
+	for (i = 0; i < reader.getErrorCount() && i < 10; i++)
+	{
+		switch (reader.getErrorCode(i))
+		{
+		case Separatista::ErrorType::ETC_ERROR:
+			wos << TEXT("Error: ");
+			break;
+		case Separatista::ErrorType::ETC_WARNING:
+			wos << TEXT("Warning: ");
+			break;
+		case Separatista::ErrorType::ETC_FATALERROR:
+			wos << TEXT("Fatal: ");
+		default:
+			wos << TEXT("Unknown: ");
+		}
+		wos << reader.getErrorMessage(i) << TEXT("\r\n");
+	}
+	// ... and xxx more
+	i = reader.getErrorCount() - i;
+	if (i > 0)
+	{
+		wos
+			<< TEXT("... and ")
+			<< i
+			<< TEXT(" more");
+	}
+
+	return SetErrorInfo(wos.str().data());
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::PaymentInformationById(BSTR PaymentInformationIdentification, PaymentInformation **ppPaymentInformation)
