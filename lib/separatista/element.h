@@ -24,8 +24,8 @@
 #include <ctime>
 #include <string>
 
-#include "separatista.h"
-#include "xerces_types.h"
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
 
 namespace Separatista
 {
@@ -88,12 +88,18 @@ namespace Separatista
 		*/
 		const wchar_t* getTag() const;
 
+		/**
+			Returns wether the element can be absent or not
+		*/
+		bool isOptional() const;
+
 	protected:
 		/**
 		Construct a new Element
 		@param pTagName The name of the xml tag
+		@param isOptional Wether the element can be absent or not
 		*/
-		Element(const wchar_t *pTagName);
+		Element(const wchar_t *pTagName, bool isOptional);
 
 		/// Calls a registered ElementListener's elementValueChanged
 		void onValueChanged(const wchar_t *pNewValue);
@@ -112,6 +118,8 @@ namespace Separatista
 		const wchar_t *m_pTag;
 		
 		ElementListener *m_pElementListener;
+	private:
+		bool m_bOptional;
 	};
 
 }

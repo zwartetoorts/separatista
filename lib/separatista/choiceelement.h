@@ -48,6 +48,7 @@ namespace Separatista
 
 	/**
 		Choice elements require to choose a child element to be written on save. If unset, the element won't be outputted.
+		Choice element child element should always be mandatory!!
 	*/
 
 	template <size_t T>
@@ -83,6 +84,31 @@ namespace Separatista
 
 			return pElement;
 		};
+
+		/**
+			
+		*/
+		void fromDOMDocument(DOMDocumentIterator &documentIterator, Element::ErrorOptions errorOptions)
+		{
+			DEBUG_METHOD
+
+			for (auto it = m_pChoices.begin(); it != m_pChoices.end(); it++)
+			{
+				// Find the chosen element by setting all values and catching the exception
+				try
+				{
+					documentIterator.fromDOMDocument(**it, errorOptions);
+					// Element was found
+					m_pChosenElement = *it;
+					break;
+				}
+				catch (const Exception &e)
+				{
+					// Element is missing
+					continue;
+				}
+			}
+		}
 
 		/**
 			Choose the child element to be the chosen one.

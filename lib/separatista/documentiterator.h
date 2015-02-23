@@ -29,9 +29,40 @@
 #include "separatista/element.h"
 #include "separatista/leafelement.h"
 #include "separatista/choiceelement.h"
+#include "separatista/exception.h"
 
 namespace Separatista
 {
+	/// Thrown when an non-optinal element isn't found
+	class SEPARATISTA_EXTERN MissingElementException : public Exception
+	{
+	public:
+		MissingElementException(const wchar_t *pMessage, Element *pSource) : Exception(pMessage)
+		{
+			DEBUG_METHOD
+			m_pSource = pSource;
+		};
+
+#ifdef SEPARATISTA_DEBUG
+		MissingElementException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, Element *pSource) :
+			Exception(pMessage, pPath, nLine)
+		{
+			DEBUG_METHOD
+			m_pSource = pSource;
+		};
+#endif
+
+		/// Returns the target element 
+		Element* getSourceElement() const
+		{
+			DEBUG_METHOD
+			return m_pSource;
+		};
+
+	private:
+		Element *m_pSource;
+	};
+
 	/**
 	Class for enumerating a DOMDocument.
 	*/
@@ -48,12 +79,6 @@ namespace Separatista
 			@throws A MissingElementException if the element wasn't optional and throwing was requested.
 		*/
 		void fromDOMDocument(Element &element, const Element::ErrorOptions errorOptions);
-
-		/**
-		Searches for the next sibbling with the same tag as element. Will call fromDOMDocument on this element if the element was found.
-		@throws A MissingElementException if the element wasn't optional and throwing was requested.
-		*/
-		void fromDOMDocument(LeafElement &leafElement, const Element::ErrorOptions errorOptions);
 
 		/**
 			Returns the text value of the current element.

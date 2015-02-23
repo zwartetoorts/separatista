@@ -57,32 +57,23 @@ DOMElement* DOMDocumentIterator::findElement(Element &element)
 	}
 
 	// Element wasn't found, check if it is allowed to be missing
-	//TODO: implement exception throwing
+	if (!element.isOptional())
+		throw MissingElementException(SEPARATISTA_EXCEPTION("Element is not optional"), &element);
+
 	return NULL;
 }
 
 void DOMDocumentIterator::fromDOMDocument(Element &element, const Element::ErrorOptions errorOptions)
 {
-	// This version should call fromDOMDocument with the first child
+	
 	DOMElement *pElement;
 
 	pElement = findElement(element);
 	if (pElement)
 	{
-		m_pElement = pElement->getFirstElementChild();
-		element.fromDOMDocument(*this, errorOptions);
-		m_pElement = pElement->getNextElementSibling();
-	}
-}
-
-void DOMDocumentIterator::fromDOMDocument(LeafElement &element, const Element::ErrorOptions errorOptions)
-{
-	// This version should call fromDOMDocument with the current element, so the value can be read
-	DOMElement *pElement;
-
-	pElement = findElement(element);
-	if (pElement)
-	{
+		// Don't iterate into leaf elements
+		if (pElement->getFirstElementChild() != NULL)
+			m_pElement = pElement->getFirstElementChild();
 		element.fromDOMDocument(*this, errorOptions);
 		m_pElement = pElement->getNextElementSibling();
 	}

@@ -33,7 +33,7 @@ namespace Separatista
 	class SEPARATISTA_EXTERN BranchElement : public Element
 	{
 	public:
-		BranchElement(const wchar_t *pTagName);
+		BranchElement(const wchar_t *pTagName, bool bOptional);
 
 	};
 }

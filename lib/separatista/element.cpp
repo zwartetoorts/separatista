@@ -36,16 +36,22 @@
 
 using namespace Separatista;
 
-Element::Element(const wchar_t *pName)
+Element::Element(const wchar_t *pName, bool bOptional)
 {
 	DEBUG_METHOD
 	m_pTag = pName;
 	m_pElementListener = NULL;
+	m_bOptional = bOptional;
 }
 
 Element::~Element()
 {
 	DEBUG_METHOD
+}
+
+bool Element::isOptional() const
+{
+	return m_bOptional;
 }
 
 ElementListener* Element::setElementListener(ElementListener *pElementListener)
