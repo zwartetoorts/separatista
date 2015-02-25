@@ -27,9 +27,9 @@
 
 using namespace Separatista;
 
-FinancialInstitutionIdentification8::FinancialInstitutionIdentification8() :
-BranchElement(TEXT("FinInstnId")),
-m_BICFI(TEXT("BICFI"), Validators.BICValidator)
+FinancialInstitutionIdentification8::FinancialInstitutionIdentification8(const ElementOptions options) :
+BranchElement(TEXT("FinInstnId"), options),
+m_BICFI(TEXT("BICFI"), Validators.BICValidator, Element::Optional)
 {
 	DEBUG_METHOD
 }
@@ -53,9 +53,9 @@ void FinancialInstitutionIdentification8::fromDOMDocument(DOMDocumentIterator &e
 	elementIterator.fromDOMDocument(m_BICFI, errorOptions);
 }
 
-BranchAndFinancialInstitutionIdentification5::BranchAndFinancialInstitutionIdentification5(const wchar_t *pTag) :
-BranchElement(pTag),
-m_FinancialInstitutionIdentification()
+BranchAndFinancialInstitutionIdentification5::BranchAndFinancialInstitutionIdentification5(const wchar_t *pTag, const ElementOptions options) :
+BranchElement(pTag, options),
+m_FinancialInstitutionIdentification(Element::Mandatory)
 {
 	DEBUG_METHOD
 }

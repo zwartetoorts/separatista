@@ -23,6 +23,7 @@
 #include "separatista/element.h"
 #include "separatista/leafelement.h"
 #include "separatista/branchelement.h"
+#include "separatista/choiceelement.h"
 
 #ifndef SEPARATISTA_PAIN_PAYMENTTYPEINFORMATION_H
 #define SEPARATISTA_PAIN_PAYMENTTYPEINFORMATION_H
@@ -31,34 +32,28 @@ namespace Separatista
 {
 	namespace pain_008_001
 	{
-		class SEPARATISTA_EXTERN SvcLvl : public BranchElement
+		class SEPARATISTA_EXTERN SvcLvl : public ChoiceElement<2>
 		{
 		public:
-			SvcLvl();
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
+			SvcLvl(const ElementOptions options);
 
 			LeafElement m_Cd;
+			LeafElement m_Prtry;
 		};
 
-		class SEPARATISTA_EXTERN LclInstrm : public BranchElement
+		class SEPARATISTA_EXTERN LclInstrm : public ChoiceElement<2>
 		{
 		public:
-			LclInstrm();
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
+			LclInstrm(const ElementOptions options);
 
 			LeafElement m_Cd;
+			LeafElement m_Prtry;
 		};
 
 		class SEPARATISTA_EXTERN PmtTpInf : public BranchElement
 		{
 		public:
-			PmtTpInf();
+			PmtTpInf(const ElementOptions options);
 
 			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 

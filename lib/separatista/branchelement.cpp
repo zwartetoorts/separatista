@@ -35,8 +35,8 @@
 
 using namespace Separatista;
 
-BranchElement::BranchElement(const wchar_t *pTagName, bool bOptional) :
-Element(pTagName, bOptional)
+BranchElement::BranchElement(const wchar_t *pTagName, const ElementOptions options) :
+Element(pTagName, options)
 {
 	DEBUG_METHOD
 }

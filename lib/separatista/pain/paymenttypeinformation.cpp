@@ -30,60 +30,27 @@
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-SvcLvl::SvcLvl() :
-BranchElement(TEXT("SvcLvl")),
-m_Cd(TEXT("Cd"), Validators.ExternalServiceLevel1CodeValidator)
+SvcLvl::SvcLvl(const ElementOptions options) :
+ChoiceElement<2>(TEXT("SvcLvl"), { &m_Cd, &m_Prtry }, options),
+m_Cd(TEXT("Cd"), Validators.ExternalServiceLevel1CodeValidator, Element::Optional),
+m_Prtry(TEXT("Prtry"), Validators.Max35TextValidator, Element::Optional)
 {
 	DEBUG_METHOD
 }
 
-xercesc::DOMElement* SvcLvl::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
-		m_Cd.toDOMDocument(pDocument, pElement, errorOptions);
-
-	return pElement;
-}
-
-void SvcLvl::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	
-	elementIterator.fromDOMDocument(m_Cd, errorOptions);
-}
-
-LclInstrm::LclInstrm() :
-BranchElement(TEXT("LclInstrm")),
-m_Cd(TEXT("Cd"), Validators.ExternalLocalInstrumentCodeValidator)
+LclInstrm::LclInstrm(const ElementOptions options) :
+ChoiceElement<2>(TEXT("LclInstrm"), { &m_Cd, &m_Prtry }, options),
+m_Cd(TEXT("Cd"), Validators.ExternalLocalInstrumentCodeValidator, Element::Optional),
+m_Prtry(TEXT("Prtry"), Validators.Max35TextValidator, Element::Optional)
 {
 	DEBUG_METHOD
 }
 
-xercesc::DOMElement* LclInstrm::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
-		m_Cd.toDOMDocument(pDocument, pElement, errorOptions);
-
-	return pElement;
-}
-
-void LclInstrm::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	elementIterator.fromDOMDocument(m_Cd, errorOptions);
-}
-
-PmtTpInf::PmtTpInf() :
-BranchElement(TEXT("PmtTpInf")),
-m_SvcLvl(),
-m_LclInstrm(),
-m_SeqTp(TEXT("SeqTp"), Validators.SequenceType3CodeValidator)
+PmtTpInf::PmtTpInf(const ElementOptions options) :
+BranchElement(TEXT("PmtTpInf"), options),
+m_SvcLvl(Element::Optional),
+m_LclInstrm(Element::Optional),
+m_SeqTp(TEXT("SeqTp"), Validators.SequenceType3CodeValidator, Element::Optional)
 {
 	DEBUG_METHOD
 }

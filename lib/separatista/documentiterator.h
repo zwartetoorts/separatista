@@ -76,9 +76,10 @@ namespace Separatista
 
 		/**
 			Searches for the next sibbling with the same tag as element. Will call fromDOMDocument on this element if the element was found.
+			@return true If the element was found, false otherwise.
 			@throws A MissingElementException if the element wasn't optional and throwing was requested.
 		*/
-		void fromDOMDocument(Element &element, const Element::ErrorOptions errorOptions);
+		bool fromDOMDocument(Element &element, const Element::ErrorOptions errorOptions);
 
 		/**
 			Returns the text value of the current element.

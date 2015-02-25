@@ -39,7 +39,7 @@ namespace Separatista
 		class SEPARATISTA_EXTERN PmtId : public BranchElement
 		{
 		public:
-			PmtId();
+			PmtId(const ElementOptions options);
 
 			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 

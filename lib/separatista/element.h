@@ -60,6 +60,17 @@ namespace Separatista
 		};
 
 		/**
+			Optional or mandatory elements.
+		*/
+		enum ElementOptions
+		{
+			/// Mandatory, once present
+			Mandatory,
+			/// Optional element, might be absent
+			Optional
+		};
+
+		/**
 			Abstract method to call to write an element to a DOMDocument.
 			@param pDocument The DOMDocument to create the element for.
 			@param pParent The DOMElement to append the element to.
@@ -89,9 +100,9 @@ namespace Separatista
 		const wchar_t* getTag() const;
 
 		/**
-			Returns wether the element can be absent or not
+			Returns the element options
 		*/
-		bool isOptional() const;
+		ElementOptions getOptions() const;
 
 	protected:
 		/**
@@ -99,7 +110,7 @@ namespace Separatista
 		@param pTagName The name of the xml tag
 		@param isOptional Wether the element can be absent or not
 		*/
-		Element(const wchar_t *pTagName, bool isOptional);
+		Element(const wchar_t *pTagName, const ElementOptions options);
 
 		/// Calls a registered ElementListener's elementValueChanged
 		void onValueChanged(const wchar_t *pNewValue);
@@ -119,7 +130,7 @@ namespace Separatista
 		
 		ElementListener *m_pElementListener;
 	private:
-		bool m_bOptional;
+		ElementOptions m_elementOptions;
 	};
 
 }

@@ -42,18 +42,18 @@
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-const wchar_t* CstmrDrctDbtInitn::NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.04");
+const wchar_t* CstmrDrctDbtInitn::NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.02");
 
 CstmrDrctDbtInitn::CstmrDrctDbtInitn() :
-BranchElement(TEXT("CstmrDrctDbtInitn")),
-m_GrpHdr()
+BranchElement(TEXT("CstmrDrctDbtInitn"), Element::Mandatory),
+m_GrpHdr(Element::Mandatory)
 {
 	DEBUG_METHOD
 }
 
 CstmrDrctDbtInitn::CstmrDrctDbtInitn(Separatista::DOMDocument *pDocument, const ErrorOptions errorOptions) :
-BranchElement(TEXT("CstmrDrctDbtInitn")),
-m_GrpHdr()
+BranchElement(TEXT("CstmrDrctDbtInitn"), Element::Mandatory),
+m_GrpHdr(Element::Mandatory)
 {
 	DEBUG_METHOD
 	DOMDocumentIterator it(pDocument);
@@ -104,7 +104,6 @@ void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator &documentIterator, c
 				documentIterator.fromDOMDocument(*pPmtInf, errorOptions);
 				AddPmtInf(pPmtInf);
 			}
-			// Should be, MissingElementException. PmtInf should be mandatory.
 			catch (const Exception &e)
 			{
 				delete pPmtInf;

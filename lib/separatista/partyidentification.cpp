@@ -27,18 +27,18 @@
 
 using namespace Separatista;
 
-PersonIdentificationSchemeName1Choice::PersonIdentificationSchemeName1Choice(const wchar_t *pTag) :
-ChoiceElement(pTag, { &m_Cd, &m_Prtry }),
-m_Cd(TEXT("Cd"), Validators.ExternalPersonIdentification1CodeValidator),
-m_Prtry(TEXT("Prtry"), Validators.Max35TextValidator)
+PersonIdentificationSchemeName1Choice::PersonIdentificationSchemeName1Choice(const wchar_t *pTag, const ElementOptions options) :
+ChoiceElement(pTag, { &m_Cd, &m_Prtry }, options),
+m_Cd(TEXT("Cd"), Validators.ExternalPersonIdentification1CodeValidator, Element::Optional),
+m_Prtry(TEXT("Prtry"), Validators.Max35TextValidator, Element::Optional)
 {
 	DEBUG_METHOD
 }
 
-GenericPersonIdentification1::GenericPersonIdentification1(const wchar_t *pTag) :
-BranchElement(pTag),
-m_Id(TEXT("Id"), Validators.Max35TextValidator),
-m_SchmeNm(TEXT("SchmeNm"))
+GenericPersonIdentification1::GenericPersonIdentification1(const wchar_t *pTag, const ElementOptions options) :
+BranchElement(pTag, options),
+m_Id(TEXT("Id"), Validators.Max35TextValidator, Element::Mandatory),
+m_SchmeNm(TEXT("SchmeNm"), Element::Optional)
 {
 	DEBUG_METHOD
 }
@@ -65,9 +65,9 @@ void GenericPersonIdentification1::fromDOMDocument(DOMDocumentIterator &elementI
 	elementIterator.fromDOMDocument(m_SchmeNm, errorOptions);
 }
 
-PersonIdentification5::PersonIdentification5(const wchar_t *pTag) :
-BranchElement(pTag),
-m_Othr(TEXT("Othr"))
+PersonIdentification5::PersonIdentification5(const wchar_t *pTag, const ElementOptions options) :
+BranchElement(pTag, options),
+m_Othr(TEXT("Othr"), Element::Optional)
 {
 	DEBUG_METHOD
 }
@@ -92,17 +92,17 @@ void PersonIdentification5::fromDOMDocument(DOMDocumentIterator &elementIterator
 	elementIterator.fromDOMDocument(m_Othr, errorOptions);
 }
 
-Party11Choice::Party11Choice() :
-ChoiceElement(TEXT("Id"), { &m_PrvtId }),
-m_PrvtId(TEXT("PrvtId"))
+Party11Choice::Party11Choice(const ElementOptions options) :
+ChoiceElement(TEXT("Id"), { &m_PrvtId }, options),
+m_PrvtId(TEXT("PrvtId"), Element::Optional)
 {
 	DEBUG_METHOD
 }
 
-PartyIdentification43::PartyIdentification43(const wchar_t *pTag) :
-BranchElement(pTag),
-m_Nm(TEXT("Nm"), Validators.Max140TextValidator),
-m_Id()
+PartyIdentification43::PartyIdentification43(const wchar_t *pTag, const ElementOptions options) :
+BranchElement(pTag, options),
+m_Nm(TEXT("Nm"), Validators.Max140TextValidator, Element::Optional),
+m_Id(Element::Optional)
 {
 	DEBUG_METHOD
 }

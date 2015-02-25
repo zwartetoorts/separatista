@@ -33,7 +33,7 @@ namespace Separatista
 	class SEPARATISTA_EXTERN AccountIdentification4Choice : public ChoiceElement<1>
 	{
 	public:
-		AccountIdentification4Choice();
+		AccountIdentification4Choice(const ElementOptions options);
 
 		LeafElement m_IBAN;
 	};
@@ -41,7 +41,7 @@ namespace Separatista
 	class SEPARATISTA_EXTERN CashAccount24 : public BranchElement
 	{
 	public:
-		CashAccount24(const wchar_t *pTag);
+		CashAccount24(const wchar_t *pTag, const ElementOptions options);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 

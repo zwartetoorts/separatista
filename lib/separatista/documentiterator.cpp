@@ -56,14 +56,11 @@ DOMElement* DOMDocumentIterator::findElement(Element &element)
 			return pElement;
 	}
 
-	// Element wasn't found, check if it is allowed to be missing
-	if (!element.isOptional())
-		throw MissingElementException(SEPARATISTA_EXCEPTION("Element is not optional"), &element);
-
+	// Not found
 	return NULL;
 }
 
-void DOMDocumentIterator::fromDOMDocument(Element &element, const Element::ErrorOptions errorOptions)
+bool DOMDocumentIterator::fromDOMDocument(Element &element, const Element::ErrorOptions errorOptions)
 {
 	
 	DOMElement *pElement;
@@ -76,7 +73,14 @@ void DOMDocumentIterator::fromDOMDocument(Element &element, const Element::Error
 			m_pElement = pElement->getFirstElementChild();
 		element.fromDOMDocument(*this, errorOptions);
 		m_pElement = pElement->getNextElementSibling();
+		return true;
 	}
+
+
+	// Element wasn't found, check if it is allowed to be missing
+	if (element.getOptions() != Element::Optional)
+		throw MissingElementException(SEPARATISTA_EXCEPTION("Element is not optional"), &element);
+	return false;
 }
 
 const wchar_t *DOMDocumentIterator::getTextValue() const

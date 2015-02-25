@@ -36,12 +36,12 @@
 
 using namespace Separatista;
 
-Element::Element(const wchar_t *pName, bool bOptional)
+Element::Element(const wchar_t *pName, const ElementOptions options)
 {
 	DEBUG_METHOD
 	m_pTag = pName;
 	m_pElementListener = NULL;
-	m_bOptional = bOptional;
+	m_elementOptions = options;
 }
 
 Element::~Element()
@@ -49,9 +49,9 @@ Element::~Element()
 	DEBUG_METHOD
 }
 
-bool Element::isOptional() const
+Element::ElementOptions Element::getOptions() const
 {
-	return m_bOptional;
+	return m_elementOptions;
 }
 
 ElementListener* Element::setElementListener(ElementListener *pElementListener)

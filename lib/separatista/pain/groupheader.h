@@ -33,9 +33,7 @@ namespace Separatista
 		class SEPARATISTA_EXTERN GrpHdr : public BranchElement
 		{
 		public:
-			GrpHdr();
-
-			GrpHdr(const DOMElement *pParent);
+			GrpHdr(const ElementOptions options);
 
 			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 

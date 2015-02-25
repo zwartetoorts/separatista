@@ -34,18 +34,18 @@ using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
 PmtInf::PmtInf() :
-BranchElement(TEXT("PmtInf")),
-m_PmtInfId(TEXT("PmtInfId"), Validators.Max35TextValidator),
-m_PmtMtd(TEXT("PmtMtd"), Validators.PaymentMethod2CodeValidator),
-m_NbOfTxs(TEXT("NbOfTxs"), Validators.Max15NumericTextValidator),
-m_CtrlSum(TEXT("CtrlSum"), Validators.DecimalNumberValidator),
-m_PmtTpInf(),
-m_ReqdColltnDt(TEXT("ReqdColltnDt"), Validators.ISODateValidator),
-m_Cdtr(TEXT("Cdtr")),
-m_CdtrAcct(TEXT("CdtrAcct")),
-m_CdtrAgt(TEXT("CdtrAgt")),
-m_ChrgBr(TEXT("ChrgBr"), Validators.ChargeBearerType1CodeValidator),
-m_CdtrSchmeId(TEXT("CdtrSchmeId"))
+BranchElement(TEXT("PmtInf"), Element::Mandatory),
+m_PmtInfId(TEXT("PmtInfId"), Validators.Max35TextValidator, Element::Mandatory),
+m_PmtMtd(TEXT("PmtMtd"), Validators.PaymentMethod2CodeValidator, Element::Mandatory),
+m_NbOfTxs(TEXT("NbOfTxs"), Validators.Max15NumericTextValidator, Element::Optional),
+m_CtrlSum(TEXT("CtrlSum"), Validators.DecimalNumberValidator, Element::Optional),
+m_PmtTpInf(Element::Optional),
+m_ReqdColltnDt(TEXT("ReqdColltnDt"), Validators.ISODateValidator, Element::Mandatory),
+m_Cdtr(TEXT("Cdtr"), Element::Mandatory),
+m_CdtrAcct(TEXT("CdtrAcct"), Element::Mandatory),
+m_CdtrAgt(TEXT("CdtrAgt"), Element::Mandatory),
+m_ChrgBr(TEXT("ChrgBr"), Validators.ChargeBearerType1CodeValidator, Element::Optional),
+m_CdtrSchmeId(TEXT("CdtrSchmeId"), Element::Optional)
 {
 	DEBUG_METHOD
 	// Set some default values

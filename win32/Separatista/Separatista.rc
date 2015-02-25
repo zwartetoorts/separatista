@@ -1,3 +1,4 @@
+urn:iso:std:iso:20022:tech:xsd:pain.008.001.02 XSD "..\..\schema\pain.008.001.02.xsd"
 urn:iso:std:iso:20022:tech:xsd:pain.008.001.04 XSD "..\..\schema\pain.008.001.04.xsd"
 urn:iso:std:iso:20022:tech:xsd:pain.001.001.05 XSD "..\..\schema\pain.001.001.05.xsd"
 urn:iso:std:iso:20022:tech:xsd:camt.053.001.04 XSD "..\..\schema\camt.053.001.04.xsd"

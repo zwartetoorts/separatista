@@ -27,16 +27,16 @@
 
 using namespace Separatista;
 
-AccountIdentification4Choice::AccountIdentification4Choice() :
-ChoiceElement<1>(TEXT("Id"), { &m_IBAN }),
-m_IBAN(TEXT("IBAN"), Validators.IBANValidator)
+AccountIdentification4Choice::AccountIdentification4Choice(const ElementOptions options) :
+ChoiceElement<1>(TEXT("Id"), { &m_IBAN }, options),
+m_IBAN(TEXT("IBAN"), Validators.IBANValidator, Element::Optional)
 {
 	DEBUG_METHOD
 }
 
-CashAccount24::CashAccount24(const wchar_t *pTag) :
-BranchElement(pTag),
-m_Id()
+CashAccount24::CashAccount24(const wchar_t *pTag, const ElementOptions options) :
+BranchElement(pTag, options),
+m_Id(Element::Mandatory)
 {
 	DEBUG_METHOD
 }

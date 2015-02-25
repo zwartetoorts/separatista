@@ -34,7 +34,7 @@ namespace Separatista
 	class SEPARATISTA_EXTERN PersonIdentificationSchemeName1Choice : public ChoiceElement<2>
 	{
 	public:
-		PersonIdentificationSchemeName1Choice::PersonIdentificationSchemeName1Choice(const wchar_t *pTag);
+		PersonIdentificationSchemeName1Choice(const wchar_t *pTag, const ElementOptions options);
 
 		LeafElement m_Cd;
 		LeafElement m_Prtry;
@@ -43,7 +43,7 @@ namespace Separatista
 	class SEPARATISTA_EXTERN GenericPersonIdentification1 : public BranchElement
 	{
 	public:
-		GenericPersonIdentification1(const wchar_t *pTag);
+		GenericPersonIdentification1(const wchar_t *pTag, const ElementOptions options);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
@@ -56,7 +56,7 @@ namespace Separatista
 	class SEPARATISTA_EXTERN PersonIdentification5 : public BranchElement
 	{
 	public:
-		PersonIdentification5(const wchar_t *pTag);
+		PersonIdentification5(const wchar_t *pTag, const ElementOptions options);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
@@ -68,7 +68,7 @@ namespace Separatista
 	class SEPARATISTA_EXTERN Party11Choice : public ChoiceElement<1>
 	{
 	public:
-		Party11Choice();
+		Party11Choice(const ElementOptions options);
 
 		PersonIdentification5 m_PrvtId;
 	};
@@ -76,7 +76,7 @@ namespace Separatista
 	class SEPARATISTA_EXTERN PartyIdentification43 : public BranchElement
 	{
 	public:
-		PartyIdentification43(const wchar_t *pTag);
+		PartyIdentification43(const wchar_t *pTag, const ElementOptions options);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 

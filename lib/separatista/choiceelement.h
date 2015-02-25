@@ -48,15 +48,15 @@ namespace Separatista
 
 	/**
 		Choice elements require to choose a child element to be written on save. If unset, the element won't be outputted.
-		Choice element child element should always be mandatory!!
+		Choice element child element should always be optional (!!)
 	*/
 
 	template <size_t T>
 	class ChoiceElement : public Element
 	{
 	public:
-		ChoiceElement(const wchar_t *pTagName, std::initializer_list<Element*> pChoices) :
-			Element(pTagName)
+		ChoiceElement(const wchar_t *pTagName, std::initializer_list<Element*> pChoices, const ElementOptions options) :
+			Element(pTagName, options)
 			{
 				DEBUG_METHOD
 
@@ -88,7 +88,7 @@ namespace Separatista
 		/**
 			
 		*/
-		void fromDOMDocument(DOMDocumentIterator &documentIterator, Element::ErrorOptions errorOptions)
+		void fromDOMDocument(DOMDocumentIterator &documentIterator, const Element::ErrorOptions errorOptions = ThrowExceptions)
 		{
 			DEBUG_METHOD
 
@@ -97,17 +97,23 @@ namespace Separatista
 				// Find the chosen element by setting all values and catching the exception
 				try
 				{
-					documentIterator.fromDOMDocument(**it, errorOptions);
-					// Element was found
-					m_pChosenElement = *it;
-					break;
+					if (documentIterator.fromDOMDocument(**it, errorOptions))
+					{
+						// Element was found
+						m_pChosenElement = *it;
+						return;
+					}
 				}
-				catch (const Exception &e)
+				catch (const MissingElementException &)
 				{
 					// Element is missing
 					continue;
 				}
 			}
+
+			// No choice was found
+			if (errorOptions == Element::ThrowExceptions)
+				throw(InvalidChoiceException(SEPARATISTA_EXCEPTION("No chosen child element found!")), this);
 		}
 
 		/**
@@ -129,7 +135,7 @@ namespace Separatista
 				}
 			}
 
-			throw InvalidChoiceException(SEPARATISTA_EXCEPTION("Choosen element not a child element"));
+			throw InvalidChoiceException(SEPARATISTA_EXCEPTION("Chosen element not a child element"));
 		};
 
 		/**

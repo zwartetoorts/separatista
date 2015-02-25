@@ -29,9 +29,9 @@
 
 using namespace Separatista;
 
-RmtInf::RmtInf() :
-BranchElement(TEXT("RmtInf")),
-m_Ustrd(TEXT("Ustrd"), Validators.Max140TextValidator)
+RmtInf::RmtInf(const ElementOptions options) :
+BranchElement(TEXT("RmtInf"), options),
+m_Ustrd(TEXT("Ustrd"), Validators.Max140TextValidator, Element::Optional)
 {
 	DEBUG_METHOD
 }

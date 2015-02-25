@@ -30,13 +30,13 @@
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-GrpHdr::GrpHdr() :
-BranchElement(TEXT("GrpHdr")),
-m_MsgId(TEXT("MsgId"), Validators.Max35TextValidator),
-m_CreDtTm(TEXT("CreDtTm"), Validators.ISODateTimeValidator),
-m_NbOfTxs(TEXT("NbOfTxs"), Validators.Max15NumericTextValidator),
-m_CtrlSum(TEXT("CtrlSum"), Validators.DecimalNumberValidator),
-m_InitgPty(TEXT("InitgPty"))
+GrpHdr::GrpHdr(const ElementOptions options) :
+BranchElement(TEXT("GrpHdr"), options),
+m_MsgId(TEXT("MsgId"), Validators.Max35TextValidator, Element::Mandatory),
+m_CreDtTm(TEXT("CreDtTm"), Validators.ISODateTimeValidator, Element::Mandatory),
+m_NbOfTxs(TEXT("NbOfTxs"), Validators.Max15NumericTextValidator, Element::Mandatory),
+m_CtrlSum(TEXT("CtrlSum"), Validators.DecimalNumberValidator, Element::Optional),
+m_InitgPty(TEXT("InitgPty"), Element::Mandatory)
 {
 	DEBUG_METHOD
 }

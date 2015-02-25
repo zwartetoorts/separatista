@@ -34,7 +34,7 @@ namespace Separatista
 	class SEPARATISTA_EXTERN LeafElement : public Element
 	{
 	public:
-		LeafElement(const wchar_t *pTagName, const Validator &validator);
+		LeafElement(const wchar_t *pTagName, const Validator &validator, const ElementOptions options);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 

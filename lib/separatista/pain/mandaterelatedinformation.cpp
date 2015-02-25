@@ -30,10 +30,10 @@
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-MndtRltdInf::MndtRltdInf() :
-BranchElement(TEXT("MndtRltdInf")),
-m_MndtId(TEXT("MndtId"), Validators.Max35TextValidator),
-m_DtOfSgntr(TEXT("DtOfSgntr"), Validators.ISODateValidator)
+MndtRltdInf::MndtRltdInf(const ElementOptions options) :
+BranchElement(TEXT("MndtRltdInf"), options),
+m_MndtId(TEXT("MndtId"), Validators.Max35TextValidator, Element::Optional),
+m_DtOfSgntr(TEXT("DtOfSgntr"), Validators.ISODateValidator, Element::Optional)
 {
 	DEBUG_METHOD
 	m_DtOfSgntr.setValue(std::time(NULL));

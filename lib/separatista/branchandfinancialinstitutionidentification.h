@@ -33,7 +33,7 @@ namespace Separatista
 	class SEPARATISTA_EXTERN FinancialInstitutionIdentification8 : public BranchElement
 	{
 	public:
-		FinancialInstitutionIdentification8();
+		FinancialInstitutionIdentification8(const ElementOptions options);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
@@ -45,7 +45,7 @@ namespace Separatista
 	class SEPARATISTA_EXTERN BranchAndFinancialInstitutionIdentification5 : public BranchElement
 	{
 	public:
-		BranchAndFinancialInstitutionIdentification5(const wchar_t *pTag);
+		BranchAndFinancialInstitutionIdentification5(const wchar_t *pTag, const ElementOptions options);
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 

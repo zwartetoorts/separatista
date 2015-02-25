@@ -30,9 +30,9 @@
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-DrctDbtTx::DrctDbtTx() :
-BranchElement(TEXT("DrctDbtTx")),
-m_MndtRltdInf()
+DrctDbtTx::DrctDbtTx(const ElementOptions options) :
+BranchElement(TEXT("DrctDbtTx"), options),
+m_MndtRltdInf(Element::Optional)
 {
 	DEBUG_METHOD
 }
@@ -40,7 +40,7 @@ m_MndtRltdInf()
 DOMElement* DrctDbtTx::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD
-		DOMElement *pElement = createElement(pDocument, pParent);
+	DOMElement *pElement = createElement(pDocument, pParent);
 
 	if (pElement)
 	{

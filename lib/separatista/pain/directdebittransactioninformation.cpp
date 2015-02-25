@@ -30,9 +30,9 @@
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-PmtId::PmtId() :
-BranchElement(TEXT("PmtId")),
-m_EndToEndId(TEXT("EndToEndId"), Validators.Max35TextValidator)
+PmtId::PmtId(const ElementOptions options) :
+BranchElement(TEXT("PmtId"), options),
+m_EndToEndId(TEXT("EndToEndId"), Validators.Max35TextValidator, Element::Mandatory)
 {
 	DEBUG_METHOD
 }
@@ -56,14 +56,14 @@ void PmtId::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOpt
 }
 
 DrctDbtTxInf::DrctDbtTxInf() :
-BranchElement(TEXT("DrctDbtTxInf")),
-m_PmtId(),
-m_InstdAmt(TEXT("InstdAmt"), Validators.ActiveOrHistoricCurrencyAndAmountValidator),
-m_DrctDbtTx(),
-m_DbtrAgt(TEXT("DbtrAgt")),
-m_Dbtr(TEXT("Dbtr")),
-m_DbtrAcct(TEXT("DbtrAcct")),
-m_RmtInf()
+BranchElement(TEXT("DrctDbtTxInf"), Element::Mandatory),
+m_PmtId(Element::Mandatory),
+m_InstdAmt(TEXT("InstdAmt"), Validators.ActiveOrHistoricCurrencyAndAmountValidator, Element::Mandatory),
+m_DrctDbtTx(Element::Optional),
+m_DbtrAgt(TEXT("DbtrAgt"), Element::Mandatory),
+m_Dbtr(TEXT("Dbtr"), Element::Mandatory),
+m_DbtrAcct(TEXT("DbtrAcct"), Element::Mandatory),
+m_RmtInf(Element::Optional)
 {
 	DEBUG_METHOD
 }

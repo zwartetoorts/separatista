@@ -36,8 +36,8 @@
 
 using namespace Separatista;
 
-LeafElement::LeafElement(const wchar_t *pTagName, const Validator &validator) :
-Element(pTagName),
+LeafElement::LeafElement(const wchar_t *pTagName, const Validator &validator, const ElementOptions options) :
+Element(pTagName, options),
 m_pValidator(&validator)
 {
 	DEBUG_METHOD;
