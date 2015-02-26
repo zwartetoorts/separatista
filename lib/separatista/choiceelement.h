@@ -86,7 +86,7 @@ namespace Separatista
 		};
 
 		/**
-			
+			Iterates over the possible choices and calls fromDOMDocument on the chosen element.
 		*/
 		void fromDOMDocument(DOMDocumentIterator &documentIterator, const Element::ErrorOptions errorOptions = ThrowExceptions)
 		{

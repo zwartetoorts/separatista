@@ -176,7 +176,7 @@ STDMETHODIMP DirectDebitTransactionInformation::GetDebtorAgentFinancialInstituti
 	if (!m_pDrctDbtTxInf)
 		return E_UNEXPECTED;
 
-	*pValue = _bstr_t(m_pDrctDbtTxInf->m_DbtrAgt.m_FinancialInstitutionIdentification.m_BICFI.getTextValue()).Detach();
+	*pValue = _bstr_t(m_pDrctDbtTxInf->m_DbtrAgt.m_FinancialInstitutionIdentification.m_BIC.getTextValue()).Detach();
 
 	return S_OK;
 }
@@ -188,7 +188,7 @@ STDMETHODIMP DirectDebitTransactionInformation::SetDebtorAgentFinancialInstituti
 
 	try
 	{
-		m_pDrctDbtTxInf->m_DbtrAgt.m_FinancialInstitutionIdentification.m_BICFI.setValue(Value);
+		m_pDrctDbtTxInf->m_DbtrAgt.m_FinancialInstitutionIdentification.m_BIC.setValue(Value);
 	}
 	catch (const Separatista::InvalidValueException &e)
 	{

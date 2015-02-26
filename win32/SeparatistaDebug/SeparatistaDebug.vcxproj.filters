@@ -20,10 +20,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\lib\separatista\debug\debug.cpp">
+    <ClCompile Include="..\..\lib\separatista\debug\dll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\debug\dll.cpp">
+    <ClCompile Include="..\..\lib\separatista\debug\debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
