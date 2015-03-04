@@ -161,7 +161,12 @@ STDMETHODIMP PaymentInformation::SetPaymentTypeInformationServiceLevelCode(BSTR 
 
 	try
 	{
+		m_pPmtInf->m_PmtTpInf.m_SvcLvl.choose(&m_pPmtInf->m_PmtTpInf.m_SvcLvl.m_Cd);
 		m_pPmtInf->m_PmtTpInf.m_SvcLvl.m_Cd.setValue(Value);
+	}
+	catch (const Separatista::InvalidChoiceException &ce)
+	{
+		return SetErrorInfo(ce);
 	}
 	catch (const Separatista::InvalidValueException &e)
 	{
@@ -196,6 +201,7 @@ STDMETHODIMP PaymentInformation::SetPaymentTypeInformationLocalIntrumentCode(IPa
 
 	try
 	{
+		m_pPmtInf->m_PmtTpInf.m_LclInstrm.choose(&m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd);
 		switch (Value)
 		{
 		case IPaymentInformation::LC_CORE:
@@ -210,6 +216,10 @@ STDMETHODIMP PaymentInformation::SetPaymentTypeInformationLocalIntrumentCode(IPa
 		default:
 			m_pPmtInf->m_PmtTpInf.m_LclInstrm.m_Cd.clear();
 		}
+	}
+	catch (const Separatista::InvalidChoiceException &ce)
+	{
+		return SetErrorInfo(ce);
 	}
 	catch (const Separatista::InvalidValueException &e)
 	{
