@@ -23,9 +23,12 @@
 
 #include <ctime>
 #include <string>
+#include <Windows.h>
 
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
+#include "elementdescriptor.h"
+#include "exception.h"
 
 namespace Separatista
 {
@@ -39,6 +42,35 @@ namespace Separatista
 		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue) = 0;
 		virtual void elementDeleted(Element *pElement) = 0;
 	};
+
+	/// Invalid value exception, thrown when an element method called doesn't belong to the element type
+	class SEPARATISTA_EXTERN ElementException : public Exception
+	{
+	public:
+		ElementException(const wchar_t *pMessage, const Element *pSource) : 
+			Exception(pMessage)
+		{
+			m_pSource = pSource;
+		};
+
+#ifdef SEPARATISTA_DEBUG
+		ElementException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, const Element *pSource) :
+			Exception(pMessage, pPath, nLine)
+		{
+			m_pSource = pSource;
+		};
+#endif
+
+		/// Returns the target element 
+		const Element* getSourceElement() const
+		{
+			return m_pSource;
+		};
+
+	private:
+		const Element *m_pSource;
+	};
+
 
 	class SEPARATISTA_EXTERN Element
 	{
@@ -60,16 +92,10 @@ namespace Separatista
 		};
 
 		/**
-			Optional or mandatory elements.
+			Get the ElementDescriptor for this element
 		*/
-		enum ElementOptions
-		{
-			/// Mandatory, once present
-			Mandatory,
-			/// Optional element, might be absent
-			Optional
-		};
-
+		const ElementDescriptor* getElementDescriptor() const;
+		
 		/**
 			Abstract method to call to write an element to a DOMDocument.
 			@param pDocument The DOMDocument to create the element for.
@@ -87,7 +113,7 @@ namespace Separatista
 
 		/**
 			Set the elementlistener. Will be notified of changes to the element. If a previous elementlistener was registered, it
-			will be returned from this function. It's the caller's choice to store this listener and notify it of changes.
+			will be returned from this function. It's the caller's choise to store this listener and notify it of changes.
 			@param pElementListener The elementlistener to register.
 			@return A pointer to a previous registered elementlistener or NULL if none was registered.
 			@see ElementListener
@@ -100,39 +126,52 @@ namespace Separatista
 		const wchar_t* getTag() const;
 
 		/**
-			Returns the element options
+			Returns the child element by tag name.
+			@return A pointer to the child element or NULL if not present or unsupported.
+			@throws ElementException if the element doesn't have any child elements.
 		*/
-		ElementOptions getOptions() const;
+		virtual Element* getElementByTag(const wchar_t *pTagName) const;
+
+		/**
+			Returns or creates the child element by tag name. If the element already exists, this function return the existing element.
+			If not, it will create the element.
+			@return A pointer to the child element. Will not return NULL, unless the the tag isn't known or supported.
+			@throws ElementException if the element doesn't have any child elements.
+		*/
+		virtual Element* createElementByTag(const wchar_t *pTagName);
+
+		/**
+			Get the element's value as text.
+			@returns A pointer to the text value or NULL if no value was set.
+			@throws ElementException if the element doesn't support having values.
+		*/
+		virtual const wchar_t* getTextValue() const;
+
+		/**
+			Set the element's value as text.
+			@throws ElementException if the element doesn't support having values.
+		*/
+		virtual void setTextValue(const wchar_t *pValue);
 
 	protected:
 		/**
 		Construct a new Element
-		@param pTagName The name of the xml tag
-		@param isOptional Wether the element can be absent or not
+		@param pElementDescriptor The element descriptor to load the element from.
 		*/
-		Element(const wchar_t *pTagName, const ElementOptions options);
+		Element(const ElementDescriptor* pElementDescriptor);
 
 		/// Calls a registered ElementListener's elementValueChanged
 		void onValueChanged(const wchar_t *pNewValue);
 		/// Calls a registerd ElementListener's elementDeleted
 		void onDeleted();
 
-		/**
-			Creates the element and appends it to it's parent. The xml namespace is taken from it's parent.
-			@param pDocument The DOMDocument to create the element for
-			@param pParent The parent DOMElement to append the element to.
-			@return Pointer to the newly created element, or NULL 
-		*/
-		DOMElement* createElement(DOMDocument *pDocument, DOMElement *pParent);
-
-		/// Tag name
-		const wchar_t *m_pTag;
-		
-		ElementListener *m_pElementListener;
 	private:
-		ElementOptions m_elementOptions;
+		/// ElementDescriptor
+		const ElementDescriptor *m_pElementDescriptor;
+		
+		/// ElementListener
+		ElementListener *m_pElementListener;
 	};
-
 }
 
 #endif // ifndef SEPARATISTA_ELEMENT_H

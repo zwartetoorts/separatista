@@ -36,24 +36,31 @@
 
 using namespace Separatista;
 
-LeafElement::LeafElement(const wchar_t *pTagName, const Validator &validator, const ElementOptions options) :
-Element(pTagName, options),
-m_pValidator(&validator)
+LeafElement::LeafElement(const ElementDescriptor* pElementDescriptor) :
+Element(pElementDescriptor)
 {
 	DEBUG_METHOD;
 }
 
+Element* LeafElement::createElement(const ElementDescriptor* pElementDescriptor)
+{
+	DEBUG_METHOD;
+
+	return new LeafElement(pElementDescriptor);
+}
+
 xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement;
+	DEBUG_METHOD;
+
+	xercesc::DOMElement *pElement = NULL;
 
 	// Check for value
 	if (isEmpty())
 		return NULL;
 
 	// Create element and set value
-	pElement = createElement(pDocument, pParent);
+	//pElement = createElement(pDocument, pParent);
 	if (pElement)
 		pElement->setTextContent(m_value.data());
 
@@ -62,14 +69,14 @@ xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument,
 
 void LeafElement::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 
 	setValue(elementIterator.getTextValue(), errorOptions);
 }
 
 void LeafElement::clear()
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 
 	m_value.clear();
 	onDeleted();
@@ -77,24 +84,25 @@ void LeafElement::clear()
 
 const wchar_t* LeafElement::getTextValue() const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 
 	return m_value.data();
 }
 
 void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOptions)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 
 	switch (errorOptions)
 	{
 	case Element::AcceptValue:
 		m_value = pValue;
+		onValueChanged(pValue);
 		break;
 	case Element::ClearValue:
 		try
 		{
-			m_pValidator->validate(pValue, this);
+			getElementDescriptor()->m_pValidator->validate(pValue, this);
 			m_value = pValue;
 			onValueChanged(pValue);
 		}
@@ -106,7 +114,7 @@ void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOption
 		break;
 	case Element::ThrowExceptions:
 	default:
-		m_pValidator->validate(pValue, this);
+		getElementDescriptor()->m_pValidator->validate(pValue, this);
 		m_value = pValue;
 		onValueChanged(pValue);
 	}
@@ -114,7 +122,8 @@ void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOption
 
 time_t LeafElement::getDateValue() const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
+
 	xercesc::XSValue::Status status;
 	xercesc::XSValue *pValue;
 	std::tm tm;
@@ -146,7 +155,8 @@ time_t LeafElement::getDateValue() const
 
 void LeafElement::setValue(const time_t Value, bool bWithTime, const ErrorOptions errorOptions)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
+
 	tm *ptm;
 	char buffer[64];
 
@@ -170,7 +180,8 @@ void LeafElement::setValue(const time_t Value, bool bWithTime, const ErrorOption
 
 int LeafElement::getIntValue() const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
+
 	xercesc::XSValue::Status status;
 	xercesc::XSValue *pValue;
 	const XMLCh *pText = getTextValue();
@@ -187,7 +198,8 @@ int LeafElement::getIntValue() const
 
 void LeafElement::setValue(const int Value, const ErrorOptions errorOptions)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
+
 	std::wstring w = std::to_wstring(Value);
 
 	setValue(w.data(), errorOptions);
@@ -195,7 +207,8 @@ void LeafElement::setValue(const int Value, const ErrorOptions errorOptions)
 
 double LeafElement::getDoubleValue() const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
+
 	xercesc::XSValue::Status status;
 	xercesc::XSValue *pValue;
 	const XMLCh *pText = getTextValue();
@@ -212,7 +225,8 @@ double LeafElement::getDoubleValue() const
 
 void LeafElement::setValue(const double d, const ErrorOptions errorOptions)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
+
 	std::wostringstream wos;
 
 	wos.imbue(std::locale::classic());
@@ -222,7 +236,8 @@ void LeafElement::setValue(const double d, const ErrorOptions errorOptions)
 
 bool LeafElement::isEmpty() const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
+
 	return m_value.empty();
 }
 

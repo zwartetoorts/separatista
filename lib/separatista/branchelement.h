@@ -23,6 +23,7 @@
 
 #include <ctime>
 #include <string>
+#include <map>
 
 #include "separatista.h"
 #include "xerces_types.h"
@@ -33,8 +34,39 @@ namespace Separatista
 	class SEPARATISTA_EXTERN BranchElement : public Element
 	{
 	public:
-		BranchElement(const wchar_t *pTagName, const ElementOptions options);
+		/**
+		Creates the element from it's descriptor
+		*/
+		static Element* createElement(const ElementDescriptor* pElementDescriptor);
 
+		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
+
+		void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
+
+		/// @see Element::getElementByTag
+		Element* getElementByTag(const wchar_t *pTagName) const;
+
+		/// @see Element::createElementByTag
+		Element* createElementByTag(const wchar_t *pTagName);
+
+		/// Key container class with custom sort and compare functions
+		class TagKey
+		{
+		public:
+			TagKey(const wchar_t *pTagName, const ElementDescriptor *pBranchElementDescriptor);
+			bool operator <(const TagKey &Other) const;
+			bool operator ==(const TagKey &Other) const;
+
+		private:
+			const wchar_t *m_pTagName;
+			const ElementDescriptor *m_pBranchElementDescriptor;
+		};
+
+	protected:
+		BranchElement(const ElementDescriptor *pElementDescriptor);
+
+	private:
+		std::map<TagKey, Element*> m_childElements;
 	};
 }
 #endif // SEPARATISTA_BRANCHELEMENT_H

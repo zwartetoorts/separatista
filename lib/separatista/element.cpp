@@ -36,12 +36,12 @@
 
 using namespace Separatista;
 
-Element::Element(const wchar_t *pName, const ElementOptions options)
+Element::Element(const ElementDescriptor *pElementDescriptor)
 {
-	DEBUG_METHOD
-	m_pTag = pName;
+	DEBUG_METHOD;
+
+	m_pElementDescriptor = pElementDescriptor;
 	m_pElementListener = NULL;
-	m_elementOptions = options;
 }
 
 Element::~Element()
@@ -49,9 +49,11 @@ Element::~Element()
 	DEBUG_METHOD
 }
 
-Element::ElementOptions Element::getOptions() const
+const ElementDescriptor* Element::getElementDescriptor() const
 {
-	return m_elementOptions;
+	DEBUG_METHOD;
+
+	return m_pElementDescriptor;
 }
 
 ElementListener* Element::setElementListener(ElementListener *pElementListener)
@@ -62,30 +64,34 @@ ElementListener* Element::setElementListener(ElementListener *pElementListener)
 	return pOld;
 }
 
-xercesc::DOMElement* Element::createElement(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent)
-{
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement;
-
-	try
-	{
-		pElement = pDocument->createElementNS(pParent->getNamespaceURI(), m_pTag);
-		if (pElement)
-			pParent->appendChild(pElement);
-	}
-	catch (const xercesc::DOMException &e)
-	{
-		LOG(e.getMessage());
-		return NULL;
-	}
-
-	return pElement;
-}
-
 const wchar_t* Element::getTag() const
 {
 	DEBUG_METHOD
-	return m_pTag;
+	return m_pElementDescriptor->m_pTag;
+}
+
+Element* Element::getElementByTag(const wchar_t *pTagName) const
+{
+	DEBUG_METHOD;
+	throw ElementException(SEPARATISTA_EXCEPTION("Child elements not supported by this element"), this);
+}
+
+Element* Element::createElementByTag(const wchar_t *pTagName)
+{
+	DEBUG_METHOD;
+	throw ElementException(SEPARATISTA_EXCEPTION("Child elements not supported by this element"), this);
+}
+
+const wchar_t* Element::getTextValue() const
+{
+	DEBUG_METHOD;
+	throw ElementException(SEPARATISTA_EXCEPTION("Values not supported by this element"), this);
+}
+
+void Element::setTextValue(const wchar_t *pValue)
+{
+	DEBUG_METHOD;
+	throw ElementException(SEPARATISTA_EXCEPTION("Values not supported by this element"), this);
 }
 
 void Element::onValueChanged(const wchar_t *pNewValue)
@@ -101,3 +107,4 @@ void Element::onDeleted()
 	if (m_pElementListener)
 		m_pElementListener->elementDeleted(this);
 }
+

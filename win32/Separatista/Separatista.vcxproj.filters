@@ -68,9 +68,6 @@
     <ClInclude Include="..\..\lib\separatista\validator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\pain\groupheader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\lib\separatista\pain\paymenttypeinformation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -84,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\separatista\documentiterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\separatista\elementdescriptor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

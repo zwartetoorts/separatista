@@ -28,13 +28,18 @@
 #include "xerces_types.h"
 #include "element.h"
 #include "validator.h"
+#include "elementdescriptor.h"
 
 namespace Separatista
 {
 	class SEPARATISTA_EXTERN LeafElement : public Element
 	{
 	public:
-		LeafElement(const wchar_t *pTagName, const Validator &validator, const ElementOptions options);
+		/**
+		Creates the element from it's descriptor
+		*/
+		static Element* createElement(const ElementDescriptor* pElementDescriptor);
+
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
@@ -92,10 +97,12 @@ namespace Separatista
 		*/
 		bool isEmpty() const;
 
-
+		
 	protected:
+		/// Protected constructor
+		LeafElement(const ElementDescriptor* pElementDescriptor);
+
 		std::wstring m_value;
-		const Validator *m_pValidator;
 	};
 }
 

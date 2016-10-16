@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2016 by Okkel Klaver   *
+*   Copyright (C) 2014 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,34 +18,37 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#ifndef SEPARATISTA_ELEMENTDESCRIPTOR_H
+#define SEPARATISTA_ELEMENTDESCRIPTOR_H
+
 #include "separatista/separatista.h"
-#include "separatista/elementdescriptor.h"
-#include "separatista/leafelement.h"
-#include "separatista/branchelement.h"
-#include "separatista/validator.h"
+#include "separatista/xerces_types.h"
 
-using namespace Separatista;
+#define SEPARATISTA_COUNTOFELEMENTS(name) sizeof(name) / sizeof(ElementDescriptor), name
 
-ElementDescriptor GroupHeader55Elements[] = 
+namespace Separatista
 {
+	// Forward decl
+	class Element;
+	class Validator;
+
+	struct ElementDescriptor
 	{
-		TEXT("MsgId"),
-		LeafElement::createElement,
-		1,
-		1,
-		&Validators.Max35TextValidator,
-		0,
-		NULL
-	}
-};
+		/// The tag name of the element
+		const wchar_t *m_pTag;
+		/// Element creator function
+		Element* (*m_pfCreateElement)(const ElementDescriptor*);
+		/// Minimal presence of the element
+		size_t m_nMin;
+		/// Maximum presence of the element, 0 = infinite
+		size_t m_nMax;
+		/// Data validation class
+		const Validator *m_pValidator;
+		/// Number of child elements
+		size_t m_nElementCount;
+		/// Child elements
+		const ElementDescriptor *m_pElements;
+	};
+}
 
-ElementDescriptor GroupHeader55[] =
-{
-	TEXT("GrpHdr"),
-	BranchElement::createElement,
-	1,
-	1,
-	NULL,
-	SEPARATISTA_COUNTOFELEMENTS(GroupHeader55Elements)
-};
-
+#endif // !defined SEPARATISTA_ELEMENTDESCRIPTOR_H

@@ -35,8 +35,86 @@
 
 using namespace Separatista;
 
-BranchElement::BranchElement(const wchar_t *pTagName, const ElementOptions options) :
-Element(pTagName, options)
+BranchElement::BranchElement(const ElementDescriptor *pElementDescriptor) :
+Element(pElementDescriptor)
 {
 	DEBUG_METHOD
 }
+
+Element* BranchElement::createElement(const ElementDescriptor *pElementDescriptor)
+{
+	DEBUG_METHOD;
+
+	return new BranchElement(pElementDescriptor);
+}
+
+Element* BranchElement::getElementByTag(const wchar_t *pTag) const
+{
+	auto element = m_childElements.find(TagKey(pTag, getElementDescriptor()));
+	if (element == m_childElements.end())
+		return NULL;
+	
+	return (*element).second;
+}
+
+Element* BranchElement::createElementByTag(const wchar_t *pTag)
+{
+	DEBUG_METHOD;
+
+	Element *pElement = NULL;
+	const ElementDescriptor *pElementDescriptor;
+
+	pElement = getElementByTag(pTag);
+	if (!pElement)
+	{
+		// Find the element descriptor
+		pElementDescriptor = getElementDescriptor();
+		for (size_t i = 0; i < pElementDescriptor->m_nElementCount; i++)
+		{
+			if (std::wcscmp(pElementDescriptor->m_pElements[i].m_pTag, pTag) == 0)
+			{
+				return pElementDescriptor->m_pElements[i].m_pfCreateElement(&pElementDescriptor->m_pElements[i]);
+			}
+		}
+		// Bad, element wasn't found
+	}
+	return pElement;
+}
+
+void BranchElement::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
+{
+	DEBUG_METHOD;
+
+}
+
+BranchElement::TagKey::TagKey(const wchar_t *pTagName, const ElementDescriptor *pBranchElementDescriptor)
+{
+	DEBUG_METHOD;
+
+	m_pTagName = pTagName;
+	m_pBranchElementDescriptor = pBranchElementDescriptor;
+}
+
+bool Separatista::BranchElement::TagKey::operator<(const TagKey & Other) const
+{
+	DEBUG_METHOD;
+
+	// The first tag found is the lesser value
+	for (size_t i = 0; i < m_pBranchElementDescriptor->m_nElementCount; i++)
+	{
+		if (std::wcscmp(m_pBranchElementDescriptor->m_pElements[i].m_pTag, m_pTagName) == 0)
+			return true;
+		else if (std::wcscmp(m_pBranchElementDescriptor->m_pElements[i].m_pTag, Other.m_pTagName) == 0)
+			return false;
+	}
+
+	return false;
+}
+
+bool Separatista::BranchElement::TagKey::operator==(const TagKey & Other) const
+{
+	DEBUG_METHOD;
+
+	return std::wcscmp(m_pTagName, Other.m_pTagName) == 0 ? true : false;
+}
+

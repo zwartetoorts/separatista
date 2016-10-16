@@ -107,13 +107,13 @@
     <ClInclude Include="..\..\lib\separatista\documentiterator.h" />
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />
     <ClInclude Include="..\..\lib\separatista\element.h" />
+    <ClInclude Include="..\..\lib\separatista\elementdescriptor.h" />
     <ClInclude Include="..\..\lib\separatista\elementlist.h" />
     <ClInclude Include="..\..\lib\separatista\exception.h" />
     <ClInclude Include="..\..\lib\separatista\leafelement.h" />
     <ClInclude Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.h" />
     <ClInclude Include="..\..\lib\separatista\pain\directdebittransaction.h" />
     <ClInclude Include="..\..\lib\separatista\pain\directdebittransactioninformation.h" />
-    <ClInclude Include="..\..\lib\separatista\pain\groupheader.h" />
     <ClInclude Include="..\..\lib\separatista\pain\mandaterelatedinformation.h" />
     <ClInclude Include="..\..\lib\separatista\pain\paymentinformation.h" />
     <ClInclude Include="..\..\lib\separatista\pain\paymenttypeinformation.h" />
