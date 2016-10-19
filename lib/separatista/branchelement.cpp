@@ -48,16 +48,16 @@ Element* BranchElement::createElement(const ElementDescriptor *pElementDescripto
 	return new BranchElement(pElementDescriptor);
 }
 
-Element* BranchElement::getElementByTag(const wchar_t *pTag) const
+Element* BranchElement::getElementByTag(const wchar_t *pTag, size_t nIndex) const
 {
-	auto element = m_childElements.find(TagKey(pTag, getElementDescriptor()));
+	auto element = m_childElements.find(TagKey(pTag, nIndex, getElementDescriptor()));
 	if (element == m_childElements.end())
 		return NULL;
 	
 	return (*element).second;
 }
 
-Element* BranchElement::createElementByTag(const wchar_t *pTag)
+Element* BranchElement::createElementByTag(const wchar_t *pTag, size_t nIndex)
 {
 	DEBUG_METHOD;
 
@@ -87,10 +87,11 @@ void BranchElement::fromDOMDocument(DOMDocumentIterator &elementIterator, const 
 
 }
 
-BranchElement::TagKey::TagKey(const wchar_t *pTagName, const ElementDescriptor *pBranchElementDescriptor)
+BranchElement::TagKey::TagKey(const wchar_t *pTagName, size_t nIndex, const ElementDescriptor *pBranchElementDescriptor)
 {
 	DEBUG_METHOD;
 
+	m_nIndex = nIndex;
 	m_pTagName = pTagName;
 	m_pBranchElementDescriptor = pBranchElementDescriptor;
 }
@@ -98,6 +99,10 @@ BranchElement::TagKey::TagKey(const wchar_t *pTagName, const ElementDescriptor *
 bool Separatista::BranchElement::TagKey::operator<(const TagKey & Other) const
 {
 	DEBUG_METHOD;
+
+	// If both tags are the same, the index makes the difference
+	if (std::wcscmp(m_pTagName, Other.m_pTagName) == 0)
+		return m_nIndex < Other.m_nIndex;
 
 	// The first tag found is the lesser value
 	for (size_t i = 0; i < m_pBranchElementDescriptor->m_nElementCount; i++)
@@ -115,6 +120,6 @@ bool Separatista::BranchElement::TagKey::operator==(const TagKey & Other) const
 {
 	DEBUG_METHOD;
 
-	return std::wcscmp(m_pTagName, Other.m_pTagName) == 0 ? true : false;
+	return std::wcscmp(m_pTagName, Other.m_pTagName) == 0 ? m_nIndex == Other.m_nIndex : false;
 }
 

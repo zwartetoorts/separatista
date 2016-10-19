@@ -44,20 +44,21 @@ namespace Separatista
 		void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/// @see Element::getElementByTag
-		Element* getElementByTag(const wchar_t *pTagName) const;
+		Element* getElementByTag(const wchar_t *pTagName, size_t nIndex = 0) const;
 
 		/// @see Element::createElementByTag
-		Element* createElementByTag(const wchar_t *pTagName);
+		Element* createElementByTag(const wchar_t *pTagName, size_t nIndex = 0);
 
 		/// Key container class with custom sort and compare functions
 		class TagKey
 		{
 		public:
-			TagKey(const wchar_t *pTagName, const ElementDescriptor *pBranchElementDescriptor);
+			TagKey(const wchar_t *pTagName, size_t  nIndex, const ElementDescriptor *pBranchElementDescriptor);
 			bool operator <(const TagKey &Other) const;
 			bool operator ==(const TagKey &Other) const;
 
 		private:
+			size_t m_nIndex;
 			const wchar_t *m_pTagName;
 			const ElementDescriptor *m_pBranchElementDescriptor;
 		};

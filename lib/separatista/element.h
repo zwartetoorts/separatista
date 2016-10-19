@@ -130,7 +130,7 @@ namespace Separatista
 			@return A pointer to the child element or NULL if not present or unsupported.
 			@throws ElementException if the element doesn't have any child elements.
 		*/
-		virtual Element* getElementByTag(const wchar_t *pTagName) const;
+		virtual Element* getElementByTag(const wchar_t *pTagName, size_t nIndex = 0) const;
 
 		/**
 			Returns or creates the child element by tag name. If the element already exists, this function return the existing element.
@@ -138,7 +138,7 @@ namespace Separatista
 			@return A pointer to the child element. Will not return NULL, unless the the tag isn't known or supported.
 			@throws ElementException if the element doesn't have any child elements.
 		*/
-		virtual Element* createElementByTag(const wchar_t *pTagName);
+		virtual Element* createElementByTag(const wchar_t *pTagName, size_t nIndex = 0);
 
 		/**
 			Get the element's value as text.
@@ -151,7 +151,7 @@ namespace Separatista
 			Set the element's value as text.
 			@throws ElementException if the element doesn't support having values.
 		*/
-		virtual void setTextValue(const wchar_t *pValue);
+		virtual void setValue(const wchar_t *pValue, const ErrorOptions errorOptions = ThrowExceptions);
 
 	protected:
 		/**

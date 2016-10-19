@@ -70,13 +70,13 @@ const wchar_t* Element::getTag() const
 	return m_pElementDescriptor->m_pTag;
 }
 
-Element* Element::getElementByTag(const wchar_t *pTagName) const
+Element* Element::getElementByTag(const wchar_t *pTagName, size_t nIndex) const
 {
 	DEBUG_METHOD;
 	throw ElementException(SEPARATISTA_EXCEPTION("Child elements not supported by this element"), this);
 }
 
-Element* Element::createElementByTag(const wchar_t *pTagName)
+Element* Element::createElementByTag(const wchar_t *pTagName, size_t nIndex)
 {
 	DEBUG_METHOD;
 	throw ElementException(SEPARATISTA_EXCEPTION("Child elements not supported by this element"), this);
@@ -88,7 +88,7 @@ const wchar_t* Element::getTextValue() const
 	throw ElementException(SEPARATISTA_EXCEPTION("Values not supported by this element"), this);
 }
 
-void Element::setTextValue(const wchar_t *pValue)
+void Element::setValue(const wchar_t *pValue, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
 	throw ElementException(SEPARATISTA_EXCEPTION("Values not supported by this element"), this);
