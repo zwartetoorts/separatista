@@ -24,14 +24,17 @@
 #include <ctime>
 #include <string>
 
-#include "separatista.h"
-#include "xerces_types.h"
-#include "element.h"
-#include "validator.h"
-#include "elementdescriptor.h"
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/element.h"
+#include "separatista/validator.h"
+#include "separatista/elementdescriptor.h"
 
 namespace Separatista
 {
+	/**
+		LeafElements are elements that hold a value.
+	*/
 	class SEPARATISTA_EXTERN LeafElement : public Element
 	{
 	public:
@@ -43,12 +46,7 @@ namespace Separatista
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-		void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-		/**
-		Clears the content of the node
-		*/
-		void clear();
+		void fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/**
 		Returns the value of the text node
@@ -60,42 +58,7 @@ namespace Separatista
 		*/
 		void setValue(const wchar_t *pValue, const ErrorOptions errorOptions = ThrowExceptions);
 
-		/**
-		Returns the value of the text node converted to date
-		@return -1 on error
-		*/
-		time_t getDateValue() const;
-
-		/**
-		Set the value of a text node by a time_t
-		@param bWithTime Wether the time should be included or not
-		*/
-		void setValue(const time_t Value, bool bWithTime = false, const ErrorOptions errorOptions = ThrowExceptions);
-
-		/**
-		Get the value of a text node converted to int
-		*/
-		int getIntValue() const;
-
-		/**
-		Set the value of a text node by an int
-		*/
-		void setValue(const int Value, const ErrorOptions errorOptions = ThrowExceptions);
-
-		/**
-		Get the value of a text node converted to double
-		*/
-		double getDoubleValue() const;
-
-		/**
-		Set the value of a text node conveted to double
-		*/
-		void setValue(const double d, const ErrorOptions errorOptions = ThrowExceptions);
-
-		/**
-		Returns true if the element text is empty
-		*/
-		bool isEmpty() const;
+		
 
 		
 	protected:

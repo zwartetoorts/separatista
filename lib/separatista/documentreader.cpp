@@ -102,7 +102,8 @@ typedef SeparatistaDocument* (*SeparatistaDocumentCreatorFunc)(xercesc::DOMDocum
 
 template<class T> SeparatistaDocument* SeparatistaDocumentCreator(xercesc::DOMDocument *pDOMDocument)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
+
 	SeparatistaDocument *pDocument = new T(pDOMDocument);
 	return pDocument;
 }
@@ -116,7 +117,7 @@ SeparatistaDocument* DocumentReader::getDocument()
 	// Insert new supported document types here...
 	std::unordered_map<std::wstring, SeparatistaDocumentCreatorFunc> documentCreatorMap(
 	{
-		{ pain_008_001::CstmrDrctDbtInitn::NameSpaceURI, SeparatistaDocumentCreator<pain_008_001::CstmrDrctDbtInitn> }
+		{ pain_008_001::CustomerDirectDebitInitiationV04::NameSpaceURI, SeparatistaDocumentCreator<pain_008_001::CustomerDirectDebitInitiationV04> }
 	});
 
 	// Check for document

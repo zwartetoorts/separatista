@@ -34,153 +34,73 @@
 #include "separatista/separatista.h"
 #include "separatista/pain/customerdirectdebitinitiation.h" 
 #include "separatista/leafelement.h"
+#include "separatista/branchelement.h"
 #include "separatista/documentreader.h"
 #include "separatista/debug/debug.h"
 #include "separatista/validator.h"
 #include "separatista/documentiterator.h"
+#include "separatista/elementdescriptor.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-const wchar_t* CstmrDrctDbtInitn::NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.02");
+const wchar_t* CustomerDirectDebitInitiationV04::NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.04");
 
-CstmrDrctDbtInitn::CstmrDrctDbtInitn() :
-BranchElement(TEXT("CstmrDrctDbtInitn"), Element::Mandatory),
-m_GrpHdr(Element::Mandatory)
+const ElementDescriptor CustomerDirectDebitInitiationV04::m_CustomerDirectDebitInitiationV04[] =
 {
-	DEBUG_METHOD
-}
-
-CstmrDrctDbtInitn::CstmrDrctDbtInitn(Separatista::DOMDocument *pDocument, const ErrorOptions errorOptions) :
-BranchElement(TEXT("CstmrDrctDbtInitn"), Element::Mandatory),
-m_GrpHdr(Element::Mandatory)
-{
-	DEBUG_METHOD
-	DOMDocumentIterator it(pDocument);
-	it.fromDOMDocument(*this, errorOptions);
-}
-
-CstmrDrctDbtInitn::~CstmrDrctDbtInitn()
-{
-	DEBUG_METHOD
-	// Delete all PmtInfs
-	std::vector<PmtInf*>::iterator it;
-
-	for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
-		delete (*it);
-}
-
-DOMElement* CstmrDrctDbtInitn::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	std::vector<PmtInf*>::iterator it;
-	DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
 	{
-		m_GrpHdr.toDOMDocument(pDocument, pElement);
-
-		for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
-			(*it)->toDOMDocument(pDocument, pElement, errorOptions);
+		SEPARATISTA_TAG("GrpHdr"),
+		BranchElement::createElement,
+		1,
+		1,
+		NULL,
+		SEPARATISTA_ELEMENTS(GroupHeader55)
+	},
+	{
+		SEPARATISTA_TAG("PmtInf"),
+		BranchElement::createElement,
+		1,
+		0,
+		NULL,
+		0,
+		NULL
 	}
+};
 
-	return pElement;
+CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor)
+	:BranchElement(pElementDescriptor)
+{
+	DEBUG_METHOD;
+
 }
 
-void CstmrDrctDbtInitn::fromDOMDocument(DOMDocumentIterator &documentIterator, const ErrorOptions errorOptions)
+CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
+	:BranchElement(pElementDescriptor)
 {
-	DEBUG_METHOD
-	PmtInf *pPmtInf;
+	DEBUG_METHOD;
 	
-	documentIterator.fromDOMDocument(m_GrpHdr, errorOptions);
-
-	while (!documentIterator.isDone())
-	{
-		pPmtInf = new PmtInf();
-		if (pPmtInf)
-		{
-			try
-			{
-				documentIterator.fromDOMDocument(*pPmtInf, errorOptions);
-				AddPmtInf(pPmtInf);
-			}
-			catch (const Exception &e)
-			{
-				delete pPmtInf;
-				throw(e);
-			}
-		}
-	}
+	fromDOMDocument(
 }
 
-void CstmrDrctDbtInitn::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
+DOMElement* CustomerDirectDebitInitiation::toDOMDocument(DOMDocument *pDOMDocument, DOMElement *pParent, const ErrorOptions errorOptions)
 {
-	DEBUG_METHOD
 	calcSum();
+	BranchElement::toDOMDocument(pDOMDocument, pParent, errorOptions);
 }
 
-void CstmrDrctDbtInitn::elementDeleted(Element *pElement)
+void CustomerDirectDebitInitiation::calcSum()
 {
-	DEBUG_METHOD
-	calcSum();
-}
+	DEBUG_METHOD;
 
-void CstmrDrctDbtInitn::AddPmtInf(PmtInf *pPmtInf)
-{
-	DEBUG_METHOD
-	// Set listeners
-	pPmtInf->m_NbOfTxs.setElementListener(this);
-	pPmtInf->m_CtrlSum.setElementListener(this);
+	double sum = 0;
+	unsigned int count;
 
-	// Set default value(s) for DirectDebit
-	pPmtInf->m_PmtMtd.setValue(TEXT("DD"));
-
-	m_PmtInfs.push_back(pPmtInf);
-
-	calcSum();
-}
-
-void CstmrDrctDbtInitn::getPmtInfs(ElementList &elementList)
-{
-	DEBUG_METHOD
-	std::vector<PmtInf*>::iterator it;
-
-	for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
-		elementList.addElement(*it);
-}
-
-PmtInf* CstmrDrctDbtInitn::getPmtInfById(const wchar_t *pId)
-{
-	DEBUG_METHOD
-	std::vector<PmtInf*>::iterator it;
-
-	for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
-	{
-		if (xercesc::XMLString::compareString(pId, (*it)->m_PmtInfId.getTextValue()) == 0)
-			return (*it);
-	}
-
-	return NULL;
-}
-
-void CstmrDrctDbtInitn::calcSum()
-{
-	DEBUG_METHOD
 	// Calc both sum and count of transactions
-	std::vector<PmtInf*>::iterator it;
-	int ntx = 0;
-	double sum = 0.0;
-
-	for (it = m_PmtInfs.begin(); it != m_PmtInfs.end(); it++)
-	{
-		ntx += (*it)->m_NbOfTxs.getIntValue();
-		sum += (*it)->m_CtrlSum.getDoubleValue();
-	}
-
-	m_GrpHdr.m_NbOfTxs.setValue(ntx);
-	m_GrpHdr.m_CtrlSum.setValue(sum);
+	
+	
 }
 
+/*
 IOErrorCode CstmrDrctDbtInitn::SaveAs(const wchar_t *pPath)
 {
 	DEBUG_METHOD
@@ -228,5 +148,18 @@ IOErrorCode CstmrDrctDbtInitn::SaveAs(const wchar_t *pPath)
 	}
 	
 	return ret;
+}
+*/
+
+CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04()
+	:CustomerDirectDebitInitiation(m_CustomerDirectDebitInitiationV04)
+{
+
+}
+
+CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04(DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
+	:CustomerDirectDebitInitiation(m_CustomerDirectDebitInitiationV04, pDOMDocument, errorOptions)
+{
+
 }
 

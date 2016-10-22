@@ -41,6 +41,14 @@ Element(pElementDescriptor)
 	DEBUG_METHOD
 }
 
+Separatista::BranchElement::~BranchElement()
+{
+	DEBUG_METHOD;
+
+	for (auto it = m_childElements.begin(); it != m_childElements.end(); it++)
+		delete (*it).second;
+}
+
 Element* BranchElement::createElement(const ElementDescriptor *pElementDescriptor)
 {
 	DEBUG_METHOD;
@@ -63,20 +71,35 @@ Element* BranchElement::createElementByTag(const wchar_t *pTag, size_t nIndex)
 
 	Element *pElement = NULL;
 	const ElementDescriptor *pElementDescriptor;
+	unsigned int hash;
 
 	pElement = getElementByTag(pTag);
 	if (!pElement)
 	{
 		// Find the element descriptor
 		pElementDescriptor = getElementDescriptor();
+		hash = BranchElement::TagKey::HashKey(pTag);
+
 		for (size_t i = 0; i < pElementDescriptor->m_nElementCount; i++)
 		{
-			if (std::wcscmp(pElementDescriptor->m_pElements[i].m_pTag, pTag) == 0)
+			/*
+				Create if:
+				Hash matches
+				TagName matches
+				Max elements if 0 or index < max
+			*/
+			if (hash == pElementDescriptor->m_pElements[i].m_nHash && std::wcscmp(pElementDescriptor->m_pElements[i].m_pTag, pTag) == 0 && 
+				(pElementDescriptor->m_pElements[i].m_nMax == 0 || nIndex < pElementDescriptor->m_pElements[i].m_nMax))
 			{
-				return pElementDescriptor->m_pElements[i].m_pfCreateElement(&pElementDescriptor->m_pElements[i]);
+				// Create new element and register it
+				Element *pElement = pElementDescriptor->m_pElements[i].m_pfCreateElement(&pElementDescriptor->m_pElements[i]);
+				if (pElement)
+					m_childElements.insert(std::pair<TagKey, Element*>(TagKey(pTag, nIndex, pElementDescriptor), pElement));
+				return pElement;
 			}
 		}
 		// Bad, element wasn't found
+		return NULL;
 	}
 	return pElement;
 }
@@ -93,6 +116,7 @@ BranchElement::TagKey::TagKey(const wchar_t *pTagName, size_t nIndex, const Elem
 
 	m_nIndex = nIndex;
 	m_pTagName = pTagName;
+	m_nHash = HashKey(pTagName);
 	m_pBranchElementDescriptor = pBranchElementDescriptor;
 }
 
@@ -101,15 +125,15 @@ bool Separatista::BranchElement::TagKey::operator<(const TagKey & Other) const
 	DEBUG_METHOD;
 
 	// If both tags are the same, the index makes the difference
-	if (std::wcscmp(m_pTagName, Other.m_pTagName) == 0)
+	if (m_nHash == Other.m_nHash && std::wcscmp(m_pTagName, Other.m_pTagName) == 0)
 		return m_nIndex < Other.m_nIndex;
 
 	// The first tag found is the lesser value
 	for (size_t i = 0; i < m_pBranchElementDescriptor->m_nElementCount; i++)
 	{
-		if (std::wcscmp(m_pBranchElementDescriptor->m_pElements[i].m_pTag, m_pTagName) == 0)
+		if (m_pBranchElementDescriptor->m_pElements[i].m_nHash == m_nHash && std::wcscmp(m_pBranchElementDescriptor->m_pElements[i].m_pTag, m_pTagName) == 0)
 			return true;
-		else if (std::wcscmp(m_pBranchElementDescriptor->m_pElements[i].m_pTag, Other.m_pTagName) == 0)
+		else if (m_pBranchElementDescriptor->m_pElements[i].m_nHash == Other.m_nHash && std::wcscmp(m_pBranchElementDescriptor->m_pElements[i].m_pTag, Other.m_pTagName) == 0)
 			return false;
 	}
 
@@ -120,6 +144,17 @@ bool Separatista::BranchElement::TagKey::operator==(const TagKey & Other) const
 {
 	DEBUG_METHOD;
 
-	return std::wcscmp(m_pTagName, Other.m_pTagName) == 0 ? m_nIndex == Other.m_nIndex : false;
+	return (m_nHash == Other.m_nHash && std::wcscmp(m_pTagName, Other.m_pTagName) == 0) ? m_nIndex == Other.m_nIndex : false;
 }
 
+unsigned int Separatista::BranchElement::TagKey::HashKey(const wchar_t *pTagName)
+{
+	DEBUG_METHOD;
+
+	unsigned int hash = 0;
+
+	size_t len = std::wcslen(pTagName);
+	for (size_t n = 0; n < len; n++)
+		hash += pTagName[n] << n;
+	return hash;
+}

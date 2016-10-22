@@ -22,30 +22,55 @@
 #include "separatista/elementdescriptor.h"
 #include "separatista/leafelement.h"
 #include "separatista/branchelement.h"
-#include "separatista/validator.h"
+#include "separatista/pain/groupheader.h"
 
 using namespace Separatista;
 
-ElementDescriptor GroupHeader55Elements[] = 
+static const ElementDescriptor GroupHeader55[] = 
 {
 	{
-		TEXT("MsgId"),
+		SEPARATISTA_TAG("MsgId"),
 		LeafElement::createElement,
 		1,
 		1,
 		&Validators.Max35TextValidator,
 		0,
 		NULL
+	},
+	{
+		SEPARATISTA_TAG("CreDtTm"),
+		LeafElement::createElement,
+		1,
+		1,
+		&Validators.ISODateTimeValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("NbOfTxs"),
+		LeafElement::createElement,
+		1,
+		1,
+		&Validators.Max15NumericTextValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("CtrlSum"),
+		LeafElement::createElement,
+		0,
+		1,
+		&Validators.DecimalNumberValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("InitgPty"),
+		BranchElement::createElement,
+		1,
+		1,
+		NULL,
+		SEPARATISTA_ELEMENTS(PartyIdentification43)
 	}
-};
-
-ElementDescriptor GroupHeader55[] =
-{
-	TEXT("GrpHdr"),
-	BranchElement::createElement,
-	1,
-	1,
-	NULL,
-	SEPARATISTA_COUNTOFELEMENTS(GroupHeader55Elements)
-};
+};	
 

@@ -46,7 +46,9 @@ Element::Element(const ElementDescriptor *pElementDescriptor)
 
 Element::~Element()
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
+
+	onDeleted();
 }
 
 const ElementDescriptor* Element::getElementDescriptor() const
@@ -106,5 +108,126 @@ void Element::onDeleted()
 	DEBUG_METHOD
 	if (m_pElementListener)
 		m_pElementListener->elementDeleted(this);
+}
+
+time_t Element::getDateValue() const
+{
+	DEBUG_METHOD;
+
+	xercesc::XSValue::Status status;
+	xercesc::XSValue *pValue;
+	std::tm tm;
+
+	const XMLCh *pText = getTextValue();
+
+	if (!pText)
+		return -1;
+
+	// Try dateTime
+	pValue = xercesc::XSValue::getActualValue(pText, xercesc::XSValue::DataType::dt_dateTime, status);
+	if (!pValue || status != xercesc::XSValue::st_Init)
+	{
+		// Try date only
+		pValue = xercesc::XSValue::getActualValue(pText, xercesc::XSValue::DataType::dt_date, status);
+		if (!pValue || status != xercesc::XSValue::st_Init)
+			return -1;
+	}
+
+	tm.tm_year = pValue->fData.fValue.f_datetime.f_year - 1900;
+	tm.tm_mon = pValue->fData.fValue.f_datetime.f_month - 1;
+	tm.tm_mday = pValue->fData.fValue.f_datetime.f_day;
+	tm.tm_hour = pValue->fData.fValue.f_datetime.f_hour;
+	tm.tm_min = pValue->fData.fValue.f_datetime.f_min;
+	tm.tm_sec = pValue->fData.fValue.f_datetime.f_milisec / 1000;
+
+	return std::mktime(&tm);
+}
+
+void Element::setValue(const time_t Value, bool bWithTime, const ErrorOptions errorOptions)
+{
+	DEBUG_METHOD;
+
+	tm *ptm;
+	char buffer[64];
+
+	ptm = std::localtime(&Value);
+	if (!ptm)
+		return;
+
+	if (bWithTime)
+		strftime(buffer, 64, "%Y-%m-%dT%H:%M:%S", ptm);
+	else
+		strftime(buffer, 64, "%Y-%m-%d", ptm);
+
+	XMLCh *xmlch = xercesc::XMLString::transcode(buffer);
+	if (xmlch)
+	{
+		setValue(xmlch, errorOptions);
+		xercesc::XMLString::release(&xmlch);
+	}
+
+}
+
+int Element::getIntValue() const
+{
+	DEBUG_METHOD;
+
+	xercesc::XSValue::Status status;
+	xercesc::XSValue *pValue;
+	const XMLCh *pText = getTextValue();
+
+	if (!pText)
+		return 0;
+
+	pValue = xercesc::XSValue::getActualValue(pText, xercesc::XSValue::DataType::dt_int, status);
+	if (!pValue || status != xercesc::XSValue::st_Init)
+		return 0;
+
+	return pValue->fData.fValue.f_int;
+}
+
+void Element::setValue(const int Value, const ErrorOptions errorOptions)
+{
+	DEBUG_METHOD;
+
+	std::wstring w = std::to_wstring(Value);
+
+	setValue(w.data(), errorOptions);
+}
+
+double Element::getDoubleValue() const
+{
+	DEBUG_METHOD;
+
+	xercesc::XSValue::Status status;
+	xercesc::XSValue *pValue;
+	const XMLCh *pText = getTextValue();
+
+	if (!pText)
+		return (double)0;
+
+	pValue = xercesc::XSValue::getActualValue(pText, xercesc::XSValue::DataType::dt_double, status);
+	if (!pValue || status != xercesc::XSValue::st_Init)
+		return (double)0;
+
+	return pValue->fData.fValue.f_double;
+}
+
+void Element::setValue(const double d, const ErrorOptions errorOptions)
+{
+	DEBUG_METHOD;
+
+	std::wostringstream wos;
+
+	wos.imbue(std::locale::classic());
+	wos << std::setprecision(2) << std::fixed << d;
+	setValue(wos.str().data(), errorOptions);
+}
+
+bool Element::isEmpty() const
+{
+	DEBUG_METHOD;
+
+	return std::wcslen(getTextValue()) == 0;
 }
 

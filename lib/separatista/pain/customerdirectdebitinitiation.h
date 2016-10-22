@@ -21,6 +21,7 @@
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
 #include "separatista/element.h"
+#include "separatista/elementdescriptor.h"
 #include "separatista/pain/paymentinformation.h"
 #include "separatista/pain/groupheader.h"
 #include "separatista/partyidentification.h"
@@ -33,55 +34,49 @@ namespace Separatista
 {
 	namespace pain_008_001
 	{
-		class SEPARATISTA_EXTERN CstmrDrctDbtInitn : public BranchElement, protected ElementListener, public SeparatistaDocument
+
+		class SEPARATISTA_EXTERN CustomerDirectDebitInitiation : public BranchElement, public SeparatistaDocument
 		{
 		public:
-			CstmrDrctDbtInitn();
+			/// Construct an empty element
+			CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor);
 
 			/**
 				Construct from a dom document.
 			*/
-			CstmrDrctDbtInitn(DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
+			CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
 
-			/**
-			Destructor, will delete all added PmtInf's
-			*/
-			~CstmrDrctDbtInitn();
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent = NULL, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
-
-			void elementDeleted(Element *pElement);
-
-			GrpHdr m_GrpHdr;
-
-			void AddPmtInf(PmtInf *pPmtInf);
-
-			void getPmtInfs(ElementList &elementList);
-
-			PmtInf* getPmtInfById(const wchar_t *pId);
+			DOMElement* toDOMDocument(DOMDocument *pDOMDocument, DOMElement *pParent = NULL, const ErrorOptions errorOptions = ThrowExceptions);
 
 			/**
 				Writes the DOM document to a local file path
 				@param pPath The path to write to
 				@return Error code
 				*/
-			IOErrorCode SaveAs(const wchar_t *pPath);
+			//IOErrorCode saveAs(const wchar_t *pPath);
 
 			/**
 				SeparatistaDocument interface
 				*/
 			DocumentType getDocumentType() const { return DT_CustomerDirectDebitDocument; };
 
-			static const wchar_t *NameSpaceURI;
-
-		private:
+		protected:
 			void calcSum();
 
-			std::vector<PmtInf*> m_PmtInfs;
+			
+		};
+
+		class SEPARATISTA_EXTERN CustomerDirectDebitInitiationV04 : public CustomerDirectDebitInitiation
+		{
+		public:
+			CustomerDirectDebitInitiationV04();
+
+			CustomerDirectDebitInitiationV04(DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
+			
+			static const wchar_t *NameSpaceURI;
+
+			static const ElementDescriptor m_CustomerDirectDebitInitiationV04[2];
+
 		};
 	}
 }

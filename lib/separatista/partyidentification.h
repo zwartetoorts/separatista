@@ -20,70 +20,16 @@
 
 #include <windows.h>
 
-#include "separatista.h"
-#include "xerces_types.h"
-#include "choiceelement.h"
-#include "branchelement.h"
-#include "leafelement.h"
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/elementdescriptor.h"
 
 #ifndef SEPARATISTA_PARTYIDENTIFICATION_H
 #define SEPARATISTA_PARTYIDENTIFICATION_H
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN PersonIdentificationSchemeName1Choice : public ChoiceElement<2>
-	{
-	public:
-		PersonIdentificationSchemeName1Choice(const wchar_t *pTag, const ElementOptions options);
-
-		LeafElement m_Cd;
-		LeafElement m_Prtry;
-	};
-
-	class SEPARATISTA_EXTERN GenericPersonIdentification1 : public BranchElement
-	{
-	public:
-		GenericPersonIdentification1(const wchar_t *pTag, const ElementOptions options);
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-		void fromDOMDocument(DOMDocumentIterator &documentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-		LeafElement m_Id;
-		PersonIdentificationSchemeName1Choice m_SchmeNm;
-	};
-
-	class SEPARATISTA_EXTERN PersonIdentification5 : public BranchElement
-	{
-	public:
-		PersonIdentification5(const wchar_t *pTag, const ElementOptions options);
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-		void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-		GenericPersonIdentification1 m_Othr;
-	};
-
-	class SEPARATISTA_EXTERN Party11Choice : public ChoiceElement<1>
-	{
-	public:
-		Party11Choice(const ElementOptions options);
-
-		PersonIdentification5 m_PrvtId;
-	};
-
-	class SEPARATISTA_EXTERN PartyIdentification43 : public BranchElement
-	{
-	public:
-		PartyIdentification43(const wchar_t *pTag, const ElementOptions options);
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-		void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-		LeafElement m_Nm;
-		Party11Choice m_Id;
-	};
+	static const ElementDescriptor PartyIdentification43[1];
 }
+
 #endif // SEPARATISTA_PARTYIDENTIFICATION_H

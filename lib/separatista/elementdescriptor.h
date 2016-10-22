@@ -24,10 +24,17 @@
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
 
-#define SEPARATISTA_COUNTOFELEMENTS(name) sizeof(name) / sizeof(ElementDescriptor), name
+#define SEPARATISTA_ELEMENTS(name) sizeof(name) / sizeof(ElementDescriptor), name
+#define SEPARATISTA_TAG(tag) TEXT(tag), Separatista::HashTag(TEXT(tag))
 
 namespace Separatista
 {
+	template<size_t L>
+	constexpr unsigned int HashTag(const wchar_t (&str)[L], size_t n = L - 1)
+	{
+		return n == 0 ? str[n] : HashTag(str, n - 1) + str[n] << n;
+	}
+
 	// Forward decl
 	class Element;
 	class Validator;
@@ -36,6 +43,8 @@ namespace Separatista
 	{
 		/// The tag name of the element
 		const wchar_t *m_pTag;
+		/// The hash of the tag 
+		unsigned int m_nHash;
 		/// Element creator function
 		Element* (*m_pfCreateElement)(const ElementDescriptor*);
 		/// Minimal presence of the element

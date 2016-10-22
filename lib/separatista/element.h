@@ -27,8 +27,8 @@
 
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
-#include "elementdescriptor.h"
-#include "exception.h"
+#include "separatista/elementdescriptor.h"
+#include "separatista/exception.h"
 
 namespace Separatista
 {
@@ -36,6 +36,9 @@ namespace Separatista
 	class Element;
 	class DOMDocumentIterator;
 
+	/**
+		Elementlistener interface
+	*/
 	class ElementListener
 	{
 	public:
@@ -103,13 +106,13 @@ namespace Separatista
 			@return Pointer to the new created DOMElement, or NULL
 			@see createElement
 		*/
-		virtual DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions) = 0;
+		virtual DOMElement* toDOMDocument(DOMDocument *pDOMDocument, DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions) = 0;
 
 		/**
 			Tries to load it's value from the document iterator.
 			@param DocumentIterator The document iterator to call to continue reading or get value from.
 		*/
-		virtual void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions) = 0;
+		virtual void fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions) = 0;
 
 		/**
 			Set the elementlistener. Will be notified of changes to the element. If a previous elementlistener was registered, it
@@ -126,7 +129,7 @@ namespace Separatista
 		const wchar_t* getTag() const;
 
 		/**
-			Returns the child element by tag name.
+			Returns the child element by tag name and index.
 			@return A pointer to the child element or NULL if not present or unsupported.
 			@throws ElementException if the element doesn't have any child elements.
 		*/
@@ -152,6 +155,43 @@ namespace Separatista
 			@throws ElementException if the element doesn't support having values.
 		*/
 		virtual void setValue(const wchar_t *pValue, const ErrorOptions errorOptions = ThrowExceptions);
+
+		/**
+		Returns the value of the text node converted to date
+		@return -1 on error
+		*/
+		time_t getDateValue() const;
+
+		/**
+		Set the value of a text node by a time_t
+		@param bWithTime Wether the time should be included or not
+		*/
+		void setValue(const time_t Value, bool bWithTime = false, const ErrorOptions errorOptions = ThrowExceptions);
+
+		/**
+		Get the value of a text node converted to int
+		*/
+		int getIntValue() const;
+
+		/**
+		Set the value of a text node by an int
+		*/
+		void setValue(const int Value, const ErrorOptions errorOptions = ThrowExceptions);
+
+		/**
+		Get the value of a text node converted to double
+		*/
+		double getDoubleValue() const;
+
+		/**
+		Set the value of a text node conveted to double
+		*/
+		void setValue(const double d, const ErrorOptions errorOptions = ThrowExceptions);
+
+		/**
+		Returns true if the element text is empty
+		*/
+		bool isEmpty() const;
 
 	protected:
 		/**

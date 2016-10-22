@@ -20,7 +20,6 @@
 
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
-#include "separatista/element.h"
 #include "separatista/partyidentification.h"
 
 #ifndef SEPARATISTA_PAIN_GROUPHEADER_H
@@ -30,22 +29,7 @@ namespace Separatista
 {
 	namespace pain_008_001
 	{
-		class SEPARATISTA_EXTERN GrpHdr : public BranchElement
-		{
-		public:
-			GrpHdr(const ElementOptions options);
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-			LeafElement m_MsgId;
-			LeafElement m_CreDtTm;
-			LeafElement m_NbOfTxs;
-			LeafElement m_CtrlSum;
-			PartyIdentification43 m_InitgPty;
-
-		};
+		static const ElementDescriptor GroupHeader55[5];
 	}
 }
 

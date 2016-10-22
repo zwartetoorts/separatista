@@ -21,19 +21,23 @@
 #ifndef SEPARATISTA_BRANCHELEMENT_H
 #define SEPARATISTA_BRANCHELEMENT_H
 
-#include <ctime>
 #include <string>
 #include <map>
 
-#include "separatista.h"
-#include "xerces_types.h"
-#include "element.h"
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/element.h"
 
 namespace Separatista
 {
+	/**
+		BranchElements are elements that hold child elements. 
+	*/
 	class SEPARATISTA_EXTERN BranchElement : public Element
 	{
 	public:
+		~BranchElement();
+
 		/**
 		Creates the element from it's descriptor
 		*/
@@ -57,9 +61,12 @@ namespace Separatista
 			bool operator <(const TagKey &Other) const;
 			bool operator ==(const TagKey &Other) const;
 
+			static unsigned int HashKey(const wchar_t *pTagName);
+
 		private:
 			size_t m_nIndex;
 			const wchar_t *m_pTagName;
+			unsigned int m_nHash;
 			const ElementDescriptor *m_pBranchElementDescriptor;
 		};
 
