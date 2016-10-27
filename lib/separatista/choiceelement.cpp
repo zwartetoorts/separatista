@@ -52,13 +52,20 @@ void Separatista::ChoiceElement::fromDOMDocument(DOMElement * pDOMElement, const
 	DEBUG_METHOD;
 
 	// Get the first child tag name
-	DOMElement *pChildElement = pDOMElement->getFirstElementChild();
-	const wchar_t *pChildTagName = pChildElement->getTagName();
+	DOMElement *pDOMChildElement = pDOMElement->getFirstElementChild();
+	if (!pDOMChildElement)
+		return;
+
+	const wchar_t *pDOMChildTagName = pDOMChildElement->getTagName();
+	if (!pDOMChildTagName)
+		return;
 
 	// Construct a new element from the first child tag
-
-
-
+	Element *pElement = createElementByTag(pDOMChildTagName);
+	if (pElement)
+	{
+		pElement->fromDOMDocument(pDOMChildElement, errorOptions);
+	}
 }
 
 Element* ChoiceElement::createElement(const ElementDescriptor *pElementDescriptor)

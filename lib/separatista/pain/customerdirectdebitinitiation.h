@@ -20,9 +20,8 @@
 
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
-#include "separatista/element.h"
+#include "separatista/branchelement.h"
 #include "separatista/elementdescriptor.h"
-#include "separatista/pain/paymentinformation.h"
 #include "separatista/pain/groupheader.h"
 #include "separatista/partyidentification.h"
 #include "separatista/elementlist.h"
@@ -53,14 +52,16 @@ namespace Separatista
 				@param pPath The path to write to
 				@return Error code
 				*/
-			//IOErrorCode saveAs(const wchar_t *pPath);
+			IOErrorCode saveAs(const wchar_t *pPath);
 
 			/**
 				SeparatistaDocument interface
-				*/
+			*/
 			DocumentType getDocumentType() const { return DT_CustomerDirectDebitDocument; };
 
+			virtual const wchar_t* getNamespaceURI() const = 0;
 		protected:
+			
 			void calcSum();
 
 			
@@ -73,9 +74,12 @@ namespace Separatista
 
 			CustomerDirectDebitInitiationV04(DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
 			
-			static const wchar_t *NameSpaceURI;
+			static const wchar_t *m_NameSpaceURI;
 
 			static const ElementDescriptor m_CustomerDirectDebitInitiationV04[2];
+
+			const wchar_t* getNamespaceURI() const {
+				return m_NameSpaceURI; };
 
 		};
 	}

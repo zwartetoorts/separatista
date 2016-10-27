@@ -23,6 +23,7 @@
 
 #include <string>
 #include <map>
+#include <iterator>
 
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
@@ -45,7 +46,7 @@ namespace Separatista
 
 		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-		void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
+		void fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/// @see Element::getElementByTag
 		Element* getElementByTag(const wchar_t *pTagName, size_t nIndex = 0) const;
@@ -63,6 +64,9 @@ namespace Separatista
 
 			static unsigned int HashKey(const wchar_t *pTagName);
 
+			const wchar_t* getTagName() const;
+			unsigned int getHash() const;
+
 		private:
 			size_t m_nIndex;
 			const wchar_t *m_pTagName;
@@ -70,11 +74,21 @@ namespace Separatista
 			const ElementDescriptor *m_pBranchElementDescriptor;
 		};
 
+		typedef std::map<const TagKey, Element*> TagKeyMap;
+
+		typedef struct
+		{
+			TagKeyMap::iterator m_begin;
+			TagKeyMap::iterator m_end;
+		} TagKeyRange;
+
+		TagKeyRange getAllByTagName(const wchar_t *pTagName);
+
 	protected:
 		BranchElement(const ElementDescriptor *pElementDescriptor);
 
 	private:
-		std::map<TagKey, Element*> m_childElements;
+		TagKeyMap m_childElements;
 	};
 }
 #endif // SEPARATISTA_BRANCHELEMENT_H

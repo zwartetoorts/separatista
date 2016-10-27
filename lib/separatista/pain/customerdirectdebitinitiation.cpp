@@ -32,6 +32,7 @@
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
 #include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
 #include "separatista/pain/customerdirectdebitinitiation.h" 
 #include "separatista/leafelement.h"
 #include "separatista/branchelement.h"
@@ -44,7 +45,7 @@
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-const wchar_t* CustomerDirectDebitInitiationV04::NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.04");
+const wchar_t* CustomerDirectDebitInitiationV04::m_NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.04");
 
 const ElementDescriptor CustomerDirectDebitInitiationV04::m_CustomerDirectDebitInitiationV04[] =
 {
@@ -74,18 +75,20 @@ CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescri
 
 }
 
-CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
+CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, xercesc::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
 	:BranchElement(pElementDescriptor)
 {
 	DEBUG_METHOD;
 	
-	fromDOMDocument(
+	fromDOMDocument(pDOMDocument->getDocumentElement()->getFirstElementChild(), errorOptions);
 }
 
-DOMElement* CustomerDirectDebitInitiation::toDOMDocument(DOMDocument *pDOMDocument, DOMElement *pParent, const ErrorOptions errorOptions)
+xercesc::DOMElement* CustomerDirectDebitInitiation::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
+	DEBUG_METHOD;
+
 	calcSum();
-	BranchElement::toDOMDocument(pDOMDocument, pParent, errorOptions);
+	return BranchElement::toDOMDocument(pDOMDocument, pParent, errorOptions);
 }
 
 void CustomerDirectDebitInitiation::calcSum()
@@ -94,19 +97,25 @@ void CustomerDirectDebitInitiation::calcSum()
 
 	double sum = 0;
 	unsigned int count;
+	BranchElement::TagKeyRange range;
+	Element *pElement;
 
 	// Calc both sum and count of transactions
-	
-	
+	range = getAllByTagName(TEXT("PmtInf"));
+	for (auto it = range.m_begin; it != range.m_end; it++)
+	{
+		pElement = it->second;
+
+	}
 }
 
-/*
-IOErrorCode CstmrDrctDbtInitn::SaveAs(const wchar_t *pPath)
+
+IOErrorCode CustomerDirectDebitInitiation::saveAs(const wchar_t *pPath)
 {
 	DEBUG_METHOD
 	// Create a DOM Document
 	xercesc::DOMImplementation *pDomImpl = xercesc::DOMImplementationRegistry::getDOMImplementation(TEXT("LS"));
-	DOMDocument *pDocument;
+	xercesc::DOMDocument *pDocument;
 	IOErrorCode ret;
 
 	if (!pDomImpl)
@@ -115,7 +124,7 @@ IOErrorCode CstmrDrctDbtInitn::SaveAs(const wchar_t *pPath)
 	try
 	{
 		pDocument = pDomImpl->createDocument(
-			CstmrDrctDbtInitn::NameSpaceURI,
+			getNamespaceURI(),
 			TEXT("Document"),
 			NULL);
 
@@ -149,7 +158,7 @@ IOErrorCode CstmrDrctDbtInitn::SaveAs(const wchar_t *pPath)
 	
 	return ret;
 }
-*/
+
 
 CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04()
 	:CustomerDirectDebitInitiation(m_CustomerDirectDebitInitiationV04)
@@ -157,7 +166,7 @@ CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04()
 
 }
 
-CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04(DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
+CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04(xercesc::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
 	:CustomerDirectDebitInitiation(m_CustomerDirectDebitInitiationV04, pDOMDocument, errorOptions)
 {
 

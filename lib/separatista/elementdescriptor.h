@@ -32,7 +32,7 @@ namespace Separatista
 	template<size_t L>
 	constexpr unsigned int HashTag(const wchar_t (&str)[L], size_t n = L - 1)
 	{
-		return n == 0 ? str[n] : HashTag(str, n - 1) + str[n] << n;
+		return n == 0 ? str[n] : HashTag(str, n - 1) + (str[n] << n);
 	}
 
 	// Forward decl
