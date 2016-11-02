@@ -41,14 +41,6 @@ Element::Element(const ElementDescriptor *pElementDescriptor)
 	DEBUG_METHOD;
 
 	m_pElementDescriptor = pElementDescriptor;
-	m_pElementListener = NULL;
-}
-
-Element::~Element()
-{
-	DEBUG_METHOD;
-
-	onDeleted();
 }
 
 const ElementDescriptor* Element::getElementDescriptor() const
@@ -58,12 +50,18 @@ const ElementDescriptor* Element::getElementDescriptor() const
 	return m_pElementDescriptor;
 }
 
-ElementListener* Element::setElementListener(ElementListener *pElementListener)
+void Element::addElementListener(ElementListener *pElementListener)
 {
-	DEBUG_METHOD
-	ElementListener *pOld = m_pElementListener;
-	m_pElementListener = pElementListener;
-	return pOld;
+	DEBUG_METHOD;
+
+	m_ElementListeners.push_back(pElementListener);
+}
+
+void Element::removeElementListener(ElementListener *pElementListener)
+{
+	DEBUG_METHOD;
+
+	m_ElementListeners.erase(std::remove(m_ElementListeners.begin(), m_ElementListeners.end(), pElementListener), m_ElementListeners.end());
 }
 
 const wchar_t* Element::getTag() const
@@ -84,6 +82,25 @@ Element* Element::createElementByTag(const wchar_t *pTagName, size_t nIndex)
 	throw ElementException(SEPARATISTA_EXCEPTION("Child elements not supported by this element"), this);
 }
 
+void Element::destroyElement(Element *pElement)
+{
+	DEBUG_METHOD;
+	throw ElementException(SEPARATISTA_EXCEPTION("Child elements not supported by this element."), this);
+}
+
+void Element::deleteElement(Element *pParentElement, Element *pChildElement)
+{
+	DEBUG_METHOD;
+	pParentElement->onElementDeleted(pChildElement);
+	delete pChildElement;
+}
+
+Element::TagKeyRange Element::getAllByTagName(const wchar_t *pTagName)
+{
+	DEBUG_METHOD;
+	throw ElementException(SEPARATISTA_EXCEPTION("Child elements not supported by this element"), this);
+}
+
 const wchar_t* Element::getTextValue() const
 {
 	DEBUG_METHOD;
@@ -96,18 +113,28 @@ void Element::setValue(const wchar_t *pValue, const ErrorOptions errorOptions)
 	throw ElementException(SEPARATISTA_EXCEPTION("Values not supported by this element"), this);
 }
 
-void Element::onValueChanged(const wchar_t *pNewValue)
+void Element::onElementValueChanged(const wchar_t *pNewValue)
 {
-	DEBUG_METHOD
-	if (m_pElementListener)
-		m_pElementListener->elementValueChanged(this, pNewValue);
+	DEBUG_METHOD;
+
+	for(auto it = m_ElementListeners.begin(); it != m_ElementListeners.end(); it++)
+		(*it)->elementValueChanged(this, pNewValue);
 }
 
-void Element::onDeleted()
+void Element::onElementCreated(Element *pChildElement)
 {
-	DEBUG_METHOD
-	if (m_pElementListener)
-		m_pElementListener->elementDeleted(this);
+	DEBUG_METHOD;
+
+	for (auto it = m_ElementListeners.begin(); it != m_ElementListeners.end(); it++)
+		(*it)->elementCreated(this, pChildElement);
+}
+
+void Element::onElementDeleted(Element *pChildElement)
+{
+	DEBUG_METHOD;
+
+	for (auto it = m_ElementListeners.begin(); it != m_ElementListeners.end(); it++)
+		(*it)->elementDeleted(this, pChildElement);
 }
 
 time_t Element::getDateValue() const
@@ -231,3 +258,65 @@ bool Element::isEmpty() const
 	return std::wcslen(getTextValue()) == 0;
 }
 
+Element::TagKey::TagKey(const wchar_t *pTagName, size_t nIndex, const ElementDescriptor *pBranchElementDescriptor)
+{
+	DEBUG_METHOD;
+
+	m_nIndex = nIndex;
+	m_pTagName = pTagName;
+	m_nHash = HashKey(pTagName);
+	m_pBranchElementDescriptor = pBranchElementDescriptor;
+}
+
+bool Element::TagKey::operator<(const TagKey & Other) const
+{
+	DEBUG_METHOD;
+
+	// If both tags are the same, the index makes the difference
+	if (m_nHash == Other.m_nHash && std::wcscmp(m_pTagName, Other.m_pTagName) == 0)
+		return m_nIndex < Other.m_nIndex;
+
+	// The first tag found is the lesser value
+	for (size_t i = 0; i < m_pBranchElementDescriptor->m_nElementCount; i++)
+	{
+		if (m_pBranchElementDescriptor->m_pElements[i].m_nHash == m_nHash && std::wcscmp(m_pBranchElementDescriptor->m_pElements[i].m_pTag, m_pTagName) == 0)
+			return true;
+		else if (m_pBranchElementDescriptor->m_pElements[i].m_nHash == Other.m_nHash && std::wcscmp(m_pBranchElementDescriptor->m_pElements[i].m_pTag, Other.m_pTagName) == 0)
+			return false;
+	}
+
+	return false;
+}
+
+bool Element::TagKey::operator==(const TagKey & Other) const
+{
+	DEBUG_METHOD;
+
+	return (m_nHash == Other.m_nHash && std::wcscmp(m_pTagName, Other.m_pTagName) == 0) ? m_nIndex == Other.m_nIndex : false;
+}
+
+unsigned int Element::TagKey::getHash() const
+{
+	DEBUG_METHOD;
+
+	return m_nHash;
+}
+
+const wchar_t* Element::TagKey::getTagName() const
+{
+	DEBUG_METHOD;
+
+	return m_pTagName;
+}
+
+unsigned int Element::TagKey::HashKey(const wchar_t *pTagName)
+{
+	DEBUG_METHOD;
+
+	unsigned int hash = 0;
+
+	size_t len = std::wcslen(pTagName);
+	for (size_t n = 0; n < len; n++)
+		hash += (pTagName[n] << n);
+	return hash;
+}

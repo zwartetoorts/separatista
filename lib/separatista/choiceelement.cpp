@@ -44,7 +44,7 @@ ChoiceElement::~ChoiceElement()
 	DEBUG_METHOD;
 
 	if (m_pChosenElement)
-		delete m_pChosenElement;
+		Element::deleteElement(this, m_pChosenElement);
 }
 
 void Separatista::ChoiceElement::fromDOMDocument(DOMElement * pDOMElement, const ErrorOptions errorOptions)
@@ -91,24 +91,27 @@ Element* ChoiceElement::createElementByTag(const wchar_t *pTagName, size_t nInde
 
 	Element *pElement;
 	const ElementDescriptor *pElementDescriptor;
+	unsigned int nHash;
 
 	pElement = getElementByTag(pTagName, nIndex);
 	if (pElement)
 		return pElement;
 
 	// Find ElementDesriptor for tag
+	nHash = Element::TagKey::HashKey(pTagName);
 	pElementDescriptor = getElementDescriptor();
 	for (size_t i = 0; i < pElementDescriptor->m_nElementCount; i++)
 	{
-		if (std::wcscmp(pElementDescriptor->m_pElements[i].m_pTag, pTagName) == 0)
+		if (pElementDescriptor->m_pElements[i].m_nHash == nHash && std::wcscmp(pElementDescriptor->m_pElements[i].m_pTag, pTagName) == 0)
 		{
 			// Found, create element and destroy old one on success.
 			pElement = pElementDescriptor->m_pElements[i].m_pfCreateElement(&pElementDescriptor->m_pElements[i]);
 			if (pElement)
 			{
 				if (m_pChosenElement)
-					delete m_pChosenElement;
+					Element::deleteElement(this, m_pChosenElement);
 				m_pChosenElement = pElement;
+				onElementCreated(pElement);
 				return pElement;
 			}
 		}

@@ -34,7 +34,7 @@ namespace Separatista
 	namespace pain_008_001
 	{
 
-		class SEPARATISTA_EXTERN CustomerDirectDebitInitiation : public BranchElement, public SeparatistaDocument
+		class SEPARATISTA_EXTERN CustomerDirectDebitInitiation : public BranchElement, public SeparatistaDocument, protected ElementListener
 		{
 		public:
 			/// Construct an empty element
@@ -53,6 +53,15 @@ namespace Separatista
 				@return Error code
 				*/
 			IOErrorCode saveAs(const wchar_t *pPath);
+
+			/**
+				ElementListener interface
+			*/
+			void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
+
+			void elementCreated(Element *pParent, Element *pChild);
+
+			void elementDeleted(Element *pParent, Element *pChild);
 
 			/**
 				SeparatistaDocument interface

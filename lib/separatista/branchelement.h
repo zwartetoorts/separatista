@@ -37,8 +37,6 @@ namespace Separatista
 	class SEPARATISTA_EXTERN BranchElement : public Element
 	{
 	public:
-		~BranchElement();
-
 		/**
 		Creates the element from it's descriptor
 		*/
@@ -54,38 +52,16 @@ namespace Separatista
 		/// @see Element::createElementByTag
 		Element* createElementByTag(const wchar_t *pTagName, size_t nIndex = 0);
 
-		/// Key container class with custom sort and compare functions
-		class TagKey
-		{
-		public:
-			TagKey(const wchar_t *pTagName, size_t  nIndex, const ElementDescriptor *pBranchElementDescriptor);
-			bool operator <(const TagKey &Other) const;
-			bool operator ==(const TagKey &Other) const;
-
-			static unsigned int HashKey(const wchar_t *pTagName);
-
-			const wchar_t* getTagName() const;
-			unsigned int getHash() const;
-
-		private:
-			size_t m_nIndex;
-			const wchar_t *m_pTagName;
-			unsigned int m_nHash;
-			const ElementDescriptor *m_pBranchElementDescriptor;
-		};
-
-		typedef std::map<const TagKey, Element*> TagKeyMap;
-
-		typedef struct
-		{
-			TagKeyMap::iterator m_begin;
-			TagKeyMap::iterator m_end;
-		} TagKeyRange;
-
+		/// @see Element::getAllByTagName
 		TagKeyRange getAllByTagName(const wchar_t *pTagName);
+
+		/// @see Element::destroyElement
+		void destroyElement(Element *pElement);
 
 	protected:
 		BranchElement(const ElementDescriptor *pElementDescriptor);
+
+		~BranchElement();
 
 	private:
 		TagKeyMap m_childElements;

@@ -73,6 +73,7 @@ CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescri
 {
 	DEBUG_METHOD;
 
+	addElementListener(this);
 }
 
 CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, xercesc::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
@@ -81,6 +82,7 @@ CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescri
 	DEBUG_METHOD;
 	
 	fromDOMDocument(pDOMDocument->getDocumentElement()->getFirstElementChild(), errorOptions);
+	addElementListener(this);
 }
 
 xercesc::DOMElement* CustomerDirectDebitInitiation::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
@@ -96,23 +98,37 @@ void CustomerDirectDebitInitiation::calcSum()
 	DEBUG_METHOD;
 
 	double sum = 0;
-	unsigned int count;
-	BranchElement::TagKeyRange range;
-	Element *pElement;
+	int count = 0;
+
+	Element *pNbOfTxs = getElementByTag(TEXT("NbOfTxs"));
+	Element *pCtrlSum = getElementByTag(TEXT("CtrlSum"));
+
+	// If both elements aren't present, abort
+	if (!pNbOfTxs && !pCtrlSum)
+		return;
 
 	// Calc both sum and count of transactions
-	range = getAllByTagName(TEXT("PmtInf"));
-	for (auto it = range.m_begin; it != range.m_end; it++)
+	Element::TagKeyRange rangePmtInf = getAllByTagName(TEXT("PmtInf"));
+	for (auto itPmtInf = rangePmtInf.m_begin; itPmtInf != rangePmtInf.m_end; itPmtInf++)
 	{
-		pElement = it->second;
-
+		Element::TagKeyRange rangeDrctDbtTxInf = itPmtInf->second->getAllByTagName(TEXT("DrctDbtTxInf"));
+		for (auto itDrctDbtTxInf = rangeDrctDbtTxInf.m_begin; itDrctDbtTxInf != rangeDrctDbtTxInf.m_end; itDrctDbtTxInf++)
+		{
+			++count;
+			Element *pAmount = itDrctDbtTxInf->second->getElementByTag(TEXT("InstdAmt"));
+			if (pAmount)
+				sum += pAmount->getDoubleValue();
+		}
 	}
-}
 
+	pNbOfTxs->setValue(count, Element::AcceptValue);
+	pCtrlSum->setValue(sum, Element::AcceptValue);
+}
 
 IOErrorCode CustomerDirectDebitInitiation::saveAs(const wchar_t *pPath)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
+
 	// Create a DOM Document
 	xercesc::DOMImplementation *pDomImpl = xercesc::DOMImplementationRegistry::getDOMImplementation(TEXT("LS"));
 	xercesc::DOMDocument *pDocument;
@@ -152,11 +168,32 @@ IOErrorCode CustomerDirectDebitInitiation::saveAs(const wchar_t *pPath)
 	}
 	catch (const xercesc::DOMException &e)
 	{
-		OutputDebugString(e.getMessage());
+		LOG(e.getMessage());
 		return IOErrorCode::Xerces;
 	}
 	
 	return ret;
+}
+
+void CustomerDirectDebitInitiation::elementValueChanged(Element * pElement, const wchar_t * pNewValue)
+{
+	DEBUG_METHOD;
+
+	calcSum();
+}
+
+void CustomerDirectDebitInitiation::elementCreated(Element * pParent, Element * pChild)
+{
+	DEBUG_METHOD;
+
+	pChild->addElementListener(this);
+}
+
+void CustomerDirectDebitInitiation::elementDeleted(Element * pParent, Element * pChild)
+{
+	DEBUG_METHOD;
+
+	calcSum();
 }
 
 

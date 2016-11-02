@@ -89,25 +89,25 @@ void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOption
 	{
 	case Element::AcceptValue:
 		m_value = pValue;
-		onValueChanged(pValue);
+		onElementValueChanged(pValue);
 		break;
 	case Element::ClearValue:
 		try
 		{
 			getElementDescriptor()->m_pValidator->validate(pValue, this);
 			m_value = pValue;
-			onValueChanged(pValue);
+			onElementValueChanged(pValue);
 		}
 		catch (const InvalidValueException &)
 		{
 			m_value.clear();
-			onValueChanged(pValue);
+			onElementValueChanged(pValue);
 		}
 		break;
 	case Element::ThrowExceptions:
 	default:
 		getElementDescriptor()->m_pValidator->validate(pValue, this);
 		m_value = pValue;
-		onValueChanged(pValue);
+		onElementValueChanged(pValue);
 	}
 }

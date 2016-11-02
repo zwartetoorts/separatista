@@ -23,6 +23,8 @@
 
 #include <ctime>
 #include <string>
+#include <map>
+#include <vector>
 #include <Windows.h>
 
 #include "separatista/separatista.h"
@@ -43,10 +45,11 @@ namespace Separatista
 	{
 	public:
 		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue) = 0;
-		virtual void elementDeleted(Element *pElement) = 0;
+		virtual void elementCreated(Element *pParent, Element *pChild) = 0;
+		virtual void elementDeleted(Element *pParent, Element *pChild) = 0;
 	};
 
-	/// Invalid value exception, thrown when an element method called doesn't belong to the element type
+	/// Element exception, thrown when an element method called doesn't belong to the element type
 	class SEPARATISTA_EXTERN ElementException : public Exception
 	{
 	public:
@@ -78,8 +81,6 @@ namespace Separatista
 	class SEPARATISTA_EXTERN Element
 	{
 	public:
-		~Element();
-
 		/**
 			Options how to handle errors when reading (fromDOMDocument) or writing (toDOMDocument) 
 			Separatista files.
@@ -115,13 +116,18 @@ namespace Separatista
 		virtual void fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions) = 0;
 
 		/**
-			Set the elementlistener. Will be notified of changes to the element. If a previous elementlistener was registered, it
-			will be returned from this function. It's the caller's choise to store this listener and notify it of changes.
+			Add an elementlistener. Will be notified of changes to the element.
 			@param pElementListener The elementlistener to register.
-			@return A pointer to a previous registered elementlistener or NULL if none was registered.
 			@see ElementListener
 			*/
-		ElementListener* setElementListener(ElementListener* pElementListener);
+		void addElementListener(ElementListener* pElementListener);
+
+		/**
+			Remove a registered elementlistener.
+			@param pElementListener The ElementListener to remove.
+			@see ElementListener
+		*/
+		void removeElementListener(ElementListener* pElementListener);
 
 		/**
 			Returns the tag name
@@ -131,7 +137,7 @@ namespace Separatista
 		/**
 			Returns the child element by tag name and index.
 			@return A pointer to the child element or NULL if not present or unsupported.
-			@throws ElementException if the element doesn't have any child elements.
+			@throws ElementException if the element doesn't support having child elements.
 		*/
 		virtual Element* getElementByTag(const wchar_t *pTagName, size_t nIndex = 0) const;
 
@@ -139,9 +145,15 @@ namespace Separatista
 			Returns or creates the child element by tag name. If the element already exists, this function return the existing element.
 			If not, it will create the element.
 			@return A pointer to the child element. Will not return NULL, unless the the tag isn't known or supported.
-			@throws ElementException if the element doesn't have any child elements.
+			@throws ElementException if the element doesn't support having child elements.
 		*/
 		virtual Element* createElementByTag(const wchar_t *pTagName, size_t nIndex = 0);
+
+		/**
+			Destroys the child element.
+			@throws ElementException of the element doesn't support having child elements.
+		*/
+		virtual void destroyElement(Element *pChildElement);
 
 		/**
 			Get the element's value as text.
@@ -193,24 +205,84 @@ namespace Separatista
 		*/
 		bool isEmpty() const;
 
+		/**
+			Key container class with custom sort and compare functions. TagKey are ordered by the pBranchElementDescriptor's tag order first
+			and second by their index.
+		*/
+		class TagKey
+		{
+		public:
+			/// Constructor
+			TagKey(const wchar_t *pTagName, size_t  nIndex, const ElementDescriptor *pBranchElementDescriptor);
+
+			bool operator <(const TagKey &Other) const;
+
+			bool operator ==(const TagKey &Other) const;
+
+			/**
+				Public available method for key hashing.
+			*/
+			static unsigned int HashKey(const wchar_t *pTagName);
+
+			const wchar_t* getTagName() const;
+			
+			unsigned int getHash() const;
+
+		private:
+			size_t m_nIndex;
+			const wchar_t *m_pTagName;
+			unsigned int m_nHash;
+			const ElementDescriptor *m_pBranchElementDescriptor;
+		};
+
+		typedef std::map<const TagKey, Element*> TagKeyMap;
+
+		typedef struct
+		{
+			TagKeyMap::const_iterator m_begin;
+			TagKeyMap::const_iterator m_end;
+		} TagKeyRange;
+
+		/**
+			Returns a range containing a begin iterator and an end iterator.
+			@throws ElementException If this element doesn't support having child elements.
+		*/
+		virtual TagKeyRange getAllByTagName(const wchar_t *pTagName);
+
 	protected:
 		/**
-		Construct a new Element
-		@param pElementDescriptor The element descriptor to load the element from.
+			Construct a new Element
+			@param pElementDescriptor The element descriptor to load the element from.
 		*/
 		Element(const ElementDescriptor* pElementDescriptor);
 
+		/**
+			Protected destructor just to protect the object from being destroyed by non Element derived classes.
+		*/
+		virtual ~Element() = 0;
+
+		/**
+			Method to make it possible for derived classes to delete Elements. 
+			Calls pParentElement->onElementDeleted(pChildElement)
+			@see Element::onElementDeleted
+		*/
+		static void deleteElement(Element* pParentElement, Element *pChildElement);
+
 		/// Calls a registered ElementListener's elementValueChanged
-		void onValueChanged(const wchar_t *pNewValue);
-		/// Calls a registerd ElementListener's elementDeleted
-		void onDeleted();
+		void onElementValueChanged(const wchar_t *pNewValue);
+
+		/// Calls a registered ElementListener's elementCreated
+		void onElementCreated(Element *pChildElement);
+
+		/// Calls a registered ElementListener's elementDeleted
+		void onElementDeleted(Element *pChildElement);
 
 	private:
 		/// ElementDescriptor
 		const ElementDescriptor *m_pElementDescriptor;
 		
-		/// ElementListener
-		ElementListener *m_pElementListener;
+		/// ElementListeners
+		std::vector<ElementListener*> m_ElementListeners;
 	};
 }
 
