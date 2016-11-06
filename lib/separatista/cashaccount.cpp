@@ -19,43 +19,38 @@
 ***************************************************************************/
 
 #include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
 
-#include "cashaccount.h"
-#include "documentiterator.h"
-#include "debug/debug.h"
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/validator.h"
+#include "separatista/cashaccount.h"
+#include "separatista/choiceelement.h"
 
 using namespace Separatista;
 
-AccountIdentification4Choice::AccountIdentification4Choice(const ElementOptions options) :
-ChoiceElement<1>(TEXT("Id"), { &m_IBAN }, options),
-m_IBAN(TEXT("IBAN"), Validators.IBANValidator, Element::Optional)
+static const ElementDescriptor Separatista::AccountIdentification4Choice[] =
 {
-	DEBUG_METHOD
-}
-
-CashAccount24::CashAccount24(const wchar_t *pTag, const ElementOptions options) :
-BranchElement(pTag, options),
-m_Id(Element::Mandatory)
-{
-	DEBUG_METHOD
-}
-
-xercesc::DOMElement* CashAccount24::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
 	{
-		m_Id.toDOMDocument(pDocument, pElement, errorOptions);
+		SEPARATISTA_TAG("IBAN"),		// TagName
+		ChoiceElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		&Validators.IBANValidator,		// Validator
+		0,								// Number of child elements
+		NULL							// Child elements
 	}
+};
 
-	return pElement;
-}
-
-void CashAccount24::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
+static const ElementDescriptor Separatista::CashAccount24[] = 
 {
-	DEBUG_METHOD
-	elementIterator.fromDOMDocument(m_Id, errorOptions);
-}
+	{
+		SEPARATISTA_TAG("Id"),			// TagName
+		ChoiceElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(AccountIdentification4Choice)
+	}
+};
+
+

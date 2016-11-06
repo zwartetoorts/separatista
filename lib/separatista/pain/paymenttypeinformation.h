@@ -18,12 +18,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "separatista/separatista.h"
-#include "separatista/xerces_types.h"
-#include "separatista/element.h"
-#include "separatista/leafelement.h"
-#include "separatista/branchelement.h"
-#include "separatista/choiceelement.h"
+#include "separatista/elementdescriptor.h"
 
 #ifndef SEPARATISTA_PAIN_PAYMENTTYPEINFORMATION_H
 #define SEPARATISTA_PAIN_PAYMENTTYPEINFORMATION_H
@@ -32,37 +27,9 @@ namespace Separatista
 {
 	namespace pain_008_001
 	{
-		class SEPARATISTA_EXTERN SvcLvl : public ChoiceElement<2>
-		{
-		public:
-			SvcLvl(const ElementOptions options);
-
-			LeafElement m_Cd;
-			LeafElement m_Prtry;
-		};
-
-		class SEPARATISTA_EXTERN LclInstrm : public ChoiceElement<2>
-		{
-		public:
-			LclInstrm(const ElementOptions options);
-
-			LeafElement m_Cd;
-			LeafElement m_Prtry;
-		};
-
-		class SEPARATISTA_EXTERN PmtTpInf : public BranchElement
-		{
-		public:
-			PmtTpInf(const ElementOptions options);
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-			SvcLvl m_SvcLvl;
-			LclInstrm m_LclInstrm;
-			LeafElement m_SeqTp;
-		};
+		extern const ElementDescriptor ServiceLevel8Choice[2];
+		extern const ElementDescriptor LocalInstrument2Choice[2];
+		extern const ElementDescriptor PaymentTypeInformation24[3];
 	}
 }
 

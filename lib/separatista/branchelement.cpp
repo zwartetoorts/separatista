@@ -101,6 +101,8 @@ Element* BranchElement::createElementByTag(const wchar_t *pTag, size_t nIndex)
 			}
 		}
 		// Bad, element wasn't found
+		LOG(TEXT("BAD: Unknown Tag: "));
+		LOG(pTag);
 		return NULL;
 	}
 	return pElement;
@@ -115,7 +117,6 @@ void BranchElement::destroyElement(Element *pElement)
 	{
 		if (it->second == pElement)
 		{
-			onElementDeleted(pElement);
 			m_childElements.erase(it);
 			Element::deleteElement(this, pElement);
 			return;
@@ -178,6 +179,48 @@ void BranchElement::fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions 
 		pElement = createElementByTag(pCurrentTag, index);
 		if (pElement)
 			pElement->fromDOMDocument(pChildElement, errorOptions);
+		else
+		{
+			LOG(TEXT("BAD: Unsupported tag:"));
+			LOG(pCurrentTag);
+		}
 		pPrevTag = pCurrentTag;
 	}
+}
+
+xercesc::DOMElement* BranchElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions)
+{
+	DEBUG_METHOD;
+
+	xercesc::DOMElement *pChildElement = NULL;
+
+	// Create my element
+	try
+	{
+		pChildElement = pDOMDocument->createElement(getTag());
+		if (pChildElement)
+		{
+			pDOMParent->appendChild(pChildElement);
+
+			// Iterate over all child elements
+			for (auto it = m_childElements.begin(); it != m_childElements.end(); it++)
+			{
+				it->second->toDOMDocument(pDOMDocument, pChildElement, errorOptions);
+			}
+		}
+	}
+	catch (const xercesc::DOMException &e)
+	{
+		if (pChildElement)
+			delete pChildElement;
+		switch (errorOptions)
+		{
+		case ThrowExceptions:
+			throw ElementException(SEPARATISTA_EXCEPTION(e.getMessage()), this);
+		default:
+			SEPARATISTA_REPORT(e);
+		}
+		return NULL;
+	}
+	return pChildElement;
 }

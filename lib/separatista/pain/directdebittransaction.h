@@ -18,13 +18,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "separatista/separatista.h"
-#include "separatista/xerces_types.h"
-#include "separatista/element.h"
-#include "separatista/leafelement.h"
-#include "separatista/branchelement.h"
-#include "separatista/pain/mandaterelatedinformation.h"
-
+#include "separatista/elementdescriptor.h"
 
 #ifndef SEPARATISTA_PAIN_DIRECTDEBITTRANSACTION_H
 #define SEPARATISTA_PAIN_DIRECTDEBITTRANSACTION_H
@@ -33,18 +27,7 @@ namespace Separatista
 {
 	namespace pain_008_001
 	{
-		class SEPARATISTA_EXTERN DrctDbtTx : public BranchElement
-		{
-		public:
-			DrctDbtTx(const ElementOptions options);
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-			MndtRltdInf m_MndtRltdInf;
-		};
-
+		extern const ElementDescriptor DirectDebitTransaction7[1];
 	}
 }
 

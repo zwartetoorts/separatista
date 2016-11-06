@@ -18,27 +18,14 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "separatista/separatista.h"
-#include "separatista/xerces_types.h"
-#include "separatista/element.h"
-#include "separatista/partyidentification.h"
+#include "separatista/elementdescriptor.h"
 
 #ifndef SEPARATISTA_REMITTANCEINFORMATION_H
 #define SEPARATISTA_REMITTANCEINFORMATION_H
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN RmtInf : public BranchElement
-	{
-	public:
-		RmtInf(const ElementOptions options);
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-		void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-		LeafElement m_Ustrd;
-	};
+	extern const ElementDescriptor RemittanceInformation7[1];
 }
 
 #endif // !defined SEPARATISTA_REMITTANCEINFORMATION_H

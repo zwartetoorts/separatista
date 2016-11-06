@@ -18,8 +18,6 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "separatista/separatista.h"
-#include "separatista/xerces_types.h"
 #include "separatista/partyidentification.h"
 
 #ifndef SEPARATISTA_PAIN_GROUPHEADER_H
@@ -29,7 +27,7 @@ namespace Separatista
 {
 	namespace pain_008_001
 	{
-		static const ElementDescriptor GroupHeader55[5];
+		extern const ElementDescriptor GroupHeader55[5];
 	}
 }
 

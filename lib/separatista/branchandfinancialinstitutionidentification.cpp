@@ -19,63 +19,37 @@
 ***************************************************************************/
 
 #include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
 
-#include "branchandfinancialinstitutionidentification.h"
-#include "documentiterator.h"
-#include "debug/debug.h"
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/leafelement.h"
+#include "separatista/branchelement.h"
+#include "separatista/branchandfinancialinstitutionidentification.h"
 
 using namespace Separatista;
 
-FinancialInstitutionIdentification8::FinancialInstitutionIdentification8(const ElementOptions options) :
-BranchElement(TEXT("FinInstnId"), options),
-m_BIC(TEXT("BIC"), Validators.BICValidator, Element::Optional)
+static const ElementDescriptor Separatista::FinancialInstitutionIdentification8[] = 
 {
-	DEBUG_METHOD
-}
-
-xercesc::DOMElement* FinancialInstitutionIdentification8::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
 	{
-		m_BIC.toDOMDocument(pDocument, pElement, errorOptions);
+		SEPARATISTA_TAG("BICFI"),		// TagName
+		LeafElement::createElement,		// Creator function
+		0,								// Min
+		1,								// Max
+		NULL,							// Validator
+		0,								// Number of child elements
+		NULL							// Child elements
 	}
+};
 
-	return pElement;
-}
-
-void FinancialInstitutionIdentification8::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
+static const ElementDescriptor Separatista::BranchAndFinancialInstitutionIdentification5[] = 
 {
-	DEBUG_METHOD
-	elementIterator.fromDOMDocument(m_BIC, errorOptions);
-}
-
-BranchAndFinancialInstitutionIdentification5::BranchAndFinancialInstitutionIdentification5(const wchar_t *pTag, const ElementOptions options) :
-BranchElement(pTag, options),
-m_FinancialInstitutionIdentification(Element::Mandatory)
-{
-	DEBUG_METHOD
-}
-
-xercesc::DOMElement* BranchAndFinancialInstitutionIdentification5::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	xercesc::DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
 	{
-		m_FinancialInstitutionIdentification.toDOMDocument(pDocument, pElement, errorOptions);
+		SEPARATISTA_TAG("FinInstnId"),	// TagName
+		BranchElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(FinancialInstitutionIdentification8)
 	}
+};
 
-	return pElement;
-}
-
-void BranchAndFinancialInstitutionIdentification5::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-
-	elementIterator.fromDOMDocument(m_FinancialInstitutionIdentification, errorOptions);
-}

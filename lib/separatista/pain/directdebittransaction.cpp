@@ -19,41 +19,24 @@
 ***************************************************************************/
 
 #include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
 
 #include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
 #include "separatista/pain/directdebittransaction.h"
-#include "separatista/debug/debug.h"
-#include "separatista/validator.h"
-#include "separatista/documentiterator.h"
+#include "separatista/pain/mandaterelatedinformation.h"
+#include "separatista/branchelement.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-DrctDbtTx::DrctDbtTx(const ElementOptions options) :
-BranchElement(TEXT("DrctDbtTx"), options),
-m_MndtRltdInf(Element::Optional)
+static const ElementDescriptor Separatista::pain_008_001::DirectDebitTransaction7[] =
 {
-	DEBUG_METHOD
-}
-
-DOMElement* DrctDbtTx::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
 	{
-		m_MndtRltdInf.toDOMDocument(pDocument, pElement, errorOptions);
+		SEPARATISTA_TAG("MndtRltdInf"),	// TagName
+		BranchElement::createElement,	// Creator function
+		0,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(MandateRelatedInformation8)
 	}
-
-	return pElement;
-}
-
-void DrctDbtTx::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-
-	elementIterator.fromDOMDocument(m_MndtRltdInf, errorOptions);
-}
-
+};

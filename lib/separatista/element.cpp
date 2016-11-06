@@ -73,19 +73,19 @@ const wchar_t* Element::getTag() const
 Element* Element::getElementByTag(const wchar_t *pTagName, size_t nIndex) const
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION("Child elements not supported by this element"), this);
+	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Child elements not supported by this element")), this);
 }
 
 Element* Element::createElementByTag(const wchar_t *pTagName, size_t nIndex)
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION("Child elements not supported by this element"), this);
+	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Child elements not supported by this element")), this);
 }
 
 void Element::destroyElement(Element *pElement)
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION("Child elements not supported by this element."), this);
+	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Child elements not supported by this element.")), this);
 }
 
 void Element::deleteElement(Element *pParentElement, Element *pChildElement)
@@ -98,19 +98,31 @@ void Element::deleteElement(Element *pParentElement, Element *pChildElement)
 Element::TagKeyRange Element::getAllByTagName(const wchar_t *pTagName)
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION("Child elements not supported by this element"), this);
+	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Child elements not supported by this element")), this);
 }
 
 const wchar_t* Element::getTextValue() const
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION("Values not supported by this element"), this);
+	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Values not supported by this element")), this);
 }
 
 void Element::setValue(const wchar_t *pValue, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION("Values not supported by this element"), this);
+	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Values not supported by this element")), this);
+}
+
+const wchar_t* Element::getAttributeValue(const wchar_t *pAtributeName) const
+{
+	DEBUG_METHOD;
+	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Attributes not supported by this element")), this);
+}
+
+void Element::setAttributeValue(const wchar_t *pAttributeName, const wchar_t *pValue)
+{
+	DEBUG_METHOD;
+	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Attributes not supported by this element")), this);
 }
 
 void Element::onElementValueChanged(const wchar_t *pNewValue)

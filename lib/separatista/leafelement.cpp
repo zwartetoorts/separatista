@@ -60,10 +60,28 @@ xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument,
 		return NULL;
 
 	// Create element and set value
-	//pElement = createElement(pDocument, pParent);
-	if (pElement)
-		pElement->setTextContent(m_value.data());
-
+	try
+	{
+		pElement = pDocument->createElement(getTag());
+		if (pElement)
+		{
+			pParent->appendChild(pElement);
+			pElement->setTextContent(m_value.data());
+		}
+	}
+	catch (const xercesc::DOMException &e)
+	{
+		if (pElement)
+			delete pElement;
+		switch (errorOptions)
+		{
+		case ThrowExceptions:
+			throw ElementException(SEPARATISTA_EXCEPTION(e.getMessage()), this);
+		default:
+			SEPARATISTA_REPORT(e);
+		}
+		return NULL;
+	}
 	return pElement;
 }
 

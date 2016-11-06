@@ -16,43 +16,27 @@
 *   along with this program; if not, write to the                         *
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+
 ***************************************************************************/
 
 #include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
 
 #include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
 #include "separatista/remittanceinformation.h"
-#include "separatista/debug/debug.h"
-#include "separatista/validator.h"
-#include "separatista/documentiterator.h"
+#include "separatista/leafelement.h"
 
 using namespace Separatista;
 
-RmtInf::RmtInf(const ElementOptions options) :
-BranchElement(TEXT("RmtInf"), options),
-m_Ustrd(TEXT("Ustrd"), Validators.Max140TextValidator, Element::Optional)
+static const ElementDescriptor Separatista::RemittanceInformation7[] =
 {
-	DEBUG_METHOD
-}
-
-DOMElement* RmtInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-		DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
 	{
-		m_Ustrd.toDOMDocument(pDocument, pElement, errorOptions);
+		SEPARATISTA_TAG("Ustrd"),		// TagName
+		LeafElement::createElement,		// Creator function
+		0,								// Min
+		0,								// Max
+		&Validators.Max140TextValidator, // Validator
+		0,								// Number of child elements
+		NULL							// Child elements
 	}
-
-	return pElement;
-}
-
-void RmtInf::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	
-	elementIterator.fromDOMDocument(m_Ustrd, errorOptions);
-}
-
+};

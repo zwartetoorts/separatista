@@ -21,6 +21,8 @@
 #ifndef SEPARATISTA_ELEMENTDESCRIPTOR_H
 #define SEPARATISTA_ELEMENTDESCRIPTOR_H
 
+#include <Windows.h>
+
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
 

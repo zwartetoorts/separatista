@@ -49,7 +49,7 @@ namespace Separatista
 		virtual void elementDeleted(Element *pParent, Element *pChild) = 0;
 	};
 
-	/// Element exception, thrown when an element method called doesn't belong to the element type
+	/// Element exception, thrown when an element method called doesn't belong to the element type.
 	class SEPARATISTA_EXTERN ElementException : public Exception
 	{
 	public:
@@ -110,7 +110,7 @@ namespace Separatista
 		virtual DOMElement* toDOMDocument(DOMDocument *pDOMDocument, DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions) = 0;
 
 		/**
-			Tries to load it's value from the document iterator.
+			Tries to load it's value from the document element.
 			@param DocumentIterator The document iterator to call to continue reading or get value from.
 		*/
 		virtual void fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions) = 0;
@@ -151,7 +151,7 @@ namespace Separatista
 
 		/**
 			Destroys the child element.
-			@throws ElementException of the element doesn't support having child elements.
+			@throws ElementException if the element doesn't support having child elements.
 		*/
 		virtual void destroyElement(Element *pChildElement);
 
@@ -167,6 +167,22 @@ namespace Separatista
 			@throws ElementException if the element doesn't support having values.
 		*/
 		virtual void setValue(const wchar_t *pValue, const ErrorOptions errorOptions = ThrowExceptions);
+
+		/**
+			Get the element's attribute value
+			@param pAttributeName The name of the attribute
+			@return The value as text or NULL
+			@throws ElementException if the element doesn't support having attributes.
+		*/
+		virtual const wchar_t* getAttributeValue(const wchar_t *pAttributeName) const;
+
+		/**
+			Set the element's attribute value
+			@param pAttributeName The name of the attribute
+			@param pValue The (new) value to set
+			@throws ElementException if the elements doesn't support having attributes.
+		*/
+		virtual void setAttributeValue(const wchar_t *pAttributeName, const wchar_t *pValue);
 
 		/**
 		Returns the value of the text node converted to date
@@ -259,7 +275,7 @@ namespace Separatista
 		/**
 			Protected destructor just to protect the object from being destroyed by non Element derived classes.
 		*/
-		virtual ~Element() = 0;
+		virtual ~Element() { };
 
 		/**
 			Method to make it possible for derived classes to delete Elements. 

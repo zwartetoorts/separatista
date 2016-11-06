@@ -33,7 +33,8 @@
 
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
-#include "separatista/pain/customerdirectdebitinitiation.h" 
+#include "separatista/pain/customerdirectdebitinitiation.h"
+#include "separatista/pain/paymentinstruction.h"
 #include "separatista/leafelement.h"
 #include "separatista/branchelement.h"
 #include "separatista/documentreader.h"
@@ -63,8 +64,7 @@ const ElementDescriptor CustomerDirectDebitInitiationV04::m_CustomerDirectDebitI
 		1,
 		0,
 		NULL,
-		0,
-		NULL
+		SEPARATISTA_ELEMENTS(PaymentInstruction10)
 	}
 };
 
@@ -89,7 +89,6 @@ xercesc::DOMElement* CustomerDirectDebitInitiation::toDOMDocument(xercesc::DOMDo
 {
 	DEBUG_METHOD;
 
-	calcSum();
 	return BranchElement::toDOMDocument(pDOMDocument, pParent, errorOptions);
 }
 
@@ -179,33 +178,53 @@ void CustomerDirectDebitInitiation::elementValueChanged(Element * pElement, cons
 {
 	DEBUG_METHOD;
 
-	calcSum();
+	// Call calcSum on the right child elements
+	if (std::wcscmp(TEXT("InstdAmt"), pElement->getTag()) == 0)
+	{
+		calcSum();
+	}
 }
 
 void CustomerDirectDebitInitiation::elementCreated(Element * pParent, Element * pChild)
 {
 	DEBUG_METHOD;
 
-	pChild->addElementListener(this);
+	// Set hooks on child elements
+
+	if (std::wcscmp(TEXT("PmtInf"), pChild->getTag()) == 0)
+	{
+		pChild->addElementListener(this);
+	}
+	else if (std::wcscmp(TEXT("DrctDbtTxInf"), pChild->getTag()) == 0)
+	{
+		pChild->addElementListener(this);
+	}
+	else if (std::wcscmp(TEXT("InstdAmd"), pChild->getTag()) == 0)
+	{
+		pChild->addElementListener(this);
+	}
 }
 
 void CustomerDirectDebitInitiation::elementDeleted(Element * pParent, Element * pChild)
 {
 	DEBUG_METHOD;
 
-	calcSum();
-}
+	if (std::wcscmp(TEXT("DrctDbtTxInf"), pChild->getTag()) == 0)
+	{
+		calcSum();
+	}
 
+}
 
 CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04()
 	:CustomerDirectDebitInitiation(m_CustomerDirectDebitInitiationV04)
 {
-
+	DEBUG_METHOD;
 }
 
 CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04(xercesc::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
 	:CustomerDirectDebitInitiation(m_CustomerDirectDebitInitiationV04, pDOMDocument, errorOptions)
 {
-
+	DEBUG_METHOD;
 }
 

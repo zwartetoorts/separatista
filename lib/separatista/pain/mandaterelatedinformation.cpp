@@ -19,44 +19,34 @@
 ***************************************************************************/
 
 #include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
 
 #include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/leafelement.h"
 #include "separatista/pain/mandaterelatedinformation.h"
-#include "separatista/debug/debug.h"
-#include "separatista/validator.h"
-#include "separatista/documentiterator.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-MndtRltdInf::MndtRltdInf(const ElementOptions options) :
-BranchElement(TEXT("MndtRltdInf"), options),
-m_MndtId(TEXT("MndtId"), Validators.Max35TextValidator, Element::Optional),
-m_DtOfSgntr(TEXT("DtOfSgntr"), Validators.ISODateValidator, Element::Optional)
+static const ElementDescriptor Separatista::pain_008_001::MandateRelatedInformation8[] =
 {
-	DEBUG_METHOD
-	m_DtOfSgntr.setValue(std::time(NULL));
-}
-
-DOMElement* MndtRltdInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
 	{
-		m_MndtId.toDOMDocument(pDocument, pElement, errorOptions);
-		m_DtOfSgntr.toDOMDocument(pDocument, pElement, errorOptions);
+		SEPARATISTA_TAG("MndtId"),		// TagName
+		LeafElement::createElement,		// Creator function
+		0,								// Min
+		1,								// Max
+		&Validators.Max35TextValidator, // Validator
+		0,								// Number of child elements
+		NULL							// Child elements
+	},
+	{
+		SEPARATISTA_TAG("DtOfSgntr"),	// TagName
+		LeafElement::createElement,		// Creator function
+		0,								// Min
+		1,								// Max
+		&Validators.ISODateValidator,	// Validator
+		0,								// Number of child elements
+		NULL							// Child elements
 	}
+};
 
-	return pElement;
-}
-
-void MndtRltdInf::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	
-	elementIterator.fromDOMDocument(m_MndtId, errorOptions);
-	elementIterator.fromDOMDocument(m_DtOfSgntr, errorOptions);
-}

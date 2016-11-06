@@ -18,10 +18,6 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
-
-#include "separatista/separatista.h"
-#include "separatista/xerces_types.h"
 #include "separatista/elementdescriptor.h"
 
 #ifndef SEPARATISTA_PARTYIDENTIFICATION_H
@@ -29,7 +25,11 @@
 
 namespace Separatista
 {
-	static const ElementDescriptor PartyIdentification43[1];
+	extern const ElementDescriptor PersonIdentificationSchemeName1Choice[1];
+	extern const ElementDescriptor GenericPersonIdentification1[2];
+	extern const ElementDescriptor PersonIdentification5[1];
+	extern const ElementDescriptor Party11Choice[1];
+	extern const ElementDescriptor PartyIdentification43[2];
 }
 
 #endif // SEPARATISTA_PARTYIDENTIFICATION_H

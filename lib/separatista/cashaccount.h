@@ -20,36 +20,15 @@
 
 #include <windows.h>
 
-#include "xerces_types.h"
-#include "branchelement.h"
-#include "leafelement.h"
-#include "choiceelement.h" 
+#include "separatista/elementdescriptor.h"
 
 #ifndef SEPARATISTA_CASHACCOUNT_H
 #define SEPARATISTA_CASHACCOUNT_H
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN AccountIdentification4Choice : public ChoiceElement<1>
-	{
-	public:
-		AccountIdentification4Choice(const ElementOptions options);
-
-		LeafElement m_IBAN;
-	};
-
-	class SEPARATISTA_EXTERN CashAccount24 : public BranchElement
-	{
-	public:
-		CashAccount24(const wchar_t *pTag, const ElementOptions options);
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-		void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-		
-		AccountIdentification4Choice m_Id;
-	};
-
+	extern const ElementDescriptor AccountIdentification4Choice[1];
+	extern const ElementDescriptor CashAccount24[1];
 }
 
 #endif // SEPARATISTA_CONTROL_CASHACCOUNT_H

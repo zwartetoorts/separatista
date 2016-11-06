@@ -18,7 +18,10 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <xercesc/dom/DOMDocument.hpp>
+
 #include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
 #include "separatista/elementdescriptor.h"
 #include "separatista/leafelement.h"
 #include "separatista/branchelement.h"
@@ -26,7 +29,7 @@
 
 using namespace Separatista;
 
-static const ElementDescriptor GroupHeader55[] = 
+static const ElementDescriptor Separatista::pain_008_001::GroupHeader55[] = 
 {
 	{
 		SEPARATISTA_TAG("MsgId"),

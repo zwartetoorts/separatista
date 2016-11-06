@@ -156,7 +156,7 @@ namespace Separatista
 	};
 
 	/// ExternalLocalInstrumentCodeValidator
-	class SEPARATISTA_EXTERN ExternalLocalInstrumentCodeValidator : public Max35TextValidator { };
+	class SEPARATISTA_EXTERN ExternalLocalInstrument1CodeValidator : public Max35TextValidator { };
 
 	/// SequenceType3CodeValidator
 	class SEPARATISTA_EXTERN SequenceType3CodeValidator : public Validator
@@ -193,7 +193,7 @@ namespace Separatista
 		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
-	typedef struct
+	typedef const struct
 	{
 		Max35TextValidator Max35TextValidator;
 		ISODateTimeValidator ISODateTimeValidator;
@@ -204,7 +204,7 @@ namespace Separatista
 		ISODateValidator ISODateValidator;
 		ChargeBearerType1CodeValidator ChargeBearerType1CodeValidator;
 		ExternalServiceLevel1CodeValidator ExternalServiceLevel1CodeValidator;
-		ExternalLocalInstrumentCodeValidator ExternalLocalInstrumentCodeValidator;
+		ExternalLocalInstrument1CodeValidator ExternalLocalInstrument1CodeValidator;
 		SequenceType3CodeValidator SequenceType3CodeValidator;
 		ActiveOrHistoricCurrencyAndAmountValidator ActiveOrHistoricCurrencyAndAmountValidator;
 		ExternalPersonIdentification1CodeValidator ExternalPersonIdentification1CodeValidator;
@@ -212,7 +212,8 @@ namespace Separatista
 		BICValidator BICValidator;
 	} _Validators;
 
-	static const _Validators Validators;
+	
+	extern _Validators Validators;
 }
 
 #endif // !defined SEPARATISTA_VALIDATOR_H

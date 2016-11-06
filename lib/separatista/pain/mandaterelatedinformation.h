@@ -18,30 +18,16 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "separatista/separatista.h"
-#include "separatista/xerces_types.h"
-#include "separatista/leafelement.h"
-#include "separatista/branchelement.h"
-
 #ifndef SEPARATISTA_PAIN_MANDATERELATEDINFORMATION_H
 #define SEPARATISTA_PAIN_MANDATERELATEDINFORMATION_H
+
+#include "separatista/elementdescriptor.h"
 
 namespace Separatista
 {
 	namespace pain_008_001
 	{
-		class SEPARATISTA_EXTERN MndtRltdInf : public BranchElement
-		{
-		public:
-			MndtRltdInf(const ElementOptions options);
-
-			DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-			void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-			LeafElement m_MndtId;
-			LeafElement m_DtOfSgntr;
-		};
+		extern const ElementDescriptor MandateRelatedInformation8[2];
 	}
 }
 #endif // !defined SEPARATISTA_PAIN_MANDATERELATEDINFORMATION_H

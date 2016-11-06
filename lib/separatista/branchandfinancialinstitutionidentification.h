@@ -20,39 +20,15 @@
 
 #include <windows.h>
 
-#include "xerces_types.h"
-#include "branchelement.h"
-#include "leafelement.h"
+#include "separatista/elementdescriptor.h"
 
 #ifndef SEPARATISTA_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
 #define SEPARATISTA_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H
 
 namespace Separatista
 {
-
-	class SEPARATISTA_EXTERN FinancialInstitutionIdentification8 : public BranchElement
-	{
-	public:
-		FinancialInstitutionIdentification8(const ElementOptions options);
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-		void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-		LeafElement m_BIC;
-	};
-
-	class SEPARATISTA_EXTERN BranchAndFinancialInstitutionIdentification5 : public BranchElement
-	{
-	public:
-		BranchAndFinancialInstitutionIdentification5(const wchar_t *pTag, const ElementOptions options);
-
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
-
-		void fromDOMDocument(DOMDocumentIterator &DocumentIterator, const ErrorOptions errorOptions = ThrowExceptions);
-
-		FinancialInstitutionIdentification8 m_FinancialInstitutionIdentification;
-	};
-
+	extern const ElementDescriptor FinancialInstitutionIdentification8[1];
+	extern const ElementDescriptor BranchAndFinancialInstitutionIdentification5[1];
 }
+
 #endif // SEPARATISTA_BRANCHANDFINANCIALINSTITUTIONIDENTIFICATION_H

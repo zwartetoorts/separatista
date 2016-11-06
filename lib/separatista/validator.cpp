@@ -29,7 +29,8 @@
 
 using namespace Separatista;
 
-const _Validators Validators =
+static _Validators Separatista::Validators;
+/*=
 {
 	Max35TextValidator(),
 	ISODateTimeValidator(),
@@ -40,13 +41,13 @@ const _Validators Validators =
 	ISODateValidator(),
 	ChargeBearerType1CodeValidator(),
 	ExternalServiceLevel1CodeValidator(),
-	ExternalLocalInstrumentCodeValidator(),
+	ExternalLocalInstrument1CodeValidator(),
 	SequenceType3CodeValidator(),
 	ActiveOrHistoricCurrencyAndAmountValidator(),
 	ExternalPersonIdentification1CodeValidator(),
 	IBANValidator(),
 	BICValidator()
-};
+};*/
 
 std::array<wchar_t, 10> Validator::m_numericDigits =
 {
@@ -67,7 +68,7 @@ void Validator::validateMaxText(const wchar_t *pValue, size_t max, Element *pEle
 	DEBUG_METHOD;
 	
 	if (std::wcslen(pValue) > max)
-		throw InvalidValueException(SEPARATISTA_EXCEPTION("Text too long"), pElement, pValue);
+		throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Text too long")), pElement, pValue);
 }
 
 void Validator::validateNumeric(const wchar_t *pValue, Element *pElement)
@@ -82,7 +83,7 @@ void Validator::validateNumeric(const wchar_t *pValue, Element *pElement)
 		st))
 	{
 		if (st != xercesc::XSValue::st_Init)
-			throw InvalidValueException(SEPARATISTA_EXCEPTION("Not a numeric value"), pElement, pValue);
+			throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Not a numeric value")), pElement, pValue);
 	}
 }
 
@@ -94,7 +95,7 @@ void Validator::isDigit(const wchar_t c, Element *pElement)
 		if (*it == c)
 			return;
 	}
-	throw InvalidValueException(SEPARATISTA_EXCEPTION("Not a valid digit"), pElement, NULL);
+	throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Not a valid digit")), pElement, NULL);
 }
 
 void Validator::validateFractionDigits(const wchar_t *pValue, size_t min, size_t max, Element *pElement)
@@ -111,7 +112,7 @@ void Validator::validateFractionDigits(const wchar_t *pValue, size_t min, size_t
 		if (c == TEXT('.'))
 		{
 			if (dot)
-				throw InvalidValueException(SEPARATISTA_EXCEPTION("Too many dot's in fraction"), pElement, pValue);
+				throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Too many dot's in fraction")), pElement, pValue);
 			else
 				dot = true;
 		}
@@ -119,11 +120,11 @@ void Validator::validateFractionDigits(const wchar_t *pValue, size_t min, size_t
 		{
 			isDigit(c, pElement);
 			if (++fc > max)
-				throw InvalidValueException(SEPARATISTA_EXCEPTION("Too many fraction digits"), pElement, pValue);
+				throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Too many fraction digits")), pElement, pValue);
 		}
 	}
 	if (fc < min)
-		throw InvalidValueException(SEPARATISTA_EXCEPTION("Too few fraction digits"), pElement, pValue);
+		throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Too few fraction digits")), pElement, pValue);
 }
 
 void Validator::validateTotalDigits(const wchar_t *pValue, size_t min, size_t max, Element *pElement)
@@ -144,9 +145,9 @@ void Validator::validateTotalDigits(const wchar_t *pValue, size_t min, size_t ma
 		}
 	}
 	if (td < min)
-		throw InvalidValueException(SEPARATISTA_EXCEPTION("Too few digits in value"), pElement, pValue);
+		throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Too few digits in value")), pElement, pValue);
 	else if (td > max)
-		throw InvalidValueException(SEPARATISTA_EXCEPTION("Too many digits in value"), pElement, pValue);
+		throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Too many digits in value")), pElement, pValue);
 
 }
 
@@ -159,7 +160,7 @@ void Validator::validateEnum(const wchar_t *pValue, std::initializer_list<const 
 		if (std::wcscmp(*it, pValue) == 0)
 			return;
 	}
-	throw InvalidValueException(SEPARATISTA_EXCEPTION("Not one of the pre-defined values"), pElement, pValue);
+	throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Not one of the pre-defined values")), pElement, pValue);
 }
 
 
@@ -182,7 +183,7 @@ void ISODateTimeValidator::validate(const wchar_t *pValue, Element *pElement) co
 		st))
 	{
 		if (st != xercesc::XSValue::st_Init)
-			throw InvalidValueException(SEPARATISTA_EXCEPTION("Wrong date format"), pElement, pValue);
+			throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Wrong date format")), pElement, pValue);
 	}
 }
 
@@ -228,7 +229,7 @@ void ISODateValidator::validate(const wchar_t *pValue, Element *pElement) const
 		st))
 	{
 		if (st != xercesc::XSValue::st_Init)
-			throw InvalidValueException(SEPARATISTA_EXCEPTION("Not a date value"), pElement, pValue);
+			throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Not a date value")), pElement, pValue);
 	}
 }
 
@@ -291,7 +292,7 @@ void IBANValidator::validate(const wchar_t *pValue, Element *pElement) const
 	
 	iban = pValue;
 	if (!iban.Check())
-		throw InvalidValueException(SEPARATISTA_EXCEPTION("Invalid IBAN"), pElement, pValue);
+		throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Invalid IBAN")), pElement, pValue);
 }
 
 void BICValidator::validate(const wchar_t *pValue, Element *pElement) const

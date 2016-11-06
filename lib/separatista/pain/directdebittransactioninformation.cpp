@@ -19,86 +19,94 @@
 ***************************************************************************/
 
 #include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
 
 #include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/leafelement.h"
+#include "separatista/branchelement.h"
+#include "separatista/attributedleafelement.h"
 #include "separatista/pain/directdebittransactioninformation.h"
-#include "separatista/debug/debug.h"
-#include "separatista/documentiterator.h"
+#include "separatista/pain/paymenttypeinformation.h"
+#include "separatista/pain/directdebittransaction.h"
+#include "separatista/branchandfinancialinstitutionidentification.h"
+#include "separatista/partyidentification.h"
+#include "separatista/cashaccount.h"
+#include "separatista/remittanceinformation.h"
 
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
-PmtId::PmtId(const ElementOptions options) :
-BranchElement(TEXT("PmtId"), options),
-m_EndToEndId(TEXT("EndToEndId"), Validators.Max35TextValidator, Element::Mandatory)
+static const ElementDescriptor Separatista::pain_008_001::PaymentIdentification1[] =
 {
-	DEBUG_METHOD
-}
-
-DOMElement* PmtId::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
-		m_EndToEndId.toDOMDocument(pDocument, pElement, errorOptions);
-
-	return pElement;
-}
-
-void PmtId::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	
-	elementIterator.fromDOMDocument(m_EndToEndId, errorOptions);
-}
-
-DrctDbtTxInf::DrctDbtTxInf() :
-BranchElement(TEXT("DrctDbtTxInf"), Element::Mandatory),
-m_PmtId(Element::Mandatory),
-m_InstdAmt(TEXT("InstdAmt"), Validators.ActiveOrHistoricCurrencyAndAmountValidator, Element::Mandatory),
-m_DrctDbtTx(Element::Optional),
-m_DbtrAgt(TEXT("DbtrAgt"), Element::Mandatory),
-m_Dbtr(TEXT("Dbtr"), Element::Mandatory),
-m_DbtrAcct(TEXT("DbtrAcct"), Element::Mandatory),
-m_RmtInf(Element::Optional)
-{
-	DEBUG_METHOD
-}
-
-DOMElement* DrctDbtTxInf::toDOMDocument(Separatista::DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD
-	DOMElement *pInstdAmt;
-	DOMElement *pElement = createElement(pDocument, pParent);
-
-	if (pElement)
 	{
-		m_PmtId.toDOMDocument(pDocument, pElement, errorOptions);
-		pInstdAmt = m_InstdAmt.toDOMDocument(pDocument, pElement, errorOptions);
-		if (pInstdAmt)
-			pInstdAmt->setAttribute(TEXT("Ccy"), TEXT("EUR"));
-		m_DrctDbtTx.toDOMDocument(pDocument, pElement, errorOptions);
-		m_DbtrAgt.toDOMDocument(pDocument, pElement, errorOptions);
-		m_Dbtr.toDOMDocument(pDocument, pElement, errorOptions);
-		m_DbtrAcct.toDOMDocument(pDocument, pElement, errorOptions);
-		m_RmtInf.toDOMDocument(pDocument, pElement, errorOptions);
+		SEPARATISTA_TAG("EndToEndId"),	// TagName
+		LeafElement::createElement,		// Creator function
+		1,								// Min
+		1,								// Max
+		&Validators.Max35TextValidator, // Validator
+		0,								// Number of child elements
+		NULL							// Child elements
 	}
+};
 
-	return pElement;
-}
-
-void DrctDbtTxInf::fromDOMDocument(DOMDocumentIterator &elementIterator, const ErrorOptions errorOptions)
+static const ElementDescriptor Separatista::pain_008_001::DirectDebitTransactionInformation13[] = 
 {
-	DEBUG_METHOD
-	
-	elementIterator.fromDOMDocument(m_PmtId, errorOptions);
-	elementIterator.fromDOMDocument(m_InstdAmt, errorOptions);
-	elementIterator.fromDOMDocument(m_DrctDbtTx, errorOptions);
-	elementIterator.fromDOMDocument(m_DbtrAgt, errorOptions);
-	elementIterator.fromDOMDocument(m_Dbtr, errorOptions);
-	elementIterator.fromDOMDocument(m_DbtrAcct, errorOptions);
-	elementIterator.fromDOMDocument(m_RmtInf, errorOptions);
-}
+	{
+		SEPARATISTA_TAG("PmtId"),		// TagName
+		BranchElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(PaymentIdentification1)
+	},
+	{
+		SEPARATISTA_TAG("InstdAmd"),	// TagName
+		AttributedLeafElement::createElement,// Creator function
+		1,								// Min
+		1,								// Max
+		&Validators.DecimalNumberValidator, // Validator
+		0,								// Number of child elements
+		NULL							// Child elements
+	},
+	{
+		SEPARATISTA_TAG("DrctDbtTx"),	// TagName
+		BranchElement::createElement,	// Creator function
+		0,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(DirectDebitTransaction7)
+	},
+	{
+		SEPARATISTA_TAG("DbtrAgt"),		// TagName
+		BranchElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(BranchAndFinancialInstitutionIdentification5)
+	},
+	{
+		SEPARATISTA_TAG("Dbtr"),		// TagName
+		BranchElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(PartyIdentification43)
+	},
+	{
+		SEPARATISTA_TAG("DbtrAcct"),	// TagName
+		BranchElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(CashAccount24)
+	},
+	{
+		SEPARATISTA_TAG("RmtInf"),		// TagName
+		BranchElement::createElement,	// Creator function
+		0,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(RemittanceInformation7)
+	}
+};
+

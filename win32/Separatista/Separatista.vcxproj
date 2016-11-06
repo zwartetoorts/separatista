@@ -100,11 +100,11 @@
     <ResourceCompile Include="Separatista.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\lib\separatista\attributedleafelement.h" />
     <ClInclude Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.h" />
     <ClInclude Include="..\..\lib\separatista\branchelement.h" />
     <ClInclude Include="..\..\lib\separatista\cashaccount.h" />
     <ClInclude Include="..\..\lib\separatista\choiceelement.h" />
-    <ClInclude Include="..\..\lib\separatista\documentiterator.h" />
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />
     <ClInclude Include="..\..\lib\separatista\element.h" />
     <ClInclude Include="..\..\lib\separatista\elementdescriptor.h" />
@@ -114,8 +114,9 @@
     <ClInclude Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.h" />
     <ClInclude Include="..\..\lib\separatista\pain\directdebittransaction.h" />
     <ClInclude Include="..\..\lib\separatista\pain\directdebittransactioninformation.h" />
+    <ClInclude Include="..\..\lib\separatista\pain\groupheader.h" />
     <ClInclude Include="..\..\lib\separatista\pain\mandaterelatedinformation.h" />
-    <ClInclude Include="..\..\lib\separatista\pain\paymentinformation.h" />
+    <ClInclude Include="..\..\lib\separatista\pain\paymentinstruction.h" />
     <ClInclude Include="..\..\lib\separatista\pain\paymenttypeinformation.h" />
     <ClInclude Include="..\..\lib\separatista\partyidentification.h" />
     <ClInclude Include="..\..\lib\separatista\remittanceinformation.h" />
@@ -124,12 +125,12 @@
     <ClInclude Include="..\..\lib\separatista\xerces_types.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\lib\separatista\attributedleafelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\branchelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\cashaccount.cpp" />
     <ClCompile Include="..\..\lib\separatista\choiceelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
-    <ClCompile Include="..\..\lib\separatista\documentiterator.cpp" />
     <ClCompile Include="..\..\lib\separatista\documentreader.cpp" />
     <ClCompile Include="..\..\lib\separatista\element.cpp" />
     <ClCompile Include="..\..\lib\separatista\elementlist.cpp" />
@@ -140,7 +141,7 @@
     <ClCompile Include="..\..\lib\separatista\pain\directdebittransactioninformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\groupheader.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\mandaterelatedinformation.cpp" />
-    <ClCompile Include="..\..\lib\separatista\pain\paymentinformation.cpp" />
+    <ClCompile Include="..\..\lib\separatista\pain\paymentinstruction.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\paymenttypeinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\partyidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\remittanceinformation.cpp" />

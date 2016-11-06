@@ -58,9 +58,6 @@ namespace Separatista
 		*/
 		void setValue(const wchar_t *pValue, const ErrorOptions errorOptions = ThrowExceptions);
 
-		
-
-		
 	protected:
 		/// Protected constructor
 		LeafElement(const ElementDescriptor* pElementDescriptor);

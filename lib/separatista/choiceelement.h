@@ -50,17 +50,12 @@ namespace Separatista
 	public:
 		~ChoiceElement();
 		
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions)
-		{
-			DEBUG_METHOD
-
-			return NULL;
-		};
-
 		/**
 			Iterates over the possible choices and calls fromDOMDocument on the chosen element.
 		*/
 		void fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions);
+
+		DOMElement* toDOMDocument(DOMDocument *pDOMDocument, DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/**
 		Creates the element from it's descriptor
@@ -75,6 +70,12 @@ namespace Separatista
 			@see Element::createElementByTag
 		*/
 		Element* createElementByTag(const wchar_t *pTagName, size_t nIndex = 0);
+
+		/**
+			Destroys the one and only child
+			@see Element::destroyElement
+		*/
+		void destroyElement(Element *pChildElement);
 
 	protected:
 		/**

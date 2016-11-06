@@ -66,6 +66,43 @@ void Separatista::ChoiceElement::fromDOMDocument(DOMElement * pDOMElement, const
 	{
 		pElement->fromDOMDocument(pDOMChildElement, errorOptions);
 	}
+	else
+	{
+		LOG(TEXT("BAD: Unsupported tag:"));
+		LOG(pDOMChildTagName);
+	}
+}
+
+xercesc::DOMElement* ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions)
+{
+	DEBUG_METHOD;
+
+	DOMElement *pChildElement = NULL;
+
+	// Create tag and call toDOMDocument
+	try
+	{
+		pChildElement = pDOMDocument->createElement(getTag());
+		if (pChildElement)
+		{
+			pDOMParent->appendChild(pChildElement);
+			m_pChosenElement->toDOMDocument(pDOMDocument, pChildElement, errorOptions);
+		}
+	}
+	catch (const xercesc::DOMException &e)
+	{
+		if (pChildElement)
+			delete pChildElement;
+		switch(errorOptions)
+		{
+			case ThrowExceptions:
+				throw ElementException(SEPARATISTA_EXCEPTION(e.getMessage()), this);
+			default:
+				SEPARATISTA_REPORT(e);
+		}
+		return NULL;
+	}
+	return pChildElement;
 }
 
 Element* ChoiceElement::createElement(const ElementDescriptor *pElementDescriptor)
@@ -117,5 +154,23 @@ Element* ChoiceElement::createElementByTag(const wchar_t *pTagName, size_t nInde
 		}
 	}
 	// Not found, wrong tag or tag not supported 
+	LOG(TEXT("BAD: Unknown Tag: "));
+	LOG(pTagName);
 	return NULL;
+}
+
+void ChoiceElement::destroyElement(Element *pElement)
+{
+	DEBUG_METHOD;
+
+	if (m_pChosenElement == pElement)
+	{
+		m_pChosenElement = NULL;
+		Element::deleteElement(this, pElement);
+	}
+	else
+	{
+		LOG(TEXT("BAD: Destroying element that's not ours:"));
+		LOG(pElement->getTag());
+	}
 }
