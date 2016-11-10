@@ -107,13 +107,13 @@ namespace Separatista
 			@return Pointer to the new created DOMElement, or NULL
 			@see createElement
 		*/
-		virtual DOMElement* toDOMDocument(DOMDocument *pDOMDocument, DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions) = 0;
+		virtual Separatista::DOMElement* toDOMDocument(Separatista::DOMDocument *pDOMDocument, Separatista::DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions) = 0;
 
 		/**
 			Tries to load it's value from the document element.
 			@param DocumentIterator The document iterator to call to continue reading or get value from.
 		*/
-		virtual void fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions) = 0;
+		virtual void fromDOMDocument(Separatista::DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions) = 0;
 
 		/**
 			Add an elementlistener. Will be notified of changes to the element.

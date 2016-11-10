@@ -24,7 +24,7 @@
 #include "dispatch.cpp"
 
 CIBAN::CIBAN(IUnknown *pParent)
-:SepaControlDispatch<IIBAN>(pParent)
+:SepaControlDispatch<IIBAN>()
 {
 	m_pIBAN = NULL;
 	m_bOwnIBAN = false;

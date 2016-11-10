@@ -33,7 +33,7 @@ public:
 		It will call AddRef on the parent object and call Release on destruction. This
 		will make sure the parent object isn't destroyed before this child.
 	*/
-	SepaControlUnknown(IUnknown *pParent = NULL);
+	SepaControlUnknown();
 
 	// IUnknown methods
 	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void** pvvObject);
@@ -51,7 +51,6 @@ protected:
 	virtual ~SepaControlUnknown();
 
 	ULONG m_uRefCount;
-	IUnknown *m_pParent;
 };
 
 #endif // !definded SEPARATISTA_UNKNOWN_H

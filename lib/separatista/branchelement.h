@@ -42,9 +42,9 @@ namespace Separatista
 		*/
 		static Element* createElement(const ElementDescriptor* pElementDescriptor);
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
+		DOMElement* toDOMDocument(Separatista::DOMDocument *pDocument, Separatista::DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-		void fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions);
+		void fromDOMDocument(Separatista::DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/// @see Element::getElementByTag
 		Element* getElementByTag(const wchar_t *pTagName, size_t nIndex = 0) const;

@@ -215,198 +215,62 @@ library Separatista
 	};
 
 	/**
-	DirectDebitTransactionInformation
+		Element
 	*/
 	[
-		uuid(C660CA93-13FB-40B5-B66A-818616D1BD55),
-		helpstring("IDirectDebitTransactionInformation interface"),
+		uuid(006D9323-D6C2-4D53-9072-9AE379CEF7DE),
+		helpstring("IElement interface"),
 		oleautomation,
 		dual,
 		odl
 	]
-	interface IDirectDebitTransactionInformation : IDispatch
+	interface IElement : IDispatch
 	{
-		[propget, helpstring("Unique identification assigned by the initiating party to unumbiguously identify the transaction.This identification is passed on, unchanged, throughout the entire end-to-end chain.")]
-		HRESULT __stdcall PaymentIdentificationEndToEndId(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Unique identification assigned by the initiating party to unumbiguously identify the transaction.This identification is passed on, unchanged, throughout the entire end-to-end chain.")]
-		HRESULT __stdcall PaymentIdentificationEndToEndId(
-			[in] BSTR Value);
-		[propget, helpstring("Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.")]
-		HRESULT __stdcall InstructedAmount(
+		[ propget, helpstring("The element XML tag") ]
+		HRESULT __stdcall TagName(
+			[out, retval] BSTR *pTagName);
+		[ propget, helpstring("The element value") ]
+		HRESULT __stdcall Value(
 			[out, retval] VARIANT *pValue);
-		[propput, helpstring("Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.")]
-		HRESULT __stdcall InstructedAmount(
-			[in] VARIANT Value);
-		[propget, helpstring("Unique identification, as assigned by the creditor, to unambiguously identify the mandate.")]
-		HRESULT __stdcall MandateIdentification(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Unique identification, as assigned by the creditor, to unambiguously identify the mandate.")]
-		HRESULT __stdcall MandateIdentification(
+		[ propput, helpstring("The element value") ]
+		HRESULT __stdcall Value(
 			[in] BSTR Value);
-		[propget, helpstring("Date on which the direct debit mandate has been signed by the debtor.")]
-		HRESULT __stdcall DateOfSignature(
-			[out, retval] DATE *pValue);
-		[propput, helpstring("Date on which the direct debit mandate has been signed by the debtor.")]
-		HRESULT __stdcall DateOfSignature(
-			[in] DATE Value);
-		[propget, helpstring("Financial institution servicing an account for the debtor.")]
-		HRESULT __stdcall DebtorAgentFinancialInstitutionIdentificationBIC(
+		[ propget, helpstring("The element value as date") ]
+		HRESULT __stdcall DateValue(
+			[out, retval] DATE *pDateValue);
+		[ propput, helpstring("The element value as date") ]
+		HRESULT __stdcall DateValue(
+			[in] DATE DateValue);
+		[ helpstring("Get the element by tag name at index") ]
+		HRESULT __stdcall GetElementByTagName(
+			[in] BSTR TagName,
+			[in, defaultvalue(0)] UINT index,
+			[out, retval] IElement **ppElement);
+		[ helpstring("Create the element by tag name at index") ]
+		HRESULT __stdcall CreateElementByTagName(
+			[in] BSTR TagName,
+			[in, defaultvalue(0)] UINT index,
+			[out, retval] IElement **ppElement);
+		[ helpstring("Destroy the child element") ]
+		HRESULT __stdcall DestroyElement(
+			[in] IElement *ChildElement);
+		[ helpstring("Returns the value of an attribute by name") ]
+		HRESULT __stdcall GetAttributeValue(
+			[in] BSTR AttributeName,
 			[out, retval] BSTR *pValue);
-		[propput, helpstring("Financial institution servicing an account for the debtor.")]
-		HRESULT __stdcall DebtorAgentFinancialInstitutionIdentificationBIC(
-			[in] BSTR Value);
-		[propget, helpstring("Party that owes an amount of money to the (ultimate) creditor.")]
-		HRESULT __stdcall DebtorName(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Party that owes an amount of money to the (ultimate) creditor.")]
-		HRESULT __stdcall DebtorName(
-			[in] BSTR Value);
-		[propget, helpstring("Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction.")]
-		HRESULT __stdcall DebtorAccountIBAN(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction.")]
-		HRESULT __stdcall DebtorAccountIBAN(
-			[in] BSTR Value);
-		[propget, helpstring("Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form.")]
-		HRESULT __stdcall RemittanceInformationUnstructured(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form.")]
-		HRESULT __stdcall RemittanceInformationUnstructured(
+		[ helpstring("Set the value of an attribute by name") ]
+		HRESULT __stdcall SetAttributeValue(
+			[in] BSTR AttributeName,
 			[in] BSTR Value);
 	};
 
 	[
-		uuid(34F53824-3D5A-49A2-8F94-A721ED35E01D),
-		helpstring("DirectDebitTransactionInformation object")
+		uuid(0F74285B-C429-4A58-95AC-B1A05B856530),
+		helpstring("Element object")
 	]
-	coclass DirectDebitTransactionInformation
+	coclass Element
 	{
-		[default] interface IDirectDebitTransactionInformation;
-		interface ISupportErrorInfo;
-		interface IDispatch;
-	};
-
-	/**
-		PaymentInformation
-	*/
-
-	typedef enum
-	{
-		LC_UNKNOWN = 1,
-		LC_CORE,
-		LC_COR1,
-		LC_B2B
-	} ExternalLocalInstrumentCode;
-
-	typedef enum
-	{
-		ST_UNKNOWN = 1,
-		ST_FRST,
-		ST_RCUR,
-		ST_FNAL,
-		ST_OOFF
-	} SequenceTypeCode;
-
-	[
-		uuid(9D52C4C2-B5FF-43E0-9FAC-600AF2986686),
-		helpstring("IPaymentInformation interface"),
-		oleautomation,
-		dual,
-		odl
-	]
-	interface IPaymentInformation : IDispatch
-	{
-		[propget, helpstring("Unique identification, as assigned by a sending party, to unambiguously identify the payment information group within the message.")]
-		HRESULT __stdcall PaymentInformationIdentification(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Unique identification, as assigned by a sending party, to unambiguously identify the payment information group within the message.")]
-		HRESULT __stdcall PaymentInformationIdentification(
-			[in] BSTR Value);
-		[propget, helpstring("Specifies the means of payment that will be used to move the amount of money.")]
-		HRESULT __stdcall PaymentMethod(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Specifies the means of payment that will be used to move the amount of money.")]
-		HRESULT __stdcall PaymentMethod(
-			[in] BSTR Value);
-		[propget, helpstring("Number of individual transactions contained in the payment information group.")]
-		HRESULT __stdcall NumberOfTransactions(
-			[out, retval] INT *pValue);
-		[propget, helpstring("Total of all individual amounts included in the group, irrespective of currencies.")]
-		HRESULT __stdcall ControlSum(
-			[out, retval] VARIANT *pValue);
-		[propget, helpstring("Specifies a pre-agreed service or level of service between the parties, as published in an external service level code list.")]
-		HRESULT __stdcall PaymentTypeInformationServiceLevelCode(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Specifies a pre-agreed service or level of service between the parties, as published in an external service level code list.")]
-		HRESULT __stdcall PaymentTypeInformationServiceLevelCode(
-			[in] BSTR Value);
-		[propget, helpstring("Specifies the local instrument, as published in an external local instrument code list.")]
-		HRESULT __stdcall PaymentTypeInformationLocalInstrumentCode(
-			[out, retval] ExternalLocalInstrumentCode *pValue);
-		[propput, helpstring("Specifies the local instrument, as published in an external local instrument code list.")]
-		HRESULT __stdcall PaymentTypeInformationLocalInstrumentCode(
-			[in] ExternalLocalInstrumentCode Value);
-		[propget, helpstring("Identifies the direct debit sequence, such as first, recurrent, final or one-off.")]
-		HRESULT __stdcall PaymentTypeInformationSequenceType(
-			[out, retval] SequenceTypeCode *pValue);
-		[propput, helpstring("Identifies the direct debit sequence, such as first, recurrent, final or one-off.")]
-		HRESULT __stdcall PaymentTypeInformationSequenceType(
-			[in] SequenceTypeCode Value);
-		[propget, helpstring("Date and time at which the creditor requests that the amount of money is to be collected from the debtor.")]
-		HRESULT __stdcall RequestedCollectionDate(
-			[out, retval] DATE *pValue);
-		[propput, helpstring("Date and time at which the creditor requests that the amount of money is to be collected from the debtor.")]
-		HRESULT __stdcall RequestedCollectionDate(
-			[in] DATE Value);
-		[propget, helpstring(" Name by which a party is known and which is usually used to identify that party.")]
-		HRESULT __stdcall CreditorName(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring(" Name by which a party is known and which is usually used to identify that party.")]
-		HRESULT __stdcall CreditorName(
-			[in] BSTR Value);
-		[propget, helpstring("International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer.Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number(IBAN)\" version 1997-10-01, or later revisions.")]
-		HRESULT __stdcall CreditorAccountIdentificationIBAN(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer.Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number(IBAN)\" version 1997-10-01, or later revisions.")]
-		HRESULT __stdcall CreditorAccountIdentificationIBAN(
-			[in] BSTR Value);
-		[propget, helpstring("Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 \"Banking - Banking telecommunication messages - Business identifier code (BIC)\".")]
-		HRESULT __stdcall CreditorAgentFinancialInstitutionIdentificationBIC(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 \"Banking - Banking telecommunication messages - Business identifier code (BIC)\".")]
-		HRESULT __stdcall CreditorAgentFinancialInstitutionIdentificationBIC(
-			[in] BSTR Value);
-		[propget, helpstring("Specifies which party/parties will bear the charges associated with the processing of the payment transaction.")]
-		HRESULT __stdcall ChargeBearer(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Specifies which party/parties will bear the charges associated with the processing of the payment transaction.")]
-		HRESULT __stdcall ChargeBearer(
-			[in] BSTR Value);
-		[propget, helpstring("Identification assigned by an institution.")]
-		HRESULT __stdcall CreditorSchemeIdentification(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Identification assigned by an institution.")]
-		HRESULT __stdcall CreditorSchemeIdentification(
-			[in] BSTR Value);
-		[propget, helpstring("Name of the identification scheme, in a free text form.")]
-		HRESULT __stdcall CreditorSchemeIdentificationSchemeName(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Name of the identification scheme, in a free text form.")]
-		HRESULT __stdcall CreditorSchemeIdentificationSchemeName(
-			[in] BSTR Value);
-		[helpstring("Append a new DirectDebitTransactionInformation")]
-		HRESULT __stdcall AddDirectDebitTransactionInformation(
-			[in] IDirectDebitTransactionInformation *pDirectDebitTransactionInformation);
-	};
-
-	[
-		uuid(CBDAC56C-5A90-443F-9511-D3F3B5AC3CF7),
-		helpstring("PaymentInformation object")
-	]
-	coclass PaymentInformation
-	{
-		[default] interface IPaymentInformation;
+		[default] interface IElement;
 		interface ISupportErrorInfo;
 		interface IDispatch;
 	};
@@ -433,40 +297,16 @@ library Separatista
 		dual,
 		odl
 	]
-	interface ICustomerDirectDebitInitiation : IDispatch
+	interface ICustomerDirectDebitInitiation : IElement
 	{
-		[propget, helpstring("Point to point reference, assigned by the instructing party and sent to the next party in the chain, to unambiguously identify the message")]
-		HRESULT __stdcall MessageIdentification(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Point to point reference, assigned by the instructing party and sent to the next party in the chain, to unambiguously identify the message")]
-		HRESULT __stdcall MessageIdentification(
-			[in] BSTR value);
-		[propget, helpstring("Date and time at which a (group of) payment instruction(s) was created by the instructing party.")]
-		HRESULT __stdcall CreationDateTime(
-			[out, retval] DATE *pDate);
-		[propput, helpstring("Date and time at which a (group of) payment instruction(s) was created by the instructing party.")]
-		HRESULT __stdcall CreationDateTime(
-			[in] DATE Date);
-		[propget, helpstring("Number of individual transactions contained in the message.")]
-		HRESULT __stdcall NumberOfTransactions(
-			[out, retval] INT *pValue);
-		[propget, helpstring("Total of all individual amounts included in the message, irrespective of currencies.")]
-		HRESULT __stdcall ControlSum(
-			[out, retval] VARIANT *pValue);
-		[propget, helpstring("Name by which a party is known and which is usually used to identify that party.")]
-		HRESULT __stdcall InitiatingPartyName(
-			[out, retval] BSTR *pValue);
-		[propput, helpstring("Name by which a party is known and which is usually used to identify that party.")]
-		HRESULT __stdcall InitiatingPartyName(
-			[in] BSTR Value);
-		[helpstring("Append a new PaymentInformation")]
-		HRESULT __stdcall AddPaymentInformation(
-			[in] IPaymentInformation *pPaymentInformation);
-		[helpstring("Shows the user a file open dialog and saves the document to the specified location.")]
+		[ propget, helpstring("The document namespace.") ]
+		HRESULT __stdcall Namespace(
+			[out, retval] BSTR *pNamespace);
+		[ helpstring("Shows the user a save dialog and saves the document to the specified location.") ]
 		HRESULT __stdcall Save(
 			[in, defaultvalue(NULL)] long hWnd,
 			[out, retval] IOErrorCode *errorCode);
-		[helpstring("Saves the document to the specified location")]
+		[helpstring("Saves the document to the specified location.")]
 		HRESULT __stdcall SaveAs(
 			[in] BSTR Path,
 			[out, retval] IOErrorCode *errorCode);
@@ -474,21 +314,11 @@ library Separatista
 		HRESULT __stdcall Open(
 			[in, defaultvalue(NULL)] long hWnd,
 			[out, retval] IOErrorCode *errorCode);
-		[helpstring("Opens the document from the specified location")]
+		[helpstring("Opens the document from the specified location.")]
 		HRESULT __stdcall OpenFrom(
 			[in] BSTR Path,
 			[out, retval] IOErrorCode *errorCode);
 
-		[propget, id(DISPID_VALUE),
-			helpstring("Get the PaymentInformation by id")]
-		HRESULT __stdcall PaymentInformationById(
-			[in] BSTR PaymentInformationIdentification,
-			[out, retval] IPaymentInformation **ppPaymentInformation);
-
-		[propget, id(DISPID_NEWENUM),
-			restricted, helpstring("Get the PaymentInformation enumerator")]
-		HRESULT __stdcall _NewEnum(
-			[out, retval] IUnknown **ppUnk);
 	};
 
 	[
@@ -498,6 +328,7 @@ library Separatista
 	coclass CustomerDirectDebitInitiation
 	{
 		[default] interface ICustomerDirectDebitInitiation;
+		interface IElement;
 		interface ISupportErrorInfo;
 		interface IDispatch;
 	};

@@ -158,7 +158,7 @@ BranchElement::TagKeyRange Separatista::BranchElement::getAllByTagName(const wch
 }
 
 
-void BranchElement::fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions)
+void BranchElement::fromDOMDocument(Separatista::DOMElement *pDOMElement, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
 
@@ -188,7 +188,7 @@ void BranchElement::fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions 
 	}
 }
 
-xercesc::DOMElement* BranchElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions)
+DOMElement* BranchElement::toDOMDocument(Separatista::DOMDocument *pDOMDocument, Separatista::DOMElement *pDOMParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
 

@@ -25,27 +25,18 @@
 #include "dll.h"
 #include "unknown.h"
 
-template <class T> SepaControlUnknown<T>::SepaControlUnknown(IUnknown *pParent)
+template <class T> SepaControlUnknown<T>::SepaControlUnknown()
 {
 	// Global
 	g_uDllRefCount++;
 
 	// Object
 	m_uRefCount = 0;
-
-	// Set parent
-	m_pParent = pParent;
-	if (pParent)
-		pParent->AddRef();
 }
 
 template <class T> SepaControlUnknown<T>::~SepaControlUnknown()
 {
 	g_uDllRefCount--;
-
-	// Check parent and release if necessary
-	if (m_pParent)
-		m_pParent->Release();
 }
 
 template <class T> ULONG SepaControlUnknown<T>::AddRef()

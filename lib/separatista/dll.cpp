@@ -62,7 +62,8 @@ BOOL WINAPI DllMain(
 
 IOErrorCode DocumentReader::loadSchema(const wchar_t *name)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
+
 	HRSRC hResInfo;
 	HGLOBAL hResource;
 	LPVOID lpData;

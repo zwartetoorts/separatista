@@ -26,7 +26,7 @@
 #include "dispatch.cpp"
 
 CMT940SRecordset::CMT940SRecordset(IDispatch *pParent)
-:SepaControlDispatch<IMT940SRecordset>(pParent)
+:SepaControlDispatch<IMT940SRecordset>()
 {
 	m_pMT940SRecordset = NULL;
 	m_transactionIndex = 0;
@@ -290,7 +290,7 @@ STDMETHODIMP CMT940SRecordset::ForeignIBAN(CIBAN **ppIBAN)
 	if (!pTransaction)
 		return S_FALSE;
 
-	*ppIBAN = new CIBAN(m_pParent);
+	*ppIBAN = new CIBAN();
 	if (!*ppIBAN)
 		return E_OUTOFMEMORY;
 

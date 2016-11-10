@@ -32,11 +32,9 @@ class SepaControlDispatch : public SepaControlUnknown<T>
 {
 public:
 	/**
-		This constructor takes the parent COM object as an argument.
-		It will call AddRef on the parent object and call Release on destruction. This
-		will make sure the parent object isn't destroyed before this child.
+		
 	*/
-	SepaControlDispatch(IUnknown* pParent = NULL);
+	SepaControlDispatch();
 
 	template <class C> static HRESULT Create(REFCLSID rclid, void** pvvObject);
 

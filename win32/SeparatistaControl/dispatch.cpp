@@ -28,8 +28,8 @@
 #include "dispatch.h"
 #include "separatista/validator.h"
 
-template <class T> SepaControlDispatch<T>::SepaControlDispatch(IUnknown *pParent)
-:SepaControlUnknown(pParent)
+template <class T> SepaControlDispatch<T>::SepaControlDispatch()
+:SepaControlUnknown()
 {
 	m_pTypeLib = NULL;
 	m_pTypeInfo = NULL;

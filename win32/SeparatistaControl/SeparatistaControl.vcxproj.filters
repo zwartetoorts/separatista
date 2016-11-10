@@ -48,14 +48,11 @@
     <ClInclude Include="customerdirectdebitinitiation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="paymentinformation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="directdebittransactioninformation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="supporterrorinfo.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="element.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -102,10 +99,7 @@
     <ClCompile Include="customerdirectdebitinitiation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="paymentinformation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="directdebittransactioninformation.cpp">
+    <ClCompile Include="element.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

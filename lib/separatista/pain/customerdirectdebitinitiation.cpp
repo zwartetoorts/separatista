@@ -76,20 +76,13 @@ CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescri
 	addElementListener(this);
 }
 
-CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, xercesc::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
+CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, Separatista::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
 	:BranchElement(pElementDescriptor)
 {
 	DEBUG_METHOD;
 	
 	fromDOMDocument(pDOMDocument->getDocumentElement()->getFirstElementChild(), errorOptions);
 	addElementListener(this);
-}
-
-xercesc::DOMElement* CustomerDirectDebitInitiation::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
-{
-	DEBUG_METHOD;
-
-	return BranchElement::toDOMDocument(pDOMDocument, pParent, errorOptions);
 }
 
 void CustomerDirectDebitInitiation::calcSum()
@@ -222,7 +215,7 @@ CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04()
 	DEBUG_METHOD;
 }
 
-CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04(xercesc::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
+CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04(Separatista::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
 	:CustomerDirectDebitInitiation(m_CustomerDirectDebitInitiationV04, pDOMDocument, errorOptions)
 {
 	DEBUG_METHOD;

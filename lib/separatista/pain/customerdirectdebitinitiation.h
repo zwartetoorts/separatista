@@ -45,8 +45,6 @@ namespace Separatista
 			*/
 			CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
 
-			DOMElement* toDOMDocument(DOMDocument *pDOMDocument, DOMElement *pParent = NULL, const ErrorOptions errorOptions = ThrowExceptions);
-
 			/**
 				Writes the DOM document to a local file path
 				@param pPath The path to write to

@@ -20,7 +20,6 @@
 
 #include <sstream>
 #include <comutil.h>
-#include <separatista/elementlist.h>
 
 #include "dispatch.cpp"
 #include "util.h"
@@ -30,144 +29,45 @@
 #include "supporterrorinfo.h"
 
 CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
-:SepaControlDispatch<ICustomerDirectDebitInitiation>(NULL)
+:Element(new Separatista::pain_008_001::CustomerDirectDebitInitiationV04())
 {
-	m_pCstmrDrctDbtInitn = new Separatista::pain_008_001::CstmrDrctDbtInitn();
-	m_bOwnCstmrDrctDbtInitn = true;
+
 }
 
 CustomerDirectDebitInitiation::~CustomerDirectDebitInitiation()
 {
-	if (m_bOwnCstmrDrctDbtInitn && m_pCstmrDrctDbtInitn)
-		delete m_pCstmrDrctDbtInitn;
+	delete (Separatista::pain_008_001::CustomerDirectDebitInitiation*)getElement();
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::QueryInterface(REFIID riid, void** ppvObject)
 {
 	SepaControlSupportErrorInfo *pSupportErrorInfo;
-
-	if (IsEqualIID(riid, IID_ISupportErrorInfo))
+	
+	*ppvObject = NULL;
+	if (IsEqualIID(riid, __uuidof(ICustomerDirectDebitInitiation)))
 	{
-		pSupportErrorInfo = new SepaControlSupportErrorInfo();
-		if (!pSupportErrorInfo)
-			return E_OUTOFMEMORY;
-		pSupportErrorInfo->AddRef();
-		*ppvObject = pSupportErrorInfo;
+		*ppvObject = this;
+		AddRef();
 		return S_OK;
 	}
-	return SepaControlDispatch<ICustomerDirectDebitInitiation>::QueryInterface(riid, ppvObject);
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::GetMessageIdentification(BSTR *pValue)
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return E_FAIL;
-
-	*pValue = _bstr_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_MsgId.getTextValue()).Detach();
-
-	return S_OK;
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::SetMessageIdentification(BSTR Value)
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return E_FAIL;
-
-	try
+	else if (IsEqualIID(riid, IID_ISupportErrorInfo))
 	{
-		m_pCstmrDrctDbtInitn->m_GrpHdr.m_MsgId.setValue(Value);
+		{
+			pSupportErrorInfo = new SepaControlSupportErrorInfo();
+			if (!pSupportErrorInfo)
+				return E_OUTOFMEMORY;
+			pSupportErrorInfo->AddRef();
+			*ppvObject = pSupportErrorInfo;
+			return S_OK;
+		}
 	}
-	catch (const Separatista::InvalidValueException &e)
-	{
-		return SetErrorInfo(e);
-	}
-
-	return S_OK;
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::GetCreationDateTime(DATE *pValue)
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return E_FAIL;
-
-	return DateTypeFromStdTime(m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.getDateValue(), pValue);
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::SetCreationDateTime(DATE Value)
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return E_FAIL;
-
-	try
-	{
-		m_pCstmrDrctDbtInitn->m_GrpHdr.m_CreDtTm.setValue(StdTimeFromDateType(Value), true);
-	}
-	catch (const Separatista::InvalidValueException &e)
-	{
-		return SetErrorInfo(e);
-	}
-
-	return S_OK;
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::GetNumberOfTransactions(INT *pValue)
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return E_FAIL;
-
-	*pValue = m_pCstmrDrctDbtInitn->m_GrpHdr.m_NbOfTxs.getIntValue();
-	return S_OK;
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::GetControlSum(VARIANT *pValue)
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return E_FAIL; 
-	
-	*pValue = _variant_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_CtrlSum.getTextValue()).Detach();
-	return S_OK;
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::GetInititiatingPartyName(BSTR *pValue)
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return E_FAIL;
-
-	*pValue = _bstr_t(m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.getTextValue()).Detach();
-	return S_OK;
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::SetInititiatingPartyName(BSTR Value)
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return E_FAIL;
-
-	try
-	{
-		m_pCstmrDrctDbtInitn->m_GrpHdr.m_InitgPty.m_Nm.setValue(Value);
-	}
-	catch (const Separatista::InvalidValueException &e)
-	{
-		return SetErrorInfo(e);
-	}
-	
-	return S_OK;
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::AddPaymentInformation(PaymentInformation *pPaymentInformation)
-{
-	if (!m_pCstmrDrctDbtInitn)
-		return S_FALSE;
-
-	m_pCstmrDrctDbtInitn->AddPmtInf(pPaymentInformation->GetPmtInf());
-	pPaymentInformation->Detach();
-	return S_OK;
+	return Element::QueryInterface(riid, ppvObject);
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::Save(LONG hWnd, Separatista::IOErrorCode *pErrorCode)
 {
-	if (!m_pCstmrDrctDbtInitn)
-		return E_UNEXPECTED;
+	if (!getElement())
+		return E_NOT_VALID_STATE;
 
 	OPENFILENAME ofn = { 0 };
 	WCHAR filename[MAX_PATH + 1];
@@ -204,26 +104,25 @@ STDMETHODIMP CustomerDirectDebitInitiation::Save(LONG hWnd, Separatista::IOError
 
 STDMETHODIMP CustomerDirectDebitInitiation::SaveAs(BSTR Path, Separatista::IOErrorCode *pErrorCode)
 {
-	if (!m_pCstmrDrctDbtInitn)
-		return E_UNEXPECTED;
+	Separatista::pain_008_001::CustomerDirectDebitInitiation *pCstmrDrctDbtInitn =
+		(Separatista::pain_008_001::CustomerDirectDebitInitiation*)getElement();
 
-	try
-	{
-		if ((*pErrorCode = m_pCstmrDrctDbtInitn->SaveAs(Path)) == Separatista::IOErrorCode::Success)
+	if (!pCstmrDrctDbtInitn)
+		return E_NOT_VALID_STATE;
+
+	if ((*pErrorCode = pCstmrDrctDbtInitn->saveAs(Path)) == Separatista::IOErrorCode::Success)
 			return S_OK;
-	}
-	catch (const Separatista::InvalidChoiceException e)
-	{
-		return SetErrorInfo(e);
-	}
-
+	
 	return E_FAIL;
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::Open(LONG hWnd, Separatista::IOErrorCode *pErrorCode)
 {
-	if (!m_pCstmrDrctDbtInitn)
-		return E_UNEXPECTED;
+	Separatista::pain_008_001::CustomerDirectDebitInitiation *pCstmrDrctDbtInitn =
+		(Separatista::pain_008_001::CustomerDirectDebitInitiation*)getElement();
+
+	if (!pCstmrDrctDbtInitn)
+		return E_NOT_VALID_STATE;
 
 	OPENFILENAME ofn = { 0 };
 	WCHAR filename[MAX_PATH + 1];
@@ -264,13 +163,19 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 	Separatista::SeparatistaDocument *pDocument = NULL;
 	std::wostringstream wos;
 	int i;
+	
+	Separatista::pain_008_001::CustomerDirectDebitInitiation *pCstmrDrctDbtInitn =
+		(Separatista::pain_008_001::CustomerDirectDebitInitiation*)getElement();
 
 	*pErrorCode = Separatista::Unknown;
 
-	if (!m_pCstmrDrctDbtInitn)
-		return E_UNEXPECTED;
+	if (!pCstmrDrctDbtInitn)
+		return E_NOT_VALID_STATE;
 
-	reader.loadSchema(Separatista::pain_008_001::CstmrDrctDbtInitn::NameSpaceURI);
+	if ((*pErrorCode = reader.loadSchema(Separatista::pain_008_001::CustomerDirectDebitInitiationV04::m_NameSpaceURI)) !=
+		Separatista::IOErrorCode::Success)
+		return E_FAIL;
+
 	if ((*pErrorCode = reader.parseFile(Path)) == Separatista::IOErrorCode::Success)
 	{
 		try
@@ -280,10 +185,8 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 			{
 				if (pDocument->getDocumentType() == Separatista::DocumentType::DT_CustomerDirectDebitDocument)
 				{
-					if (m_bOwnCstmrDrctDbtInitn && m_pCstmrDrctDbtInitn)
-						delete m_pCstmrDrctDbtInitn;
-					m_bOwnCstmrDrctDbtInitn = true;
-					m_pCstmrDrctDbtInitn = (Separatista::pain_008_001::CstmrDrctDbtInitn*)pDocument;
+					delete pCstmrDrctDbtInitn;
+					setElement((Separatista::pain_008_001::CustomerDirectDebitInitiation*)pDocument);
 					return S_OK;
 				}
 				delete pDocument;
@@ -330,47 +233,14 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 	return SetErrorInfo(wos.str().data());
 }
 
-STDMETHODIMP CustomerDirectDebitInitiation::PaymentInformationById(BSTR PaymentInformationIdentification, PaymentInformation **ppPaymentInformation)
+STDMETHODIMP CustomerDirectDebitInitiation::GetNamespace(BSTR *pNamespace)
 {
-	Separatista::pain_008_001::PmtInf *pPmtInf;
+	Separatista::pain_008_001::CustomerDirectDebitInitiation *pCstmrDrctDbtInitn =
+		(Separatista::pain_008_001::CustomerDirectDebitInitiation*)getElement();
 
-	if (!m_pCstmrDrctDbtInitn)
-		return E_UNEXPECTED;
+	if (!pCstmrDrctDbtInitn)
+		return E_NOT_VALID_STATE;
 
-	pPmtInf = m_pCstmrDrctDbtInitn->getPmtInfById(PaymentInformationIdentification);
-	if (pPmtInf)
-	{
-		*ppPaymentInformation = new PaymentInformation(pPmtInf, this);
-		(*ppPaymentInformation)->AddRef();
-	}
-	else
-		*ppPaymentInformation = NULL;
-
-	return S_OK;
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::_NewEnum(IUnknown **ppUnk)
-{
-	EnumVariant *pEnumVariant;
-	PaymentInformation *pPaymentInformation;
-	Separatista::ElementList list;
-
-	if (!m_pCstmrDrctDbtInitn)
-		return E_UNEXPECTED;
-
-	pEnumVariant = new EnumVariant();
-	if (!pEnumVariant)
-		return E_OUTOFMEMORY;
-	pEnumVariant->AddRef();
-
-	// Add all PaymentInformations to the enumvariant
-	m_pCstmrDrctDbtInitn->getPmtInfs(list);
-	for (unsigned int i = 0; i < list.getElementCount(); i++)
-	{
-		pPaymentInformation = new PaymentInformation((Separatista::pain_008_001::PmtInf*)list.getElement(i), this);
-		pEnumVariant->Add(_variant_t(pPaymentInformation).Detach());
-	}
-
-	*ppUnk = pEnumVariant;
+	*pNamespace = _bstr_t(pCstmrDrctDbtInitn->getNamespaceURI()).Detach();
 	return S_OK;
 }

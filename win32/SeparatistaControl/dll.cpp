@@ -28,8 +28,7 @@
 #include "dispatch.cpp"
 #include "customerdirectdebitinitiation.h"
 #include "ciban.h"
-#include "paymentinformation.h"
-#include "directdebittransactioninformation.h"
+#include "element.h"
 
 /**
 	Globals
@@ -92,15 +91,11 @@ STDAPI DllGetClassObject(REFCLSID rclsid,
 
 	*ppv = NULL;
 	if (IsEqualIID(rclsid, __uuidof(CMT940SDocument)))
-		pFactory = new SepaControlClassFactory(SepaControlDispatch<IMT940SDocument>::Create<CMT940SDocument>);
+		pFactory = new SepaControlClassFactory(CMT940SDocument::Create<CMT940SDocument>);
 	else if (IsEqualIID(rclsid, __uuidof(CustomerDirectDebitInitiation)))
-		pFactory = new SepaControlClassFactory(SepaControlDispatch<ICustomerDirectDebitInitiation>::Create<CustomerDirectDebitInitiation>);
+		pFactory = new SepaControlClassFactory(CustomerDirectDebitInitiation::Create<CustomerDirectDebitInitiation>);
 	else if (IsEqualIID(rclsid, __uuidof(CIBAN)))
-		pFactory = new SepaControlClassFactory(SepaControlDispatch<IIBAN>::Create<CIBAN>);
-	else if (IsEqualIID(rclsid, __uuidof(PaymentInformation)))
-		pFactory = new SepaControlClassFactory(SepaControlDispatch<IPaymentInformation>::Create<PaymentInformation>);
-	else if (IsEqualIID(rclsid, __uuidof(DirectDebitTransactionInformation)))
-		pFactory = new SepaControlClassFactory(SepaControlDispatch<IDirectDebitTransactionInformation>::Create<DirectDebitTransactionInformation>);
+		pFactory = new SepaControlClassFactory(CIBAN::Create<CIBAN>);
 	else 
 		return CLASS_E_CLASSNOTAVAILABLE;
 
@@ -179,17 +174,11 @@ STDAPI DllUnregisterServer()
 		TEXT("Separatista.CustomerDirectDebitInitiation.1"),
 		TEXT("Separatista.CustomerDirectDebitInitiation"));
 
-	// Unregister Separatista.PaymentInformation
+	// Unregister Separatista.Element
 	DllUnregisterObject(
-		TEXT("{CBDAC56C-5A90-443F-9511-D3F3B5AC3CF7}"),
-		TEXT("Separatista.PaymentInformation.1"),
-		TEXT("Separatista.PaymentInformation"));
-	
-	// Unregister Separatista.DirectDebitTransactionInformation
-	DllUnregisterObject(
-		TEXT("{34F53824-3D5A-49A2-8F94-A721ED35E01D}"),
-		TEXT("Separatista.DirectDebitTransactionInformation.1"),
-		TEXT("Separatista.DirectDebitTransactionInformation"));
+		TEXT("{0F74285B-C429-4A58-95AC-B1A05B856530}"),
+		TEXT("Separatista.Element.1"),
+		TEXT("Separatista.Element"));
 	
 	return S_OK;;
 }
@@ -344,22 +333,11 @@ STDAPI DllRegisterServer()
 		return hr;
 	}
 
-	// Try to register Separatista.PaymentInformation
+	// Try to register Separatista.Element
 	hr = DllRegisterObject(
-		TEXT("{CBDAC56C-5A90-443F-9511-D3F3B5AC3CF7}"),
-		TEXT("Separatista.PaymentInformation.1"),
-		TEXT("Separatista.PaymentInformation"));
-	if (FAILED(hr))
-	{
-		DllUnregisterServer();
-		return hr;
-	}
-
-	// Try to register Separatista.DirectDebitTransactionInformation
-	hr = DllRegisterObject(
-		TEXT("{34F53824-3D5A-49A2-8F94-A721ED35E01D}"),
-		TEXT("Separatista.DirectDebitTransactionInformation.1"),
-		TEXT("Separatista.DirectDebitTransactionInformation"));
+		TEXT("{0F74285B-C429-4A58-95AC-B1A05B856530}"),
+		TEXT("Separatista.Element.1"),
+		TEXT("Separatista.Element"));
 	if (FAILED(hr))
 	{
 		DllUnregisterServer();

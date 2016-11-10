@@ -134,6 +134,10 @@ namespace Separatista
 
 #ifdef SEPARATISTA_DEBUG_NEW
 
+#ifdef _MSC_VER
+#pragma warning (disable: 4595)
+#endif
+
 // Prevent internal use of new from being trapped
 #ifndef SEPARATISTADEBUG_BUILDINGDLL
 
