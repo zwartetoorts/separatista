@@ -42,9 +42,9 @@ namespace Separatista
 		static Element* createElement(const ElementDescriptor* pElementDescriptor);
 
 
-		DOMElement* toDOMDocument(DOMDocument *pDocument, DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
+		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions);
 
-		void fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions);
+		void fromDOMDocument(xercesc::DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/// @see Element::getAttributeValue
 		const wchar_t* getAttributeValue(const wchar_t *pAttributeName) const;

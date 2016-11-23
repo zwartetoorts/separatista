@@ -64,13 +64,13 @@ namespace Separatista
 		const wchar_t* getErrorMessage(int index) const;
 
 		/// @see SAXParseException
-		void warning(const SAXParseException &e);
+		void warning(const xercesc::SAXParseException &e);
 
 		/// @see SAXParseException
-		void error(const SAXParseException &e);
+		void error(const xercesc::SAXParseException &e);
 
 		/// @see SAXParseException
-		void fatalError(const SAXParseException &e);
+		void fatalError(const xercesc::SAXParseException &e);
 
 		/// @see SAXParseException
 		void resetErrors();
@@ -96,11 +96,11 @@ namespace Separatista
 		SeparatistaDocument* getDocument();
 
 	protected:
-		void appendError(ErrorType::ErrorCode etc, const SAXParseException &e);
+		void appendError(ErrorType::ErrorCode etc, const xercesc::SAXParseException &e);
 
 	private:
-		XercesDOMParser *m_pParser;
-		DOMDocument *m_pDocument;
+		xercesc::XercesDOMParser *m_pParser;
+		xercesc::DOMDocument *m_pDocument;
 		std::vector<ErrorType*> m_ErrorList;
 	};
 }

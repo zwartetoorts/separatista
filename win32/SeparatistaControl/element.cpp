@@ -35,7 +35,8 @@ Element::Element(Separatista::Element *pElement)
 
 Element::~Element()
 {
-	
+	if(m_pElement)
+		m_pElement->removeElementListener(this);
 }
 
 Separatista::Element* Element::getElement() const
@@ -58,7 +59,7 @@ void Element::elementValueChanged(Separatista::Element *pElement, const wchar_t 
 
 }
 
-void Element::elementDeleted(Separatista::Element *pParent, Separatista::Element *pElement)
+void Element::elementDeleted(Separatista::Element *pElement)
 {
 	// Check if the deleted element is mine and release it if it is
 	if (pElement == m_pElement)
@@ -97,14 +98,14 @@ STDMETHODIMP Element::GetTagName(BSTR *pTagName)
 	return S_OK;
 }
 
-STDMETHODIMP Element::GetValue(VARIANT *pValue)
+STDMETHODIMP Element::GetValue(BSTR *pValue)
 {
 	if (!m_pElement)
 		return E_NOT_VALID_STATE;
 
 	try
 	{
-		*pValue = _variant_t(m_pElement->getTextValue()).Detach();
+		*pValue = _bstr_t(m_pElement->getTextValue()).Detach();
 	}
 	catch (const Separatista::ElementException &e)
 	{
@@ -171,6 +172,8 @@ STDMETHODIMP Element::SetDateValue(DATE DateValue)
 
 STDMETHODIMP Element::GetElementByTagName(BSTR TagName, UINT index, IElement **ppElement)
 {
+	*ppElement = NULL;
+
 	if (!m_pElement)
 		return E_NOT_VALID_STATE;
 
@@ -178,10 +181,10 @@ STDMETHODIMP Element::GetElementByTagName(BSTR TagName, UINT index, IElement **p
 	{
 		Separatista::Element *pElement = m_pElement->getElementByTag(TagName, index);
 		if (!pElement)
-		{
-			*ppElement = NULL;
 			return S_OK;
-		}
+		*ppElement = new Element(pElement);
+		(*ppElement)->AddRef();
+		return S_OK;
 	}
 	catch (const Separatista::ElementException &e)
 	{
@@ -192,6 +195,8 @@ STDMETHODIMP Element::GetElementByTagName(BSTR TagName, UINT index, IElement **p
 
 STDMETHODIMP Element::CreateElementByTagName(BSTR TagName, UINT index, IElement **ppElement)
 {
+	*ppElement = NULL;
+
 	if (!m_pElement)
 		return E_NOT_VALID_STATE;
 
@@ -199,10 +204,10 @@ STDMETHODIMP Element::CreateElementByTagName(BSTR TagName, UINT index, IElement 
 	{
 		Separatista::Element *pElement = m_pElement->createElementByTag(TagName, index);
 		if (!pElement)
-		{
-			*ppElement = NULL;
 			return S_OK;
-		}
+		*ppElement = new Element(pElement);
+		(*ppElement)->AddRef();
+		return S_OK;
 	}
 	catch (const Separatista::ElementException &e)
 	{

@@ -32,7 +32,6 @@
 
 #include "leafelement.h"
 #include "debug/debug.h"
-#include "documentiterator.h"
 
 using namespace Separatista;
 
@@ -49,7 +48,7 @@ Element* LeafElement::createElement(const ElementDescriptor* pElementDescriptor)
 	return new LeafElement(pElementDescriptor);
 }
 
-Separatista::DOMElement* LeafElement::toDOMDocument(Separatista::DOMDocument *pDocument, Separatista::DOMElement *pParent, const ErrorOptions errorOptions)
+xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
 
@@ -85,7 +84,7 @@ Separatista::DOMElement* LeafElement::toDOMDocument(Separatista::DOMDocument *pD
 	return pElement;
 }
 
-void LeafElement::fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions)
+void LeafElement::fromDOMDocument(xercesc::DOMElement *pDOMElement, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
 

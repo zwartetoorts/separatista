@@ -26,7 +26,6 @@
 #include "separatista/element.h"
 #include "separatista/exception.h"
 #include "separatista/debug/debug.h"
-#include "separatista/documentiterator.h" 
 #include "separatista/elementdescriptor.h"
 
 namespace Separatista
@@ -53,9 +52,9 @@ namespace Separatista
 		/**
 			Iterates over the possible choices and calls fromDOMDocument on the chosen element.
 		*/
-		void fromDOMDocument(DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions);
+		void fromDOMDocument(xercesc::DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions);
 
-		DOMElement* toDOMDocument(DOMDocument *pDOMDocument, DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions);
+		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions);
 
 		/**
 		Creates the element from it's descriptor

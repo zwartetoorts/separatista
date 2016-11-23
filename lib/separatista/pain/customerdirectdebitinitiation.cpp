@@ -40,7 +40,6 @@
 #include "separatista/documentreader.h"
 #include "separatista/debug/debug.h"
 #include "separatista/validator.h"
-#include "separatista/documentiterator.h"
 #include "separatista/elementdescriptor.h"
 
 using namespace Separatista;
@@ -48,7 +47,7 @@ using namespace Separatista::pain_008_001;
 
 const wchar_t* CustomerDirectDebitInitiationV04::m_NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.04");
 
-const ElementDescriptor CustomerDirectDebitInitiationV04::m_CustomerDirectDebitInitiationV04[] =
+const ElementDescriptor CustomerDirectDebitInitiationV04[] =
 {
 	{
 		SEPARATISTA_TAG("GrpHdr"),
@@ -68,6 +67,18 @@ const ElementDescriptor CustomerDirectDebitInitiationV04::m_CustomerDirectDebitI
 	}
 };
 
+const ElementDescriptor CustomerDirectDebitInitiationV04::m_CustomerDirectDebitInitiationV04[] =
+{
+	{
+		SEPARATISTA_TAG("CstmrDrctDbtInitn"),
+		BranchElement::createElement,
+		1,
+		1,
+		NULL,
+		SEPARATISTA_ELEMENTS(::CustomerDirectDebitInitiationV04)
+	}
+};
+
 CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor)
 	:BranchElement(pElementDescriptor)
 {
@@ -76,7 +87,7 @@ CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescri
 	addElementListener(this);
 }
 
-CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, Separatista::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
+CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, xercesc::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
 	:BranchElement(pElementDescriptor)
 {
 	DEBUG_METHOD;
@@ -198,11 +209,19 @@ void CustomerDirectDebitInitiation::elementCreated(Element * pParent, Element * 
 	}
 }
 
-void CustomerDirectDebitInitiation::elementDeleted(Element * pParent, Element * pChild)
+void CustomerDirectDebitInitiation::elementDeleted(Element * pElement)
 {
 	DEBUG_METHOD;
 
-	if (std::wcscmp(TEXT("DrctDbtTxInf"), pChild->getTag()) == 0)
+	if (std::wcscmp(TEXT("PmtInf"), pElement->getTag()) == 0)
+	{
+		calcSum();
+	}
+	else if (std::wcscmp(TEXT("DrctDbtTxInf"), pElement->getTag()) == 0)
+	{
+		calcSum();
+	}
+	else if (std::wcscmp(TEXT("InstdAmd"), pElement->getTag()) == 0)
 	{
 		calcSum();
 	}
@@ -215,7 +234,8 @@ CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04()
 	DEBUG_METHOD;
 }
 
-CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04(Separatista::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
+
+CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04(xercesc::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
 	:CustomerDirectDebitInitiation(m_CustomerDirectDebitInitiationV04, pDOMDocument, errorOptions)
 {
 	DEBUG_METHOD;

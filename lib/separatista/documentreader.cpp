@@ -55,21 +55,21 @@ public:
 	};
 
 	/// @see SAXParseException
-	void warning(const SAXParseException &e)
+	void warning(const xercesc::SAXParseException &e)
 	{
 		DEBUG_METHOD
 		m_pDocumentReader->warning(e);
 	};
 
 	/// @see SAXParseException
-	void error(const SAXParseException &e)
+	void error(const xercesc::SAXParseException &e)
 	{
 		DEBUG_METHOD
 		m_pDocumentReader->error(e);
 	};
 
 	/// @see SAXParseException
-	void fatalError(const SAXParseException &e)
+	void fatalError(const xercesc::SAXParseException &e)
 	{
 		DEBUG_METHOD
 		m_pDocumentReader->fatalError(e);

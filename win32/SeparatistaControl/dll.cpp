@@ -93,7 +93,7 @@ STDAPI DllGetClassObject(REFCLSID rclsid,
 	if (IsEqualIID(rclsid, __uuidof(CMT940SDocument)))
 		pFactory = new SepaControlClassFactory(CMT940SDocument::Create<CMT940SDocument>);
 	else if (IsEqualIID(rclsid, __uuidof(CustomerDirectDebitInitiation)))
-		pFactory = new SepaControlClassFactory(CustomerDirectDebitInitiation::Create<CustomerDirectDebitInitiation>);
+		pFactory = new SepaControlClassFactory(CustomerDirectDebitInitiation::SepaControlDispatch<ICustomerDirectDebitInitiation>::Create<CustomerDirectDebitInitiation>);
 	else if (IsEqualIID(rclsid, __uuidof(CIBAN)))
 		pFactory = new SepaControlClassFactory(CIBAN::Create<CIBAN>);
 	else 

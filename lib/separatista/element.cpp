@@ -88,10 +88,10 @@ void Element::destroyElement(Element *pElement)
 	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Child elements not supported by this element.")), this);
 }
 
-void Element::deleteElement(Element *pParentElement, Element *pChildElement)
+void Element::deleteElement(Element *pChildElement)
 {
 	DEBUG_METHOD;
-	pParentElement->onElementDeleted(pChildElement);
+	pChildElement->onElementDeleted();
 	delete pChildElement;
 }
 
@@ -141,12 +141,12 @@ void Element::onElementCreated(Element *pChildElement)
 		(*it)->elementCreated(this, pChildElement);
 }
 
-void Element::onElementDeleted(Element *pChildElement)
+void Element::onElementDeleted()
 {
 	DEBUG_METHOD;
 
 	for (auto it = m_ElementListeners.begin(); it != m_ElementListeners.end(); it++)
-		(*it)->elementDeleted(this, pChildElement);
+		(*it)->elementDeleted(this);
 }
 
 time_t Element::getDateValue() const

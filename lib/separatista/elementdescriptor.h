@@ -24,7 +24,6 @@
 #include <Windows.h>
 
 #include "separatista/separatista.h"
-#include "separatista/xerces_types.h"
 
 #define SEPARATISTA_ELEMENTS(name) sizeof(name) / sizeof(ElementDescriptor), name
 #define SEPARATISTA_TAG(tag) TEXT(tag), Separatista::HashTag(TEXT(tag))

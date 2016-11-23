@@ -37,14 +37,7 @@ namespace Separatista
 		class SEPARATISTA_EXTERN CustomerDirectDebitInitiation : public BranchElement, public SeparatistaDocument, protected ElementListener
 		{
 		public:
-			/// Construct an empty element
-			CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor);
-
-			/**
-				Construct from a dom document.
-			*/
-			CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
-
+			
 			/**
 				Writes the DOM document to a local file path
 				@param pPath The path to write to
@@ -59,7 +52,7 @@ namespace Separatista
 
 			void elementCreated(Element *pParent, Element *pChild);
 
-			void elementDeleted(Element *pParent, Element *pChild);
+			void elementDeleted(Element *pElement);
 
 			/**
 				SeparatistaDocument interface
@@ -68,7 +61,14 @@ namespace Separatista
 
 			virtual const wchar_t* getNamespaceURI() const = 0;
 		protected:
-			
+			/// Construct an empty element
+			CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor);
+
+			/**
+			Construct from a dom document.
+			*/
+			CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, xercesc::DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
+
 			void calcSum();
 
 			
@@ -79,7 +79,7 @@ namespace Separatista
 		public:
 			CustomerDirectDebitInitiationV04();
 
-			CustomerDirectDebitInitiationV04(DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
+			CustomerDirectDebitInitiationV04(xercesc::DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
 			
 			static const wchar_t *m_NameSpaceURI;
 

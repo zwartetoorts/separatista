@@ -29,14 +29,14 @@
 #include "supporterrorinfo.h"
 
 CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
-:Element(new Separatista::pain_008_001::CustomerDirectDebitInitiationV04())
 {
-
+	m_pCustomerDirectDebitInitiation = new Separatista::pain_008_001::CustomerDirectDebitInitiationV04();
 }
 
 CustomerDirectDebitInitiation::~CustomerDirectDebitInitiation()
 {
-	delete (Separatista::pain_008_001::CustomerDirectDebitInitiation*)getElement();
+	if (m_pCustomerDirectDebitInitiation)
+		delete m_pCustomerDirectDebitInitiation;
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::QueryInterface(REFIID riid, void** ppvObject)
@@ -44,31 +44,20 @@ STDMETHODIMP CustomerDirectDebitInitiation::QueryInterface(REFIID riid, void** p
 	SepaControlSupportErrorInfo *pSupportErrorInfo;
 	
 	*ppvObject = NULL;
-	if (IsEqualIID(riid, __uuidof(ICustomerDirectDebitInitiation)))
+	if (IsEqualIID(riid, IID_ISupportErrorInfo))
 	{
-		*ppvObject = this;
-		AddRef();
+		pSupportErrorInfo = new SepaControlSupportErrorInfo();
+		if (!pSupportErrorInfo)
+			return E_OUTOFMEMORY;
+		pSupportErrorInfo->AddRef();
+		*ppvObject = pSupportErrorInfo;
 		return S_OK;
 	}
-	else if (IsEqualIID(riid, IID_ISupportErrorInfo))
-	{
-		{
-			pSupportErrorInfo = new SepaControlSupportErrorInfo();
-			if (!pSupportErrorInfo)
-				return E_OUTOFMEMORY;
-			pSupportErrorInfo->AddRef();
-			*ppvObject = pSupportErrorInfo;
-			return S_OK;
-		}
-	}
-	return Element::QueryInterface(riid, ppvObject);
+	return SepaControlDispatch<ICustomerDirectDebitInitiation>::QueryInterface(riid, ppvObject);
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::Save(LONG hWnd, Separatista::IOErrorCode *pErrorCode)
 {
-	if (!getElement())
-		return E_NOT_VALID_STATE;
-
 	OPENFILENAME ofn = { 0 };
 	WCHAR filename[MAX_PATH + 1];
 	std::wcscpy(filename, TEXT("sepa.xml"));
@@ -104,13 +93,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::Save(LONG hWnd, Separatista::IOError
 
 STDMETHODIMP CustomerDirectDebitInitiation::SaveAs(BSTR Path, Separatista::IOErrorCode *pErrorCode)
 {
-	Separatista::pain_008_001::CustomerDirectDebitInitiation *pCstmrDrctDbtInitn =
-		(Separatista::pain_008_001::CustomerDirectDebitInitiation*)getElement();
-
-	if (!pCstmrDrctDbtInitn)
-		return E_NOT_VALID_STATE;
-
-	if ((*pErrorCode = pCstmrDrctDbtInitn->saveAs(Path)) == Separatista::IOErrorCode::Success)
+	if ((*pErrorCode = m_pCustomerDirectDebitInitiation->saveAs(Path)) == Separatista::IOErrorCode::Success)
 			return S_OK;
 	
 	return E_FAIL;
@@ -118,12 +101,6 @@ STDMETHODIMP CustomerDirectDebitInitiation::SaveAs(BSTR Path, Separatista::IOErr
 
 STDMETHODIMP CustomerDirectDebitInitiation::Open(LONG hWnd, Separatista::IOErrorCode *pErrorCode)
 {
-	Separatista::pain_008_001::CustomerDirectDebitInitiation *pCstmrDrctDbtInitn =
-		(Separatista::pain_008_001::CustomerDirectDebitInitiation*)getElement();
-
-	if (!pCstmrDrctDbtInitn)
-		return E_NOT_VALID_STATE;
-
 	OPENFILENAME ofn = { 0 };
 	WCHAR filename[MAX_PATH + 1];
 	std::wcscpy(filename, TEXT("sepa.xml"));
@@ -164,13 +141,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 	std::wostringstream wos;
 	int i;
 	
-	Separatista::pain_008_001::CustomerDirectDebitInitiation *pCstmrDrctDbtInitn =
-		(Separatista::pain_008_001::CustomerDirectDebitInitiation*)getElement();
-
 	*pErrorCode = Separatista::Unknown;
-
-	if (!pCstmrDrctDbtInitn)
-		return E_NOT_VALID_STATE;
 
 	if ((*pErrorCode = reader.loadSchema(Separatista::pain_008_001::CustomerDirectDebitInitiationV04::m_NameSpaceURI)) !=
 		Separatista::IOErrorCode::Success)
@@ -185,8 +156,9 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 			{
 				if (pDocument->getDocumentType() == Separatista::DocumentType::DT_CustomerDirectDebitDocument)
 				{
-					delete pCstmrDrctDbtInitn;
-					setElement((Separatista::pain_008_001::CustomerDirectDebitInitiation*)pDocument);
+					if (m_pCustomerDirectDebitInitiation)
+						delete m_pCustomerDirectDebitInitiation;
+					m_pCustomerDirectDebitInitiation = (Separatista::pain_008_001::CustomerDirectDebitInitiation*)pDocument;
 					return S_OK;
 				}
 				delete pDocument;
@@ -197,7 +169,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 			if (pDocument)
 				delete pDocument;
 			*pErrorCode = Separatista::Separatista;
-			return SetErrorInfo(e);
+			return SepaControlDispatch<ICustomerDirectDebitInitiation>::SetErrorInfo(e);
 		}
 		*pErrorCode = Separatista::Document_Invalid;
 	}
@@ -230,17 +202,18 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 			<< TEXT(" more");
 	}
 
-	return SetErrorInfo(wos.str().data());
+	return SepaControlDispatch<ICustomerDirectDebitInitiation>::SetErrorInfo(wos.str().data());
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::GetNamespace(BSTR *pNamespace)
 {
-	Separatista::pain_008_001::CustomerDirectDebitInitiation *pCstmrDrctDbtInitn =
-		(Separatista::pain_008_001::CustomerDirectDebitInitiation*)getElement();
+	*pNamespace = _bstr_t(m_pCustomerDirectDebitInitiation->getNamespaceURI()).Detach();
+	return S_OK;
+}
 
-	if (!pCstmrDrctDbtInitn)
-		return E_NOT_VALID_STATE;
-
-	*pNamespace = _bstr_t(pCstmrDrctDbtInitn->getNamespaceURI()).Detach();
+STDMETHODIMP CustomerDirectDebitInitiation::GetRootElement(IElement **ppElement)
+{
+	*ppElement = new Element(m_pCustomerDirectDebitInitiation);
+	(*ppElement)->AddRef();
 	return S_OK;
 }

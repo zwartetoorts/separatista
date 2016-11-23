@@ -38,7 +38,7 @@ DEFINE_GUID(IID_CUSTOMERDIRECTDEBITINITIATION ,
 DEFINE_GUID(CLSID_CUSTOMERDIRECTDEBITINITIATION,
 	0xa3142fec, 0xfb2e, 0x4715, 0xb5, 0xdf, 0xc4, 0xf7, 0x84, 0x4d, 0x29, 0x56);
 
-struct ICustomerDirectDebitInitiation : public IElement
+struct ICustomerDirectDebitInitiation : public IDispatch
 {
 	// IDispatch
 	STDMETHOD_(ULONG, AddRef)() PURE;
@@ -48,27 +48,15 @@ struct ICustomerDirectDebitInitiation : public IElement
 	STDMETHOD(GetTypeInfo)(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo) PURE;
 	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId) PURE;
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
-
-	// IElement
-	STDMETHOD(GetTagName)(BSTR *pTagName) PURE;
-	STDMETHOD(GetValue)(VARIANT *pValue) PURE;
-	STDMETHOD(SetValue)(BSTR Value) PURE;
-	STDMETHOD(GetDateValue)(DATE *pDateValue) PURE;
-	STDMETHOD(SetDateValue)(DATE DateValue) PURE;
-	STDMETHOD(GetElementByTagName)(BSTR TagName, UINT index, IElement **ppElement) PURE;
-	STDMETHOD(CreateElementByTagName)(BSTR TagName, UINT index, IElement **ppElement) PURE;
-	STDMETHOD(DestroyElement)(IElement *pChildElement) PURE;
-	STDMETHOD(GetAttributeValue)(BSTR AttributeName, BSTR *pValue) PURE;
-	STDMETHOD(SetAttributeValue)(BSTR AttributeName, BSTR Value) PURE;
-
+	
 	// ICustomerDirectDebitInitiation
 	STDMETHOD(GetNamespace)(BSTR *pNamespace) PURE;
+	STDMETHOD(GetRootElement)(IElement **ppElement) PURE;
 	STDMETHOD(Save)(LONG hWnd, Separatista::IOErrorCode *pErrorCode) PURE;
 	STDMETHOD(SaveAs)(BSTR Path, Separatista::IOErrorCode *pErrorCode) PURE;
 	STDMETHOD(Open)(LONG hWnd, Separatista::IOErrorCode *pErrorCode) PURE;
 	STDMETHOD(OpenFrom)(BSTR Path, Separatista::IOErrorCode *pErrorCode) PURE;
 
-	STDMETHOD(_NewEnum)(IUnknown **ppUnk) PURE;
 }; 
 
 struct __declspec(uuid("{4B8AC337-5E17-454D-A7EC-8955B07B99CC}")) ICustomerDirectDebitInitiation;
@@ -76,7 +64,7 @@ struct __declspec(uuid("{4B8AC337-5E17-454D-A7EC-8955B07B99CC}")) ICustomerDirec
 /**
 	
 */
-class CustomerDirectDebitInitiation : public Element
+class CustomerDirectDebitInitiation : public SepaControlDispatch<ICustomerDirectDebitInitiation>
 {
 public:
 	/**
@@ -89,6 +77,7 @@ public:
 	STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject);
 
 	STDMETHOD(GetNamespace)(BSTR *pNamespace);
+	STDMETHOD(GetRootElement)(IElement **ppElement);
 	STDMETHOD(Save)(LONG hWnd, Separatista::IOErrorCode *pErrorCode);
 	STDMETHOD(SaveAs)(BSTR Path, Separatista::IOErrorCode *pErrorCode);
 	STDMETHOD(Open)(LONG hWnd, Separatista::IOErrorCode *pErrorCode);
@@ -99,6 +88,9 @@ protected:
 	Destructor
 	*/
 	~CustomerDirectDebitInitiation();
+
+private:
+	Separatista::pain_008_001::CustomerDirectDebitInitiation *m_pCustomerDirectDebitInitiation;
 };
 
 class __declspec(uuid("{A3142FEC-FB2E-4715-B5DF-C4F7844D2956}")) CustomerDirectDebitInitiation;

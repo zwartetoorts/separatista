@@ -46,7 +46,7 @@ namespace Separatista
 	public:
 		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue) = 0;
 		virtual void elementCreated(Element *pParent, Element *pChild) = 0;
-		virtual void elementDeleted(Element *pParent, Element *pChild) = 0;
+		virtual void elementDeleted(Element *pElement) = 0;
 	};
 
 	/// Element exception, thrown when an element method called doesn't belong to the element type.
@@ -107,13 +107,13 @@ namespace Separatista
 			@return Pointer to the new created DOMElement, or NULL
 			@see createElement
 		*/
-		virtual Separatista::DOMElement* toDOMDocument(Separatista::DOMDocument *pDOMDocument, Separatista::DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions) = 0;
+		virtual xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions) = 0;
 
 		/**
 			Tries to load it's value from the document element.
 			@param DocumentIterator The document iterator to call to continue reading or get value from.
 		*/
-		virtual void fromDOMDocument(Separatista::DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions) = 0;
+		virtual void fromDOMDocument(xercesc::DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions) = 0;
 
 		/**
 			Add an elementlistener. Will be notified of changes to the element.
@@ -279,10 +279,10 @@ namespace Separatista
 
 		/**
 			Method to make it possible for derived classes to delete Elements. 
-			Calls pParentElement->onElementDeleted(pChildElement)
+			Calls pChildElement->onElementDeleted()
 			@see Element::onElementDeleted
 		*/
-		static void deleteElement(Element* pParentElement, Element *pChildElement);
+		static void deleteElement(Element *pChildElement);
 
 		/// Calls a registered ElementListener's elementValueChanged
 		void onElementValueChanged(const wchar_t *pNewValue);
@@ -291,7 +291,7 @@ namespace Separatista
 		void onElementCreated(Element *pChildElement);
 
 		/// Calls a registered ElementListener's elementDeleted
-		void onElementDeleted(Element *pChildElement);
+		void onElementDeleted();
 
 	private:
 		/// ElementDescriptor

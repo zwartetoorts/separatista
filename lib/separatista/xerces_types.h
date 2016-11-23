@@ -31,17 +31,9 @@
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #endif
 
-namespace Separatista
+#ifndef XERCES_HAS_CPP_NAMESPACE
+namespace xercesc_3_1
 {
-#ifdef XERCES_HAS_CPP_NAMESPACE
-	typedef xercesc::DOMDocument DOMDocument;
-	typedef xercesc::DOMElement DOMElement;
-	typedef xercesc::DOMNodeIterator DOMNodeIterator;
-	typedef xercesc::DOMNode DOMNode;
-	typedef xercesc::XercesDOMParser XercesDOMParser;
-	typedef xercesc::SAXParseException SAXParseException;
-	typedef xercesc::ErrorHandler ErrorHandler;
-#else
 	class DOMDocument;
 	class DOMElement;
 	class DOMNodeIterator;
@@ -49,8 +41,8 @@ namespace Separatista
 	class XercesDOMParser;
 	class SAXParseException;
 	class ErrorHandler;
-#endif
-
 }
+namespace xercesc = xercesc_3_1;
+#endif
 
 #endif // SEPARATISTA_XERCES_TYPES_H

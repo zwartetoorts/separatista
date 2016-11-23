@@ -41,11 +41,11 @@ Element(pElementDescriptor)
 	DEBUG_METHOD
 }
 
-Separatista::BranchElement::~BranchElement()
+BranchElement::~BranchElement()
 {
 	DEBUG_METHOD;
 	for (auto it = m_childElements.begin(); it != m_childElements.end(); it++)
-		Element::deleteElement(this, it->second);
+		Element::deleteElement(it->second);
 }
 
 Element* BranchElement::createElement(const ElementDescriptor *pElementDescriptor)
@@ -118,13 +118,13 @@ void BranchElement::destroyElement(Element *pElement)
 		if (it->second == pElement)
 		{
 			m_childElements.erase(it);
-			Element::deleteElement(this, pElement);
+			Element::deleteElement(pElement);
 			return;
 		}
 	}
 }
 
-BranchElement::TagKeyRange Separatista::BranchElement::getAllByTagName(const wchar_t * pTagName)
+BranchElement::TagKeyRange BranchElement::getAllByTagName(const wchar_t * pTagName)
 {
 	DEBUG_METHOD;
 
@@ -158,7 +158,7 @@ BranchElement::TagKeyRange Separatista::BranchElement::getAllByTagName(const wch
 }
 
 
-void BranchElement::fromDOMDocument(Separatista::DOMElement *pDOMElement, const ErrorOptions errorOptions)
+void BranchElement::fromDOMDocument(xercesc::DOMElement *pDOMElement, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
 
@@ -188,7 +188,7 @@ void BranchElement::fromDOMDocument(Separatista::DOMElement *pDOMElement, const 
 	}
 }
 
-DOMElement* BranchElement::toDOMDocument(Separatista::DOMDocument *pDOMDocument, Separatista::DOMElement *pDOMParent, const ErrorOptions errorOptions)
+xercesc::DOMElement* BranchElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
 

@@ -50,7 +50,7 @@ struct IElement : public IDispatch
 
 	// IElement
 	STDMETHOD(GetTagName)(BSTR *pTagName) PURE;
-	STDMETHOD(GetValue)(VARIANT *pValue) PURE;
+	STDMETHOD(GetValue)(BSTR *pValue) PURE;
 	STDMETHOD(SetValue)(BSTR Value) PURE;
 	STDMETHOD(GetDateValue)(DATE *pDateValue) PURE;
 	STDMETHOD(SetDateValue)(DATE DateValue) PURE;
@@ -59,7 +59,6 @@ struct IElement : public IDispatch
 	STDMETHOD(DestroyElement)(IElement *pChildElement) PURE;
 	STDMETHOD(GetAttributeValue)(BSTR AttributeName, BSTR *pValue) PURE;
 	STDMETHOD(SetAttributeValue)(BSTR AttributeName, BSTR Value) PURE;
-	
 
 };
 
@@ -73,7 +72,7 @@ class Element : public SepaControlDispatch<IElement>, public Separatista::Elemen
 {
 public:
 	/**
-		Creates an Element with a Separatista element
+		Creates an Element with a Separatista element.
 	*/
 	Element(Separatista::Element *pElement);
 
@@ -83,7 +82,7 @@ public:
 
 	// Element Methods
 	STDMETHOD(GetTagName)(BSTR *pTagName);
-	STDMETHOD(GetValue)(VARIANT *pValue);
+	STDMETHOD(GetValue)(BSTR *pValue);
 	STDMETHOD(SetValue)(BSTR Value);
 	STDMETHOD(GetDateValue)(DATE *pDateValue);
 	STDMETHOD(SetDateValue)(DATE DateValue);
@@ -97,7 +96,7 @@ public:
 	// Elementlistener
 	void elementValueChanged(Separatista::Element *pElement, const wchar_t *pValue);
 	void elementCreated(Separatista::Element *pParentElement, Separatista::Element *pChildElement);
-	void elementDeleted(Separatista::Element *pParentElement, Separatista::Element *pChildElement);
+	void elementDeleted(Separatista::Element *pChildElement);
 
 protected:
 	/**

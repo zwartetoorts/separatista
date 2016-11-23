@@ -44,15 +44,15 @@ ChoiceElement::~ChoiceElement()
 	DEBUG_METHOD;
 
 	if (m_pChosenElement)
-		Element::deleteElement(this, m_pChosenElement);
+		Element::deleteElement(m_pChosenElement);
 }
 
-void Separatista::ChoiceElement::fromDOMDocument(DOMElement * pDOMElement, const ErrorOptions errorOptions)
+void ChoiceElement::fromDOMDocument(xercesc::DOMElement * pDOMElement, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
 
 	// Get the first child tag name
-	DOMElement *pDOMChildElement = pDOMElement->getFirstElementChild();
+	xercesc::DOMElement *pDOMChildElement = pDOMElement->getFirstElementChild();
 	if (!pDOMChildElement)
 		return;
 
@@ -77,7 +77,7 @@ xercesc::DOMElement* ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocu
 {
 	DEBUG_METHOD;
 
-	DOMElement *pChildElement = NULL;
+	xercesc::DOMElement *pChildElement = NULL;
 
 	// Create tag and call toDOMDocument
 	try
@@ -146,7 +146,7 @@ Element* ChoiceElement::createElementByTag(const wchar_t *pTagName, size_t nInde
 			if (pElement)
 			{
 				if (m_pChosenElement)
-					Element::deleteElement(this, m_pChosenElement);
+					Element::deleteElement(m_pChosenElement);
 				m_pChosenElement = pElement;
 				onElementCreated(pElement);
 				return pElement;
@@ -166,7 +166,7 @@ void ChoiceElement::destroyElement(Element *pElement)
 	if (m_pChosenElement == pElement)
 	{
 		m_pChosenElement = NULL;
-		Element::deleteElement(this, pElement);
+		Element::deleteElement(pElement);
 	}
 	else
 	{

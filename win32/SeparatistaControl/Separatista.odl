@@ -229,10 +229,10 @@ library Separatista
 		[ propget, helpstring("The element XML tag") ]
 		HRESULT __stdcall TagName(
 			[out, retval] BSTR *pTagName);
-		[ propget, helpstring("The element value") ]
+		[ propget, helpstring("The element value"), id(DISPID_VALUE) ]
 		HRESULT __stdcall Value(
-			[out, retval] VARIANT *pValue);
-		[ propput, helpstring("The element value") ]
+			[out, retval] BSTR *pValue);
+		[ propput, helpstring("The element value"), id(DISPID_VALUE) ]
 		HRESULT __stdcall Value(
 			[in] BSTR Value);
 		[ propget, helpstring("The element value as date") ]
@@ -244,12 +244,12 @@ library Separatista
 		[ helpstring("Get the element by tag name at index") ]
 		HRESULT __stdcall GetElementByTagName(
 			[in] BSTR TagName,
-			[in, defaultvalue(0)] UINT index,
+			[in, defaultvalue(0)] int index,
 			[out, retval] IElement **ppElement);
 		[ helpstring("Create the element by tag name at index") ]
 		HRESULT __stdcall CreateElementByTagName(
 			[in] BSTR TagName,
-			[in, defaultvalue(0)] UINT index,
+			[in, defaultvalue(0)] int index,
 			[out, retval] IElement **ppElement);
 		[ helpstring("Destroy the child element") ]
 		HRESULT __stdcall DestroyElement(
@@ -297,11 +297,14 @@ library Separatista
 		dual,
 		odl
 	]
-	interface ICustomerDirectDebitInitiation : IElement
+	interface ICustomerDirectDebitInitiation : IDispatch
 	{
 		[ propget, helpstring("The document namespace.") ]
 		HRESULT __stdcall Namespace(
 			[out, retval] BSTR *pNamespace);
+		[ propget, helpstring("The root element") ]
+		HRESULT __stdcall RootElement(
+			[out, retval] IElement **ppElement);
 		[ helpstring("Shows the user a save dialog and saves the document to the specified location.") ]
 		HRESULT __stdcall Save(
 			[in, defaultvalue(NULL)] long hWnd,
@@ -328,7 +331,6 @@ library Separatista
 	coclass CustomerDirectDebitInitiation
 	{
 		[default] interface ICustomerDirectDebitInitiation;
-		interface IElement;
 		interface ISupportErrorInfo;
 		interface IDispatch;
 	};
