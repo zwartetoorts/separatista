@@ -49,6 +49,69 @@ static const ElementDescriptor Separatista::pain_008_001::PaymentIdentification1
 	}
 };
 
+static const ElementDescriptor Separatista::pain_008_001::DirectDebitTransactionInformation9[] =
+{
+	{
+		SEPARATISTA_TAG("PmtId"),		// TagName
+		BranchElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(PaymentIdentification1)
+	},
+	{
+		SEPARATISTA_TAG("InstdAmt"),	// TagName
+		AttributedLeafElement::createElement,// Creator function
+		1,								// Min
+		1,								// Max
+		&Validators.DecimalNumberValidator, // Validator
+		0,								// Number of child elements
+		NULL							// Child elements
+	},
+	{
+		SEPARATISTA_TAG("DrctDbtTx"),	// TagName
+		BranchElement::createElement,	// Creator function
+		0,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(DirectDebitTransaction6)
+	},
+	{
+		SEPARATISTA_TAG("DbtrAgt"),		// TagName
+		BranchElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(BranchAndFinancialInstitutionIdentification4)
+	},
+	{
+		SEPARATISTA_TAG("Dbtr"),		// TagName
+		BranchElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(PartyIdentification32)
+	},
+	{
+		SEPARATISTA_TAG("DbtrAcct"),	// TagName
+		BranchElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(CashAccount16)
+	},
+	{
+		SEPARATISTA_TAG("RmtInf"),		// TagName
+		BranchElement::createElement,	// Creator function
+		0,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(RemittanceInformation5)
+	}
+};
+
+
+
 static const ElementDescriptor Separatista::pain_008_001::DirectDebitTransactionInformation13[] = 
 {
 	{
@@ -60,7 +123,7 @@ static const ElementDescriptor Separatista::pain_008_001::DirectDebitTransaction
 		SEPARATISTA_ELEMENTS(PaymentIdentification1)
 	},
 	{
-		SEPARATISTA_TAG("InstdAmd"),	// TagName
+		SEPARATISTA_TAG("InstdAmt"),	// TagName
 		AttributedLeafElement::createElement,// Creator function
 		1,								// Min
 		1,								// Max

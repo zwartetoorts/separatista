@@ -117,6 +117,7 @@ SeparatistaDocument* DocumentReader::getDocument()
 	// Insert new supported document types here...
 	std::unordered_map<std::wstring, SeparatistaDocumentCreatorFunc> documentCreatorMap(
 	{
+		{ pain_008_001::CustomerDirectDebitInitiationV02::m_NameSpaceURI, SeparatistaDocumentCreator<pain_008_001::CustomerDirectDebitInitiationV02> },
 		{ pain_008_001::CustomerDirectDebitInitiationV04::m_NameSpaceURI, SeparatistaDocumentCreator<pain_008_001::CustomerDirectDebitInitiationV04> }
 	});
 

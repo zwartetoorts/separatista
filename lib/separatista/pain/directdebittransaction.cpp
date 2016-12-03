@@ -29,6 +29,18 @@
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
+static const ElementDescriptor Separatista::pain_008_001::DirectDebitTransaction6[] =
+{
+	{
+		SEPARATISTA_TAG("MndtRltdInf"),	// TagName
+		BranchElement::createElement,	// Creator function
+		0,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(MandateRelatedInformation8)
+	}
+};
+
 static const ElementDescriptor Separatista::pain_008_001::DirectDebitTransaction7[] =
 {
 	{

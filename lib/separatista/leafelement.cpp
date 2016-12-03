@@ -61,7 +61,7 @@ xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument,
 	// Create element and set value
 	try
 	{
-		pElement = pDocument->createElement(getTag());
+		pElement = pDocument->createElementNS(pParent->getNamespaceURI(), getTag());
 		if (pElement)
 		{
 			pParent->appendChild(pElement);
@@ -101,7 +101,9 @@ const wchar_t* LeafElement::getTextValue() const
 void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
+	const Validator *pValidator;
 
+	pValidator = getElementDescriptor()->m_pValidator;
 	switch (errorOptions)
 	{
 	case Element::AcceptValue:
@@ -111,7 +113,8 @@ void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOption
 	case Element::ClearValue:
 		try
 		{
-			getElementDescriptor()->m_pValidator->validate(pValue, this);
+			if(pValidator)
+				pValidator->validate(pValue, this);
 			m_value = pValue;
 			onElementValueChanged(pValue);
 		}
@@ -123,7 +126,8 @@ void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOption
 		break;
 	case Element::ThrowExceptions:
 	default:
-		getElementDescriptor()->m_pValidator->validate(pValue, this);
+		if (pValidator)
+			pValidator->validate(pValue, this);
 		m_value = pValue;
 		onElementValueChanged(pValue);
 	}

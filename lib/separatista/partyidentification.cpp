@@ -76,6 +76,18 @@ static const ElementDescriptor Separatista::PersonIdentification5[] =
 	}
 };
 
+static const ElementDescriptor Separatista::Party6Choice[] =
+{
+	{
+		SEPARATISTA_TAG("PrvtId"),		// TagName
+		BranchElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(PersonIdentification5)
+	}
+};
+
 static const ElementDescriptor Separatista::Party11Choice[] = 
 {
 	{
@@ -87,6 +99,28 @@ static const ElementDescriptor Separatista::Party11Choice[] =
 		SEPARATISTA_ELEMENTS(PersonIdentification5)
 	}
 };
+
+static const ElementDescriptor Separatista::PartyIdentification32[] =
+{
+	{
+		SEPARATISTA_TAG("Nm"),
+		LeafElement::createElement,
+		0,
+		1,
+		&Validators.Max140TextValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("Id"),			// TagName
+		ChoiceElement::createElement,	// Creator function
+		0,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(Party6Choice)
+	}
+};
+
 
 static const ElementDescriptor Separatista::PartyIdentification43[] = 
 {

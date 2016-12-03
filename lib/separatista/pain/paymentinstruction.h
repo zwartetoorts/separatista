@@ -27,6 +27,7 @@ namespace Separatista
 {
 	namespace pain_008_001
 	{
+		extern const ElementDescriptor PaymentInstruction4[12];
 		extern const ElementDescriptor PaymentInstruction10[12];
 	}
 }

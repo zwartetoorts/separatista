@@ -28,6 +28,7 @@
 namespace Separatista
 {
 	extern const ElementDescriptor AccountIdentification4Choice[1];
+	extern const ElementDescriptor CashAccount16[1];
 	extern const ElementDescriptor CashAccount24[1];
 }
 

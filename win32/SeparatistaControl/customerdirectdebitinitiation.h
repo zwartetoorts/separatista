@@ -40,6 +40,12 @@ DEFINE_GUID(CLSID_CUSTOMERDIRECTDEBITINITIATION,
 
 struct ICustomerDirectDebitInitiation : public IDispatch
 {
+	typedef enum
+	{
+		V2 = 1,
+		V4
+	} DocumentVersion;
+
 	// IDispatch
 	STDMETHOD_(ULONG, AddRef)() PURE;
 	STDMETHOD_(ULONG, Release)() PURE;
@@ -50,6 +56,8 @@ struct ICustomerDirectDebitInitiation : public IDispatch
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
 	
 	// ICustomerDirectDebitInitiation
+	STDMETHOD(GetVersion)(DocumentVersion *pVersion) PURE;
+	STDMETHOD(SetVersion)(DocumentVersion Version) PURE;
 	STDMETHOD(GetNamespace)(BSTR *pNamespace) PURE;
 	STDMETHOD(GetRootElement)(IElement **ppElement) PURE;
 	STDMETHOD(Save)(LONG hWnd, Separatista::IOErrorCode *pErrorCode) PURE;
@@ -76,6 +84,8 @@ public:
 	// Subclass for ISupportErrorInfo
 	STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject);
 
+	STDMETHOD(GetVersion)(DocumentVersion *pVersion);
+	STDMETHOD(SetVersion)(DocumentVersion Version);
 	STDMETHOD(GetNamespace)(BSTR *pNamespace);
 	STDMETHOD(GetRootElement)(IElement **ppElement);
 	STDMETHOD(Save)(LONG hWnd, Separatista::IOErrorCode *pErrorCode);
@@ -90,6 +100,7 @@ protected:
 	~CustomerDirectDebitInitiation();
 
 private:
+	DocumentVersion m_nVersion;
 	Separatista::pain_008_001::CustomerDirectDebitInitiation *m_pCustomerDirectDebitInitiation;
 };
 

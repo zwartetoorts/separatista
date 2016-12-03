@@ -28,7 +28,9 @@ namespace Separatista
 	extern const ElementDescriptor PersonIdentificationSchemeName1Choice[1];
 	extern const ElementDescriptor GenericPersonIdentification1[2];
 	extern const ElementDescriptor PersonIdentification5[1];
+	extern const ElementDescriptor Party6Choice[1];
 	extern const ElementDescriptor Party11Choice[1];
+	extern const ElementDescriptor PartyIdentification32[2];
 	extern const ElementDescriptor PartyIdentification43[2];
 }
 

@@ -25,6 +25,7 @@
 #include "separatista/validator.h"
 #include "separatista/cashaccount.h"
 #include "separatista/choiceelement.h"
+#include "separatista/leafelement.h"
 
 using namespace Separatista;
 
@@ -32,12 +33,24 @@ static const ElementDescriptor Separatista::AccountIdentification4Choice[] =
 {
 	{
 		SEPARATISTA_TAG("IBAN"),		// TagName
-		ChoiceElement::createElement,	// Creator function
+		LeafElement::createElement,		// Creator function
 		1,								// Min
 		1,								// Max
 		&Validators.IBANValidator,		// Validator
 		0,								// Number of child elements
 		NULL							// Child elements
+	}
+};
+
+static const ElementDescriptor Separatista::CashAccount16[] =
+{
+	{
+		SEPARATISTA_TAG("Id"),			// TagName
+		ChoiceElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(AccountIdentification4Choice)
 	}
 };
 

@@ -28,6 +28,19 @@
 
 using namespace Separatista;
 
+static const ElementDescriptor Separatista::RemittanceInformation5[] =
+{
+	{
+		SEPARATISTA_TAG("Ustrd"),		// TagName
+		LeafElement::createElement,		// Creator function
+		0,								// Min
+		0,								// Max
+		&Validators.Max140TextValidator, // Validator
+		0,								// Number of child elements
+		NULL							// Child elements
+	}
+};
+
 static const ElementDescriptor Separatista::RemittanceInformation7[] =
 {
 	{

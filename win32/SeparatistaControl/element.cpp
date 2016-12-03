@@ -134,6 +134,38 @@ STDMETHODIMP Element::SetValue(BSTR Value)
 	return S_OK;
 }
 
+STDMETHODIMP Element::GetCurrencyValue(VARIANT *pValue)
+{
+	if (!m_pElement)
+		return E_NOT_VALID_STATE;
+
+	try
+	{
+		*pValue = _variant_t(m_pElement->getDoubleValue()).Detach();
+	}
+	catch (const Separatista::ElementException &e)
+	{
+		return SetErrorInfo(e);
+	}
+	return S_OK;
+}
+
+STDMETHODIMP Element::SetCurrencyValue(VARIANT Value)
+{
+	if (!m_pElement)
+		return E_NOT_VALID_STATE;
+
+	try
+	{
+		m_pElement->setValue((double)_variant_t(Value));
+	}
+	catch (const Separatista::InvalidValueException &e)
+	{
+		return SetErrorInfo(e);
+	}
+	return S_OK;
+}
+
 STDMETHODIMP Element::GetDateValue(DATE *pDateValue)
 {
 	if (!m_pElement)
@@ -158,6 +190,26 @@ STDMETHODIMP Element::SetDateValue(DATE DateValue)
 	try
 	{
 		m_pElement->setValue(StdTimeFromDateType(DateValue));
+	}
+	catch (const Separatista::ElementException &e)
+	{
+		return SetErrorInfo(e);
+	}
+	catch (const Separatista::InvalidValueException &iv)
+	{
+		return SetErrorInfo(iv);
+	}
+	return S_OK;
+}
+
+STDMETHODIMP Element::SetDateTimeValue(DATE DateTimeValue)
+{
+	if (!m_pElement)
+		return E_NOT_VALID_STATE;
+
+	try
+	{
+		m_pElement->setValue(StdTimeFromDateType(DateTimeValue), true);
 	}
 	catch (const Separatista::ElementException &e)
 	{
@@ -265,5 +317,37 @@ STDMETHODIMP Element::SetAttributeValue(BSTR AttributeName, BSTR Value)
 	{
 		return SetErrorInfo(iv);
 	}
+	return S_OK;
+}
+
+STDMETHODIMP Element::GetAllByTagName(BSTR TagName, IEnumVARIANT **ppEnumVariant)
+{
+	EnumVariant *pEnumVariant;
+	
+	if (!m_pElement)
+		return E_NOT_VALID_STATE;
+
+	pEnumVariant = new EnumVariant();
+	if (!pEnumVariant)
+	{
+		*ppEnumVariant = NULL;
+		return E_OUTOFMEMORY;
+	}
+	pEnumVariant->AddRef();
+
+	try
+	{
+		Separatista::Element::TagKeyRange range = m_pElement->getAllByTagName(TagName);
+		for (auto p = range.m_begin; p != range.m_end; p++)
+		{
+			pEnumVariant->Add(_variant_t(new Element(p->second)).Detach());
+		}
+	}
+	catch (const Separatista::ElementException &e)
+	{
+		return SetErrorInfo(e);
+	}
+
+	*ppEnumVariant = pEnumVariant;
 	return S_OK;
 }

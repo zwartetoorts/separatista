@@ -49,7 +49,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll,
 
 	DWORD dwPathLen = 0;
 	DWORD dwPathRet;
-
+	
 	switch(fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:

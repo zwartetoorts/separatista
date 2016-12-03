@@ -44,8 +44,12 @@ Element(pElementDescriptor)
 BranchElement::~BranchElement()
 {
 	DEBUG_METHOD;
-	for (auto it = m_childElements.begin(); it != m_childElements.end(); it++)
-		Element::deleteElement(it->second);
+	for (auto it = m_childElements.begin(); it != m_childElements.end(); )
+	{
+		Element *pElement = it->second;
+		m_childElements.erase(it++);
+		Element::deleteElement(pElement);
+	}
 }
 
 Element* BranchElement::createElement(const ElementDescriptor *pElementDescriptor)
@@ -72,7 +76,7 @@ Element* BranchElement::createElementByTag(const wchar_t *pTag, size_t nIndex)
 	const ElementDescriptor *pElementDescriptor;
 	unsigned int hash;
 
-	pElement = getElementByTag(pTag);
+	pElement = getElementByTag(pTag, nIndex);
 	if (!pElement)
 	{
 		// Find the element descriptor
@@ -94,7 +98,8 @@ Element* BranchElement::createElementByTag(const wchar_t *pTag, size_t nIndex)
 				Element *pElement = pElementDescriptor->m_pElements[i].m_pfCreateElement(&pElementDescriptor->m_pElements[i]);
 				if (pElement)
 				{
-					m_childElements.insert(std::pair<TagKey, Element*>(TagKey(pTag, nIndex, pElementDescriptor), pElement));
+					// Important: create TagKey with ElementDescriptor::m_pTag, not with pTag wich can be deleted at some time
+					m_childElements.insert(std::pair<TagKey, Element*>(TagKey(pElementDescriptor->m_pElements[i].m_pTag, nIndex, pElementDescriptor), pElement));
 					onElementCreated(pElement);
 				}
 				return pElement;
@@ -197,7 +202,7 @@ xercesc::DOMElement* BranchElement::toDOMDocument(xercesc::DOMDocument *pDOMDocu
 	// Create my element
 	try
 	{
-		pChildElement = pDOMDocument->createElement(getTag());
+		pChildElement = pDOMDocument->createElementNS(pDOMParent->getNamespaceURI(), getTag());
 		if (pChildElement)
 		{
 			pDOMParent->appendChild(pChildElement);

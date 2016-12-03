@@ -235,12 +235,21 @@ library Separatista
 		[ propput, helpstring("The element value"), id(DISPID_VALUE) ]
 		HRESULT __stdcall Value(
 			[in] BSTR Value);
+		[ propget, helpstring("The element value as currency") ]
+		HRESULT __stdcall CurrencyValue(
+			[out, retval] VARIANT *Value);
+		[ propput, helpstring("The element value as currency") ]
+		HRESULT __stdcall CurrencyValue(
+			[in] VARIANT Value);
 		[ propget, helpstring("The element value as date") ]
 		HRESULT __stdcall DateValue(
 			[out, retval] DATE *pDateValue);
 		[ propput, helpstring("The element value as date") ]
 		HRESULT __stdcall DateValue(
 			[in] DATE DateValue);
+		[ propput, helpstring("The element value as date with time") ]
+		HRESULT __stdcall DateTimeValue(
+			[in] DATE DateTimeValue);
 		[ helpstring("Get the element by tag name at index") ]
 		HRESULT __stdcall GetElementByTagName(
 			[in] BSTR TagName,
@@ -251,7 +260,7 @@ library Separatista
 			[in] BSTR TagName,
 			[in, defaultvalue(0)] int index,
 			[out, retval] IElement **ppElement);
-		[ helpstring("Destroy the child element") ]
+		[ helpstring("Destroy the child element (and all it's children if present)") ]
 		HRESULT __stdcall DestroyElement(
 			[in] IElement *ChildElement);
 		[ helpstring("Returns the value of an attribute by name") ]
@@ -262,6 +271,10 @@ library Separatista
 		HRESULT __stdcall SetAttributeValue(
 			[in] BSTR AttributeName,
 			[in] BSTR Value);
+		[ helpstring("Get all the elements by tag name") ]
+		HRESULT __stdcall GetAllByTagName(
+			[in] BSTR TagName,
+			[out, retval] IEnumVariant **ppEnumVariant);
 	};
 
 	[
@@ -286,6 +299,12 @@ library Separatista
 		IOERR_USER
 	} IOErrorCode;
 
+	typedef enum
+	{
+		V2 = 1,
+		V4
+	} CustomerDirectDebitInitiationDocumentVersion;
+
 	/**
 		CustomerDirectDebitInitiation
 	*/
@@ -299,6 +318,12 @@ library Separatista
 	]
 	interface ICustomerDirectDebitInitiation : IDispatch
 	{
+		[ propget, helpstring("The document version") ]
+		HRESULT __stdcall Version(
+			[out, retval] CustomerDirectDebitInitiationDocumentVersion* pVersion);
+		[ propput, helpstring("The document version") ]
+		HRESULT __stdcall Version(
+			[in] CustomerDirectDebitInitiationDocumentVersion Version);
 		[ propget, helpstring("The document namespace.") ]
 		HRESULT __stdcall Namespace(
 			[out, retval] BSTR *pNamespace);

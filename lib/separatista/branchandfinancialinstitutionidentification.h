@@ -27,7 +27,9 @@
 
 namespace Separatista
 {
+	extern const ElementDescriptor FinancialInstitutionIdentification7[1];
 	extern const ElementDescriptor FinancialInstitutionIdentification8[1];
+	extern const ElementDescriptor BranchAndFinancialInstitutionIdentification4[1];
 	extern const ElementDescriptor BranchAndFinancialInstitutionIdentification5[1];
 }
 

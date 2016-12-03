@@ -75,6 +75,35 @@ static const ElementDescriptor Separatista::pain_008_001::LocalInstrument2Choice
 	}
 };
 
+static const ElementDescriptor Separatista::pain_008_001::PaymentTypeInformation20[] =
+{
+	{
+		SEPARATISTA_TAG("SvcLvl"),		// TagName
+		ChoiceElement::createElement,	// Creator function
+		0,								// Min
+		1,								// Max
+		NULL, // Validator
+		SEPARATISTA_ELEMENTS(ServiceLevel8Choice)
+	},
+	{
+		SEPARATISTA_TAG("LclInstrm"),	// TagName
+		ChoiceElement::createElement,	// Creator function
+		0,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(LocalInstrument2Choice)
+	},
+	{
+		SEPARATISTA_TAG("SeqTp"),		// TagName
+		LeafElement::createElement,		// Creator function
+		0,								// Min
+		1,								// Max
+		&Validators.SequenceType3CodeValidator, // Validator
+		0,								// Number of child elements
+		NULL							// Child elements
+	}
+};
+
 static const ElementDescriptor Separatista::pain_008_001::PaymentTypeInformation24[] =
 {
 	{

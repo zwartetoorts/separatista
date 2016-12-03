@@ -27,6 +27,7 @@ namespace Separatista
 {
 	namespace pain_008_001
 	{
+		extern const ElementDescriptor MandateRelatedInformation6[2];
 		extern const ElementDescriptor MandateRelatedInformation8[2];
 	}
 }

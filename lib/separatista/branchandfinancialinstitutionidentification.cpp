@@ -28,6 +28,19 @@
 
 using namespace Separatista;
 
+static const ElementDescriptor Separatista::FinancialInstitutionIdentification7[] =
+{
+	{
+		SEPARATISTA_TAG("BIC"),			// TagName
+		LeafElement::createElement,		// Creator function
+		0,								// Min
+		1,								// Max
+		NULL,							// Validator
+		0,								// Number of child elements
+		NULL							// Child elements
+	}
+};
+
 static const ElementDescriptor Separatista::FinancialInstitutionIdentification8[] = 
 {
 	{
@@ -38,6 +51,18 @@ static const ElementDescriptor Separatista::FinancialInstitutionIdentification8[
 		NULL,							// Validator
 		0,								// Number of child elements
 		NULL							// Child elements
+	}
+};
+
+static const ElementDescriptor Separatista::BranchAndFinancialInstitutionIdentification4[] =
+{
+	{
+		SEPARATISTA_TAG("FinInstnId"),	// TagName
+		BranchElement::createElement,	// Creator function
+		1,								// Min
+		1,								// Max
+		NULL,							// Validator
+		SEPARATISTA_ELEMENTS(FinancialInstitutionIdentification7)
 	}
 };
 

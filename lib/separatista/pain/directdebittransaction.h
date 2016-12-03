@@ -27,6 +27,7 @@ namespace Separatista
 {
 	namespace pain_008_001
 	{
+		extern const ElementDescriptor DirectDebitTransaction6[1];
 		extern const ElementDescriptor DirectDebitTransaction7[1];
 	}
 }

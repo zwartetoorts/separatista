@@ -29,6 +29,7 @@ namespace Separatista
 	{
 		extern const ElementDescriptor ServiceLevel8Choice[2];
 		extern const ElementDescriptor LocalInstrument2Choice[2];
+		extern const ElementDescriptor PaymentTypeInformation20[3];
 		extern const ElementDescriptor PaymentTypeInformation24[3];
 	}
 }

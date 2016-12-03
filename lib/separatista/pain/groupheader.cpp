@@ -29,6 +29,54 @@
 
 using namespace Separatista;
 
+static const ElementDescriptor Separatista::pain_008_001::GroupHeader39[] =
+{
+	{
+		SEPARATISTA_TAG("MsgId"),
+		LeafElement::createElement,
+		1,
+		1,
+		&Validators.Max35TextValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("CreDtTm"),
+		LeafElement::createElement,
+		1,
+		1,
+		&Validators.ISODateTimeValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("NbOfTxs"),
+		LeafElement::createElement,
+		1,
+		1,
+		&Validators.Max15NumericTextValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("CtrlSum"),
+		LeafElement::createElement,
+		0,
+		1,
+		&Validators.DecimalNumberValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("InitgPty"),
+		BranchElement::createElement,
+		1,
+		1,
+		NULL,
+		SEPARATISTA_ELEMENTS(PartyIdentification32)
+	}
+};
+
 static const ElementDescriptor Separatista::pain_008_001::GroupHeader55[] = 
 {
 	{

@@ -28,6 +28,28 @@
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
+static const ElementDescriptor Separatista::pain_008_001::MandateRelatedInformation6[] =
+{
+	{
+		SEPARATISTA_TAG("MndtId"),		// TagName
+		LeafElement::createElement,		// Creator function
+		0,								// Min
+		1,								// Max
+		&Validators.Max35TextValidator, // Validator
+		0,								// Number of child elements
+		NULL							// Child elements
+	},
+	{
+		SEPARATISTA_TAG("DtOfSgntr"),	// TagName
+		LeafElement::createElement,		// Creator function
+		0,								// Min
+		1,								// Max
+		&Validators.ISODateValidator,	// Validator
+		0,								// Number of child elements
+		NULL							// Child elements
+	}
+};
+
 static const ElementDescriptor Separatista::pain_008_001::MandateRelatedInformation8[] =
 {
 	{

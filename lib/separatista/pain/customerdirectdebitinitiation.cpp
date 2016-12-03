@@ -45,6 +45,40 @@
 using namespace Separatista;
 using namespace Separatista::pain_008_001;
 
+const wchar_t* CustomerDirectDebitInitiationV02::m_NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.02");
+
+const ElementDescriptor CustomerDirectDebitInitiationV02[] =
+{
+	{
+		SEPARATISTA_TAG("GrpHdr"),
+		BranchElement::createElement,
+		1,
+		1,
+		NULL,
+		SEPARATISTA_ELEMENTS(GroupHeader39)
+	},
+	{
+		SEPARATISTA_TAG("PmtInf"),
+		BranchElement::createElement,
+		1,
+		0,
+		NULL,
+		SEPARATISTA_ELEMENTS(PaymentInstruction4)
+	}
+};
+
+const ElementDescriptor CustomerDirectDebitInitiationV02::m_CustomerDirectDebitInitiationV02[] =
+{
+	{
+		SEPARATISTA_TAG("CstmrDrctDbtInitn"),
+		BranchElement::createElement,
+		1,
+		1,
+		NULL,
+		SEPARATISTA_ELEMENTS(::CustomerDirectDebitInitiationV02)
+	}
+};
+
 const wchar_t* CustomerDirectDebitInitiationV04::m_NameSpaceURI = TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.04");
 
 const ElementDescriptor CustomerDirectDebitInitiationV04[] =
@@ -99,12 +133,16 @@ CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescri
 void CustomerDirectDebitInitiation::calcSum()
 {
 	DEBUG_METHOD;
+	
+	double sum = 0, pmtsum;
+	int count = 0, pmtcount;
 
-	double sum = 0;
-	int count = 0;
+	Element *pGrpHdr = getElementByTag(TEXT("GrpHdr"));
+	if (!pGrpHdr)
+		return;
 
-	Element *pNbOfTxs = getElementByTag(TEXT("NbOfTxs"));
-	Element *pCtrlSum = getElementByTag(TEXT("CtrlSum"));
+	Element *pNbOfTxs = pGrpHdr->createElementByTag(TEXT("NbOfTxs"));
+	Element *pCtrlSum = pGrpHdr->createElementByTag(TEXT("CtrlSum"));
 
 	// If both elements aren't present, abort
 	if (!pNbOfTxs && !pCtrlSum)
@@ -114,14 +152,25 @@ void CustomerDirectDebitInitiation::calcSum()
 	Element::TagKeyRange rangePmtInf = getAllByTagName(TEXT("PmtInf"));
 	for (auto itPmtInf = rangePmtInf.m_begin; itPmtInf != rangePmtInf.m_end; itPmtInf++)
 	{
+		pmtsum = 0;
+		pmtcount = 0;
 		Element::TagKeyRange rangeDrctDbtTxInf = itPmtInf->second->getAllByTagName(TEXT("DrctDbtTxInf"));
 		for (auto itDrctDbtTxInf = rangeDrctDbtTxInf.m_begin; itDrctDbtTxInf != rangeDrctDbtTxInf.m_end; itDrctDbtTxInf++)
 		{
-			++count;
+			++pmtcount;
 			Element *pAmount = itDrctDbtTxInf->second->getElementByTag(TEXT("InstdAmt"));
 			if (pAmount)
-				sum += pAmount->getDoubleValue();
+				pmtsum += pAmount->getDoubleValue();
 		}
+		// Set CtrlSum abd NbOfTxs for PmtInf
+		Element *pPmtNbOfTxs = itPmtInf->second->createElementByTag(TEXT("NbOfTxs"));
+		if (pPmtNbOfTxs)
+			pPmtNbOfTxs->setValue(pmtcount, Element::AcceptValue);
+		Element *pPmtCrtlSum = itPmtInf->second->createElementByTag(TEXT("CtrlSum"));
+		if (pPmtCrtlSum)
+			pPmtCrtlSum->setValue(pmtsum, Element::AcceptValue);
+		sum += pmtsum;
+		count += pmtcount;
 	}
 
 	pNbOfTxs->setValue(count, Element::AcceptValue);
@@ -203,9 +252,13 @@ void CustomerDirectDebitInitiation::elementCreated(Element * pParent, Element * 
 	{
 		pChild->addElementListener(this);
 	}
-	else if (std::wcscmp(TEXT("InstdAmd"), pChild->getTag()) == 0)
+	else if (std::wcscmp(TEXT("InstdAmt"), pChild->getTag()) == 0)
 	{
 		pChild->addElementListener(this);
+	}
+	else if (std::wcscmp(TEXT("GrpHdr"), pChild->getTag()) == 0)
+	{
+		calcSum();
 	}
 }
 
@@ -221,11 +274,23 @@ void CustomerDirectDebitInitiation::elementDeleted(Element * pElement)
 	{
 		calcSum();
 	}
-	else if (std::wcscmp(TEXT("InstdAmd"), pElement->getTag()) == 0)
+	else if (std::wcscmp(TEXT("InstdAmt"), pElement->getTag()) == 0)
 	{
 		calcSum();
 	}
 
+}
+
+CustomerDirectDebitInitiationV02::CustomerDirectDebitInitiationV02()
+	:CustomerDirectDebitInitiation(m_CustomerDirectDebitInitiationV02)
+{
+	DEBUG_METHOD;
+}
+
+CustomerDirectDebitInitiationV02::CustomerDirectDebitInitiationV02(xercesc::DOMDocument *pDOMDocument, const ErrorOptions errorOptions)
+	: CustomerDirectDebitInitiation(m_CustomerDirectDebitInitiationV02, pDOMDocument, errorOptions)
+{
+	DEBUG_METHOD;
 }
 
 CustomerDirectDebitInitiationV04::CustomerDirectDebitInitiationV04()

@@ -27,6 +27,7 @@ namespace Separatista
 {
 	namespace pain_008_001
 	{
+		extern const ElementDescriptor GroupHeader39[5];
 		extern const ElementDescriptor GroupHeader55[5];
 	}
 }

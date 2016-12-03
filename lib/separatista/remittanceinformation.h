@@ -25,6 +25,7 @@
 
 namespace Separatista
 {
+	extern const ElementDescriptor RemittanceInformation5[1];
 	extern const ElementDescriptor RemittanceInformation7[1];
 }
 

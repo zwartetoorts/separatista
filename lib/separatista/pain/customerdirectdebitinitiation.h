@@ -74,6 +74,23 @@ namespace Separatista
 			
 		};
 
+		class SEPARATISTA_EXTERN CustomerDirectDebitInitiationV02 : public CustomerDirectDebitInitiation
+		{
+		public:
+			CustomerDirectDebitInitiationV02();
+
+			CustomerDirectDebitInitiationV02(xercesc::DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
+
+			static const wchar_t *m_NameSpaceURI;
+
+			static const ElementDescriptor m_CustomerDirectDebitInitiationV02[2];
+
+			const wchar_t* getNamespaceURI() const {
+				return m_NameSpaceURI;
+			};
+
+		};
+
 		class SEPARATISTA_EXTERN CustomerDirectDebitInitiationV04 : public CustomerDirectDebitInitiation
 		{
 		public:

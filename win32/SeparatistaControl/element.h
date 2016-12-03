@@ -52,13 +52,17 @@ struct IElement : public IDispatch
 	STDMETHOD(GetTagName)(BSTR *pTagName) PURE;
 	STDMETHOD(GetValue)(BSTR *pValue) PURE;
 	STDMETHOD(SetValue)(BSTR Value) PURE;
+	STDMETHOD(GetCurrencyValue)(VARIANT *pValue) PURE;
+	STDMETHOD(SetCurrencyValue)(VARIANT Value) PURE;
 	STDMETHOD(GetDateValue)(DATE *pDateValue) PURE;
 	STDMETHOD(SetDateValue)(DATE DateValue) PURE;
+	STDMETHOD(SetDateTimeValue)(DATE DateTimeValue) PURE;
 	STDMETHOD(GetElementByTagName)(BSTR TagName, UINT index, IElement **ppElement) PURE;
 	STDMETHOD(CreateElementByTagName)(BSTR TagName, UINT index, IElement **ppElement) PURE;
 	STDMETHOD(DestroyElement)(IElement *pChildElement) PURE;
 	STDMETHOD(GetAttributeValue)(BSTR AttributeName, BSTR *pValue) PURE;
 	STDMETHOD(SetAttributeValue)(BSTR AttributeName, BSTR Value) PURE;
+	STDMETHOD(GetAllByTagName)(BSTR TagName, IEnumVARIANT **ppEnumVariant) PURE;
 
 };
 
@@ -84,13 +88,17 @@ public:
 	STDMETHOD(GetTagName)(BSTR *pTagName);
 	STDMETHOD(GetValue)(BSTR *pValue);
 	STDMETHOD(SetValue)(BSTR Value);
+	STDMETHOD(GetCurrencyValue)(VARIANT *pValue);
+	STDMETHOD(SetCurrencyValue)(VARIANT Value);
 	STDMETHOD(GetDateValue)(DATE *pDateValue);
 	STDMETHOD(SetDateValue)(DATE DateValue);
+	STDMETHOD(SetDateTimeValue)(DATE DateTimeValue);
 	STDMETHOD(GetElementByTagName)(BSTR TagName, UINT index, IElement **ppElement);
 	STDMETHOD(CreateElementByTagName)(BSTR TagName, UINT index, IElement **ppElement);
 	STDMETHOD(DestroyElement)(IElement *pChildElement);
 	STDMETHOD(GetAttributeValue)(BSTR AttributeName, BSTR *pValue);
 	STDMETHOD(SetAttributeValue)(BSTR AttributeName, BSTR Value);
+	STDMETHOD(GetAllByTagName)(BSTR TagName, IEnumVARIANT **ppEnumVariant);
 	
 
 	// Elementlistener

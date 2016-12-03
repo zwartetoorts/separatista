@@ -42,9 +42,12 @@ ChoiceElement::ChoiceElement(const ElementDescriptor *pElementDescriptor)
 ChoiceElement::~ChoiceElement()
 {
 	DEBUG_METHOD;
+	Element *pElement;
 
-	if (m_pChosenElement)
-		Element::deleteElement(m_pChosenElement);
+	pElement = m_pChosenElement;
+	m_pChosenElement = NULL;
+	if (pElement)
+		Element::deleteElement(pElement);
 }
 
 void ChoiceElement::fromDOMDocument(xercesc::DOMElement * pDOMElement, const ErrorOptions errorOptions)
@@ -82,7 +85,7 @@ xercesc::DOMElement* ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocu
 	// Create tag and call toDOMDocument
 	try
 	{
-		pChildElement = pDOMDocument->createElement(getTag());
+		pChildElement = pDOMDocument->createElementNS(pDOMParent->getNamespaceURI(), getTag());
 		if (pChildElement)
 		{
 			pDOMParent->appendChild(pChildElement);
