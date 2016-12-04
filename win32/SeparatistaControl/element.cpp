@@ -320,34 +320,44 @@ STDMETHODIMP Element::SetAttributeValue(BSTR AttributeName, BSTR Value)
 	return S_OK;
 }
 
-STDMETHODIMP Element::GetAllByTagName(BSTR TagName, IEnumVARIANT **ppEnumVariant)
+STDMETHODIMP Element::GetAllByTagName(BSTR TagName, SAFEARRAY **ppArray)
 {
-	EnumVariant *pEnumVariant;
-	
+	SAFEARRAYBOUND bound;
+	std::vector<Separatista::Element*> elements;
+
 	if (!m_pElement)
 		return E_NOT_VALID_STATE;
-
-	pEnumVariant = new EnumVariant();
-	if (!pEnumVariant)
-	{
-		*ppEnumVariant = NULL;
-		return E_OUTOFMEMORY;
-	}
-	pEnumVariant->AddRef();
 
 	try
 	{
 		Separatista::Element::TagKeyRange range = m_pElement->getAllByTagName(TagName);
 		for (auto p = range.m_begin; p != range.m_end; p++)
 		{
-			pEnumVariant->Add(_variant_t(new Element(p->second)).Detach());
+			elements.push_back(p->second);
 		}
 	}
-	catch (const Separatista::ElementException &e)
+	catch (const Separatista::ElementException &ee)
 	{
-		return SetErrorInfo(e);
+		return SetErrorInfo(ee);
 	}
 
-	*ppEnumVariant = pEnumVariant;
+	bound.lLbound = 0;
+	bound.cElements = elements.size();
+	*ppArray = SafeArrayCreate(VT_DISPATCH, 1, &bound);
+
+	IDispatch **ppElements = NULL;
+	HRESULT hr = SafeArrayAccessData(*ppArray, (void**)&ppElements);
+	if (SUCCEEDED(hr))
+	{
+		for (size_t i = bound.lLbound; i < bound.cElements; i++)
+		{
+			ppElements[i] = new Element(elements[i]);
+			ppElements[i]->AddRef();
+		}
+		SafeArrayUnaccessData(*ppArray);
+	}
+	else
+		return hr;
+
 	return S_OK;
 }

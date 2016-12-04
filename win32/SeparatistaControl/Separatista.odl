@@ -274,7 +274,7 @@ library Separatista
 		[ helpstring("Get all the elements by tag name") ]
 		HRESULT __stdcall GetAllByTagName(
 			[in] BSTR TagName,
-			[out, retval] IEnumVariant **ppEnumVariant);
+			[out, retval] SAFEARRAY(IElement*) *pArray);
 	};
 
 	[

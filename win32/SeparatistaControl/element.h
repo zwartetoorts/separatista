@@ -62,7 +62,7 @@ struct IElement : public IDispatch
 	STDMETHOD(DestroyElement)(IElement *pChildElement) PURE;
 	STDMETHOD(GetAttributeValue)(BSTR AttributeName, BSTR *pValue) PURE;
 	STDMETHOD(SetAttributeValue)(BSTR AttributeName, BSTR Value) PURE;
-	STDMETHOD(GetAllByTagName)(BSTR TagName, IEnumVARIANT **ppEnumVariant) PURE;
+	STDMETHOD(GetAllByTagName)(BSTR TagName, SAFEARRAY **ppArray) PURE;
 
 };
 
@@ -98,7 +98,7 @@ public:
 	STDMETHOD(DestroyElement)(IElement *pChildElement);
 	STDMETHOD(GetAttributeValue)(BSTR AttributeName, BSTR *pValue);
 	STDMETHOD(SetAttributeValue)(BSTR AttributeName, BSTR Value);
-	STDMETHOD(GetAllByTagName)(BSTR TagName, IEnumVARIANT **ppEnumVariant);
+	STDMETHOD(GetAllByTagName)(BSTR TagName, SAFEARRAY **ppArray);
 	
 
 	// Elementlistener
