@@ -126,8 +126,8 @@ CustomerDirectDebitInitiation::CustomerDirectDebitInitiation(const ElementDescri
 {
 	DEBUG_METHOD;
 	
-	fromDOMDocument(pDOMDocument->getDocumentElement()->getFirstElementChild(), errorOptions);
 	addElementListener(this);
+	fromDOMDocument(pDOMDocument->getDocumentElement()->getFirstElementChild(), errorOptions);
 }
 
 void CustomerDirectDebitInitiation::calcSum()
@@ -162,7 +162,7 @@ void CustomerDirectDebitInitiation::calcSum()
 			if (pAmount)
 				pmtsum += pAmount->getDoubleValue();
 		}
-		// Set CtrlSum abd NbOfTxs for PmtInf
+		// Set CtrlSum and NbOfTxs for PmtInf
 		Element *pPmtNbOfTxs = itPmtInf->second->createElementByTag(TEXT("NbOfTxs"));
 		if (pPmtNbOfTxs)
 			pPmtNbOfTxs->setValue(pmtcount, Element::AcceptValue);

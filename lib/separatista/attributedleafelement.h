@@ -55,7 +55,7 @@ namespace Separatista
 		/// Protected constructor
 		AttributedLeafElement(const ElementDescriptor* pElementDescriptor);
 
-		std::map<std::wstring, const wchar_t*> m_Attributes;
+		std::map<std::wstring, std::wstring> m_Attributes;
 	};
 }
 

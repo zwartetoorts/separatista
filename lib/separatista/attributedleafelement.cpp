@@ -52,7 +52,7 @@ xercesc::DOMElement* AttributedLeafElement::toDOMDocument(xercesc::DOMDocument *
 		try
 		{
 			for (auto it = m_Attributes.begin(); it != m_Attributes.end(); it++)
-				pElement->setAttribute(it->first.c_str(), it->second);
+				pElement->setAttribute(it->first.c_str(), it->second.c_str());
 		}
 		catch (const xercesc::DOMException &e)
 		{
@@ -85,7 +85,7 @@ void AttributedLeafElement::fromDOMDocument(xercesc::DOMElement *pDOMElement, co
 			if (pDOMNode)
 			{
 				m_Attributes.insert(
-					std::make_pair<std::wstring, const wchar_t*>(std::wstring(pDOMNode->getNodeName()), pDOMNode->getNodeValue()));
+					std::make_pair<std::wstring, std::wstring>(pDOMNode->getNodeName(), pDOMNode->getNodeValue()));
 			}
 			else
 				LOG(TEXT("BAD! DOMNodeMap returns NULL while index should be valid!"));
@@ -99,7 +99,7 @@ const wchar_t* AttributedLeafElement::getAttributeValue(const wchar_t *pAttribut
 
 	auto it = m_Attributes.find(std::wstring(pAttributeName));
 	if (it != m_Attributes.end())
-		return it->second;
+		return it->second.c_str();
 	return NULL;
 }
 
@@ -107,5 +107,5 @@ void AttributedLeafElement::setAttributeValue(const wchar_t *pAttributeName, con
 {
 	DEBUG_METHOD;
 
-	m_Attributes[std::wstring(pAttributeName)] = pValue;
+	m_Attributes[pAttributeName] = pValue;
 }

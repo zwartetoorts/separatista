@@ -173,7 +173,7 @@ void Max35TextValidator::validate(const wchar_t *pValue, Element *pElement) cons
 
 void ISODateTimeValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 
 	xercesc::XSValue::Status st;
 
@@ -189,7 +189,7 @@ void ISODateTimeValidator::validate(const wchar_t *pValue, Element *pElement) co
 
 void Max15NumericTextValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 
 	validateMaxText(pValue, 15, pElement);
 	validateNumeric(pValue, pElement);
@@ -205,7 +205,7 @@ void DecimalNumberValidator::validate(const wchar_t *pValue, Element *pElement) 
 
 void Max140TextValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 
 	validateMaxText(pValue, 140, pElement);
 }

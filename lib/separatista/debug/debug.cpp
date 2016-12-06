@@ -104,7 +104,7 @@ void Separatista::Debug::MemDebug::releaseMemory(void *ptr)
 
 bool Separatista::Debug::MemDebug::init()
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	g_memMap = new std::unordered_map < void*, MemDebug >;
 	if (!g_memMap)
 		return false;
@@ -113,8 +113,8 @@ bool Separatista::Debug::MemDebug::init()
 
 bool Separatista::Debug::MemDebug::exit()
 {
+	DEBUG_METHOD;
 	std::unordered_map<void *, MemDebug>* memMap;
-	DEBUG_METHOD
 
 	memMap = g_memMap;
 	g_memMap = NULL;

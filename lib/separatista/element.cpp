@@ -66,7 +66,7 @@ void Element::removeElementListener(ElementListener *pElementListener)
 
 const wchar_t* Element::getTag() const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	return m_pElementDescriptor->m_pTag;
 }
 

@@ -37,8 +37,8 @@
 #ifdef SEPARATISTA_DEBUG
 
 // First declare macro's
-#define LOG(message) Separatista::Debug::DebugLogger::log(message, TEXT(__FILE__), __LINE__);
-#define DEBUG_METHOD Separatista::Debug::DebugLogger __debugLogger(TEXT(__FUNCTION__));
+#define LOG(message) Separatista::Debug::DebugLogger::log(message, TEXT(__FILE__), __LINE__)
+#define DEBUG_METHOD Separatista::Debug::DebugLogger __debugLogger(TEXT(__FUNCTION__))
 
 namespace Separatista
 {

@@ -25,18 +25,18 @@ using namespace Separatista;
 
 void ElementList::addElement(Element *pElement)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	m_Elements.push_back(pElement);
 }
 
 size_t ElementList::getElementCount() const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	return m_Elements.size();
 }
 
 Element* ElementList::getElement(size_t index)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	return m_Elements.at(index);
 }

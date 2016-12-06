@@ -28,7 +28,7 @@ using namespace Separatista;
 
 Exception::Exception(const wchar_t *pMessage)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 
 	m_msg = pMessage;
 }
@@ -37,7 +37,7 @@ Exception::Exception(const wchar_t *pMessage)
 
 Exception::Exception(const wchar_t *pMessage, const wchar_t *pPath, int line)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	std::wostringstream wos;
 
 	wos << TEXT("Exception thrown from ");
@@ -55,7 +55,7 @@ Exception::Exception(const wchar_t *pMessage, const wchar_t *pPath, int line)
 
 const wchar_t* Exception::getMessage() const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	return m_msg.data();
 }
 

@@ -50,49 +50,49 @@ public:
 
 	DocumentReaderErrorHandler(DocumentReader *pDocumentReader)
 	{
-		DEBUG_METHOD
+		DEBUG_METHOD;
 		m_pDocumentReader = pDocumentReader; 
 	};
 
 	/// @see SAXParseException
 	void warning(const xercesc::SAXParseException &e)
 	{
-		DEBUG_METHOD
+		DEBUG_METHOD;
 		m_pDocumentReader->warning(e);
 	};
 
 	/// @see SAXParseException
 	void error(const xercesc::SAXParseException &e)
 	{
-		DEBUG_METHOD
+		DEBUG_METHOD;
 		m_pDocumentReader->error(e);
 	};
 
 	/// @see SAXParseException
 	void fatalError(const xercesc::SAXParseException &e)
 	{
-		DEBUG_METHOD
+		DEBUG_METHOD;
 		m_pDocumentReader->fatalError(e);
 	};
 
 	/// @see SAXParseException
 	void resetErrors()
 	{
-		DEBUG_METHOD
+		DEBUG_METHOD;
 		m_pDocumentReader->resetErrors();
 	};
 };
 
 DocumentReader::DocumentReader()
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	m_pParser = new xercesc::XercesDOMParser();
 	m_pDocument = NULL;
 }
 
 DocumentReader::~DocumentReader()
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	if (m_pParser)
 		delete m_pParser;
 	resetErrors();
@@ -110,7 +110,7 @@ template<class T> SeparatistaDocument* SeparatistaDocumentCreator(xercesc::DOMDo
 
 SeparatistaDocument* DocumentReader::getDocument()
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	xercesc::DOMElement *pDocumentElement;
 	const XMLCh *pNamespaceURI;
 
@@ -148,7 +148,7 @@ SeparatistaDocument* DocumentReader::getDocument()
 
 IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)
 {	
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	DocumentReaderErrorHandler handler(this);
 
 	if (!m_pParser)
@@ -187,44 +187,44 @@ IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)
 
 int DocumentReader::getErrorCount() const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	return m_ErrorList.size();
 }
 
 const ErrorType::ErrorCode DocumentReader::getErrorCode(int index) const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	return m_ErrorList.at(index)->errorCode;
 }
 
 const wchar_t* DocumentReader::getErrorMessage(int index) const
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	return m_ErrorList.at(index)->msg.data();
 
 }
 
 void DocumentReader::warning(const xercesc::SAXParseException &e)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	appendError(ErrorType::ETC_WARNING, e);
 }
 
 void DocumentReader::error(const xercesc::SAXParseException &e)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	appendError(ErrorType::ETC_ERROR, e);
 }
 
 void DocumentReader::fatalError(const xercesc::SAXParseException &e)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	appendError(ErrorType::ETC_FATALERROR, e);
 }
 
 void DocumentReader::resetErrors()
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	std::vector<ErrorType*>::iterator it;
 
 	for (it = m_ErrorList.begin(); it != m_ErrorList.end(); it++)
@@ -233,7 +233,7 @@ void DocumentReader::resetErrors()
 
 void DocumentReader::appendError(ErrorType::ErrorCode etc, const xercesc::SAXParseException &e)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 	std::wostringstream wos;
 	ErrorType *pError = new ErrorType;
 

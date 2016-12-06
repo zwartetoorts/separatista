@@ -38,7 +38,7 @@ using namespace Separatista;
 BranchElement::BranchElement(const ElementDescriptor *pElementDescriptor) :
 Element(pElementDescriptor)
 {
-	DEBUG_METHOD
+	DEBUG_METHOD;
 }
 
 BranchElement::~BranchElement()
