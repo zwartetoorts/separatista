@@ -103,6 +103,7 @@
     <ClInclude Include="..\..\lib\separatista\attributedleafelement.h" />
     <ClInclude Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.h" />
     <ClInclude Include="..\..\lib\separatista\branchelement.h" />
+    <ClInclude Include="..\..\lib\separatista\camt\banktocustomerstatement.h" />
     <ClInclude Include="..\..\lib\separatista\cashaccount.h" />
     <ClInclude Include="..\..\lib\separatista\choiceelement.h" />
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />

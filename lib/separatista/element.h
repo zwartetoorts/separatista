@@ -36,7 +36,6 @@ namespace Separatista
 {
 	// Forward decl
 	class Element;
-	class DOMDocumentIterator;
 
 	/**
 		Elementlistener interface
@@ -77,6 +76,35 @@ namespace Separatista
 		const Element *m_pSource;
 	};
 
+	/// Unsupported tag exception, thrown when CreateElementByTag doesn't support the tag
+	class SEPARATISTA_EXTERN UnsupportedTagException : public ElementException
+	{
+	public:
+		UnsupportedTagException(const wchar_t *pMessage, const Element *pSource, const wchar_t *pTag) :
+			ElementException(pMessage, pSource),
+			m_Tag(pTag)
+		{
+			
+		};
+
+#ifdef SEPARATISTA_DEBUG
+		UnsupportedTagException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, const Element *pSource, const wchar_t *pTag) :
+			ElementException(pMessage, pPath, nLine, pSource),
+			m_Tag(pTag)
+		{
+			
+		};
+#endif
+		/// Returns the unsupported tag
+		const wchar_t* getTag() const
+		{
+			return m_Tag.c_str();
+		};
+
+	private:
+		std::wstring m_Tag;
+	};
+
 
 	class SEPARATISTA_EXTERN Element
 	{
@@ -107,7 +135,7 @@ namespace Separatista
 			@return Pointer to the new created DOMElement, or NULL
 			@see createElement
 		*/
-		virtual xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions) = 0;
+		virtual xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions) const = 0;
 
 		/**
 			Tries to load it's value from the document element.
@@ -144,8 +172,9 @@ namespace Separatista
 		/**
 			Returns or creates the child element by tag name. If the element already exists, this function return the existing element.
 			If not, it will create the element.
-			@return A pointer to the child element. Will not return NULL, unless the the tag isn't known or supported.
+			@return A pointer to the child element. Will not return NULL. If the element isn't supported an UnsupportedTagException is thrown.
 			@throws ElementException if the element doesn't support having child elements.
+			@throws UnsupportedTagException if the requested tag isn't supported by Separatista
 		*/
 		virtual Element* createElementByTag(const wchar_t *pTagName, size_t nIndex = 0);
 

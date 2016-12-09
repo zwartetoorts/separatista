@@ -24,7 +24,7 @@
 #include "separatista/elementdescriptor.h"
 #include "separatista/pain/groupheader.h"
 #include "separatista/partyidentification.h"
-#include "separatista/elementlist.h"
+#include "separatista/documentreader.h"
 
 #ifndef SEPARATISTA_PAIN_CUSTOMERDIRECTDEBITINITIATION_H
 #define SEPARATISTA_PAIN_CUSTOMERDIRECTDEBITINITIATION_H
@@ -37,14 +37,6 @@ namespace Separatista
 		class SEPARATISTA_EXTERN CustomerDirectDebitInitiation : public BranchElement, public SeparatistaDocument, protected ElementListener
 		{
 		public:
-			
-			/**
-				Writes the DOM document to a local file path
-				@param pPath The path to write to
-				@return Error code
-				*/
-			IOErrorCode saveAs(const wchar_t *pPath);
-
 			/**
 				ElementListener interface
 			*/
@@ -59,7 +51,6 @@ namespace Separatista
 			*/
 			DocumentType getDocumentType() const { return DT_CustomerDirectDebitDocument; };
 
-			virtual const wchar_t* getNamespaceURI() const = 0;
 		protected:
 			/// Construct an empty element
 			CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor);

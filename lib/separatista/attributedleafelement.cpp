@@ -42,7 +42,7 @@ Element* AttributedLeafElement::createElement(const ElementDescriptor *pElementD
 	return new AttributedLeafElement(pElementDescriptor);
 }
 
-xercesc::DOMElement* AttributedLeafElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions)
+xercesc::DOMElement* AttributedLeafElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions) const
 {
 	DEBUG_METHOD;
 

@@ -177,56 +177,6 @@ void CustomerDirectDebitInitiation::calcSum()
 	pCtrlSum->setValue(sum, Element::AcceptValue);
 }
 
-IOErrorCode CustomerDirectDebitInitiation::saveAs(const wchar_t *pPath)
-{
-	DEBUG_METHOD;
-
-	// Create a DOM Document
-	xercesc::DOMImplementation *pDomImpl = xercesc::DOMImplementationRegistry::getDOMImplementation(TEXT("LS"));
-	xercesc::DOMDocument *pDocument;
-	IOErrorCode ret;
-
-	if (!pDomImpl)
-		return IOErrorCode::Xerces;
-
-	try
-	{
-		pDocument = pDomImpl->createDocument(
-			getNamespaceURI(),
-			TEXT("Document"),
-			NULL);
-
-		if (toDOMDocument(pDocument, pDocument->getDocumentElement()))
-		{
-			xercesc::DOMLSSerializer *pSerializer = ((xercesc::DOMImplementationLS*)pDomImpl)->createLSSerializer();
-			xercesc::DOMLSOutput *pOutput = ((xercesc::DOMImplementationLS*)pDomImpl)->createLSOutput();
-			xercesc::LocalFileFormatTarget *pTarget = new xercesc::LocalFileFormatTarget(pPath);
-
-			pOutput->setByteStream(pTarget);
-			pOutput->setEncoding(TEXT("UTF-8"));
-			pSerializer->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMXMLDeclaration, true);
-			pSerializer->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMWRTFormatPrettyPrint, true);
-			pSerializer->write(pDocument, pOutput);
-			pTarget->flush();
-
-			delete pTarget;
-			pOutput->release();
-			pSerializer->release();
-
-			ret = IOErrorCode::Success;
-		}
-		else
-			ret = IOErrorCode::Separatista;
-	}
-	catch (const xercesc::DOMException &e)
-	{
-		LOG(e.getMessage());
-		return IOErrorCode::Xerces;
-	}
-	
-	return ret;
-}
-
 void CustomerDirectDebitInitiation::elementValueChanged(Element * pElement, const wchar_t * pNewValue)
 {
 	DEBUG_METHOD;

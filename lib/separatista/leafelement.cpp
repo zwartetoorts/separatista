@@ -48,7 +48,7 @@ Element* LeafElement::createElement(const ElementDescriptor* pElementDescriptor)
 	return new LeafElement(pElementDescriptor);
 }
 
-xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions)
+xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions) const
 {
 	DEBUG_METHOD;
 

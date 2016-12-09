@@ -76,7 +76,7 @@ void ChoiceElement::fromDOMDocument(xercesc::DOMElement * pDOMElement, const Err
 	}
 }
 
-xercesc::DOMElement* ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions)
+xercesc::DOMElement* ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions) const
 {
 	DEBUG_METHOD;
 
@@ -89,7 +89,8 @@ xercesc::DOMElement* ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocu
 		if (pChildElement)
 		{
 			pDOMParent->appendChild(pChildElement);
-			m_pChosenElement->toDOMDocument(pDOMDocument, pChildElement, errorOptions);
+			if(m_pChosenElement)
+				m_pChosenElement->toDOMDocument(pDOMDocument, pChildElement, errorOptions);
 		}
 	}
 	catch (const xercesc::DOMException &e)
@@ -157,9 +158,7 @@ Element* ChoiceElement::createElementByTag(const wchar_t *pTagName, size_t nInde
 		}
 	}
 	// Not found, wrong tag or tag not supported 
-	LOG(TEXT("BAD: Unknown Tag: "));
-	LOG(pTagName);
-	return NULL;
+	throw UnsupportedTagException(SEPARATISTA_EXCEPTION(TEXT("Unsupported tag")), this, pTagName);
 }
 
 void ChoiceElement::destroyElement(Element *pElement)

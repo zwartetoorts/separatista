@@ -54,7 +54,7 @@ namespace Separatista
 		*/
 		void fromDOMDocument(xercesc::DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions);
 
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions);
+		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions) const;
 
 		/**
 		Creates the element from it's descriptor

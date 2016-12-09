@@ -59,20 +59,6 @@ namespace Separatista
 		User
 	} IOErrorCode;
 
-	/**
-		Supported Separatista document types
-	*/
-	typedef enum
-	{
-		DT_CustomerDirectDebitDocument = 1
-	} DocumentType;
-
-	class SeparatistaDocument
-	{
-	public:
-		virtual DocumentType getDocumentType() const = 0;
-	};
-
 	/// Initialization, initializes xerces
 	SEPARATISTA_EXTERN IOErrorCode Init();
 

@@ -94,7 +94,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::Save(LONG hWnd, Separatista::IOError
 
 STDMETHODIMP CustomerDirectDebitInitiation::SaveAs(BSTR Path, Separatista::IOErrorCode *pErrorCode)
 {
-	if ((*pErrorCode = m_pCustomerDirectDebitInitiation->saveAs(Path)) == Separatista::IOErrorCode::Success)
+	if ((*pErrorCode = m_pCustomerDirectDebitInitiation->saveAs(m_pCustomerDirectDebitInitiation, Path)) == Separatista::IOErrorCode::Success)
 			return S_OK;
 	
 	return E_FAIL;

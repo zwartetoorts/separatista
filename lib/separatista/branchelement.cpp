@@ -106,9 +106,7 @@ Element* BranchElement::createElementByTag(const wchar_t *pTag, size_t nIndex)
 			}
 		}
 		// Bad, element wasn't found
-		LOG(TEXT("BAD: Unknown Tag: "));
-		LOG(pTag);
-		return NULL;
+		throw UnsupportedTagException(SEPARATISTA_EXCEPTION(TEXT("Unsupported tag")), this, pTag);
 	}
 	return pElement;
 }
@@ -193,7 +191,7 @@ void BranchElement::fromDOMDocument(xercesc::DOMElement *pDOMElement, const Erro
 	}
 }
 
-xercesc::DOMElement* BranchElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions)
+xercesc::DOMElement* BranchElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions) const
 {
 	DEBUG_METHOD;
 
