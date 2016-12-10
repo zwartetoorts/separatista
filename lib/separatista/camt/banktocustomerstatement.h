@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2016 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -21,24 +21,21 @@
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
 #include "separatista/branchelement.h"
-#include "separatista/elementdescriptor.h"
-#include "separatista/pain/pain_groupheader.h"
-#include "separatista/partyidentification.h"
 #include "separatista/documentreader.h"
+#include "separatista/elementdescriptor.h"
 
-#ifndef SEPARATISTA_PAIN_CUSTOMERDIRECTDEBITINITIATION_H
-#define SEPARATISTA_PAIN_CUSTOMERDIRECTDEBITINITIATION_H
+#ifndef SEPARATISTA_CAMT_BANKTOCUSTOMERSTATEMENT_H
+#define SEPARATISTA_CAMT_BANKTOCUSTOMERSTATEMENT_H
 
 namespace Separatista
 {
-	namespace pain_008_001
+	namespace camt_053_001
 	{
-
-		class SEPARATISTA_EXTERN CustomerDirectDebitInitiation : public BranchElement, public SeparatistaDocument, protected ElementListener
+		class SEPARATISTA_EXTERN BankToCustomerStatement : public BranchElement, public SeparatistaDocument, protected ElementListener
 		{
 		public:
 			/**
-				ElementListener interface
+			ElementListener interface
 			*/
 			void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 
@@ -47,57 +44,39 @@ namespace Separatista
 			void elementDeleted(Element *pElement);
 
 			/**
-				SeparatistaDocument interface
+			SeparatistaDocument interface
 			*/
-			DocumentType getDocumentType() const { return DT_CustomerDirectDebitDocument; };
+			DocumentType getDocumentType() const { return DT_BankToCustomerStatement; };
 
 		protected:
 			/// Construct an empty element
-			CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor);
+			BankToCustomerStatement(const ElementDescriptor *pElementDescriptor);
 
 			/**
 			Construct from a dom document.
 			*/
-			CustomerDirectDebitInitiation(const ElementDescriptor *pElementDescriptor, xercesc::DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
+			BankToCustomerStatement(const ElementDescriptor *pElementDescriptor, xercesc::DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
 
 			void calcSum();
-
-			
 		};
 
-		class SEPARATISTA_EXTERN CustomerDirectDebitInitiationV02 : public CustomerDirectDebitInitiation
+		class SEPARATISTA_EXTERN BankToCustomerStatementV02 : public BankToCustomerStatement
 		{
 		public:
-			CustomerDirectDebitInitiationV02();
+			BankToCustomerStatementV02();
 
-			CustomerDirectDebitInitiationV02(xercesc::DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
+			BankToCustomerStatementV02(xercesc::DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
 
 			static const wchar_t *m_NameSpaceURI;
 
-			static const ElementDescriptor m_CustomerDirectDebitInitiationV02[2];
+			static const ElementDescriptor m_BankToCustomerStatementV02[2];
 
 			const wchar_t* getNamespaceURI() const {
 				return m_NameSpaceURI;
 			};
 
 		};
-
-		class SEPARATISTA_EXTERN CustomerDirectDebitInitiationV04 : public CustomerDirectDebitInitiation
-		{
-		public:
-			CustomerDirectDebitInitiationV04();
-
-			CustomerDirectDebitInitiationV04(xercesc::DOMDocument *pDocument, const ErrorOptions errorOptions = ThrowExceptions);
-			
-			static const wchar_t *m_NameSpaceURI;
-
-			static const ElementDescriptor m_CustomerDirectDebitInitiationV04[2];
-
-			const wchar_t* getNamespaceURI() const {
-				return m_NameSpaceURI; };
-
-		};
 	}
 }
 
-#endif // SEPARATISTA_PAIN_CUSTOMERDIRECTDEBITINITIATION_H
+#endif // !defined SEPARATISTA_CAMT_BANKTOCUSTOMERSTATEMENT_H

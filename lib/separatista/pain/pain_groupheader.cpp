@@ -18,14 +18,12 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <xercesc/dom/DOMDocument.hpp>
-
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
 #include "separatista/elementdescriptor.h"
 #include "separatista/leafelement.h"
 #include "separatista/branchelement.h"
-#include "separatista/pain/groupheader.h"
+#include "separatista/pain/pain_groupheader.h"
 
 using namespace Separatista;
 

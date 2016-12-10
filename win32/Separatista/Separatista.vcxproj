@@ -104,6 +104,7 @@
     <ClInclude Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.h" />
     <ClInclude Include="..\..\lib\separatista\branchelement.h" />
     <ClInclude Include="..\..\lib\separatista\camt\banktocustomerstatement.h" />
+    <ClInclude Include="..\..\lib\separatista\camt\camt_groupheader.h" />
     <ClInclude Include="..\..\lib\separatista\cashaccount.h" />
     <ClInclude Include="..\..\lib\separatista\choiceelement.h" />
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />
@@ -115,7 +116,7 @@
     <ClInclude Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.h" />
     <ClInclude Include="..\..\lib\separatista\pain\directdebittransaction.h" />
     <ClInclude Include="..\..\lib\separatista\pain\directdebittransactioninformation.h" />
-    <ClInclude Include="..\..\lib\separatista\pain\groupheader.h" />
+    <ClInclude Include="..\..\lib\separatista\pain\pain_groupheader.h" />
     <ClInclude Include="..\..\lib\separatista\pain\mandaterelatedinformation.h" />
     <ClInclude Include="..\..\lib\separatista\pain\paymentinstruction.h" />
     <ClInclude Include="..\..\lib\separatista\pain\paymenttypeinformation.h" />
@@ -129,6 +130,8 @@
     <ClCompile Include="..\..\lib\separatista\attributedleafelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\branchelement.cpp" />
+    <ClCompile Include="..\..\lib\separatista\camt\banktocustomerstatement.cpp" />
+    <ClCompile Include="..\..\lib\separatista\camt\camt_groupheader.cpp" />
     <ClCompile Include="..\..\lib\separatista\cashaccount.cpp" />
     <ClCompile Include="..\..\lib\separatista\choiceelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
@@ -140,7 +143,7 @@
     <ClCompile Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\directdebittransaction.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\directdebittransactioninformation.cpp" />
-    <ClCompile Include="..\..\lib\separatista\pain\groupheader.cpp" />
+    <ClCompile Include="..\..\lib\separatista\pain\pain_groupheader.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\mandaterelatedinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\paymentinstruction.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\paymenttypeinformation.cpp" />

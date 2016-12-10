@@ -77,9 +77,6 @@
     <ClInclude Include="..\..\lib\separatista\elementdescriptor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\pain\groupheader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\lib\separatista\pain\paymenttypeinformation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -90,6 +87,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\separatista\camt\banktocustomerstatement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\separatista\pain\pain_groupheader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\separatista\camt\camt_groupheader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -139,9 +142,6 @@
     <ClCompile Include="..\..\lib\separatista\validator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\pain\groupheader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\lib\separatista\pain\paymenttypeinformation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -158,6 +158,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\separatista\attributedleafelement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\separatista\camt\banktocustomerstatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\separatista\pain\pain_groupheader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\separatista\camt\camt_groupheader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
