@@ -299,3 +299,45 @@ void BICValidator::validate(const wchar_t *pValue, Element *pElement) const
 {
 	DEBUG_METHOD;
 }
+
+void NumberValidator::validate(const wchar_t *pValue, Element *pElement) const
+{
+	DEBUG_METHOD;
+
+	validateFractionDigits(pValue, 0, 0, pElement);
+	validateTotalDigits(pValue, 0, 18, pElement);
+}
+
+void BalanceType5ChoiceValidator::validate(const wchar_t *pValue, Element *pElement) const
+{
+	DEBUG_METHOD;
+
+	validateEnum(
+		pValue,
+		{
+			TEXT("CLAV"),
+			TEXT("CLBD"),
+			TEXT("FWAV"),
+			TEXT("INFO"),
+			TEXT("ITAV"),
+			TEXT("ITBD"),
+			TEXT("OPAV"),
+			TEXT("OPBD"),
+			TEXT("PRCD"),
+			TEXT("XPCD")
+		},
+		pElement);
+}
+
+void CreditDebitCodeValidator::validate(const wchar_t *pValue, Element *pElement) const
+{
+	DEBUG_METHOD;
+
+	validateEnum(
+		pValue,
+		{
+			TEXT("CRDT"),
+			TEXT("DBIT")
+		},
+		pElement);
+}

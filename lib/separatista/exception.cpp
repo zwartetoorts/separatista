@@ -21,7 +21,8 @@
 #include <sstream>
 
 #include "separatista.h"
-#include "exception.h"
+#include "separatista/element.h"
+#include "separatista/exception.h"
 #include "debug/debug.h"
 
 using namespace Separatista;
@@ -59,3 +60,75 @@ const wchar_t* Exception::getMessage() const
 	return m_msg.data();
 }
 
+void Exception::setMessage(const wchar_t *pMessage)
+{
+	DEBUG_METHOD;
+	m_msg = pMessage;
+}
+
+ElementException::ElementException(const wchar_t *pMessage, const Element *pSource) :
+	Exception(pMessage),
+	m_pSource(pSource)
+{
+	DEBUG_METHOD;
+	std::wostringstream wos;
+
+	wos << pSource->getTag()
+		<< TEXT(": ")
+		<< getMessage();
+	setMessage(wos.str().c_str());
+}
+
+#ifdef SEPARATISTA_DEBUG
+ElementException::ElementException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, const Element *pSource) :
+	Exception(pMessage, pPath, nLine),
+	m_pSource(pSource)
+{
+	DEBUG_METHOD;
+	std::wostringstream wos;
+
+	wos << pSource->getTag()
+		<< TEXT(": ")
+		<< getMessage();
+	setMessage(wos.str().c_str());
+};
+#endif
+
+const Element* ElementException::getSourceElement() const
+{
+	return m_pSource;
+};
+
+UnsupportedTagException::UnsupportedTagException(const wchar_t *pMessage, const Element *pSource, const wchar_t *pTag) :
+	ElementException(pMessage, pSource),
+	m_Tag(pTag)
+{
+	DEBUG_METHOD;
+	std::wostringstream wos;
+
+	wos << pTag
+		<< TEXT("@")
+		<< getMessage();
+	setMessage(wos.str().c_str());
+}
+
+#ifdef SEPARATISTA_DEBUG
+UnsupportedTagException::UnsupportedTagException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, const Element *pSource, const wchar_t *pTag) :
+	ElementException(pMessage, pPath, nLine, pSource),
+	m_Tag(pTag)
+{
+	DEBUG_METHOD;
+	std::wostringstream wos;
+
+	wos << pTag
+		<< TEXT("@")
+		<< getMessage();
+	setMessage(wos.str().c_str());
+
+}
+#endif
+
+const wchar_t* UnsupportedTagException::getTag() const
+{
+	return m_Tag.c_str();
+}

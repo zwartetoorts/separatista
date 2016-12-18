@@ -35,6 +35,8 @@
 
 namespace Separatista
 {
+	class Element;
+
 	class SEPARATISTA_EXTERN Exception
 	{
 	public:
@@ -44,9 +46,46 @@ namespace Separatista
 
 #endif
 		const wchar_t* getMessage() const;
+
+	protected:
+		void setMessage(const wchar_t *pMessage);
 	private:
 		std::wstring m_msg;
 	};
-}
 
+
+	/// Element exception, thrown when an element method called doesn't belong to the element type.
+	class SEPARATISTA_EXTERN ElementException : public Exception
+	{
+	public:
+		ElementException(const wchar_t *pMessage, const Element *pSource);
+
+#ifdef SEPARATISTA_DEBUG
+		ElementException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, const Element *pSource);
+#endif
+
+		/// Returns the target element 
+		const Element* getSourceElement() const;
+
+	private:
+		const Element *m_pSource;
+	};
+
+	/// Unsupported tag exception, thrown when CreateElementByTag doesn't support the tag
+	class SEPARATISTA_EXTERN UnsupportedTagException : public ElementException
+	{
+	public:
+		UnsupportedTagException(const wchar_t *pMessage, const Element *pSource, const wchar_t *pTag);
+
+#ifdef SEPARATISTA_DEBUG
+		UnsupportedTagException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, const Element *pSource, const wchar_t *pTag);
+#endif
+		/// Returns the unsupported tag
+		const wchar_t* getTag() const;
+
+	private:
+		std::wstring m_Tag;
+	};
+
+}
 #endif // !defined SEPARATISTA_EXCEPTION_H

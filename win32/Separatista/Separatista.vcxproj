@@ -103,8 +103,10 @@
     <ClInclude Include="..\..\lib\separatista\attributedleafelement.h" />
     <ClInclude Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.h" />
     <ClInclude Include="..\..\lib\separatista\branchelement.h" />
+    <ClInclude Include="..\..\lib\separatista\camt\accountstatement.h" />
     <ClInclude Include="..\..\lib\separatista\camt\banktocustomerstatement.h" />
     <ClInclude Include="..\..\lib\separatista\camt\camt_groupheader.h" />
+    <ClInclude Include="..\..\lib\separatista\camt\cashbalance.h" />
     <ClInclude Include="..\..\lib\separatista\cashaccount.h" />
     <ClInclude Include="..\..\lib\separatista\choiceelement.h" />
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />
@@ -130,8 +132,10 @@
     <ClCompile Include="..\..\lib\separatista\attributedleafelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\branchelement.cpp" />
+    <ClCompile Include="..\..\lib\separatista\camt\accountstatement.cpp" />
     <ClCompile Include="..\..\lib\separatista\camt\banktocustomerstatement.cpp" />
     <ClCompile Include="..\..\lib\separatista\camt\camt_groupheader.cpp" />
+    <ClCompile Include="..\..\lib\separatista\camt\cashbalance.cpp" />
     <ClCompile Include="..\..\lib\separatista\cashaccount.cpp" />
     <ClCompile Include="..\..\lib\separatista\choiceelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />

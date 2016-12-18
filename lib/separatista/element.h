@@ -25,17 +25,20 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <sstream>
 #include <Windows.h>
 
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
+#include "separatista/debug/debug.h"
 #include "separatista/elementdescriptor.h"
 #include "separatista/exception.h"
 
 namespace Separatista
 {
 	// Forward decl
-	class Element;
+	class ElementException;
+	class UnsupportedElementException;
 
 	/**
 		Elementlistener interface
@@ -48,64 +51,7 @@ namespace Separatista
 		virtual void elementDeleted(Element *pElement) = 0;
 	};
 
-	/// Element exception, thrown when an element method called doesn't belong to the element type.
-	class SEPARATISTA_EXTERN ElementException : public Exception
-	{
-	public:
-		ElementException(const wchar_t *pMessage, const Element *pSource) : 
-			Exception(pMessage)
-		{
-			m_pSource = pSource;
-		};
-
-#ifdef SEPARATISTA_DEBUG
-		ElementException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, const Element *pSource) :
-			Exception(pMessage, pPath, nLine)
-		{
-			m_pSource = pSource;
-		};
-#endif
-
-		/// Returns the target element 
-		const Element* getSourceElement() const
-		{
-			return m_pSource;
-		};
-
-	private:
-		const Element *m_pSource;
-	};
-
-	/// Unsupported tag exception, thrown when CreateElementByTag doesn't support the tag
-	class SEPARATISTA_EXTERN UnsupportedTagException : public ElementException
-	{
-	public:
-		UnsupportedTagException(const wchar_t *pMessage, const Element *pSource, const wchar_t *pTag) :
-			ElementException(pMessage, pSource),
-			m_Tag(pTag)
-		{
-			
-		};
-
-#ifdef SEPARATISTA_DEBUG
-		UnsupportedTagException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, const Element *pSource, const wchar_t *pTag) :
-			ElementException(pMessage, pPath, nLine, pSource),
-			m_Tag(pTag)
-		{
-			
-		};
-#endif
-		/// Returns the unsupported tag
-		const wchar_t* getTag() const
-		{
-			return m_Tag.c_str();
-		};
-
-	private:
-		std::wstring m_Tag;
-	};
-
-
+	
 	class SEPARATISTA_EXTERN Element
 	{
 	public:

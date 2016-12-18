@@ -95,6 +95,12 @@
     <ClInclude Include="..\..\lib\separatista\camt\camt_groupheader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\lib\separatista\camt\accountstatement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\separatista\camt\cashbalance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\separatista\element.cpp">
@@ -167,6 +173,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\separatista\camt\camt_groupheader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\separatista\camt\accountstatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\separatista\camt\cashbalance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

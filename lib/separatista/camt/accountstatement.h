@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2016 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,20 +18,19 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <windows.h>
-
+#include "separatista/separatista.h"
 #include "separatista/elementdescriptor.h"
 
-#ifndef SEPARATISTA_CASHACCOUNT_H
-#define SEPARATISTA_CASHACCOUNT_H
+#ifndef SEPARATISTA_CAMT_ACCOUNTSTATEMENT_H
+#define SEPARATISTA_CAMT_ACCOUNTSTATEMENT_H
 
 namespace Separatista
 {
-	extern const ElementDescriptor AccountIdentification4Choice[1];
-	extern const ElementDescriptor GenericAccountIdentification1[1];
-	extern const ElementDescriptor CashAccount16[1];
-	extern const ElementDescriptor CashAccount20[2];
-	extern const ElementDescriptor CashAccount24[1];
+	namespace camt_053_001
+	{
+		extern const ElementDescriptor DateAndDateTimeChoice[1];
+		extern const ElementDescriptor AccountStatement2[9];
+	}
 }
 
-#endif // SEPARATISTA_CONTROL_CASHACCOUNT_H
+#endif // !defined SEPARATISTA_CAMT_ACCOUNTSTATEMENT_H

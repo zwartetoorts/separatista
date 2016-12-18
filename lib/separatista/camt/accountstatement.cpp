@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2014 by Okkel Klaver   *
+*   Copyright (C) 2016 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,86 +18,102 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <xercesc/dom/DOMDocument.hpp>
-
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
+#include "separatista/elementdescriptor.h"
+#include "separatista/leafelement.h"
+#include "separatista/attributedleafelement.h"
+#include "separatista/branchelement.h"
+#include "separatista/choiceelement.h"
 #include "separatista/validator.h"
 #include "separatista/cashaccount.h"
-#include "separatista/choiceelement.h"
-#include "separatista/leafelement.h"
+#include "separatista/camt/accountstatement.h"
+#include "separatista/camt/cashbalance.h"
 
 using namespace Separatista;
 
-static const ElementDescriptor Separatista::AccountIdentification4Choice[] =
+static const ElementDescriptor Separatista::camt_053_001::DateAndDateTimeChoice[] =
 {
 	{
-		SEPARATISTA_TAG("IBAN"),		// TagName
-		LeafElement::createElement,		// Creator function
-		1,								// Min
-		1,								// Max
-		&Validators.IBANValidator,		// Validator
-		0,								// Number of child elements
-		NULL							// Child elements
-	}
-};
-
-static const ElementDescriptor Separatista::GenericAccountIdentification1[] =
-{
-	{
-		SEPARATISTA_TAG("IBAN"),
+		SEPARATISTA_TAG("Dt"),
 		LeafElement::createElement,
 		1,
 		1,
-		&Validators.IBANValidator,
+		&Validators.ISODateValidator,
 		0,
 		NULL
 	}
 };
 
-static const ElementDescriptor Separatista::CashAccount16[] =
-{
-	{
-		SEPARATISTA_TAG("Id"),			// TagName
-		ChoiceElement::createElement,	// Creator function
-		1,								// Min
-		1,								// Max
-		NULL,							// Validator
-		SEPARATISTA_ELEMENTS(AccountIdentification4Choice)
-	}
-};
-
-static const ElementDescriptor Separatista::CashAccount20[] = 
+static const ElementDescriptor Separatista::camt_053_001::AccountStatement2[] =
 {
 	{
 		SEPARATISTA_TAG("Id"),
-		ChoiceElement::createElement,
+		LeafElement::createElement,
+		1,
+		1,
+		&Validators.Max35TextValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("ElctrnctSeqNb"),
+		LeafElement::createElement,
+		0,
+		1,
+		&Validators.NumberValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("CreDtTm"),
+		LeafElement::createElement,
+		1,
+		1,
+		&Validators.ISODateTimeValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("Acct"),
+		BranchElement::createElement,
 		1,
 		1,
 		NULL,
-		SEPARATISTA_ELEMENTS(GenericAccountIdentification1)
+		SEPARATISTA_ELEMENTS(CashAccount20)
 	},
 	{
-		SEPARATISTA_TAG("Ccy"),
-		LeafElement::createElement,
+		SEPARATISTA_TAG("Bal"),
+		BranchElement::createElement,
+		1,
 		0,
+		NULL,
+		SEPARATISTA_ELEMENTS(Separatista::camt_053_001::CashBalance3)
+	},
+	{
+		SEPARATISTA_TAG("Amt"),
+		AttributedLeafElement::createElement,
+		1,
 		1,
 		&Validators.ActiveOrHistoricCurrencyAndAmountValidator,
 		0,
 		NULL
-	}
-};
-
-static const ElementDescriptor Separatista::CashAccount24[] = 
-{
+	},
 	{
-		SEPARATISTA_TAG("Id"),			// TagName
-		ChoiceElement::createElement,	// Creator function
-		1,								// Min
-		1,								// Max
-		NULL,							// Validator
-		SEPARATISTA_ELEMENTS(AccountIdentification4Choice)
+		SEPARATISTA_TAG("CdtDbtInd"),
+		LeafElement::createElement,
+		1,
+		1,
+		&Validators.CreditDebitCodeValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("Dt"),
+		ChoiceElement::createElement,
+		1,
+		1,
+		NULL,
+		SEPARATISTA_ELEMENTS(Separatista::camt_053_001::DateAndDateTimeChoice)
 	}
 };
-
-

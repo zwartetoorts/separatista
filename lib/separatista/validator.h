@@ -193,6 +193,24 @@ namespace Separatista
 		void validate(const wchar_t *pValue, Element *pElement) const;
 	};
 
+	class SEPARATISTA_EXTERN NumberValidator : public Validator
+	{
+	public:
+		void validate(const wchar_t *pValue, Element *pElement) const;
+	};
+
+	class SEPARATISTA_EXTERN BalanceType5ChoiceValidator : public Validator
+	{
+	public:
+		void validate(const wchar_t *pValue, Element *pElement) const;
+	};
+
+	class SEPARATISTA_EXTERN CreditDebitCodeValidator : public Validator
+	{
+	public:
+		void validate(const wchar_t *pValue, Element *pElement) const;
+	};
+
 	typedef const struct
 	{
 		Max35TextValidator Max35TextValidator;
@@ -210,6 +228,9 @@ namespace Separatista
 		ExternalPersonIdentification1CodeValidator ExternalPersonIdentification1CodeValidator;
 		IBANValidator IBANValidator;
 		BICValidator BICValidator;
+		NumberValidator NumberValidator;
+		BalanceType5ChoiceValidator BalanceType5ChoiceValidator;
+		CreditDebitCodeValidator CreditDebitCodeValidator;
 	} _Validators;
 
 	

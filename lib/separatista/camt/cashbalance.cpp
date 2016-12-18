@@ -23,81 +23,47 @@
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
 #include "separatista/validator.h"
-#include "separatista/cashaccount.h"
-#include "separatista/choiceelement.h"
 #include "separatista/leafelement.h"
+#include "separatista/branchelement.h"
+#include "separatista/choiceelement.h"
+#include "separatista/camt/cashbalance.h"
 
 using namespace Separatista;
 
-static const ElementDescriptor Separatista::AccountIdentification4Choice[] =
+static const ElementDescriptor Separatista::camt_053_001::BalanceType5Choice[] =
 {
 	{
-		SEPARATISTA_TAG("IBAN"),		// TagName
+		SEPARATISTA_TAG("Cd"),			// TagName
 		LeafElement::createElement,		// Creator function
 		1,								// Min
 		1,								// Max
-		&Validators.IBANValidator,		// Validator
+		&Validators.BalanceType5ChoiceValidator,// Validator
 		0,								// Number of child elements
 		NULL							// Child elements
 	}
 };
 
-static const ElementDescriptor Separatista::GenericAccountIdentification1[] =
+static const ElementDescriptor Separatista::camt_053_001::BalanceType12[] = 
 {
 	{
-		SEPARATISTA_TAG("IBAN"),
-		LeafElement::createElement,
-		1,
-		1,
-		&Validators.IBANValidator,
-		0,
-		NULL
-	}
-};
-
-static const ElementDescriptor Separatista::CashAccount16[] =
-{
-	{
-		SEPARATISTA_TAG("Id"),			// TagName
+		SEPARATISTA_TAG("CdOrPrtry"),	// TagName
 		ChoiceElement::createElement,	// Creator function
 		1,								// Min
 		1,								// Max
 		NULL,							// Validator
-		SEPARATISTA_ELEMENTS(AccountIdentification4Choice)
+		SEPARATISTA_ELEMENTS(Separatista::camt_053_001::BalanceType5Choice)
 	}
 };
 
-static const ElementDescriptor Separatista::CashAccount20[] = 
+static const ElementDescriptor Separatista::camt_053_001::CashBalance3[] =
 {
 	{
-		SEPARATISTA_TAG("Id"),
-		ChoiceElement::createElement,
-		1,
-		1,
-		NULL,
-		SEPARATISTA_ELEMENTS(GenericAccountIdentification1)
-	},
-	{
-		SEPARATISTA_TAG("Ccy"),
-		LeafElement::createElement,
-		0,
-		1,
-		&Validators.ActiveOrHistoricCurrencyAndAmountValidator,
-		0,
-		NULL
-	}
-};
-
-static const ElementDescriptor Separatista::CashAccount24[] = 
-{
-	{
-		SEPARATISTA_TAG("Id"),			// TagName
-		ChoiceElement::createElement,	// Creator function
+		SEPARATISTA_TAG("Tp"),			// TagName
+		BranchElement::createElement,	// Creator function
 		1,								// Min
 		1,								// Max
 		NULL,							// Validator
-		SEPARATISTA_ELEMENTS(AccountIdentification4Choice)
+		SEPARATISTA_ELEMENTS(Separatista::camt_053_001::BalanceType12)
 	}
 };
-
 
