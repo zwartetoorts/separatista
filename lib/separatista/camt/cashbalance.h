@@ -28,9 +28,10 @@ namespace Separatista
 {
 	namespace camt_053_001
 	{
+		extern const ElementDescriptor DateAndDateTimeChoice[1];
 		extern const ElementDescriptor BalanceType5Choice[1];
 		extern const ElementDescriptor BalanceType12[1];
-		extern const ElementDescriptor CashBalance3[1];
+		extern const ElementDescriptor CashBalance3[4];
 	}
 }
 

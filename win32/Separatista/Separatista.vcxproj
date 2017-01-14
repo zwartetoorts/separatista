@@ -107,6 +107,7 @@
     <ClInclude Include="..\..\lib\separatista\camt\banktocustomerstatement.h" />
     <ClInclude Include="..\..\lib\separatista\camt\camt_groupheader.h" />
     <ClInclude Include="..\..\lib\separatista\camt\cashbalance.h" />
+    <ClInclude Include="..\..\lib\separatista\camt\totaltransactions.h" />
     <ClInclude Include="..\..\lib\separatista\cashaccount.h" />
     <ClInclude Include="..\..\lib\separatista\choiceelement.h" />
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />
@@ -136,6 +137,7 @@
     <ClCompile Include="..\..\lib\separatista\camt\banktocustomerstatement.cpp" />
     <ClCompile Include="..\..\lib\separatista\camt\camt_groupheader.cpp" />
     <ClCompile Include="..\..\lib\separatista\camt\cashbalance.cpp" />
+    <ClCompile Include="..\..\lib\separatista\camt\totaltransactions.cpp" />
     <ClCompile Include="..\..\lib\separatista\cashaccount.cpp" />
     <ClCompile Include="..\..\lib\separatista\choiceelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />

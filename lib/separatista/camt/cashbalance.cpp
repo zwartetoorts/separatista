@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2014 by Okkel Klaver   *
+*   Copyright (C) 2016 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -26,9 +26,23 @@
 #include "separatista/leafelement.h"
 #include "separatista/branchelement.h"
 #include "separatista/choiceelement.h"
+#include "separatista/attributedleafelement.h"
 #include "separatista/camt/cashbalance.h"
 
 using namespace Separatista;
+
+static const ElementDescriptor Separatista::camt_053_001::DateAndDateTimeChoice[] =
+{
+	{
+		SEPARATISTA_TAG("Dt"),
+		LeafElement::createElement,
+		1,
+		1,
+		&Validators.ISODateValidator,
+		0,
+		NULL
+	}
+};
 
 static const ElementDescriptor Separatista::camt_053_001::BalanceType5Choice[] =
 {
@@ -64,6 +78,32 @@ static const ElementDescriptor Separatista::camt_053_001::CashBalance3[] =
 		1,								// Max
 		NULL,							// Validator
 		SEPARATISTA_ELEMENTS(Separatista::camt_053_001::BalanceType12)
+	},
+	{
+		SEPARATISTA_TAG("Amt"),
+		AttributedLeafElement::createElement,
+		1,
+		1,
+		&Validators.ActiveOrHistoricCurrencyAndAmountValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("CdtDbtInd"),
+		LeafElement::createElement,
+		1,
+		1,
+		&Validators.CreditDebitCodeValidator,
+		0,
+		NULL
+	},
+	{
+		SEPARATISTA_TAG("Dt"),
+		ChoiceElement::createElement,
+		1,
+		1,
+		NULL,
+		SEPARATISTA_ELEMENTS(Separatista::camt_053_001::DateAndDateTimeChoice)
 	}
 };
 

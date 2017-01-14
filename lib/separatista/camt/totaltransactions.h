@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2016 by Okkel Klaver   *
+*   Copyright (C) 2017 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -19,70 +19,21 @@
 ***************************************************************************/
 
 #include "separatista/separatista.h"
-#include "separatista/xerces_types.h"
 #include "separatista/elementdescriptor.h"
-#include "separatista/leafelement.h"
-#include "separatista/branchelement.h"
-#include "separatista/choiceelement.h"
-#include "separatista/validator.h"
-#include "separatista/cashaccount.h"
-#include "separatista/camt/accountstatement.h"
-#include "separatista/camt/cashbalance.h"
 
-using namespace Separatista;
+#ifndef SEPARATISTA_CAMT_TOTALTRANSACTONS_H
+#define SEPARATISTA_CAMT_TOTALTRANSACTONS_H
 
-static const ElementDescriptor Separatista::camt_053_001::AccountStatement2[] =
+namespace Separatista
 {
+	namespace camt_053_001
 	{
-		SEPARATISTA_TAG("Id"),
-		LeafElement::createElement,
-		1,
-		1,
-		&Validators.Max35TextValidator,
-		0,
-		NULL
-	},
-	{
-		SEPARATISTA_TAG("ElctrnctSeqNb"),
-		LeafElement::createElement,
-		0,
-		1,
-		&Validators.NumberValidator,
-		0,
-		NULL
-	},
-	{
-		SEPARATISTA_TAG("CreDtTm"),
-		LeafElement::createElement,
-		1,
-		1,
-		&Validators.ISODateTimeValidator,
-		0,
-		NULL
-	},
-	{
-		SEPARATISTA_TAG("Acct"),
-		BranchElement::createElement,
-		1,
-		1,
-		NULL,
-		SEPARATISTA_ELEMENTS(CashAccount20)
-	},
-	{
-		SEPARATISTA_TAG("Bal"),
-		BranchElement::createElement,
-		1,
-		0,
-		NULL,
-		SEPARATISTA_ELEMENTS(Separatista::camt_053_001::CashBalance3)
-	},
-	{
-		SEPARATISTA_TAG("TxsSummry"),
-		BranchElement::createElement,
-		0,
-		1,
-		NULL,
-		SEPARATISTA_ELEMENTS(Separatista::camt_053_001::TotalTransactions2)
+		extern const ElementDescriptor TotalPerBankTransactionCode2[];
+		extern const ElementDescriptor NumberAndSumOfTransactions1[2];
+		extern const ElementDescriptor NumberAndSumOfTransactions2[4];
+		extern const ElementDescriptor TotalTransactions2[];
+	}
 }
-	
-};
+
+#endif // !defined SEPARATISTA_CAMT_TOTALTRANSACTONS_H
+#pragma once
