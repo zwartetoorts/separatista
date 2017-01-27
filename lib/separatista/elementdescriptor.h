@@ -48,7 +48,7 @@ namespace Separatista
 		unsigned int m_nHash;
 		/// Element creator function
 		Element* (*m_pfCreateElement)(const ElementDescriptor*);
-		/// Minimal presence of the element
+		/// Minimal presence of the element, 0 = optional
 		size_t m_nMin;
 		/// Maximum presence of the element, 0 = infinite
 		size_t m_nMax;
