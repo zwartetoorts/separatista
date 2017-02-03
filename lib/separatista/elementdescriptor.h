@@ -39,26 +39,36 @@ namespace Separatista
 	// Forward decl
 	class Element;
 	class Validator;
+	struct ChildElementDescriptor;
 
 	struct ElementDescriptor
+	{
+		/// Parent type ElementDescriptor, if any
+		const ElementDescriptor *m_pTypeParent;
+		/// Element creator function
+		Element* (*m_pfCreateElement)(const ElementDescriptor*);
+		/// Data validation class
+		void (*m_pfnValidate)(const wchar_t *pValue, Element *pElement);
+		/// Number of child elements
+		size_t m_nElementCount;
+		/// ChildElement descriptors
+		const ChildElementDescriptor *m_pChildren;
+	};
+
+	struct ChildElementDescriptor
 	{
 		/// The tag name of the element
 		const wchar_t *m_pTag;
 		/// The hash of the tag 
 		unsigned int m_nHash;
-		/// Element creator function
-		Element* (*m_pfCreateElement)(const ElementDescriptor*);
 		/// Minimal presence of the element, 0 = optional
 		size_t m_nMin;
 		/// Maximum presence of the element, 0 = infinite
 		size_t m_nMax;
-		/// Data validation class
-		const Validator *m_pValidator;
-		/// Number of child elements
-		size_t m_nElementCount;
-		/// Child elements
-		const ElementDescriptor *m_pElements;
+		/// ElementDescriptor
+		const ElementDescriptor *m_pElementDescriptor;
 	};
+
 }
 
 #endif // !defined SEPARATISTA_ELEMENTDESCRIPTOR_H

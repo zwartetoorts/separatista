@@ -119,6 +119,7 @@
     <ClInclude Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.h" />
     <ClInclude Include="..\..\lib\separatista\pain\directdebittransaction.h" />
     <ClInclude Include="..\..\lib\separatista\pain\directdebittransactioninformation.h" />
+    <ClInclude Include="..\..\lib\separatista\pain\pain.008.001.02.h" />
     <ClInclude Include="..\..\lib\separatista\pain\pain_groupheader.h" />
     <ClInclude Include="..\..\lib\separatista\pain\mandaterelatedinformation.h" />
     <ClInclude Include="..\..\lib\separatista\pain\paymentinstruction.h" />
@@ -149,6 +150,7 @@
     <ClCompile Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\directdebittransaction.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\directdebittransactioninformation.cpp" />
+    <ClCompile Include="..\..\lib\separatista\pain\pain.008.001.02.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\pain_groupheader.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\mandaterelatedinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\paymentinstruction.cpp" />

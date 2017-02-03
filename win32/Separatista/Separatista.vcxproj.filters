@@ -104,6 +104,9 @@
     <ClInclude Include="..\..\lib\separatista\camt\totaltransactions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\lib\separatista\pain\pain.008.001.02.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\separatista\element.cpp">
@@ -185,6 +188,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\separatista\camt\totaltransactions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\separatista\pain\pain.008.001.02.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

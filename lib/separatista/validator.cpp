@@ -29,26 +29,6 @@
 
 using namespace Separatista;
 
-static _Validators Separatista::Validators;
-/*=
-{
-	Max35TextValidator(),
-	ISODateTimeValidator(),
-	Max15NumericTextValidator(),
-	DecimalNumberValidator(),
-	Max140TextValidator(),
-	PaymentMethod2CodeValidator(),
-	ISODateValidator(),
-	ChargeBearerType1CodeValidator(),
-	ExternalServiceLevel1CodeValidator(),
-	ExternalLocalInstrument1CodeValidator(),
-	SequenceType3CodeValidator(),
-	ActiveOrHistoricCurrencyAndAmountValidator(),
-	ExternalPersonIdentification1CodeValidator(),
-	IBANValidator(),
-	BICValidator()
-};*/
-
 std::array<wchar_t, 10> Validator::m_numericDigits =
 {
 	TEXT('0'),
@@ -106,6 +86,10 @@ void Validator::validateFractionDigits(const wchar_t *pValue, size_t min, size_t
 	wchar_t c;
 	size_t fc = 0; // Fraction count
 
+	// Remove + and - sign
+	if (*pValue == TEXT('+') || *pValue == TEXT('-'))
+		pValue++;
+
 	// Scan string
 	while ((c = *pValue++) != TEXT('\0'))
 	{
@@ -134,10 +118,14 @@ void Validator::validateTotalDigits(const wchar_t *pValue, size_t min, size_t ma
 	wchar_t c;
 	size_t td = 0;
 
+	// Remove + and - sign
+	if (*pValue == TEXT('+') || *pValue == TEXT('-'))
+		pValue++;
+
 	while ((c = *pValue++) != TEXT('\0'))
 	{
 		if (c == TEXT('.'))
-			break;
+			;
 		else
 		{
 			isDigit(c, pElement);
@@ -164,14 +152,7 @@ void Validator::validateEnum(const wchar_t *pValue, std::initializer_list<const 
 }
 
 
-void Max35TextValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateMaxText(pValue, 35, pElement);
-}
-
-void ISODateTimeValidator::validate(const wchar_t *pValue, Element *pElement) const
+void Validator::validateISODateTime(const wchar_t *pValue, Element *pElement)
 {
 	DEBUG_METHOD;
 
@@ -187,37 +168,7 @@ void ISODateTimeValidator::validate(const wchar_t *pValue, Element *pElement) co
 	}
 }
 
-void Max15NumericTextValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateMaxText(pValue, 15, pElement);
-	validateNumeric(pValue, pElement);
-}
-
-void DecimalNumberValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateFractionDigits(pValue, 0, 17, pElement);
-	validateTotalDigits(pValue, 0, 18, pElement);
-}
-
-void Max140TextValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateMaxText(pValue, 140, pElement);
-}
-
-void PaymentMethod2CodeValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateEnum(pValue, { TEXT("DD") }, pElement);
-}
-
-void ISODateValidator::validate(const wchar_t *pValue, Element *pElement) const
+void Validator::validateISODate(const wchar_t *pValue, Element *pElement)
 {
 	DEBUG_METHOD;
 
@@ -233,111 +184,3 @@ void ISODateValidator::validate(const wchar_t *pValue, Element *pElement) const
 	}
 }
 
-void ChargeBearerType1CodeValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateEnum(
-		pValue,
-		{
-			TEXT("DEBT"),
-			TEXT("CRED"),
-			TEXT("SHAR"),
-			TEXT("SLEV")
-		}, pElement);
-}
-
-void ExternalServiceLevel1CodeValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateMaxText(pValue, 4, pElement);
-}
-
-void SequenceType3CodeValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateEnum(
-		pValue,
-		{
-			TEXT("FRST"),
-			TEXT("RCUR"),
-			TEXT("FNAL"),
-			TEXT("OOFF"),
-			TEXT("RPRE")
-		}, pElement);
-}
-
-void ActiveOrHistoricCurrencyAndAmountValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateFractionDigits(pValue, 0, 5, pElement);
-	validateTotalDigits(pValue, 0, 18, pElement);
-}
-
-void ExternalPersonIdentification1CodeValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateMaxText(pValue, 35, pElement);
-}
-
-void IBANValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	IBAN iban;
-	
-	iban = pValue;
-	if (!iban.Check())
-		throw InvalidValueException(SEPARATISTA_EXCEPTION(TEXT("Invalid IBAN")), pElement, pValue);
-}
-
-void BICValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-}
-
-void NumberValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateFractionDigits(pValue, 0, 0, pElement);
-	validateTotalDigits(pValue, 0, 18, pElement);
-}
-
-void BalanceType5ChoiceValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateEnum(
-		pValue,
-		{
-			TEXT("CLAV"),
-			TEXT("CLBD"),
-			TEXT("FWAV"),
-			TEXT("INFO"),
-			TEXT("ITAV"),
-			TEXT("ITBD"),
-			TEXT("OPAV"),
-			TEXT("OPBD"),
-			TEXT("PRCD"),
-			TEXT("XPCD")
-		},
-		pElement);
-}
-
-void CreditDebitCodeValidator::validate(const wchar_t *pValue, Element *pElement) const
-{
-	DEBUG_METHOD;
-
-	validateEnum(
-		pValue,
-		{
-			TEXT("CRDT"),
-			TEXT("DBIT")
-		},
-		pElement);
-}

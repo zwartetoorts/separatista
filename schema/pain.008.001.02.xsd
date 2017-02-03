@@ -137,6 +137,7 @@
             <xs:enumeration value="LOAN"/>
             <xs:enumeration value="SLRY"/>
             <xs:enumeration value="ODFT"/>
+            <xs:enumeration value="ODFT"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:complexType name="CategoryPurpose1Choice">
