@@ -13,7 +13,8 @@ namespace Separatista
 {
 	namespace <xsl:value-of select="translate(substring(@targetNamespace,32), ':.', '__')" /> 
 	{
-		extern const Separatista::ElementDescriptor* getRootElementDescriptor();
+		extern const wchar_t* g_Namespace;
+		extern const Separatista::ElementDescriptor* DocumentElementDescriptor;
 		<xsl:apply-templates />
 	}
 }

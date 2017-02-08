@@ -19,16 +19,14 @@ namespace Separatista
 {
 	namespace <xsl:value-of select="translate(substring(@targetNamespace, 32), ':.', '__')" /> 
 	{
+		static const wchar_t* Namespace = TEXT("<xsl:value-of select="substring(@targetNamespace, 32)" /> ");
 		<xsl:apply-templates />
 	}
 }
 </xsl:template>
 
 <xsl:template match="xs:element">
-		static const Separatista::ElementDescriptor* getRootElementDescriptor()
-		{
-			return &amp;<xsl:value-of select="@type" />;
-		}
+		static const Separatista::ElementDescriptor* DocumentElementDescriptor = &amp;<xsl:value-of select="@type" />;
 </xsl:template>
 
 <xsl:template match="xs:simpleType">
@@ -55,7 +53,7 @@ namespace Separatista
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:for-each select="*">
-			Separatista::Validator::validate<xsl:value-of select="concat(translate(substring(name(), 4, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(name(), 5))" />(pValue, TEXT("<xsl:value-of select="@value" />"), pElement);
+			Separatista::Validator::validate<xsl:value-of select="concat(translate(substring(name(), 4, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(name(), 5))" />(pValue, TEXT("<xsl:call-template name="escapeBackslash"><xsl:with-param name="text" select="@value" /></xsl:call-template>"), pElement);
 					</xsl:for-each>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -69,6 +67,15 @@ namespace Separatista
 </xsl:template>
 
 <xsl:template match="xs:enumeration[position() = last()]">
+					TEXT("<xsl:value-of select="@value" />")
+				},
+				pElement);
+</xsl:template>
+
+<xsl:template match="xs:enumeration[position() = last() and position() = 1]">
+			Separatista::Validator::validateEnumeration(
+				pValue, 
+				{
 					TEXT("<xsl:value-of select="@value" />")
 				},
 				pElement);
@@ -150,6 +157,19 @@ namespace Separatista
 					&amp;<xsl:value-of select="@type" />								// ElementDescriptor
 				},
 				
+</xsl:template>
+
+<xsl:template name="escapeBackslash">
+	<xsl:param name="text" />
+	<xsl:variable name="todo" select="substring-after($text, '\')" />
+	<xsl:choose>
+		<xsl:when test="$todo">
+			<xsl:value-of select="substring-before($text, '\')" />\\<xsl:call-template name="escapeBackslash"><xsl:with-param name="text" select="$todo" /></xsl:call-template>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$text" />
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 </xsl:stylesheet>

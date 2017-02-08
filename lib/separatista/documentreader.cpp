@@ -40,12 +40,13 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/separatistadocument.h"
+#include "separatista/documentreader.h"
+#include "separatista/debug/debug.h"
 
-#include "separatista.h"
-#include "xerces_types.h"
-#include "documentreader.h"
-#include "pain/customerdirectdebitinitiation.h"
-#include "debug/debug.h"
+#include "separatista/pain/pain.008.001.02.h"
 
 using namespace Separatista;
 
@@ -92,56 +93,6 @@ public:
 		m_pDocumentReader->resetErrors();
 	};
 };
-
-IOErrorCode SeparatistaDocument::saveAs(const Element *pRootElement, const wchar_t *pPath)
-{
-	DEBUG_METHOD;
-
-	// Create a DOM Document
-	xercesc::DOMImplementation *pDomImpl = xercesc::DOMImplementationRegistry::getDOMImplementation(TEXT("LS"));
-	xercesc::DOMDocument *pDocument;
-	IOErrorCode ret;
-
-	if (!pDomImpl)
-		return IOErrorCode::Xerces;
-
-	try
-	{
-		pDocument = pDomImpl->createDocument(
-			getNamespaceURI(),
-			TEXT("Document"),
-			NULL);
-
-		if (pRootElement->toDOMDocument(pDocument, pDocument->getDocumentElement()))
-		{
-			xercesc::DOMLSSerializer *pSerializer = ((xercesc::DOMImplementationLS*)pDomImpl)->createLSSerializer();
-			xercesc::DOMLSOutput *pOutput = ((xercesc::DOMImplementationLS*)pDomImpl)->createLSOutput();
-			xercesc::LocalFileFormatTarget *pTarget = new xercesc::LocalFileFormatTarget(pPath);
-
-			pOutput->setByteStream(pTarget);
-			pOutput->setEncoding(TEXT("UTF-8"));
-			pSerializer->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMXMLDeclaration, true);
-			pSerializer->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMWRTFormatPrettyPrint, true);
-			pSerializer->write(pDocument, pOutput);
-			pTarget->flush();
-
-			delete pTarget;
-			pOutput->release();
-			pSerializer->release();
-
-			ret = IOErrorCode::Success;
-		}
-		else
-			ret = IOErrorCode::Separatista;
-	}
-	catch (const xercesc::DOMException &e)
-	{
-		LOG(e.getMessage());
-		return IOErrorCode::Xerces;
-	}
-
-	return ret;
-}
 
 DocumentReader::DocumentReader()
 {

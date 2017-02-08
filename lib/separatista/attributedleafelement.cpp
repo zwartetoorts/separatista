@@ -29,17 +29,17 @@
 
 using namespace Separatista;
 
-AttributedLeafElement::AttributedLeafElement(const ElementDescriptor *pElementDescriptor)
-	:LeafElement(pElementDescriptor)
+AttributedLeafElement::AttributedLeafElement(const ChildElementDescriptor *pChildElementDescriptor)
+	:LeafElement(pChildElementDescriptor)
 {
 	DEBUG_METHOD;
 }
 
-Element* AttributedLeafElement::createElement(const ElementDescriptor *pElementDescriptor)
+Element* AttributedLeafElement::createElement(const ChildElementDescriptor *pChildElementDescriptor)
 {
 	DEBUG_METHOD;
 
-	return new AttributedLeafElement(pElementDescriptor);
+	return new AttributedLeafElement(pChildElementDescriptor);
 }
 
 xercesc::DOMElement* AttributedLeafElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions) const
@@ -59,7 +59,7 @@ xercesc::DOMElement* AttributedLeafElement::toDOMDocument(xercesc::DOMDocument *
 			switch (errorOptions)
 			{
 			case ThrowExceptions:
-				throw ElementException(SEPARATISTA_EXCEPTION(e.getMessage()), this);
+				SEPARATISTA_THROW_EXCEPTION(ElementException, e.getMessage(), this);
 			default:
 				SEPARATISTA_REPORT(e);
 			}

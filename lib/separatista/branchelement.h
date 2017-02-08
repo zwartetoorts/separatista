@@ -40,7 +40,7 @@ namespace Separatista
 		/**
 		Creates the element from it's descriptor
 		*/
-		static Element* createElement(const ElementDescriptor* pElementDescriptor);
+		static Element* createElement(const ChildElementDescriptor* pChildElementDescriptor);
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions) const;
 
@@ -59,7 +59,7 @@ namespace Separatista
 		void destroyElement(Element *pElement);
 
 	protected:
-		BranchElement(const ElementDescriptor *pElementDescriptor);
+		BranchElement(const ChildElementDescriptor *pChildElementDescriptor);
 
 		~BranchElement();
 

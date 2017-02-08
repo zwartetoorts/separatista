@@ -31,15 +31,15 @@
 namespace Separatista
 {
 	/**
-	LeafElements are elements that hold a value.
+		AttributedLeafElements are elements that hold a value and Attributes
 	*/
 	class SEPARATISTA_EXTERN AttributedLeafElement : public LeafElement
 	{
 	public:
 		/**
-		Creates the element from it's descriptor
+			Creates the element from it's descriptor
 		*/
-		static Element* createElement(const ElementDescriptor* pElementDescriptor);
+		static Element* createElement(const ChildElementDescriptor* pChildElementDescriptor);
 
 
 		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions) const;
@@ -53,7 +53,7 @@ namespace Separatista
 		void setAttributeValue(const wchar_t *pAttributeName, const wchar_t *pValue);
 	protected:
 		/// Protected constructor
-		AttributedLeafElement(const ElementDescriptor* pElementDescriptor);
+		AttributedLeafElement(const ChildElementDescriptor* pChildElementDescriptor);
 
 		std::map<std::wstring, std::wstring> m_Attributes;
 	};

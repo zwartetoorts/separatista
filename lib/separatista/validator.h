@@ -69,21 +69,33 @@ namespace Separatista
 	class SEPARATISTA_EXTERN Validator
 	{
 	public:
-		static void validateMaxText(const wchar_t *pValue, size_t max, Element *pElement);
+		static void validateDecimal(const wchar_t *pValue, Element *pElement);
 
-		static void validateFractionDigits(const wchar_t *pValue, size_t min, size_t max, Element *pElement);
+		static void validateString(const wchar_t *pValue, Element *pElement);
 
-		static void validateTotalDigits(const wchar_t *pValue, size_t min, size_t max, Element *pElement);
+		static void validateBoolean(const wchar_t *pValue, Element *pElement);
+
+		static void validateMinInclusive(const wchar_t *pValue, const wchar_t *pArg, Element *pElement);
+
+		static void validateFractionDigits(const wchar_t *pValue, const wchar_t *pArg, Element *pElement);
+
+		static void validateTotalDigits(const wchar_t *pValue, const wchar_t *pArg, Element *pElement);
 
 		static void validateNumeric(const wchar_t *pValue, Element *pElement);
 
-		static void validateEnum(const wchar_t *pValue, std::initializer_list<const wchar_t*> pPossibleValues, Element *pElement);
+		static void validateEnumeration(const wchar_t *pValue, std::initializer_list<const wchar_t*> pPossibleValues, Element *pElement);
+
+		static void validatePattern(const wchar_t *pValue, const wchar_t *pArg, Element *pElement);
+
+		static void validateMinLength(const wchar_t *pValue, const wchar_t *pArg, Element *pElement);
+
+		static void validateMaxLength(const wchar_t *pValue, const wchar_t *pArg, Element *pElement);
 
 		static void isDigit(const wchar_t c, Element *pElement);
 
-		static void validateISODateTime(const wchar_t *pValue, Element *pElement);
+		static void validateDateTime(const wchar_t *pValue, Element *pElement);
 
-		static void validateISODate(const wchar_t *pValue, Element *pElement);
+		static void validateDate(const wchar_t *pValue, Element *pElement);
 
 
 	private:

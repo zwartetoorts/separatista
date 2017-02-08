@@ -31,8 +31,8 @@
 
 using namespace Separatista;
 
-ChoiceElement::ChoiceElement(const ElementDescriptor *pElementDescriptor)
-	:Element(pElementDescriptor)
+ChoiceElement::ChoiceElement(const ChildElementDescriptor *pChildElementDescriptor)
+	:Element(pChildElementDescriptor)
 {
 	DEBUG_METHOD;
 
@@ -100,7 +100,7 @@ xercesc::DOMElement* ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocu
 		switch(errorOptions)
 		{
 			case ThrowExceptions:
-				throw ElementException(SEPARATISTA_EXCEPTION(e.getMessage()), this);
+				SEPARATISTA_THROW_EXCEPTION(ElementException, e.getMessage(), this);
 			default:
 				SEPARATISTA_REPORT(e);
 		}
@@ -109,11 +109,11 @@ xercesc::DOMElement* ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocu
 	return pChildElement;
 }
 
-Element* ChoiceElement::createElement(const ElementDescriptor *pElementDescriptor)
+Element* ChoiceElement::createElement(const ChildElementDescriptor *pChildElementDescriptor)
 {
 	DEBUG_METHOD;
 
-	return new ChoiceElement(pElementDescriptor);
+	return new ChoiceElement(pChildElementDescriptor);
 }
 
 Element* ChoiceElement::getElementByTag(const wchar_t *pTagName, size_t nIndex) const
@@ -143,10 +143,10 @@ Element* ChoiceElement::createElementByTag(const wchar_t *pTagName, size_t nInde
 	pElementDescriptor = getElementDescriptor();
 	for (size_t i = 0; i < pElementDescriptor->m_nElementCount; i++)
 	{
-		if (pElementDescriptor->m_pElements[i].m_nHash == nHash && std::wcscmp(pElementDescriptor->m_pElements[i].m_pTag, pTagName) == 0)
+		if (pElementDescriptor->m_pChildren[i].m_nHash == nHash && std::wcscmp(pElementDescriptor->m_pChildren[i].m_pTag, pTagName) == 0)
 		{
 			// Found, create element and destroy old one on success.
-			pElement = pElementDescriptor->m_pElements[i].m_pfCreateElement(&pElementDescriptor->m_pElements[i]);
+			pElement = pElementDescriptor->m_pChildren[i].m_pElementDescriptor->m_pfCreateElement(&pElementDescriptor->m_pChildren[i]);
 			if (pElement)
 			{
 				if (m_pChosenElement)
@@ -158,7 +158,7 @@ Element* ChoiceElement::createElementByTag(const wchar_t *pTagName, size_t nInde
 		}
 	}
 	// Not found, wrong tag or tag not supported 
-	throw UnsupportedTagException(SEPARATISTA_EXCEPTION(TEXT("Unsupported tag")), this, pTagName);
+	SEPARATISTA_THROW_EXCEPTION(UnsupportedTagException, TEXT("Unsupported tag"), this, pTagName);
 }
 
 void ChoiceElement::destroyElement(Element *pElement)

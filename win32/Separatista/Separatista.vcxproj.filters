@@ -20,19 +20,10 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\cashaccount.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\lib\separatista\element.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\separatista\separatista.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\partyidentification.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\separatista\branchelement.h">
@@ -50,12 +41,6 @@
     <ClInclude Include="..\..\lib\separatista\xerces_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\pain\directdebittransactioninformation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\lib\separatista\choiceelement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -65,46 +50,16 @@
     <ClInclude Include="..\..\lib\separatista\validator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\pain\mandaterelatedinformation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\remittanceinformation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\pain\directdebittransaction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\lib\separatista\elementdescriptor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\pain\paymenttypeinformation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\pain\paymentinstruction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\separatista\attributedleafelement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\camt\banktocustomerstatement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\pain\pain_groupheader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\camt\camt_groupheader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\camt\accountstatement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\camt\cashbalance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\separatista\camt\totaltransactions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\lib\separatista\pain\pain.008.001.02.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\separatista\separatistadocument.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -130,22 +85,7 @@
     <ClCompile Include="..\..\lib\separatista\elementlist.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\pain\directdebittransactioninformation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\lib\separatista\choiceelement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\cashaccount.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\partyidentification.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\separatista\exception.cpp">
@@ -154,43 +94,13 @@
     <ClCompile Include="..\..\lib\separatista\validator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\pain\paymenttypeinformation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\pain\mandaterelatedinformation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\remittanceinformation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\pain\directdebittransaction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\pain\paymentinstruction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\lib\separatista\attributedleafelement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\camt\banktocustomerstatement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\pain\pain_groupheader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\camt\camt_groupheader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\camt\accountstatement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\camt\cashbalance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\separatista\camt\totaltransactions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\lib\separatista\pain\pain.008.001.02.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\separatista\separatistadocument.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

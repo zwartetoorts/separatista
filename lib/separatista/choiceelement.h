@@ -59,7 +59,7 @@ namespace Separatista
 		/**
 		Creates the element from it's descriptor
 		*/
-		static Element* createElement(const ElementDescriptor *pElementDescriptor);
+		static Element* createElement(const ChildElementDescriptor *pChildElementDescriptor);
 
 		/// @see Element::getElementByTag
 		Element* getElementByTag(const wchar_t *pTagName, size_t nIndex = 0) const;
@@ -80,7 +80,7 @@ namespace Separatista
 		/**
 		Constructor
 		*/
-		ChoiceElement(const ElementDescriptor *pElementDescriptor);
+		ChoiceElement(const ChildElementDescriptor *pChildElementDescriptor);
 
 	private:
 		/// The chosen element 

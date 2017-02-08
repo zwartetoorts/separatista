@@ -36,18 +36,24 @@
 
 using namespace Separatista;
 
-Element::Element(const ElementDescriptor *pElementDescriptor)
+Element::Element(const ChildElementDescriptor *pChildElementDescriptor)
 {
 	DEBUG_METHOD;
 
-	m_pElementDescriptor = pElementDescriptor;
+	m_pChildElementDescriptor = m_pChildElementDescriptor;
+}
+
+Element::~Element()
+{
+	if (m_pParent)
+		delete m_pParent;
 }
 
 const ElementDescriptor* Element::getElementDescriptor() const
 {
 	DEBUG_METHOD;
 
-	return m_pElementDescriptor;
+	return m_pChildElementDescriptor->m_pElementDescriptor;
 }
 
 void Element::addElementListener(ElementListener *pElementListener)
@@ -67,25 +73,25 @@ void Element::removeElementListener(ElementListener *pElementListener)
 const wchar_t* Element::getTag() const
 {
 	DEBUG_METHOD;
-	return m_pElementDescriptor->m_pTag;
+	return m_pChildElementDescriptor->m_pTag;
 }
 
 Element* Element::getElementByTag(const wchar_t *pTagName, size_t nIndex) const
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Child elements not supported by this element")), this);
+	SEPARATISTA_THROW_EXCEPTION(ElementException, TEXT("Child elements not supported by this element"), this);
 }
 
 Element* Element::createElementByTag(const wchar_t *pTagName, size_t nIndex)
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Child elements not supported by this element")), this);
+	SEPARATISTA_THROW_EXCEPTION(ElementException, TEXT("Child elements not supported by this element"), this);
 }
 
 void Element::destroyElement(Element *pElement)
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Child elements not supported by this element.")), this);
+	SEPARATISTA_THROW_EXCEPTION(ElementException, TEXT("Child elements not supported by this element."), this);
 }
 
 void Element::deleteElement(Element *pChildElement)
@@ -98,31 +104,31 @@ void Element::deleteElement(Element *pChildElement)
 Element::TagKeyRange Element::getAllByTagName(const wchar_t *pTagName)
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Child elements not supported by this element")), this);
+	SEPARATISTA_THROW_EXCEPTION(ElementException, TEXT("Child elements not supported by this element"), this);
 }
 
 const wchar_t* Element::getTextValue() const
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Values not supported by this element")), this);
+	SEPARATISTA_THROW_EXCEPTION(ElementException, TEXT("Values not supported by this element"), this);
 }
 
 void Element::setValue(const wchar_t *pValue, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Values not supported by this element")), this);
+	SEPARATISTA_THROW_EXCEPTION(ElementException, TEXT("Values not supported by this element"), this);
 }
 
 const wchar_t* Element::getAttributeValue(const wchar_t *pAtributeName) const
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Attributes not supported by this element")), this);
+	SEPARATISTA_THROW_EXCEPTION(ElementException, TEXT("Attributes not supported by this element"), this);
 }
 
 void Element::setAttributeValue(const wchar_t *pAttributeName, const wchar_t *pValue)
 {
 	DEBUG_METHOD;
-	throw ElementException(SEPARATISTA_EXCEPTION(TEXT("Attributes not supported by this element")), this);
+	SEPARATISTA_THROW_EXCEPTION(ElementException, TEXT("Attributes not supported by this element"), this);
 }
 
 void Element::onElementValueChanged(const wchar_t *pNewValue)
@@ -280,7 +286,7 @@ Element::TagKey::TagKey(const wchar_t *pTagName, size_t nIndex, const ElementDes
 	m_pBranchElementDescriptor = pBranchElementDescriptor;
 }
 
-bool Element::TagKey::operator<(const TagKey & Other) const
+bool Element::TagKey::operator<(const TagKey& Other) const
 {
 	DEBUG_METHOD;
 
@@ -291,9 +297,9 @@ bool Element::TagKey::operator<(const TagKey & Other) const
 	// The first tag found is the lesser value
 	for (size_t i = 0; i < m_pBranchElementDescriptor->m_nElementCount; i++)
 	{
-		if (m_pBranchElementDescriptor->m_pElements[i].m_nHash == m_nHash && std::wcscmp(m_pBranchElementDescriptor->m_pElements[i].m_pTag, m_pTagName) == 0)
+		if (m_pBranchElementDescriptor->m_pChildren[i].m_nHash == m_nHash && std::wcscmp(m_pBranchElementDescriptor->m_pChildren[i].m_pTag, m_pTagName) == 0)
 			return true;
-		else if (m_pBranchElementDescriptor->m_pElements[i].m_nHash == Other.m_nHash && std::wcscmp(m_pBranchElementDescriptor->m_pElements[i].m_pTag, Other.m_pTagName) == 0)
+		else if (m_pBranchElementDescriptor->m_pChildren[i].m_nHash == Other.m_nHash && std::wcscmp(m_pBranchElementDescriptor->m_pChildren[i].m_pTag, Other.m_pTagName) == 0)
 			return false;
 	}
 

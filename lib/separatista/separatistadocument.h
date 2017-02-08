@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2014 by Okkel Klaver   *
+*   Copyright (C) 2017 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,53 +18,43 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_LEAFELEMENT_H
-#define SEPARATISTA_LEAFELEMENT_H
-
-#include <ctime>
+#include <vector>
 #include <string>
 
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
 #include "separatista/element.h"
-#include "separatista/validator.h"
 #include "separatista/elementdescriptor.h"
+
+#ifndef SEPARATISTA_SEPARATISTADOCUMENT_H
+#define SEPARATISTA_SEPARATISTADOCUMENT_H
 
 namespace Separatista
 {
-	/**
-		LeafElements are elements that hold a value.
-	*/
-	class SEPARATISTA_EXTERN LeafElement : public Element
+	class SEPARATISTA_EXTERN SeparatistaDocument
 	{
 	public:
-		/**
-		Creates the element from it's descriptor
-		*/
-		static Element* createElement(const ChildElementDescriptor* pChildElementDescriptor);
-
-
-		xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions) const;
-
-		void fromDOMDocument(xercesc::DOMElement *pDOMElement, const ErrorOptions errorOptions = ThrowExceptions);
+		virtual const wchar_t* getNamespaceURI() const = 0;
 
 		/**
-			Returns the value of the text node
+		Writes the DOM document to a local file path
+		@param pRootElement The element to create the document from
+		@param pPath The path to write to
+		@return Error code
 		*/
-		const wchar_t* getTextValue() const;
+		IOErrorCode saveAs(const Element *pRootElement, const wchar_t *pPath);
 
-		/**
-			Set the value of a text node
-		*/
-		void setValue(const wchar_t *pValue, const ErrorOptions errorOptions = ThrowExceptions);
+	};
 
-	protected:
-		/// Protected constructor
-		LeafElement(const ChildElementDescriptor* pChildElementDescriptor);
-
-		std::wstring m_value;
+	template<namespace N>
+	class SeparatistaDocumentImpl : public SeparatistaDoument
+	{
+	public:
+		const wchar_t* getNamespaceURI() const 
+		{
+			return N;
+		};
 	};
 }
 
-
-#endif // SEPARATISTA_LEAFELEMENT_H
+#endif // !defined SEPARATISTA_SEPARATISTADOCUMENT_H

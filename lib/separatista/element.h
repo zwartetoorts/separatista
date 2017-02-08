@@ -243,14 +243,21 @@ namespace Separatista
 	protected:
 		/**
 			Construct a new Element
+			@param pTag The tag the element is known by
 			@param pElementDescriptor The element descriptor to load the element from.
 		*/
-		Element(const ElementDescriptor* pElementDescriptor);
+		Element(const ChildElementDescriptor* pChildElementDescriptor);
 
 		/**
-			Protected destructor just to protect the object from being destroyed by non Element derived classes.
+			Protected destructor to protect the object from being destroyed by non Element derived classes.
 		*/
-		virtual ~Element() { };
+		virtual ~Element();
+
+		/**
+			Get the parent element
+			@retrn The parent element or NULL if no parent was found in the ElementDescriptor
+		*/
+		Element* getParentElement() const;
 
 		/**
 			Method to make it possible for derived classes to delete Elements. 
@@ -269,11 +276,17 @@ namespace Separatista
 		void onElementDeleted();
 
 	private:
-		/// ElementDescriptor
-		const ElementDescriptor *m_pElementDescriptor;
+		/// ChildElementDescriptor
+		const ChildElementDescriptor *m_pChildElementDescriptor;
 		
 		/// ElementListeners
 		std::vector<ElementListener*> m_ElementListeners;
+
+		/// Parent element
+		Element *m_pParent;
+
+		/// Tag
+		const wchar_t *m_pTag;
 	};
 }
 

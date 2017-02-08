@@ -31,33 +31,6 @@
 namespace Separatista
 {
 	/**
-		Supported Separatista document types
-	*/
-	typedef enum
-	{
-		DT_CustomerDirectDebitDocument = 1,
-		DT_BankToCustomerStatement
-	} DocumentType;
-
-	class SEPARATISTA_EXTERN SeparatistaDocument
-	{
-	public:
-		virtual DocumentType getDocumentType() const = 0;
-
-		virtual const wchar_t* getNamespaceURI() const = 0;
-
-		/**
-			Writes the DOM document to a local file path
-			@param pRootElement The element to create the document from
-			@param pPath The path to write to
-			@return Error code
-		*/
-		IOErrorCode saveAs(const Element *pRootElement, const wchar_t *pPath);
-
-	};
-
-
-	/**
 		Error with code and xerces message.
 	*/
 	typedef struct

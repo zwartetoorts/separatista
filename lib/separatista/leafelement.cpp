@@ -35,17 +35,17 @@
 
 using namespace Separatista;
 
-LeafElement::LeafElement(const ElementDescriptor* pElementDescriptor) :
-Element(pElementDescriptor)
+LeafElement::LeafElement(const ChildElementDescriptor* pChildElementDescriptor) :
+Element(pChildElementDescriptor)
 {
 	DEBUG_METHOD;
 }
 
-Element* LeafElement::createElement(const ElementDescriptor* pElementDescriptor)
+Element* LeafElement::createElement(const ChildElementDescriptor* pChildElementDescriptor)
 {
 	DEBUG_METHOD;
 
-	return new LeafElement(pElementDescriptor);
+	return new LeafElement(pChildElementDescriptor);
 }
 
 xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions) const
@@ -75,7 +75,7 @@ xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument,
 		switch (errorOptions)
 		{
 		case ThrowExceptions:
-			throw ElementException(SEPARATISTA_EXCEPTION(e.getMessage()), this);
+			SEPARATISTA_THROW_EXCEPTION(ElementException, e.getMessage(), this);
 		default:
 			SEPARATISTA_REPORT(e);
 		}
@@ -101,9 +101,7 @@ const wchar_t* LeafElement::getTextValue() const
 void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOptions)
 {
 	DEBUG_METHOD;
-	const Validator *pValidator;
 
-	pValidator = getElementDescriptor()->m_pValidator;
 	switch (errorOptions)
 	{
 	case Element::AcceptValue:
@@ -113,8 +111,8 @@ void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOption
 	case Element::ClearValue:
 		try
 		{
-			if(pValidator)
-				pValidator->validate(pValue, this);
+			if(getElementDescriptor()->m_pfnValidate)
+				getElementDescriptor()->m_pfnValidate(pValue, this);
 			m_value = pValue;
 			onElementValueChanged(pValue);
 		}
@@ -126,8 +124,8 @@ void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOption
 		break;
 	case Element::ThrowExceptions:
 	default:
-		if (pValidator)
-			pValidator->validate(pValue, this);
+		if (getElementDescriptor()->m_pfnValidate)
+			getElementDescriptor()->m_pfnValidate(pValue, this);
 		m_value = pValue;
 		onElementValueChanged(pValue);
 	}

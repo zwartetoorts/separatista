@@ -26,9 +26,9 @@
 #include "separatista.h"
 
 #ifdef SEPARATISTA_DEBUG
-#	define SEPARATISTA_EXCEPTION(msg) msg, TEXT(__FILE__), __LINE__
+#	define SEPARATISTA_THROW_EXCEPTION(type, msg, ...) throw type(msg, TEXT(__FILE__), __LINE__, __VA_ARGS__)
 #else
-#	define SEPARATISTA_EXCEPTION(msg) TEXT(msg)
+#	define SEPARATISTA_THROW_EXCEPTION(type, msg, ...) throw type(msg, __VA_ARGS__)
 #endif // defined SEPARATISTA_DEBUG
 
 #define SEPARATISTA_REPORT(e) LOG(e.getMessage())

@@ -35,8 +35,8 @@
 
 using namespace Separatista;
 
-BranchElement::BranchElement(const ElementDescriptor *pElementDescriptor) :
-Element(pElementDescriptor)
+BranchElement::BranchElement(const ChildElementDescriptor *pChildElementDescriptor) :
+Element(pChildElementDescriptor)
 {
 	DEBUG_METHOD;
 }
@@ -52,11 +52,11 @@ BranchElement::~BranchElement()
 	}
 }
 
-Element* BranchElement::createElement(const ElementDescriptor *pElementDescriptor)
+Element* BranchElement::createElement(const ChildElementDescriptor *pChildElementDescriptor)
 {
 	DEBUG_METHOD;
 
-	return new BranchElement(pElementDescriptor);
+	return new BranchElement(pChildElementDescriptor);
 }
 
 Element* BranchElement::getElementByTag(const wchar_t *pTag, size_t nIndex) const
@@ -91,22 +91,22 @@ Element* BranchElement::createElementByTag(const wchar_t *pTag, size_t nIndex)
 				TagName matches
 				Max elements is 0 or index < max
 			*/
-			if (hash == pElementDescriptor->m_pElements[i].m_nHash && std::wcscmp(pElementDescriptor->m_pElements[i].m_pTag, pTag) == 0 && 
-				(pElementDescriptor->m_pElements[i].m_nMax == 0 || nIndex < pElementDescriptor->m_pElements[i].m_nMax))
+			if (hash == pElementDescriptor->m_pChildren[i].m_nHash && std::wcscmp(pElementDescriptor->m_pChildren[i].m_pTag, pTag) == 0 && 
+				(pElementDescriptor->m_pChildren[i].m_nMax == 0 || nIndex < pElementDescriptor->m_pChildren[i].m_nMax))
 			{
 				// Create new element and register it
-				Element *pElement = pElementDescriptor->m_pElements[i].m_pfCreateElement(&pElementDescriptor->m_pElements[i]);
+				Element *pElement = pElementDescriptor->m_pChildren[i].m_pElementDescriptor->m_pfCreateElement(&pElementDescriptor->m_pChildren[i]);
 				if (pElement)
 				{
 					// Important: create TagKey with ElementDescriptor::m_pTag, not with pTag wich can be deleted at some time
-					m_childElements.insert(std::pair<TagKey, Element*>(TagKey(pElementDescriptor->m_pElements[i].m_pTag, nIndex, pElementDescriptor), pElement));
+					m_childElements.insert(std::pair<TagKey, Element*>(TagKey(pElementDescriptor->m_pChildren[i].m_pTag, nIndex, pElementDescriptor), pElement));
 					onElementCreated(pElement);
 				}
 				return pElement;
 			}
 		}
 		// Bad, element wasn't found
-		throw UnsupportedTagException(SEPARATISTA_EXCEPTION(TEXT("Unsupported tag")), this, pTag);
+		SEPARATISTA_THROW_EXCEPTION(UnsupportedTagException, TEXT("Unsupported tag"), this, pTag);
 	}
 	return pElement;
 }
@@ -219,7 +219,7 @@ xercesc::DOMElement* BranchElement::toDOMDocument(xercesc::DOMDocument *pDOMDocu
 		switch (errorOptions)
 		{
 		case ThrowExceptions:
-			throw ElementException(SEPARATISTA_EXCEPTION(e.getMessage()), this);
+			SEPARATISTA_THROW_EXCEPTION(ElementException, e.getMessage(), this);
 		default:
 			SEPARATISTA_REPORT(e);
 		}

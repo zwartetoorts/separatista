@@ -46,7 +46,7 @@ namespace Separatista
 		/// Parent type ElementDescriptor, if any
 		const ElementDescriptor *m_pTypeParent;
 		/// Element creator function
-		Element* (*m_pfCreateElement)(const ElementDescriptor*);
+		Element* (*m_pfCreateElement)(const ChildElementDescriptor*);
 		/// Data validation class
 		void (*m_pfnValidate)(const wchar_t *pValue, Element *pElement);
 		/// Number of child elements

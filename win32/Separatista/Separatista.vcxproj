@@ -101,14 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\separatista\attributedleafelement.h" />
-    <ClInclude Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.h" />
     <ClInclude Include="..\..\lib\separatista\branchelement.h" />
-    <ClInclude Include="..\..\lib\separatista\camt\accountstatement.h" />
-    <ClInclude Include="..\..\lib\separatista\camt\banktocustomerstatement.h" />
-    <ClInclude Include="..\..\lib\separatista\camt\camt_groupheader.h" />
-    <ClInclude Include="..\..\lib\separatista\camt\cashbalance.h" />
-    <ClInclude Include="..\..\lib\separatista\camt\totaltransactions.h" />
-    <ClInclude Include="..\..\lib\separatista\cashaccount.h" />
     <ClInclude Include="..\..\lib\separatista\choiceelement.h" />
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />
     <ClInclude Include="..\..\lib\separatista\element.h" />
@@ -116,30 +109,15 @@
     <ClInclude Include="..\..\lib\separatista\elementlist.h" />
     <ClInclude Include="..\..\lib\separatista\exception.h" />
     <ClInclude Include="..\..\lib\separatista\leafelement.h" />
-    <ClInclude Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.h" />
-    <ClInclude Include="..\..\lib\separatista\pain\directdebittransaction.h" />
-    <ClInclude Include="..\..\lib\separatista\pain\directdebittransactioninformation.h" />
     <ClInclude Include="..\..\lib\separatista\pain\pain.008.001.02.h" />
-    <ClInclude Include="..\..\lib\separatista\pain\pain_groupheader.h" />
-    <ClInclude Include="..\..\lib\separatista\pain\mandaterelatedinformation.h" />
-    <ClInclude Include="..\..\lib\separatista\pain\paymentinstruction.h" />
-    <ClInclude Include="..\..\lib\separatista\pain\paymenttypeinformation.h" />
-    <ClInclude Include="..\..\lib\separatista\partyidentification.h" />
-    <ClInclude Include="..\..\lib\separatista\remittanceinformation.h" />
     <ClInclude Include="..\..\lib\separatista\separatista.h" />
+    <ClInclude Include="..\..\lib\separatista\separatistadocument.h" />
     <ClInclude Include="..\..\lib\separatista\validator.h" />
     <ClInclude Include="..\..\lib\separatista\xerces_types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\separatista\attributedleafelement.cpp" />
-    <ClCompile Include="..\..\lib\separatista\branchandfinancialinstitutionidentification.cpp" />
     <ClCompile Include="..\..\lib\separatista\branchelement.cpp" />
-    <ClCompile Include="..\..\lib\separatista\camt\accountstatement.cpp" />
-    <ClCompile Include="..\..\lib\separatista\camt\banktocustomerstatement.cpp" />
-    <ClCompile Include="..\..\lib\separatista\camt\camt_groupheader.cpp" />
-    <ClCompile Include="..\..\lib\separatista\camt\cashbalance.cpp" />
-    <ClCompile Include="..\..\lib\separatista\camt\totaltransactions.cpp" />
-    <ClCompile Include="..\..\lib\separatista\cashaccount.cpp" />
     <ClCompile Include="..\..\lib\separatista\choiceelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
     <ClCompile Include="..\..\lib\separatista\documentreader.cpp" />
@@ -147,17 +125,9 @@
     <ClCompile Include="..\..\lib\separatista\elementlist.cpp" />
     <ClCompile Include="..\..\lib\separatista\exception.cpp" />
     <ClCompile Include="..\..\lib\separatista\leafelement.cpp" />
-    <ClCompile Include="..\..\lib\separatista\pain\customerdirectdebitinitiation.cpp" />
-    <ClCompile Include="..\..\lib\separatista\pain\directdebittransaction.cpp" />
-    <ClCompile Include="..\..\lib\separatista\pain\directdebittransactioninformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\pain\pain.008.001.02.cpp" />
-    <ClCompile Include="..\..\lib\separatista\pain\pain_groupheader.cpp" />
-    <ClCompile Include="..\..\lib\separatista\pain\mandaterelatedinformation.cpp" />
-    <ClCompile Include="..\..\lib\separatista\pain\paymentinstruction.cpp" />
-    <ClCompile Include="..\..\lib\separatista\pain\paymenttypeinformation.cpp" />
-    <ClCompile Include="..\..\lib\separatista\partyidentification.cpp" />
-    <ClCompile Include="..\..\lib\separatista\remittanceinformation.cpp" />
     <ClCompile Include="..\..\lib\separatista\separatista.cpp" />
+    <ClCompile Include="..\..\lib\separatista\separatistadocument.cpp" />
     <ClCompile Include="..\..\lib\separatista\validator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
