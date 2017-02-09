@@ -21,9 +21,10 @@
 #include <vector>
 #include <string>
 
-#include "separatista.h"
-#include "xerces_types.h"
-#include "element.h"
+#include "separatista/separatista.h"
+#include "separatista/xerces_types.h"
+#include "separatista/element.h"
+#include "separatista/separatistadocument.h"
 
 #ifndef SEPARATISTA_DOCUMENTREADER_H
 #define SEPARATISTA_DOCUMENTREADER_H

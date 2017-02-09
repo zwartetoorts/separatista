@@ -43,6 +43,7 @@
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
 #include "separatista/separatistadocument.h"
+#include "separatista/documentregistry.h"
 #include "separatista/documentreader.h"
 #include "separatista/debug/debug.h"
 
@@ -109,29 +110,13 @@ DocumentReader::~DocumentReader()
 	resetErrors();
 }
 
-typedef SeparatistaDocument* (*SeparatistaDocumentCreatorFunc)(xercesc::DOMDocument *pDocument);
-
-template<class T> SeparatistaDocument* SeparatistaDocumentCreator(xercesc::DOMDocument *pDOMDocument)
-{
-	DEBUG_METHOD;
-
-	SeparatistaDocument *pDocument = new T(pDOMDocument);
-	return pDocument;
-}
-
 SeparatistaDocument* DocumentReader::getDocument()
 {
 	DEBUG_METHOD;
 	xercesc::DOMElement *pDocumentElement;
 	const XMLCh *pNamespaceURI;
-
-	// Insert new supported document types here...
-	std::unordered_map<std::wstring, SeparatistaDocumentCreatorFunc> documentCreatorMap(
-	{
-		{ pain_008_001::CustomerDirectDebitInitiationV02::m_NameSpaceURI, SeparatistaDocumentCreator<pain_008_001::CustomerDirectDebitInitiationV02> },
-		{ pain_008_001::CustomerDirectDebitInitiationV04::m_NameSpaceURI, SeparatistaDocumentCreator<pain_008_001::CustomerDirectDebitInitiationV04> }
-	});
-
+	const ElementDescriptor *pElementDescriptor;
+	
 	// Check for document
 	if (!m_pDocument)
 		return NULL;
@@ -141,20 +126,15 @@ SeparatistaDocument* DocumentReader::getDocument()
 	if (!pDocumentElement)
 		return NULL;
 
-	// The document root element tag should be "Document"
-	if (xercesc::XMLString::compareString(TEXT("Document"), pDocumentElement->getTagName()) != 0)
-		return NULL;
-
 	// Find by namespace uri
-	SeparatistaDocumentCreatorFunc func;
 	pNamespaceURI = pDocumentElement->getNamespaceURI();
 	if (!pNamespaceURI)
 		return NULL;
-
-	if ((func = documentCreatorMap[pNamespaceURI]) != NULL)
-		return func(m_pDocument);
-
-	return NULL;
+	pElementDescriptor = DocumentRegistry::getElementDescriptorByNamespace(pNamespaceURI);
+	if (!pElementDescriptor)
+		return NULL;
+	
+	return new SeparatistaDocument(pNamespaceURI, pElementDescriptor);
 }
 
 IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)

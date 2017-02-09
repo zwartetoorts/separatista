@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2014 by Okkel Klaver   *
+*   Copyright (C) 2017 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,17 +18,23 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_PAIN_MANDATERELATEDINFORMATION_H
-#define SEPARATISTA_PAIN_MANDATERELATEDINFORMATION_H
+#include <string>
+#include <unordered_map>
 
-#include "separatista/elementdescriptor.h"
+#include "separatista/separatista.h"
+#include "separatista/documentregistry.h"
+#include "separatista/pain/pain.008.001.02.h"
+#include "separatista/debug/debug.h"
 
-namespace Separatista
+const Separatista::ElementDescriptor* Separatista::DocumentRegistry::getElementDescriptorByNamespace(const wchar_t *pNamespace)
 {
-	namespace pain_008_001
+	DEBUG_METHOD;
+
+	// Insert new supported document types here...
+	std::unordered_map<std::wstring, const ElementDescriptor*> documentCreatorMap(
 	{
-		extern const ElementDescriptor MandateRelatedInformation6[2];
-		extern const ElementDescriptor MandateRelatedInformation8[2];
-	}
+		{ Separatista::pain_008_001_02::Namespace, Separatista::pain_008_001_02::DocumentElementDescriptor },
+	});
+
+	return documentCreatorMap[pNamespace];
 }
-#endif // !defined SEPARATISTA_PAIN_MANDATERELATEDINFORMATION_H

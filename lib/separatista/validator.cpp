@@ -29,6 +29,19 @@
 
 using namespace Separatista;
 
+template<class T>
+T getActualValue(xercesc::XSValue::DataType dataType, const wchar_t *pArg)
+{
+	xercesc::XSValue::Status status;
+	xercesc::XSValue *pValue;
+
+	pValue = xercesc::XSValue::getActualValue(pArg, xercesc::XSValue::DataType::dt_int, status);
+	if (!pValue || status != xercesc::XSValue::st_Init)
+		return 0;
+
+	return pValue->fData.fValue.;
+}
+
 std::array<wchar_t, 10> Validator::m_numericDigits =
 {
 	TEXT('0'),
@@ -43,12 +56,31 @@ std::array<wchar_t, 10> Validator::m_numericDigits =
 	TEXT('9')
 };
 
-void Validator::validateMaxText(const wchar_t *pValue, size_t max, Element *pElement)
+void Separatista::Validator::validateDecimal(const wchar_t * pValue, Element * pElement)
+{
+}
+
+void Separatista::Validator::validateString(const wchar_t * pValue, Element * pElement)
+{
+}
+
+void Separatista::Validator::validateBoolean(const wchar_t * pValue, Element * pElement)
+{
+}
+
+void Separatista::Validator::validateMinInclusive(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
+{
+}
+
+void Separatista::Validator::validateFractionDigits(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
 	DEBUG_METHOD;
+
 	
-	if (std::wcslen(pValue) > max)
-		SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Text too long"), pElement, pValue);
+}
+
+void Separatista::Validator::validateTotalDigits(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
+{
 }
 
 void Validator::validateNumeric(const wchar_t *pValue, Element *pElement)
@@ -67,6 +99,29 @@ void Validator::validateNumeric(const wchar_t *pValue, Element *pElement)
 	}
 }
 
+void Separatista::Validator::validateEnumeration(const wchar_t * pValue, std::initializer_list<const wchar_t*> pPossibleValues, Element * pElement)
+{
+}
+
+void Separatista::Validator::validatePattern(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
+{
+}
+
+void Separatista::Validator::validateMinLength(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
+{
+}
+
+void Separatista::Validator::validateMaxLength(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
+{
+	DEBUG_METHOD;
+
+	size_t max = ::getActualValue<size_t>(xercesc::XSValue::dt_unsignedLong, pArg);
+
+	if (std::wcslen(pValue) > max)
+		SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Text too long"), pElement, pValue);
+
+}
+
 void Validator::isDigit(const wchar_t c, Element *pElement)
 {
 	DEBUG_METHOD;
@@ -78,109 +133,11 @@ void Validator::isDigit(const wchar_t c, Element *pElement)
 	SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Not a valid digit"), pElement, NULL);
 }
 
-void Validator::validateFractionDigits(const wchar_t *pValue, size_t min, size_t max, Element *pElement)
+void Separatista::Validator::validateDateTime(const wchar_t * pValue, Element * pElement)
 {
-	DEBUG_METHOD;
-
-	bool dot = false;
-	wchar_t c;
-	size_t fc = 0; // Fraction count
-
-	// Remove + and - sign
-	if (*pValue == TEXT('+') || *pValue == TEXT('-'))
-		pValue++;
-
-	// Scan string
-	while ((c = *pValue++) != TEXT('\0'))
-	{
-		if (c == TEXT('.'))
-		{
-			if (dot)
-				SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Too many dot's in fraction"), pElement, pValue);
-			else
-				dot = true;
-		}
-		else
-		{
-			isDigit(c, pElement);
-			if (++fc > max)
-				SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Too many fraction digits"), pElement, pValue);
-		}
-	}
-	if (fc < min)
-		SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Too few fraction digits"), pElement, pValue);
 }
 
-void Validator::validateTotalDigits(const wchar_t *pValue, size_t min, size_t max, Element *pElement)
+void Separatista::Validator::validateDate(const wchar_t * pValue, Element * pElement)
 {
-	DEBUG_METHOD;
-
-	wchar_t c;
-	size_t td = 0;
-
-	// Remove + and - sign
-	if (*pValue == TEXT('+') || *pValue == TEXT('-'))
-		pValue++;
-
-	while ((c = *pValue++) != TEXT('\0'))
-	{
-		if (c == TEXT('.'))
-			;
-		else
-		{
-			isDigit(c, pElement);
-			++td;
-		}
-	}
-	if (td < min)
-		SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Too few digits in value"), pElement, pValue);
-	else if (td > max)
-		SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Too many digits in value"), pElement, pValue);
-
-}
-
-void Validator::validateEnum(const wchar_t *pValue, std::initializer_list<const wchar_t*> pPossibleValues, Element *pElement)
-{
-	DEBUG_METHOD;
-
-	for (auto it = pPossibleValues.begin(); it != pPossibleValues.end(); it++)
-	{
-		if (std::wcscmp(*it, pValue) == 0)
-			return;
-	}
-	SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Not one of the pre-defined values"), pElement, pValue);
-}
-
-
-void Validator::validateISODateTime(const wchar_t *pValue, Element *pElement)
-{
-	DEBUG_METHOD;
-
-	xercesc::XSValue::Status st;
-
-	if (xercesc::XSValue::validate(
-		pValue,
-		xercesc::XSValue::DataType::dt_dateTime,
-		st))
-	{
-		if (st != xercesc::XSValue::st_Init)
-			SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Wrong date format"), pElement, pValue);
-	}
-}
-
-void Validator::validateISODate(const wchar_t *pValue, Element *pElement)
-{
-	DEBUG_METHOD;
-
-	xercesc::XSValue::Status st;
-
-	if (xercesc::XSValue::validate(
-		pValue,
-		xercesc::XSValue::DataType::dt_date,
-		st))
-	{
-		if (st != xercesc::XSValue::st_Init)
-			SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Not a date value"), pElement, pValue);
-	}
 }
 

@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2013 by Okkel Klaver   *
+*   Copyright (C) 2017 by Okkel Klaver   *
 *   info@vanhetland.nl   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,18 +18,25 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "separatista/elementdescriptor.h"
+#include <vector>
+#include <string>
 
-#ifndef SEPARATISTA_PAIN_PAYMENTINSTRUCTION_H
-#define SEPARATISTA_PAIN_PAYMENTINSTRUCTION_H
+#include "separatista/separatista.h"
+
+#ifndef SEPARATISTA_DOCUMENTREGISTRY_H
+#define SEPARATISTA_DOCUMENTREGISTRY_H
 
 namespace Separatista
 {
-	namespace pain_008_001
+	struct ElementDescriptor;
+
+	class SEPARATISTA_EXTERN DocumentRegistry
 	{
-		extern const ElementDescriptor PaymentInstruction4[12];
-		extern const ElementDescriptor PaymentInstruction10[12];
-	}
+	public:
+		static const ElementDescriptor* getElementDescriptorByNamespace(const wchar_t *pNamespace);
+
+	};
 }
 
-#endif // SEPARATISTA_PAIN_PAYMENTINSTRUCTION_H
+#endif // !defined SEPARATISTA_DOCUMENTREGISTRY_H
+#pragma once

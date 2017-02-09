@@ -48,6 +48,18 @@
 
 using namespace Separatista;
 
+SeparatistaDocument::SeparatistaDocument(const wchar_t *pNameSpaceURI, const ElementDescriptor *pElementDescriptor) :
+	m_NamespaceURI(pNameSpaceURI),
+	m_pElementDescriptor(pElementDescriptor)
+{
+	DEBUG_METHOD;
+}
+
+const wchar_t* SeparatistaDocument::getNamespaceURI() const
+{
+	return m_NamespaceURI.c_str();
+}
+
 IOErrorCode SeparatistaDocument::saveAs(const Element *pRootElement, const wchar_t *pPath)
 {
 	DEBUG_METHOD;

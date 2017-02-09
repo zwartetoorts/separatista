@@ -34,7 +34,10 @@ namespace Separatista
 	class SEPARATISTA_EXTERN SeparatistaDocument
 	{
 	public:
-		virtual const wchar_t* getNamespaceURI() const = 0;
+		SeparatistaDocument(const wchar_t *pNamespace, const ElementDescriptor *pElementDescriptor);
+
+
+		const wchar_t* getNamespaceURI() const;
 
 		/**
 		Writes the DOM document to a local file path
@@ -44,16 +47,10 @@ namespace Separatista
 		*/
 		IOErrorCode saveAs(const Element *pRootElement, const wchar_t *pPath);
 
-	};
 
-	template<namespace N>
-	class SeparatistaDocumentImpl : public SeparatistaDoument
-	{
-	public:
-		const wchar_t* getNamespaceURI() const 
-		{
-			return N;
-		};
+	private:
+		std::wstring m_NamespaceURI;
+		const ElementDescriptor *m_pElementDescriptor;
 	};
 }
 
