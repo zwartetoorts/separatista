@@ -25,16 +25,17 @@
 #include "separatista/xerces_types.h"
 #include "separatista/element.h"
 #include "separatista/elementdescriptor.h"
+#include "separatista/branchelement.h"
 
 #ifndef SEPARATISTA_SEPARATISTADOCUMENT_H
 #define SEPARATISTA_SEPARATISTADOCUMENT_H
 
 namespace Separatista
 {
-	class SEPARATISTA_EXTERN SeparatistaDocument
+	class SEPARATISTA_EXTERN SeparatistaDocument : public BranchElement
 	{
 	public:
-		SeparatistaDocument(const wchar_t *pNamespace, const ElementDescriptor *pElementDescriptor);
+		SeparatistaDocument(const wchar_t *pNamespace);
 
 
 		const wchar_t* getNamespaceURI() const;
@@ -45,7 +46,7 @@ namespace Separatista
 		@param pPath The path to write to
 		@return Error code
 		*/
-		IOErrorCode saveAs(const Element *pRootElement, const wchar_t *pPath);
+		IOErrorCode saveAs(const wchar_t *pPath);
 
 
 	private:

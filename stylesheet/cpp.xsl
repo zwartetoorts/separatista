@@ -19,14 +19,14 @@ namespace Separatista
 {
 	namespace <xsl:value-of select="translate(substring(@targetNamespace, 32), ':.', '__')" /> 
 	{
-		static const wchar_t* Namespace = TEXT("<xsl:value-of select="substring(@targetNamespace, 32)" /> ");
+		const wchar_t* Namespace = TEXT("<xsl:value-of select="substring(@targetNamespace, 32)" /> ");
 		<xsl:apply-templates />
 	}
 }
 </xsl:template>
 
 <xsl:template match="xs:element">
-		static const Separatista::ElementDescriptor* DocumentElementDescriptor = &amp;<xsl:value-of select="@type" />;
+		const Separatista::ElementDescriptor* DocumentElementDescriptor = &amp;<xsl:value-of select="@type" />;
 </xsl:template>
 
 <xsl:template match="xs:simpleType">

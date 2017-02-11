@@ -21,6 +21,9 @@
 #include <cwchar>
 
 #include <xercesc/framework/psvi/XSValue.hpp>
+#include <xercesc/util/regx/RegularExpression.hpp>
+#include <xercesc/validators/datatype/StringDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 
 #include "separatista.h"
 #include "debug/debug.h"
@@ -29,47 +32,57 @@
 
 using namespace Separatista;
 
-template<class T>
-T getActualValue(xercesc::XSValue::DataType dataType, const wchar_t *pArg)
-{
-	xercesc::XSValue::Status status;
-	xercesc::XSValue *pValue;
-
-	pValue = xercesc::XSValue::getActualValue(pArg, xercesc::XSValue::DataType::dt_int, status);
-	if (!pValue || status != xercesc::XSValue::st_Init)
-		return 0;
-
-	return pValue->fData.fValue.;
-}
-
-std::array<wchar_t, 10> Validator::m_numericDigits =
-{
-	TEXT('0'),
-	TEXT('1'),
-	TEXT('2'),
-	TEXT('3'),
-	TEXT('4'),
-	TEXT('5'),
-	TEXT('6'),
-	TEXT('7'),
-	TEXT('8'),
-	TEXT('9')
-};
-
 void Separatista::Validator::validateDecimal(const wchar_t * pValue, Element * pElement)
 {
+	DEBUG_METHOD;
+	xercesc::XSValue::Status status;
+
+	if(!xercesc::XSValue::validate(pValue, xercesc::XSValue::dt_decimal, status) || status != xercesc::XSValue::st_Init)
+		SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Not a decimal value"), pElement, pValue);
 }
 
 void Separatista::Validator::validateString(const wchar_t * pValue, Element * pElement)
 {
+	DEBUG_METHOD;
+	xercesc::XSValue::Status status;
+
+	if (!xercesc::XSValue::validate(pValue, xercesc::XSValue::dt_string, status) || status != xercesc::XSValue::st_Init)
+		SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Not a string value"), pElement, pValue);
 }
 
 void Separatista::Validator::validateBoolean(const wchar_t * pValue, Element * pElement)
 {
+	DEBUG_METHOD;
+	xercesc::XSValue::Status status;
+
+	if (!xercesc::XSValue::validate(pValue, xercesc::XSValue::dt_boolean, status) || status != xercesc::XSValue::st_Init)
+		SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Not a boolean value"), pElement, pValue);
+
 }
 
 void Separatista::Validator::validateMinInclusive(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
+	DEBUG_METHOD;
+
+	xercesc::RefHashTableOf<xercesc::KVStringPair>* pFacets = new xercesc::RefHashTableOf<xercesc::KVStringPair>(1, true);
+	pFacets->put(
+		(void*)xercesc::SchemaSymbols::fgELT_MININCLUSIVE,
+		new xercesc::KVStringPair(
+			xercesc::SchemaSymbols::fgELT_MININCLUSIVE,
+			pArg));
+
+	xercesc::StringDatatypeValidator *pValidator = new xercesc::StringDatatypeValidator(NULL, pFacets, NULL, 0);
+	if (pValidator)
+	{
+		try
+		{
+			pValidator->validate(pValue);
+		}
+		catch (const xercesc::InvalidDatatypeValueException &)
+		{
+			SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Invalid value"), pElement, pValue);
+		}
+	}
 }
 
 void Separatista::Validator::validateFractionDigits(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
@@ -81,6 +94,8 @@ void Separatista::Validator::validateFractionDigits(const wchar_t * pValue, cons
 
 void Separatista::Validator::validateTotalDigits(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
+	DEBUG_METHOD;
+
 }
 
 void Validator::validateNumeric(const wchar_t *pValue, Element *pElement)
@@ -101,43 +116,37 @@ void Validator::validateNumeric(const wchar_t *pValue, Element *pElement)
 
 void Separatista::Validator::validateEnumeration(const wchar_t * pValue, std::initializer_list<const wchar_t*> pPossibleValues, Element * pElement)
 {
+	DEBUG_METHOD;
+
 }
 
 void Separatista::Validator::validatePattern(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
+	DEBUG_METHOD;
+
+	xercesc::RegularExpression rex(pArg);
+	if (!rex.matches(pValue))
+		SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Value doesn't match predefined pattern"), pElement, pValue);
 }
 
 void Separatista::Validator::validateMinLength(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
+	DEBUG_METHOD;
 }
 
 void Separatista::Validator::validateMaxLength(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
 	DEBUG_METHOD;
 
-	size_t max = ::getActualValue<size_t>(xercesc::XSValue::dt_unsignedLong, pArg);
-
-	if (std::wcslen(pValue) > max)
-		SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Text too long"), pElement, pValue);
-
-}
-
-void Validator::isDigit(const wchar_t c, Element *pElement)
-{
-	DEBUG_METHOD;
-	for (auto it = m_numericDigits.begin(); it != m_numericDigits.end(); it++)
-	{
-		if (*it == c)
-			return;
-	}
-	SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Not a valid digit"), pElement, NULL);
 }
 
 void Separatista::Validator::validateDateTime(const wchar_t * pValue, Element * pElement)
 {
+	DEBUG_METHOD;
 }
 
 void Separatista::Validator::validateDate(const wchar_t * pValue, Element * pElement)
 {
+	DEBUG_METHOD;
 }
 

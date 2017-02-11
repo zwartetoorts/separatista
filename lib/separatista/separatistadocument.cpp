@@ -43,14 +43,15 @@
 #include "separatista/separatista.h"
 #include "separatista/xerces_types.h"
 #include "separatista/separatistadocument.h"
-#include "separatista/documentreader.h"
+#include "separatista/documentregistry.h"
 #include "separatista/debug/debug.h"
 
 using namespace Separatista;
 
-SeparatistaDocument::SeparatistaDocument(const wchar_t *pNameSpaceURI, const ElementDescriptor *pElementDescriptor) :
+SeparatistaDocument::SeparatistaDocument(const wchar_t *pNameSpaceURI) :
 	m_NamespaceURI(pNameSpaceURI),
-	m_pElementDescriptor(pElementDescriptor)
+	m_pElementDescriptor(DocumentRegistry::getElementDescriptorByNamespace(pNameSpaceURI)),
+	BranchElement(m_pElementDescriptor->m_pChildren)
 {
 	DEBUG_METHOD;
 }
@@ -60,7 +61,7 @@ const wchar_t* SeparatistaDocument::getNamespaceURI() const
 	return m_NamespaceURI.c_str();
 }
 
-IOErrorCode SeparatistaDocument::saveAs(const Element *pRootElement, const wchar_t *pPath)
+IOErrorCode SeparatistaDocument::saveAs(const wchar_t *pPath)
 {
 	DEBUG_METHOD;
 
@@ -75,11 +76,11 @@ IOErrorCode SeparatistaDocument::saveAs(const Element *pRootElement, const wchar
 	try
 	{
 		pDocument = pDomImpl->createDocument(
-			getNamespaceURI(),
+			getNamespaceURI(), 
 			TEXT("Document"),
 			NULL);
 
-		if (pRootElement->toDOMDocument(pDocument, pDocument->getDocumentElement()))
+		if (toDOMDocument(pDocument, pDocument->getDocumentElement()))
 		{
 			xercesc::DOMLSSerializer *pSerializer = ((xercesc::DOMImplementationLS*)pDomImpl)->createLSSerializer();
 			xercesc::DOMLSOutput *pOutput = ((xercesc::DOMImplementationLS*)pDomImpl)->createLSOutput();

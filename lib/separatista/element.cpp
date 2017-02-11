@@ -185,6 +185,7 @@ time_t Element::getDateValue() const
 	tm.tm_min = pValue->fData.fValue.f_datetime.f_min;
 	tm.tm_sec = pValue->fData.fValue.f_datetime.f_milisec / 1000;
 
+	delete pValue;
 	return std::mktime(&tm);
 }
 
@@ -220,6 +221,7 @@ int Element::getIntValue() const
 	xercesc::XSValue::Status status;
 	xercesc::XSValue *pValue;
 	const XMLCh *pText = getTextValue();
+	int ret;
 
 	if (!pText)
 		return 0;
@@ -228,7 +230,9 @@ int Element::getIntValue() const
 	if (!pValue || status != xercesc::XSValue::st_Init)
 		return 0;
 
-	return pValue->fData.fValue.f_int;
+	ret = pValue->fData.fValue.f_int;
+	delete pValue;
+	return ret;
 }
 
 void Element::setValue(const int Value, const ErrorOptions errorOptions)
@@ -247,6 +251,7 @@ double Element::getDoubleValue() const
 	xercesc::XSValue::Status status;
 	xercesc::XSValue *pValue;
 	const XMLCh *pText = getTextValue();
+	double ret;
 
 	if (!pText)
 		return (double)0;
@@ -255,7 +260,9 @@ double Element::getDoubleValue() const
 	if (!pValue || status != xercesc::XSValue::st_Init)
 		return (double)0;
 
-	return pValue->fData.fValue.f_double;
+	ret = pValue->fData.fValue.f_double;
+	delete pValue;
+	return ret;
 }
 
 void Element::setValue(const double d, const ErrorOptions errorOptions)

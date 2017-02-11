@@ -91,15 +91,10 @@ namespace Separatista
 
 		static void validateMaxLength(const wchar_t *pValue, const wchar_t *pArg, Element *pElement);
 
-		static void isDigit(const wchar_t c, Element *pElement);
-
 		static void validateDateTime(const wchar_t *pValue, Element *pElement);
 
 		static void validateDate(const wchar_t *pValue, Element *pElement);
 
-
-	private:
-		static std::array<wchar_t, 10> m_numericDigits;
 	};
 
 }

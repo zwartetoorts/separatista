@@ -30,8 +30,7 @@
 
 CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
 {
-	m_nVersion = V2;
-	m_pCustomerDirectDebitInitiation = new Separatista::pain_008_001::CustomerDirectDebitInitiationV02();
+	m_pCustomerDirectDebitInitiation = new Separatista::SeparatistaDocument(TEXT("pain.008.001.02 "));
 }
 
 CustomerDirectDebitInitiation::~CustomerDirectDebitInitiation()
@@ -94,7 +93,7 @@ STDMETHODIMP CustomerDirectDebitInitiation::Save(LONG hWnd, Separatista::IOError
 
 STDMETHODIMP CustomerDirectDebitInitiation::SaveAs(BSTR Path, Separatista::IOErrorCode *pErrorCode)
 {
-	if ((*pErrorCode = m_pCustomerDirectDebitInitiation->saveAs(m_pCustomerDirectDebitInitiation, Path)) == Separatista::IOErrorCode::Success)
+	if ((*pErrorCode = m_pCustomerDirectDebitInitiation->saveAs(Path)) == Separatista::IOErrorCode::Success)
 			return S_OK;
 	
 	return E_FAIL;
@@ -155,11 +154,11 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 			pDocument = reader.getDocument();
 			if (pDocument)
 			{
-				if (pDocument->getDocumentType() == Separatista::DocumentType::DT_CustomerDirectDebitDocument)
+				if (std::wcscmp(pDocument->getNamespaceURI(), m_pCustomerDirectDebitInitiation->getNamespaceURI()) == 0)
 				{
 					if (m_pCustomerDirectDebitInitiation)
 						delete m_pCustomerDirectDebitInitiation;
-					m_pCustomerDirectDebitInitiation = (Separatista::pain_008_001::CustomerDirectDebitInitiation*)pDocument;
+					m_pCustomerDirectDebitInitiation = pDocument;
 					return S_OK;
 				}
 				delete pDocument;
@@ -204,42 +203,6 @@ STDMETHODIMP CustomerDirectDebitInitiation::OpenFrom(BSTR Path, Separatista::IOE
 	}
 
 	return SepaControlDispatch<ICustomerDirectDebitInitiation>::SetErrorInfo(wos.str().data());
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::GetVersion(CustomerDirectDebitInitiation::DocumentVersion *pVersion)
-{
-	*pVersion = m_nVersion;
-	return S_OK;
-}
-
-STDMETHODIMP CustomerDirectDebitInitiation::SetVersion(CustomerDirectDebitInitiation::DocumentVersion Version)
-{
-	Separatista::pain_008_001::CustomerDirectDebitInitiation *pCustomerDirectDebitInitiation;
-
-	if (Version == m_nVersion)
-		return S_OK;
-
-	switch (Version)
-	{
-	case V2:
-		pCustomerDirectDebitInitiation = new Separatista::pain_008_001::CustomerDirectDebitInitiationV02();
-		break;
-	case V4:
-		pCustomerDirectDebitInitiation = new Separatista::pain_008_001::CustomerDirectDebitInitiationV04();
-		break;
-	default:
-		return E_INVALIDARG;
-	}
-
-	if (pCustomerDirectDebitInitiation)
-	{
-		m_nVersion = Version;
-		delete m_pCustomerDirectDebitInitiation;
-		m_pCustomerDirectDebitInitiation = pCustomerDirectDebitInitiation;
-		return S_OK;
-	}
-
-	return E_OUTOFMEMORY;
 }
 
 STDMETHODIMP CustomerDirectDebitInitiation::GetNamespace(BSTR *pNamespace)

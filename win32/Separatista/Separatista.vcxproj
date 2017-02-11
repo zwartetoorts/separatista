@@ -104,6 +104,7 @@
     <ClInclude Include="..\..\lib\separatista\branchelement.h" />
     <ClInclude Include="..\..\lib\separatista\choiceelement.h" />
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />
+    <ClInclude Include="..\..\lib\separatista\documentregistry.h" />
     <ClInclude Include="..\..\lib\separatista\element.h" />
     <ClInclude Include="..\..\lib\separatista\elementdescriptor.h" />
     <ClInclude Include="..\..\lib\separatista\elementlist.h" />
@@ -121,6 +122,7 @@
     <ClCompile Include="..\..\lib\separatista\choiceelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
     <ClCompile Include="..\..\lib\separatista\documentreader.cpp" />
+    <ClCompile Include="..\..\lib\separatista\documentregistry.cpp" />
     <ClCompile Include="..\..\lib\separatista\element.cpp" />
     <ClCompile Include="..\..\lib\separatista\elementlist.cpp" />
     <ClCompile Include="..\..\lib\separatista\exception.cpp" />

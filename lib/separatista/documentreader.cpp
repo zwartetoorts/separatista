@@ -115,7 +115,6 @@ SeparatistaDocument* DocumentReader::getDocument()
 	DEBUG_METHOD;
 	xercesc::DOMElement *pDocumentElement;
 	const XMLCh *pNamespaceURI;
-	const ElementDescriptor *pElementDescriptor;
 	
 	// Check for document
 	if (!m_pDocument)
@@ -130,11 +129,8 @@ SeparatistaDocument* DocumentReader::getDocument()
 	pNamespaceURI = pDocumentElement->getNamespaceURI();
 	if (!pNamespaceURI)
 		return NULL;
-	pElementDescriptor = DocumentRegistry::getElementDescriptorByNamespace(pNamespaceURI);
-	if (!pElementDescriptor)
-		return NULL;
 	
-	return new SeparatistaDocument(pNamespaceURI, pElementDescriptor);
+	return new SeparatistaDocument(pNamespaceURI);
 }
 
 IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)

@@ -299,12 +299,6 @@ library Separatista
 		IOERR_USER
 	} IOErrorCode;
 
-	typedef enum
-	{
-		V2 = 1,
-		V4
-	} CustomerDirectDebitInitiationDocumentVersion;
-
 	/**
 		CustomerDirectDebitInitiation
 	*/
@@ -318,12 +312,6 @@ library Separatista
 	]
 	interface ICustomerDirectDebitInitiation : IDispatch
 	{
-		[ propget, helpstring("The document version") ]
-		HRESULT __stdcall Version(
-			[out, retval] CustomerDirectDebitInitiationDocumentVersion* pVersion);
-		[ propput, helpstring("The document version") ]
-		HRESULT __stdcall Version(
-			[in] CustomerDirectDebitInitiationDocumentVersion Version);
 		[ propget, helpstring("The document namespace.") ]
 		HRESULT __stdcall Namespace(
 			[out, retval] BSTR *pNamespace);
