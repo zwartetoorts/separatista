@@ -30,7 +30,7 @@
 
 CustomerDirectDebitInitiation::CustomerDirectDebitInitiation()
 {
-	m_pCustomerDirectDebitInitiation = new Separatista::SeparatistaDocument(TEXT("pain.008.001.02 "));
+	m_pCustomerDirectDebitInitiation = new Separatista::SeparatistaDocument(TEXT("urn:iso:std:iso:20022:tech:xsd:pain.008.001.02"));
 }
 
 CustomerDirectDebitInitiation::~CustomerDirectDebitInitiation()

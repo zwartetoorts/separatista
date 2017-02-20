@@ -111,6 +111,11 @@ void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOption
 	case Element::ClearValue:
 		try
 		{
+			if (getElementDescriptor()->m_pTypeParent)
+			{
+				getElementDescriptor()->m_pTypeParent->m_pfnValidate(pValue, this);
+			}
+
 			if(getElementDescriptor()->m_pfnValidate)
 				getElementDescriptor()->m_pfnValidate(pValue, this);
 			m_value = pValue;
@@ -124,6 +129,10 @@ void LeafElement::setValue(const wchar_t *pValue, const ErrorOptions errorOption
 		break;
 	case Element::ThrowExceptions:
 	default:
+		if (getElementDescriptor()->m_pTypeParent)
+		{
+			getElementDescriptor()->m_pTypeParent->m_pfnValidate(pValue, this);
+		}
 		if (getElementDescriptor()->m_pfnValidate)
 			getElementDescriptor()->m_pfnValidate(pValue, this);
 		m_value = pValue;

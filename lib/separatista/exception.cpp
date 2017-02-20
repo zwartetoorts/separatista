@@ -132,3 +132,36 @@ const wchar_t* UnsupportedTagException::getTag() const
 {
 	return m_Tag.c_str();
 }
+
+UnsupportedNamespaceException::UnsupportedNamespaceException(const wchar_t *pMessage, const Element *pSource, const wchar_t *pNamespace)
+	:ElementException(pMessage, pSource),
+	m_Namespace(pNamespace)
+{
+	DEBUG_METHOD;
+	std::wostringstream wos;
+
+	wos << pNamespace
+		<< TEXT(": ")
+		<< getMessage();
+	setMessage(wos.str().c_str());
+}
+
+#ifdef SEPARATISTA_DEBUG
+UnsupportedNamespaceException::UnsupportedNamespaceException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, const Element *pSource, const wchar_t *pNamespace)
+	:ElementException(pMessage, pPath, nLine, pSource),
+	m_Namespace(pNamespace)
+{
+	DEBUG_METHOD;
+	std::wostringstream wos;
+
+	wos << pNamespace
+		<< TEXT(": ")
+		<< getMessage();
+	setMessage(wos.str().c_str());
+}
+#endif 
+
+const wchar_t* UnsupportedNamespaceException::getNamespace() const
+{
+	return m_Namespace.c_str();
+}

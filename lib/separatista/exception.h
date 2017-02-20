@@ -87,5 +87,20 @@ namespace Separatista
 		std::wstring m_Tag;
 	};
 
+	/// Unsupported namespace exception, thrown when the namespace isn't supported
+	class SEPARATISTA_EXTERN UnsupportedNamespaceException : public Separatista::ElementException
+	{
+	public:
+		UnsupportedNamespaceException(const wchar_t *pMessage, const Element *pSource, const wchar_t *pNamespace);
+
+#ifdef SEPARATISTA_DEBUG
+		UnsupportedNamespaceException(const wchar_t *pMessage, const wchar_t *pPath, int nLine, const Element *pSource, const wchar_t *pNamespace);
+#endif
+		/// Returns the unsupported tag
+		const wchar_t* getNamespace() const;
+
+	private:
+		std::wstring m_Namespace;
+	};
 }
 #endif // !defined SEPARATISTA_EXCEPTION_H

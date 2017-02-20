@@ -243,7 +243,6 @@ namespace Separatista
 	protected:
 		/**
 			Construct a new Element
-			@param pTag The tag the element is known by
 			@param pElementDescriptor The element descriptor to load the element from.
 		*/
 		Element(const ChildElementDescriptor* pChildElementDescriptor);
@@ -287,6 +286,8 @@ namespace Separatista
 
 		/// Tag
 		const wchar_t *m_pTag;
+
+		friend class SeparatistaDocument;
 	};
 }
 

@@ -40,7 +40,7 @@ Element::Element(const ChildElementDescriptor *pChildElementDescriptor)
 {
 	DEBUG_METHOD;
 
-	m_pChildElementDescriptor = m_pChildElementDescriptor;
+	m_pChildElementDescriptor = pChildElementDescriptor;
 }
 
 Element::~Element()

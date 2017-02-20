@@ -28,15 +28,14 @@
 
 namespace Separatista
 {
-	struct ElementDescriptor;
-
+	// Forward decl
+	struct ChildElementDescriptor;
+	
 	class SEPARATISTA_EXTERN DocumentRegistry
 	{
 	public:
-		static const ElementDescriptor* getElementDescriptorByNamespace(const wchar_t *pNamespace);
-
+		static const ChildElementDescriptor* getDocumentChildElementDescriptor(const wchar_t *pNamespace);
 	};
 }
 
 #endif // !defined SEPARATISTA_DOCUMENTREGISTRY_H
-#pragma once

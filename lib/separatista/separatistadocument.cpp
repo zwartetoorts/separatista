@@ -49,11 +49,16 @@
 using namespace Separatista;
 
 SeparatistaDocument::SeparatistaDocument(const wchar_t *pNameSpaceURI) :
-	m_NamespaceURI(pNameSpaceURI),
-	m_pElementDescriptor(DocumentRegistry::getElementDescriptorByNamespace(pNameSpaceURI)),
-	BranchElement(m_pElementDescriptor->m_pChildren)
+	BranchElement(DocumentRegistry::getDocumentChildElementDescriptor(pNameSpaceURI)),
+	m_NamespaceURI(pNameSpaceURI)
 {
 	DEBUG_METHOD;
+}
+
+SeparatistaDocument::~SeparatistaDocument()
+{
+	DEBUG_METHOD;
+
 }
 
 const wchar_t* SeparatistaDocument::getNamespaceURI() const
@@ -77,7 +82,7 @@ IOErrorCode SeparatistaDocument::saveAs(const wchar_t *pPath)
 	{
 		pDocument = pDomImpl->createDocument(
 			getNamespaceURI(), 
-			TEXT("Document"),
+			getTag(),
 			NULL);
 
 		if (toDOMDocument(pDocument, pDocument->getDocumentElement()))

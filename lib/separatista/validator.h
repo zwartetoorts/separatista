@@ -95,8 +95,38 @@ namespace Separatista
 
 		static void validateDate(const wchar_t *pValue, Element *pElement);
 
+		template <class T>
+		static void validate(const wchar_t* pSchemaSymbols, const wchar_t *pValue, const wchar_t *pArg, Element *pElement);
+
 	};
 
+	template<class T>
+	inline void Validator::validate(const wchar_t * pSchemaSymbols, const wchar_t * pValue, const wchar_t * pArg, Element *pElement)
+	{
+		xercesc::RefHashTableOf<xercesc::KVStringPair>* pFacets = new xercesc::RefHashTableOf<xercesc::KVStringPair>(1, true);
+		pFacets->put(
+			(void*)pSchemaSymbols,
+			new xercesc::KVStringPair(
+				pSchemaSymbols,
+				pArg));
+
+		T *pValidator = new T(NULL, pFacets, NULL, 0);
+		if (pValidator)
+		{
+			try
+			{
+				pValidator->validate(pValue);
+			}
+			catch (const xercesc::InvalidDatatypeValueException &)
+			{
+				//delete pFacets;
+				//delete pValidator;
+				SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Invalid value"), pElement, pValue);
+			}
+		}
+		//delete pValidator;
+		//delete pFacets;
+	}
 }
 
 #endif // !defined SEPARATISTA_VALIDATOR_H

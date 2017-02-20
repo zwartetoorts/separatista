@@ -37,6 +37,8 @@ namespace Separatista
 	public:
 		SeparatistaDocument(const wchar_t *pNamespace);
 
+		/// Destructor
+		~SeparatistaDocument();
 
 		const wchar_t* getNamespaceURI() const;
 
@@ -47,7 +49,6 @@ namespace Separatista
 		@return Error code
 		*/
 		IOErrorCode saveAs(const wchar_t *pPath);
-
 
 	private:
 		std::wstring m_NamespaceURI;

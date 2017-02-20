@@ -23,6 +23,9 @@
 #include <xercesc/framework/psvi/XSValue.hpp>
 #include <xercesc/util/regx/RegularExpression.hpp>
 #include <xercesc/validators/datatype/StringDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/DecimalDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/DateDatatypeValidator.hpp>
+#include <xercesc/validators/datatype/DateTimeDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 
 #include "separatista.h"
@@ -64,38 +67,21 @@ void Separatista::Validator::validateMinInclusive(const wchar_t * pValue, const 
 {
 	DEBUG_METHOD;
 
-	xercesc::RefHashTableOf<xercesc::KVStringPair>* pFacets = new xercesc::RefHashTableOf<xercesc::KVStringPair>(1, true);
-	pFacets->put(
-		(void*)xercesc::SchemaSymbols::fgELT_MININCLUSIVE,
-		new xercesc::KVStringPair(
-			xercesc::SchemaSymbols::fgELT_MININCLUSIVE,
-			pArg));
-
-	xercesc::StringDatatypeValidator *pValidator = new xercesc::StringDatatypeValidator(NULL, pFacets, NULL, 0);
-	if (pValidator)
-	{
-		try
-		{
-			pValidator->validate(pValue);
-		}
-		catch (const xercesc::InvalidDatatypeValueException &)
-		{
-			SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Invalid value"), pElement, pValue);
-		}
-	}
+	validate<xercesc::DecimalDatatypeValidator>(xercesc::SchemaSymbols::fgELT_MININCLUSIVE, pValue, pArg, pElement);
 }
 
 void Separatista::Validator::validateFractionDigits(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
 	DEBUG_METHOD;
 
-	
+	validate<xercesc::DecimalDatatypeValidator>(xercesc::SchemaSymbols::fgELT_FRACTIONDIGITS, pValue, pArg, pElement);
 }
 
 void Separatista::Validator::validateTotalDigits(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
 	DEBUG_METHOD;
 
+	validate<xercesc::DecimalDatatypeValidator>(xercesc::SchemaSymbols::fgELT_TOTALDIGITS, pValue, pArg, pElement);
 }
 
 void Validator::validateNumeric(const wchar_t *pValue, Element *pElement)
@@ -114,10 +100,16 @@ void Validator::validateNumeric(const wchar_t *pValue, Element *pElement)
 	}
 }
 
-void Separatista::Validator::validateEnumeration(const wchar_t * pValue, std::initializer_list<const wchar_t*> pPossibleValues, Element * pElement)
+void Separatista::Validator::validateEnumeration(const wchar_t * pValue, std::initializer_list<const wchar_t*> PossibleValues, Element * pElement)
 {
 	DEBUG_METHOD;
 
+	for (auto possibleValue : PossibleValues)
+	{
+		if (std::wcscmp(possibleValue, pValue) == 0)
+			return;
+	}
+	SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Value doesn't match predefined set"), pElement, pValue);
 }
 
 void Separatista::Validator::validatePattern(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
@@ -132,21 +124,46 @@ void Separatista::Validator::validatePattern(const wchar_t * pValue, const wchar
 void Separatista::Validator::validateMinLength(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
 	DEBUG_METHOD;
+
+	validate<xercesc::StringDatatypeValidator>(xercesc::SchemaSymbols::fgELT_MINLENGTH, pValue, pArg, pElement);
 }
 
 void Separatista::Validator::validateMaxLength(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
 	DEBUG_METHOD;
 
+	validate<xercesc::StringDatatypeValidator>(xercesc::SchemaSymbols::fgELT_MAXLENGTH, pValue, pArg, pElement);
 }
 
 void Separatista::Validator::validateDateTime(const wchar_t * pValue, Element * pElement)
 {
 	DEBUG_METHOD;
+
+	xercesc::XSValue::Status st;
+
+	if (xercesc::XSValue::validate(
+		pValue,
+		xercesc::XSValue::DataType::dt_dateTime,
+		st))
+	{
+		if (st != xercesc::XSValue::st_Init)
+			SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Not a datetime value"), pElement, pValue);
+	}
 }
 
 void Separatista::Validator::validateDate(const wchar_t * pValue, Element * pElement)
 {
 	DEBUG_METHOD;
+
+	xercesc::XSValue::Status st;
+
+	if (xercesc::XSValue::validate(
+		pValue,
+		xercesc::XSValue::DataType::dt_date,
+		st))
+	{
+		if (st != xercesc::XSValue::st_Init)
+			SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Not a date value"), pElement, pValue);
+	}
 }
 
