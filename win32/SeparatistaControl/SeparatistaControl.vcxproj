@@ -92,7 +92,7 @@
   <ItemGroup>
     <ClInclude Include="ciban.h" />
     <ClInclude Include="classfactory.h" />
-    <ClInclude Include="customerdirectdebitinitiation.h" />
+    <ClInclude Include="separatistadocument.h" />
     <ClInclude Include="dispatch.h" />
     <ClInclude Include="dll.h" />
     <ClInclude Include="element.h" />
@@ -116,7 +116,7 @@
   <ItemGroup>
     <ClCompile Include="ciban.cpp" />
     <ClCompile Include="classfactory.cpp" />
-    <ClCompile Include="customerdirectdebitinitiation.cpp" />
+    <ClCompile Include="separatistadocument.cpp" />
     <ClCompile Include="dispatch.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>

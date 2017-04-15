@@ -54,6 +54,10 @@ void ChoiceElement::fromDOMDocument(xercesc::DOMElement * pDOMElement, const Err
 {
 	DEBUG_METHOD;
 
+	// Check current tag
+	if (std::wcscmp(pDOMElement->getTagName(), getTag()) != 0)
+		return;
+
 	// Get the first child tag name
 	xercesc::DOMElement *pDOMChildElement = pDOMElement->getFirstElementChild();
 	if (!pDOMChildElement)
@@ -76,11 +80,12 @@ void ChoiceElement::fromDOMDocument(xercesc::DOMElement * pDOMElement, const Err
 	}
 }
 
-xercesc::DOMElement* ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions) const
+IOErrorCode ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions) const
 {
 	DEBUG_METHOD;
 
 	xercesc::DOMElement *pChildElement = NULL;
+	IOErrorCode ret = Success;
 
 	// Create tag and call toDOMDocument
 	try
@@ -89,8 +94,12 @@ xercesc::DOMElement* ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocu
 		if (pChildElement)
 		{
 			pDOMParent->appendChild(pChildElement);
-			if(m_pChosenElement)
-				m_pChosenElement->toDOMDocument(pDOMDocument, pChildElement, errorOptions);
+			if (m_pChosenElement)
+			{
+				ret = m_pChosenElement->toDOMDocument(pDOMDocument, pChildElement, errorOptions);
+				if (ret != Success)
+					return ret;
+			}
 		}
 	}
 	catch (const xercesc::DOMException &e)
@@ -102,11 +111,11 @@ xercesc::DOMElement* ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocu
 			case ThrowExceptions:
 				SEPARATISTA_THROW_EXCEPTION(ElementException, e.getMessage(), this);
 			default:
+				ret = Xerces;
 				SEPARATISTA_REPORT(e);
 		}
-		return NULL;
 	}
-	return pChildElement;
+	return ret;
 }
 
 Element* ChoiceElement::createElement(const ChildElementDescriptor *pChildElementDescriptor)

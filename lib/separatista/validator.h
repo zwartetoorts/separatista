@@ -119,12 +119,12 @@ namespace Separatista
 			}
 			catch (const xercesc::InvalidDatatypeValueException &)
 			{
+				delete pValidator;
 				//delete pFacets;
-				//delete pValidator;
 				SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Invalid value"), pElement, pValue);
 			}
 		}
-		//delete pValidator;
+		delete pValidator;
 		//delete pFacets;
 	}
 }

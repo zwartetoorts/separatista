@@ -44,6 +44,7 @@
 #include "separatista/xerces_types.h"
 #include "separatista/separatistadocument.h"
 #include "separatista/documentregistry.h"
+#include "separatista/automagic.h"
 #include "separatista/debug/debug.h"
 
 using namespace Separatista;
@@ -53,12 +54,45 @@ SeparatistaDocument::SeparatistaDocument(const wchar_t *pNameSpaceURI) :
 	m_NamespaceURI(pNameSpaceURI)
 {
 	DEBUG_METHOD;
+
+	AutoMagic::installAutoMagic(this);
+}
+
+SeparatistaDocument::SeparatistaDocument(const wchar_t *pNameSpaceURI, xercesc::DOMElement *pRootDOMElement) :
+	BranchElement(DocumentRegistry::getDocumentChildElementDescriptor(pNameSpaceURI)),
+	m_NamespaceURI(pNameSpaceURI)
+{
+	DEBUG_METHOD;
+
+	AutoMagic::installAutoMagic(this);
+	fromDOMDocument(pRootDOMElement);
 }
 
 SeparatistaDocument::~SeparatistaDocument()
 {
 	DEBUG_METHOD;
 
+}
+
+IOErrorCode SeparatistaDocument::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions) const
+{
+	DEBUG_METHOD;
+	IOErrorCode ret = Success;
+
+	// DOMDocument already has a root element defined, so we should start with the child element(s)
+	const ElementDescriptor *pDescriptor = getElementDescriptor();
+	Element *pElement;
+	for (size_t c = 0; c < pDescriptor->m_nElementCount; c++)
+	{
+		pElement = getElementByTag(pDescriptor->m_pChildren[c].m_pTag);
+		if (pElement)
+		{
+			ret = pElement->toDOMDocument(pDocument, pParent, errorOptions);
+			if (ret != Success)
+				return ret;
+		}
+	}
+	return ret;
 }
 
 const wchar_t* SeparatistaDocument::getNamespaceURI() const
@@ -85,7 +119,7 @@ IOErrorCode SeparatistaDocument::saveAs(const wchar_t *pPath)
 			getTag(),
 			NULL);
 
-		if (toDOMDocument(pDocument, pDocument->getDocumentElement()))
+		if (toDOMDocument(pDocument, pDocument->getDocumentElement()) == Success)
 		{
 			xercesc::DOMLSSerializer *pSerializer = ((xercesc::DOMImplementationLS*)pDomImpl)->createLSSerializer();
 			xercesc::DOMLSOutput *pOutput = ((xercesc::DOMImplementationLS*)pDomImpl)->createLSOutput();

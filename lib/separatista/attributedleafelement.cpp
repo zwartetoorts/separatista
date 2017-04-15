@@ -42,11 +42,14 @@ Element* AttributedLeafElement::createElement(const ChildElementDescriptor *pChi
 	return new AttributedLeafElement(pChildElementDescriptor);
 }
 
-xercesc::DOMElement* AttributedLeafElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions) const
+IOErrorCode AttributedLeafElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions) const
 {
 	DEBUG_METHOD;
+	IOErrorCode ret = Success;
+	xercesc::DOMElement *pElement;
 
-	xercesc::DOMElement *pElement = LeafElement::toDOMDocument(pDOMDocument, pDOMParent, errorOptions);
+	ret = LeafElement::toDOMDocument(pDOMDocument, pDOMParent, errorOptions);
+	pElement = pDOMParent->getLastElementChild();
 	if (pElement)
 	{
 		try
@@ -61,11 +64,12 @@ xercesc::DOMElement* AttributedLeafElement::toDOMDocument(xercesc::DOMDocument *
 			case ThrowExceptions:
 				SEPARATISTA_THROW_EXCEPTION(ElementException, e.getMessage(), this);
 			default:
+				ret = Xerces;
 				SEPARATISTA_REPORT(e);
 			}
 		}
 	}
-	return pElement;
+	return ret;
 }
 
 void AttributedLeafElement::fromDOMDocument(xercesc::DOMElement *pDOMElement, const ErrorOptions errorOptions)

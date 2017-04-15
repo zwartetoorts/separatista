@@ -300,21 +300,24 @@ library Separatista
 	} IOErrorCode;
 
 	/**
-		CustomerDirectDebitInitiation
+		SeparatistaDocument
 	*/
 
 	[
 		uuid(4B8AC337-5E17-454D-A7EC-8955B07B99CC),
-		helpstring("ICustomerDirectDebitInitiation interface"),
+		helpstring("ISeparatistaDocument interface"),
 		oleautomation,
 		dual,
 		odl
 	]
-	interface ICustomerDirectDebitInitiation : IDispatch
+	interface ISeparatistaDocument : IDispatch
 	{
 		[ propget, helpstring("The document namespace.") ]
 		HRESULT __stdcall Namespace(
 			[out, retval] BSTR *pNamespace);
+		[ propput, helpstring("The document namespace.") ]
+		HRESULT __stdcall NameSpace(
+			[in] BSTR Namespace);
 		[ propget, helpstring("The root element") ]
 		HRESULT __stdcall RootElement(
 			[out, retval] IElement **ppElement);
@@ -339,11 +342,11 @@ library Separatista
 
 	[
 		uuid(A3142FEC-FB2E-4715-B5DF-C4F7844D2956),
-		helpstring("CustomerDirectDebitInitiation object")
+		helpstring("SeparatistaDocument object")
 	]
-	coclass CustomerDirectDebitInitiation
+	coclass SeparatistaDocument
 	{
-		[default] interface ICustomerDirectDebitInitiation;
+		[default] interface ISeparatistaDocument;
 		interface ISupportErrorInfo;
 		interface IDispatch;
 	};

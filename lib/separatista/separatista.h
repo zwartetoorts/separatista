@@ -47,7 +47,7 @@ namespace Separatista
 		Unknown,
 		/// Error was caused by the platform (os)
 		Platform,
-		/// Xerces caused the error, thus xml related
+		/// Xerces caused the error, so xml related
 		Xerces,
 		/// The error was caused by Separatista, internally
 		Separatista,

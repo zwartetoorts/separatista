@@ -130,7 +130,7 @@ SeparatistaDocument* DocumentReader::getDocument()
 	if (!pNamespaceURI)
 		return NULL;
 	
-	return new SeparatistaDocument(pNamespaceURI);
+	return new SeparatistaDocument(pNamespaceURI, pDocumentElement);
 }
 
 IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)

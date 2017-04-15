@@ -101,7 +101,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\separatista\attributedleafelement.h" />
+    <ClInclude Include="..\..\lib\separatista\automagic.h" />
     <ClInclude Include="..\..\lib\separatista\branchelement.h" />
+    <ClInclude Include="..\..\lib\separatista\camt\camt.053.001.02.h" />
     <ClInclude Include="..\..\lib\separatista\choiceelement.h" />
     <ClInclude Include="..\..\lib\separatista\documentreader.h" />
     <ClInclude Include="..\..\lib\separatista\documentregistry.h" />
@@ -118,7 +120,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\separatista\attributedleafelement.cpp" />
+    <ClCompile Include="..\..\lib\separatista\automagic.cpp" />
     <ClCompile Include="..\..\lib\separatista\branchelement.cpp" />
+    <ClCompile Include="..\..\lib\separatista\camt\camt.053.001.02.cpp" />
     <ClCompile Include="..\..\lib\separatista\choiceelement.cpp" />
     <ClCompile Include="..\..\lib\separatista\dll.cpp" />
     <ClCompile Include="..\..\lib\separatista\documentreader.cpp" />

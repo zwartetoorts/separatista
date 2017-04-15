@@ -26,7 +26,7 @@
 #include "mt940sdocument.h"
 #include "registrykey.h"
 #include "dispatch.cpp"
-#include "customerdirectdebitinitiation.h"
+#include "separatistadocument.h"
 #include "ciban.h"
 #include "element.h"
 
@@ -92,8 +92,8 @@ STDAPI DllGetClassObject(REFCLSID rclsid,
 	*ppv = NULL;
 	if (IsEqualIID(rclsid, __uuidof(CMT940SDocument)))
 		pFactory = new SepaControlClassFactory(CMT940SDocument::Create<CMT940SDocument>);
-	else if (IsEqualIID(rclsid, __uuidof(CustomerDirectDebitInitiation)))
-		pFactory = new SepaControlClassFactory(CustomerDirectDebitInitiation::SepaControlDispatch<ICustomerDirectDebitInitiation>::Create<CustomerDirectDebitInitiation>);
+	else if (IsEqualIID(rclsid, __uuidof(SeparatistaDocument)))
+		pFactory = new SepaControlClassFactory(SeparatistaDocument::SepaControlDispatch<ISeparatistaDocument>::Create<SeparatistaDocument>);
 	else if (IsEqualIID(rclsid, __uuidof(CIBAN)))
 		pFactory = new SepaControlClassFactory(CIBAN::Create<CIBAN>);
 	else 
@@ -168,11 +168,11 @@ STDAPI DllUnregisterServer()
 		TEXT("Separatista.IBAN.1"),
 		TEXT("Separatista.IBAN"));
 
-	// Unregister Separatista.CustomerDirectDebitInitiation
+	// Unregister Separatista.SeparatistaDocument
 	DllUnregisterObject(
 		TEXT("{A3142FEC-FB2E-4715-B5DF-C4F7844D2956}"),
-		TEXT("Separatista.CustomerDirectDebitInitiation.1"),
-		TEXT("Separatista.CustomerDirectDebitInitiation"));
+		TEXT("Separatista.SeparatistaDocument.1"),
+		TEXT("Separatista.SeparatistaDocument"));
 
 	// Unregister Separatista.Element
 	DllUnregisterObject(
@@ -322,11 +322,11 @@ STDAPI DllRegisterServer()
 		return hr;
 	}
 
-	// Try to register Separatista.CustomerDirectDebitInitiation
+	// Try to register Separatista.SeparatistaDocument
 	hr = DllRegisterObject(
 		TEXT("{A3142FEC-FB2E-4715-B5DF-C4F7844D2956}"),
-		TEXT("Separatista.CustomerDirectDebitInitiation.1"),
-		TEXT("Separatista.CustomerDirectDebitInitiation"));
+		TEXT("Separatista.SeparatistaDocument.1"),
+		TEXT("Separatista.SeparatistaDocument"));
 	if (FAILED(hr))
 	{
 		DllUnregisterServer();

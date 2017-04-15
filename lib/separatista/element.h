@@ -81,7 +81,7 @@ namespace Separatista
 			@return Pointer to the new created DOMElement, or NULL
 			@see createElement
 		*/
-		virtual xercesc::DOMElement* toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions) const = 0;
+		virtual IOErrorCode toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions = ThrowExceptions) const = 0;
 
 		/**
 			Tries to load it's value from the document element.
@@ -286,8 +286,6 @@ namespace Separatista
 
 		/// Tag
 		const wchar_t *m_pTag;
-
-		friend class SeparatistaDocument;
 	};
 }
 

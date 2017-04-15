@@ -35,10 +35,17 @@ namespace Separatista
 	class SEPARATISTA_EXTERN SeparatistaDocument : public BranchElement
 	{
 	public:
+		/// Construct an empty document
 		SeparatistaDocument(const wchar_t *pNamespace);
+
+		/// Construct a separatista document from a xerces document
+		SeparatistaDocument(const wchar_t *pNamespace, xercesc::DOMElement *pRootDOMElement);
 
 		/// Destructor
 		~SeparatistaDocument();
+
+		/// @see Element::toDOMDocument
+		IOErrorCode toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions) const;
 
 		const wchar_t* getNamespaceURI() const;
 
@@ -52,7 +59,6 @@ namespace Separatista
 
 	private:
 		std::wstring m_NamespaceURI;
-		const ElementDescriptor *m_pElementDescriptor;
 	};
 }
 

@@ -41,6 +41,7 @@ Element::Element(const ChildElementDescriptor *pChildElementDescriptor)
 	DEBUG_METHOD;
 
 	m_pChildElementDescriptor = pChildElementDescriptor;
+	m_pParent = NULL;
 }
 
 Element::~Element()

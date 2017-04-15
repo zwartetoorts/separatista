@@ -25,6 +25,7 @@
 #include "separatista/documentregistry.h"
 #include "separatista/exception.h"
 #include "separatista/pain/pain.008.001.02.h"
+#include "separatista/camt/camt.053.001.02.h"
 #include "separatista/debug/debug.h"
 
 const Separatista::ChildElementDescriptor* Separatista::DocumentRegistry::getDocumentChildElementDescriptor(const wchar_t *pNamespace)
@@ -36,8 +37,12 @@ const Separatista::ChildElementDescriptor* Separatista::DocumentRegistry::getDoc
 	{
 		{
 			Separatista::pain_008_001_02::Namespace, &Separatista::pain_008_001_02::DocumentElementDescriptor
-		}, 
+		},
+		{
+			Separatista::camt_053_001_02::Namespace, &Separatista::camt_053_001_02::DocumentElementDescriptor
+		}
 	});
 
 	return documentCreatorMap[pNamespace];
 }
+

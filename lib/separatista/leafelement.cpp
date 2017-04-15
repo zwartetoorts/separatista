@@ -48,15 +48,12 @@ Element* LeafElement::createElement(const ChildElementDescriptor* pChildElementD
 	return new LeafElement(pChildElementDescriptor);
 }
 
-xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions) const
+IOErrorCode LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions) const
 {
 	DEBUG_METHOD;
 
 	xercesc::DOMElement *pElement = NULL;
-
-	// Check for value
-	if (isEmpty())
-		return NULL;
+	IOErrorCode ret = Success;
 
 	// Create element and set value
 	try
@@ -77,11 +74,11 @@ xercesc::DOMElement* LeafElement::toDOMDocument(xercesc::DOMDocument *pDocument,
 		case ThrowExceptions:
 			SEPARATISTA_THROW_EXCEPTION(ElementException, e.getMessage(), this);
 		default:
+			ret = Xerces;
 			SEPARATISTA_REPORT(e);
 		}
-		return NULL;
 	}
-	return pElement;
+	return ret;
 }
 
 void LeafElement::fromDOMDocument(xercesc::DOMElement *pDOMElement, const ErrorOptions errorOptions)

@@ -170,6 +170,10 @@ void BranchElement::fromDOMDocument(xercesc::DOMElement *pDOMElement, const Erro
 	size_t index = 0;
 	Element *pElement;
 
+	// Check current tag
+	if (std::wcscmp(pDOMElement->getTagName(), getTag()) != 0)
+		return;
+
 	// Iterate over all child elements
 	for (pChildElement = pDOMElement->getFirstElementChild(); pChildElement != NULL; pChildElement = pChildElement->getNextElementSibling())
 	{
@@ -191,11 +195,12 @@ void BranchElement::fromDOMDocument(xercesc::DOMElement *pDOMElement, const Erro
 	}
 }
 
-xercesc::DOMElement* BranchElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions) const
+IOErrorCode BranchElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xercesc::DOMElement *pDOMParent, const ErrorOptions errorOptions) const
 {
 	DEBUG_METHOD;
 
 	xercesc::DOMElement *pChildElement = NULL;
+	IOErrorCode ret = Success;
 
 	// Create my element
 	try
@@ -208,7 +213,9 @@ xercesc::DOMElement* BranchElement::toDOMDocument(xercesc::DOMDocument *pDOMDocu
 			// Iterate over all child elements
 			for (auto it = m_childElements.begin(); it != m_childElements.end(); it++)
 			{
-				it->second->toDOMDocument(pDOMDocument, pChildElement, errorOptions);
+				ret = it->second->toDOMDocument(pDOMDocument, pChildElement, errorOptions);
+				if (ret != Success)
+					return ret;
 			}
 		}
 	}
@@ -221,9 +228,9 @@ xercesc::DOMElement* BranchElement::toDOMDocument(xercesc::DOMDocument *pDOMDocu
 		case ThrowExceptions:
 			SEPARATISTA_THROW_EXCEPTION(ElementException, e.getMessage(), this);
 		default:
+			ret = Xerces;
 			SEPARATISTA_REPORT(e);
 		}
-		return NULL;
 	}
-	return pChildElement;
+	return ret;
 }
