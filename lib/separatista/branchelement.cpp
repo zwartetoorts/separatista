@@ -149,11 +149,8 @@ BranchElement::TagKeyRange BranchElement::getAllByTagName(const wchar_t * pTagNa
 				tagKeyRange.m_begin = it;
 				begin = false;
 			}
-			else
-			{
-				tagKeyRange.m_end = it;
-				++tagKeyRange.m_end;
-			}
+			tagKeyRange.m_end = it;
+			++tagKeyRange.m_end;
 		}
 	}
 
