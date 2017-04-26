@@ -33,21 +33,20 @@ namespace Separatista
 	class PathWatcher : public ElementListener
 	{
 	public:
-		PathWatcher(ElementListener *pAutoMagic, Element *pElement, const wchar_t *pPath);
+		PathWatcher(ElementListener *pFinalListener, Element *pElement, const wchar_t *pPath);
 
 		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 		virtual void elementCreated(Element *pParent, Element *pChild);
 		virtual void elementDeleted(Element *pElement);
 	protected:
 		const wchar_t *m_pPath;
-		ElementListener *m_pAutoMagic;
+		ElementListener *m_pFinalListener;
 	};
-
 
 	class AutoMagic : public ElementListener
 	{
 	public:
-		AutoMagic(SeparatistaDocument *pDocument, const wchar_t *pBasePath, const wchar_t *pWatchPath, const wchar_t *pValuePath);
+		AutoMagic(Element *m_pBaseElement, const wchar_t *pWatchPath, const wchar_t *pValuePath);
 
 		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 		virtual void elementCreated(Element *pParent, Element *pChild);
@@ -60,18 +59,39 @@ namespace Separatista
 
 	private:
 		Element *m_pBaseElement;
+		const wchar_t *m_pValuePath;
+	};
+
+	template <class T>
+	class AutoMagicFactory : public ElementListener
+	{
+	public:
+		AutoMagicFactory(SeparatistaDocument *pDocument, const wchar_t *pBasePath, const wchar_t *pWatchPath, const wchar_t *pValuePath);
+
+		static void Create(SeparatistaDocument *pDocument, const wchar_t *pBasePath, const wchar_t *pWatchPath, const wchar_t *pValuePath)
+		{
+			DEBUG_METHOD;
+
+			new AutoMagicFactory<T>(pDocument, pBasePath, pWatchPath, pValuePath);
+		};
+
+		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
+		virtual void elementCreated(Element *pParent, Element *pChild);
+		virtual void elementDeleted(Element *pElement);
+	private:
 		const wchar_t *m_pWatchPath;
 		const wchar_t *m_pValuePath;
+		SeparatistaDocument *m_pDocument;
 	};
 
 	class CountAutoMagic : public AutoMagic
 	{
 	public:
-		CountAutoMagic(SeparatistaDocument *pDocument, const wchar_t *pBasePath, const wchar_t *pWatchPath, const wchar_t *pValuePath);
+		CountAutoMagic(Element *pBaseElement, const wchar_t *pWatchPath, const wchar_t *pValuePath);
 
+		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 		virtual void elementCreated(Element *pParent, Element *pChild);
 		virtual void elementDeleted(Element *pElement);
-
 	private:
 		size_t m_nCount;
 	};
@@ -79,12 +99,21 @@ namespace Separatista
 	class SumAutoMagic : public AutoMagic
 	{
 	public:
-		SumAutoMagic(SeparatistaDocument *pDocument, const wchar_t *pBasePath, const wchar_t *pWatchPath, const wchar_t *pValuePath);
+		SumAutoMagic(Element *pBaseElement, const wchar_t *pWatchPath, const wchar_t *pValuePath);
 
 		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
+		virtual void elementCreated(Element *pParent, Element *pChild);
+		virtual void elementDeleted(Element *pElement);
+	protected:
+		void sum();
+
+		static unsigned int atoi(const wchar_t c);
+		static wchar_t itoa(unsigned int i);
+		/// Returns strlen pValue if not found
+		static size_t findCh(const wchar_t *pValue, const wchar_t ch);
 
 	private:
-		std::wstring m_sum;
+		std::list<Element*> m_elements;
 	};
 	
 }

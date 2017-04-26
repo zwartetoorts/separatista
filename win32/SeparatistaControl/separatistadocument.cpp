@@ -236,6 +236,9 @@ STDMETHODIMP SeparatistaDocument::SetNamespace(BSTR Namespace)
 
 STDMETHODIMP SeparatistaDocument::GetRootElement(IElement **ppElement)
 {
+	if (!m_pSeparatistaDocument)
+		return E_NOT_VALID_STATE;
+
 	*ppElement = new Element(m_pSeparatistaDocument);
 	(*ppElement)->AddRef();
 	return S_OK;
