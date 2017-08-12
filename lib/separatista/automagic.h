@@ -55,11 +55,12 @@ namespace Separatista
 		static void installAutoMagic(SeparatistaDocument *pDocument);
 
 	protected:
-		Element* createValueElement();
+		Element* getValueElement();
 
 	private:
+		Element *createValueElement(Element *pBaseElement, const wchar_t *pValuePath);
+		Element *m_pValueElement;
 		Element *m_pBaseElement;
-		const wchar_t *m_pValuePath;
 	};
 
 	template <class T>

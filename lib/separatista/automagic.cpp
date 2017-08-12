@@ -136,55 +136,36 @@ void PathWatcher::elementDeleted(Element *pElement)
 	delete this;
 }
 
-/// Filter class for filtering out callbacks from elements
-class ElementDeleteListener : public ElementListener
-{
-public:
-	ElementDeleteListener(ElementListener *pTarget) : m_pTarget(pTarget) { DEBUG_METHOD; };
-	virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue) { DEBUG_METHOD; };
-	virtual void elementCreated(Element *pParent, Element *pChild) { DEBUG_METHOD; };
-	virtual void elementDeleted(Element *pElement)
-	{
-		DEBUG_METHOD;
-
-		m_pTarget->elementDeleted(pElement);
-		delete this;
-	};
-private:
-	ElementListener *m_pTarget;
-};
-
-
-
 AutoMagic::AutoMagic(Element *pBaseElement, const wchar_t * pWatchPath, const wchar_t * pValuePath)
 {
 	DEBUG_METHOD;
 
+	// Store base element
 	m_pBaseElement = pBaseElement;
-	m_pValuePath = pValuePath;
 
-	// Install PathWatcher
-	new PathWatcher(this, pBaseElement, pWatchPath);
+	// Create value element
+	m_pValueElement = createValueElement(pBaseElement, pValuePath);
+	if (m_pValueElement)
+	{
+		// Keep an eye on the value element
+		m_pValueElement->addElementListener(this);
 
-	// Set listener for deletion
-	pBaseElement->addElementListener(new ElementDeleteListener(this));
+		// Install PathWatchers
+		new PathWatcher(this, pBaseElement, pWatchPath);
+	}
 }
 
-Element* AutoMagic::createValueElement()
+Element* AutoMagic::createValueElement(Element *pBaseElement, const wchar_t *pValuePath)
 {
 	DEBUG_METHOD;
 
-	const wchar_t *pPath = m_pValuePath;
+	const wchar_t *pPath = pValuePath;
 	wchar_t c;
 	std::wstring p;
 	Element *pElement;
 
-	// Check for base path element, should be there!
-	if (!m_pBaseElement)
-		return NULL;
-
 	// Create path
-	pElement = m_pBaseElement;
+	pElement = pBaseElement;
 	while ((c = *pPath++) != TEXT('\0'))
 	{
 		p += c;
@@ -211,26 +192,33 @@ Element* AutoMagic::createValueElement()
 	return pElement;
 }
 
+Element* AutoMagic::getValueElement()
+{
+	DEBUG_METHOD;
+
+	return m_pValueElement;
+}
+
 void AutoMagic::elementCreated(Element *pParent, Element *pChild)
 {
 	DEBUG_METHOD;
 
-	
 }
 
 void AutoMagic::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
 {
 	DEBUG_METHOD;
 
-	
 }
 
 void AutoMagic::elementDeleted(Element *pElement)
 {
-DEBUG_METHOD;
+	DEBUG_METHOD;
 
-if (pElement == m_pBaseElement)
-delete this;
+	if (pElement == m_pValueElement)
+		m_pValueElement = NULL;
+	else if (pElement == m_pBaseElement)
+		delete this;
 }
 
 CountAutoMagic::CountAutoMagic(Element *pBaseElement, const wchar_t *pWatchPath, const wchar_t *pValuePath)
@@ -244,9 +232,12 @@ CountAutoMagic::CountAutoMagic(Element *pBaseElement, const wchar_t *pWatchPath,
 void CountAutoMagic::elementCreated(Element *pParent, Element *pChild)
 {
 	DEBUG_METHOD;
+	Element *pValueElement;
 
 	m_nCount++;
-	createValueElement()->setValue((int)m_nCount);
+	pValueElement = getValueElement();
+	if(pValueElement)
+		pValueElement->setValue((int)m_nCount);
 
 	AutoMagic::elementCreated(pParent, pChild);
 }
@@ -254,10 +245,16 @@ void CountAutoMagic::elementCreated(Element *pParent, Element *pChild)
 void CountAutoMagic::elementDeleted(Element *pElement)
 {
 	DEBUG_METHOD;
+	Element *pValueElement;
 
-	m_nCount--;
-	createValueElement()->setValue((int)m_nCount);
+	pValueElement = getValueElement();
+	if (pElement != pValueElement)
+	{
+		m_nCount--;
 
+		if (pValueElement)
+			pValueElement->setValue((int)m_nCount);
+	}
 	AutoMagic::elementDeleted(pElement);
 }
 
@@ -273,20 +270,24 @@ SumAutoMagic::SumAutoMagic(Element *pBaseElement, const wchar_t * pWatchPath, co
 {
 	DEBUG_METHOD;
 
+	sum();
 }
 
 void SumAutoMagic::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
 {
 	DEBUG_METHOD;
 
-	sum();
+	// Check for loops
+	if(pElement != getValueElement())
+		sum();
 	AutoMagic::elementValueChanged(pElement, pNewValue);
 }
 
 void SumAutoMagic::elementCreated(Element *pParent, Element *pChild)
 {
 	DEBUG_METHOD;
-
+	
+	pChild->addElementListener(this);
 	m_elements.push_back(pChild);
 	AutoMagic::elementCreated(pParent, pChild);
 }
@@ -295,8 +296,12 @@ void SumAutoMagic::elementDeleted(Element *pElement)
 {
 	DEBUG_METHOD;
 
-	m_elements.remove(pElement);
-	sum();
+	Element *pValueElement = getValueElement();
+	if (pElement != pValueElement)
+	{
+		m_elements.remove(pElement);
+		sum();
+	}
 	AutoMagic::elementDeleted(pElement);
 }
 
@@ -338,21 +343,26 @@ size_t SumAutoMagic::findCh(const wchar_t *pValue, const wchar_t ch)
 void SumAutoMagic::sum()
 {
 	DEBUG_METHOD;
+	Element *pValueElement = getValueElement();
+	if (!pValueElement)
+		return;
+
 	std::wstring sum(TEXT("0"));
-	std::wstring nsum;
 	const wchar_t *pValue1 = sum.c_str();
 	const wchar_t *pValue2;
 	unsigned int v = 0;
 
 	for (auto it = m_elements.begin(); it != m_elements.end(); it++)
 	{
+		std::wstring nsum;
+
 		pValue2 = (*it)->getTextValue();
 
 		size_t len1 = std::wcslen(pValue1);
 		size_t len2 = std::wcslen(pValue2);
 
 		// Make value1 always the longest in size
-		if (len2 > len1)
+/*		if (len2 > len1)
 		{
 			size_t tlen = len2;
 			len2 = len1;
@@ -362,12 +372,12 @@ void SumAutoMagic::sum()
 			pValue2 = pValue1;
 			pValue1 = pTemp;
 		}
-
+*/
 		// Get dot positions and calc decimal count including dot
 		size_t dc1 = len1 - findCh(pValue1, TEXT('.'));
 		size_t dc2 = len2 - findCh(pValue2, TEXT('.'));
 
-		while (len1 > 0)
+		while (len1 > 0 || len2 > 0)
 		{
 			bool dot = false;
 			unsigned int v1 = 0;
@@ -379,7 +389,8 @@ void SumAutoMagic::sum()
 			{
 				if (dc1 > dc2)
 				{
-					v1 = atoi(pValue1[--len1]);
+					if (len1 > 0)
+						v1 = atoi(pValue1[--len1]);
 					dc1--;
 				}
 				else if (dc2 > dc1)
@@ -390,7 +401,8 @@ void SumAutoMagic::sum()
 				}
 				else if (dc1 == dc2)
 				{
-					v1 = atoi(pValue1[--len1]);
+					if (len1 > 0)
+						v1 = atoi(pValue1[--len1]);
 					if (len2 > 0)
 						v2 = atoi(pValue2[--len2]);
 					dc1--;
@@ -402,9 +414,10 @@ void SumAutoMagic::sum()
 			}
 			else
 			{
+				if (len1 > 0)
+					v1 = atoi(pValue1[--len1]);
 				if (len2 > 0)
 					v2 = atoi(pValue2[--len2]);
-				v1 = atoi(pValue1[--len1]);
 			}
 
 			// v1 and v2 should hold values now
@@ -430,7 +443,7 @@ void SumAutoMagic::sum()
 		}
 	}
 	// Set values
-	createValueElement()->setValue(sum.c_str());
+	pValueElement->setValue(sum.c_str());
 }
 
 template <class T>
@@ -446,7 +459,7 @@ AutoMagicFactory<T>::AutoMagicFactory(SeparatistaDocument *pDocument, const wcha
 	new PathWatcher(this, pDocument, pBasePath);
 
 	// Set elementlistener for document for destruction
-	pDocument->addElementListener(new ElementDeleteListener(this));
+	pDocument->addElementListener(this);
 }
 
 template <class T>
@@ -461,7 +474,8 @@ void AutoMagicFactory<T>::elementCreated(Element *pParent, Element *pChild)
 {
 	DEBUG_METHOD;
 
-	new T(pChild, m_pWatchPath, m_pValuePath);
+	if(pParent != m_pDocument)
+		new T(pChild, m_pWatchPath, m_pValuePath);
 }
 
 template <class T>

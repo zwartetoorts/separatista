@@ -92,14 +92,23 @@ void Separatista::Debug::MemDebug::trackMemory(void *ptr, const MemDebug &memDeb
 
 void Separatista::Debug::MemDebug::releaseMemory(void *ptr)
 {
-	std::wostringstream wos;
-
 	if (!g_memMap)
 		return;
 
 	// Check if key exists
 	if (g_memMap->find(ptr) != g_memMap->end())
+	{
 		g_memMap->erase(ptr);
+	}
+	/*else
+	{
+		std::wostringstream wos;
+		wos.setf(std::ios::hex, std::ios::basefield);
+		wos << TEXT("WARNING: Deleting unallocated object: ");
+		wos << ptr;
+		wos << TEXT("\r\n");
+		OutputDebugString(wos.str().data());
+	}*/
 }
 
 bool Separatista::Debug::MemDebug::init()
