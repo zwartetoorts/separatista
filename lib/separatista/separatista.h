@@ -34,6 +34,8 @@
 #	define SEPARATISTA_EXTERN
 #endif
 
+#include "separatista/debug/debug.h"
+
 namespace Separatista
 {
 	/**

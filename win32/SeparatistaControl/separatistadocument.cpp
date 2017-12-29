@@ -27,10 +27,22 @@
 #include "separatista/documentreader.h"
 #include "enumvariant.h"
 #include "supporterrorinfo.h"
+#include "separatista/camt/camt.053.001.02.h"
+#include "separatista/pain/pain.001.001.03.h"
+#include "separatista/pain/pain.008.001.02.h"
+
+const wchar_t *SeparatistaDocument::m_pNamespaceTable[] =
+{
+	Separatista::camt_053_001_02::Namespace,
+	Separatista::pain_001_001_03::Namespace,
+	Separatista::pain_008_001_02::Namespace
+};
 
 SeparatistaDocument::SeparatistaDocument()
 {
 	m_pSeparatistaDocument = NULL;
+	m_bEnableAutoMagic = TRUE;
+	m_nDocumentNamespace = INVALID;
 }
 
 SeparatistaDocument::~SeparatistaDocument()
@@ -74,7 +86,7 @@ STDMETHODIMP SeparatistaDocument::Save(LONG hWnd, Separatista::IOErrorCode *pErr
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
 	ofn.lpstrInitialDir = NULL;
-	ofn.lpstrFileTitle = TEXT("Save SEPA DirectDebit document as");
+	ofn.lpstrFileTitle = TEXT("Save SEPA document as");
 	ofn.Flags = OFN_OVERWRITEPROMPT;
 	ofn.nFileOffset = 0;
 	ofn.nFileExtension = 0;
@@ -123,7 +135,7 @@ STDMETHODIMP SeparatistaDocument::Open(LONG hWnd, Separatista::IOErrorCode *pErr
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
 	ofn.lpstrInitialDir = NULL;
-	ofn.lpstrFileTitle = TEXT("Open a SEPA DirectDebit document from");
+	ofn.lpstrFileTitle = TEXT("Open a SEPA document from");
 	ofn.Flags = OFN_FILEMUSTEXIST;
 	ofn.nFileOffset = 0;
 	ofn.nFileExtension = 0;
@@ -214,21 +226,62 @@ STDMETHODIMP SeparatistaDocument::OpenFrom(BSTR Path, Separatista::IOErrorCode *
 	return SepaControlDispatch<ISeparatistaDocument>::SetErrorInfo(wos.str().data());
 }
 
-STDMETHODIMP SeparatistaDocument::GetNamespace(BSTR *pNamespace)
+STDMETHODIMP SeparatistaDocument::GetNamespaceText(BSTR *pNamespaceText)
 {
-	*pNamespace = _bstr_t(m_Namespace.c_str()).Detach();
+	if (m_nDocumentNamespace >= 0 && m_nDocumentNamespace < MAX)
+	{
+		*pNamespaceText = _bstr_t(m_pNamespaceTable[m_nDocumentNamespace]).Detach();
+	}
+	else
+	{
+		*pNamespaceText = _bstr_t(TEXT("Unknown")).Detach();
+	}
+
 	return S_OK;
 }
 
-STDMETHODIMP SeparatistaDocument::SetNamespace(BSTR Namespace)
+STDMETHODIMP SeparatistaDocument::GetNamespace(DocumentNamespace *pNamespace)
 {
-	if (m_Namespace != Namespace)
+	*pNamespace = m_nDocumentNamespace;
+	return S_OK;
+}
+
+STDMETHODIMP SeparatistaDocument::SetNamespace(DocumentNamespace Namespace)
+{
+	if (m_nDocumentNamespace != Namespace)
+	{
+		m_nDocumentNamespace = INVALID;
+
+		if (m_pSeparatistaDocument)
+		{
+			delete m_pSeparatistaDocument;
+			m_pSeparatistaDocument = NULL;
+		}
+
+		return CreateDocument(Namespace);
+	}
+
+	return S_OK;
+}
+
+STDMETHODIMP SeparatistaDocument::GetEnableAutoMagic(VARIANT_BOOL *pEnableAutoMagic)
+{
+	*pEnableAutoMagic = m_bEnableAutoMagic ? -1 : FALSE;
+
+	return S_OK;
+}
+
+STDMETHODIMP SeparatistaDocument::SetEnableAutoMagic(VARIANT_BOOL bEnableAutoMagic)
+{
+	// Create new document if automagics don't match
+	// Comparing VARIANT_BOOl and bool primitive leads to compiler warnings
+	if (bEnableAutoMagic && !m_bEnableAutoMagic || !bEnableAutoMagic && m_bEnableAutoMagic)
 	{
 		if (m_pSeparatistaDocument)
 			delete m_pSeparatistaDocument;
-	
-		m_pSeparatistaDocument = new Separatista::SeparatistaDocument(Namespace);
-		m_Namespace = Namespace;
+
+		m_bEnableAutoMagic = bEnableAutoMagic ? true : false;
+		return CreateDocument(m_nDocumentNamespace);
 	}
 
 	return S_OK;
@@ -241,5 +294,21 @@ STDMETHODIMP SeparatistaDocument::GetRootElement(IElement **ppElement)
 
 	*ppElement = new Element(m_pSeparatistaDocument);
 	(*ppElement)->AddRef();
+	return S_OK;
+}
+
+HRESULT SeparatistaDocument::CreateDocument(DocumentNamespace documentNamespace)
+{
+	if (documentNamespace >= 0 && documentNamespace <= MAX)
+	{
+		m_pSeparatistaDocument = new Separatista::SeparatistaDocument(m_pNamespaceTable[documentNamespace], m_bEnableAutoMagic);
+		if (m_pSeparatistaDocument)
+			m_nDocumentNamespace = documentNamespace;
+	}
+	else
+	{
+		m_pSeparatistaDocument = NULL;
+		return E_FAIL;
+	}
 	return S_OK;
 }

@@ -34,7 +34,7 @@ using namespace Separatista;
 
 void AutoMagic::installAutoMagic(SeparatistaDocument *pDocument)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	typedef struct
 	{
@@ -50,19 +50,20 @@ void AutoMagic::installAutoMagic(SeparatistaDocument *pDocument)
 		{
 			Separatista::pain_008_001_02::Namespace, 
 				{
-					{
-						AutoMagicFactory<CountAutoMagic>::Create, TEXT("CstmrDrctDbtInitn/PmtInf"), TEXT("DrctDbtTxInf"), TEXT("NbOfTxs")
-					},
-					{
-						AutoMagicFactory<SumAutoMagic>::Create, TEXT("CstmrDrctDbtInitn/PmtInf"), TEXT("DrctDbtTxInf/InstdAmt"), TEXT("CtrlSum")
-					},
+					// Order is important here, value elements being watched should be created last
 					{
 						AutoMagicFactory<SumAutoMagic>::Create, TEXT("CstmrDrctDbtInitn"), TEXT("PmtInf/NbOfTxs"), TEXT("GrpHdr/NbOfTxs")
 					},
 					{
 						AutoMagicFactory<SumAutoMagic>::Create, TEXT("CstmrDrctDbtInitn"), TEXT("PmtInf/CtrlSum"), TEXT("GrpHdr/CtrlSum")
+					},
+					{
+						AutoMagicFactory<CountAutoMagic>::Create, TEXT("CstmrDrctDbtInitn/PmtInf"), TEXT("DrctDbtTxInf"), TEXT("NbOfTxs")
+					},
+					{
+						AutoMagicFactory<SumAutoMagic>::Create, TEXT("CstmrDrctDbtInitn/PmtInf"), TEXT("DrctDbtTxInf/InstdAmt"), TEXT("CtrlSum")
 					}
-				}
+				} 
 		}
 	};
 
@@ -74,11 +75,11 @@ void AutoMagic::installAutoMagic(SeparatistaDocument *pDocument)
 }
 
 
-PathWatcher::PathWatcher(ElementListener *pFinalListener, Element *pElement, const wchar_t *pPath)
+PathWatcher::PathWatcher(AutoMagic *pAutoMagic, Element *pElement, const wchar_t *pPath)
 {
 	DEBUG_METHOD;
 
-	m_pFinalListener = pFinalListener;
+	m_pAutoMagic = pAutoMagic;
 	m_pPath = pPath;
 	pElement->addElementListener(this);
 }
@@ -87,9 +88,9 @@ void PathWatcher::elementValueChanged(Element *pElement, const wchar_t *pNewValu
 {
 	DEBUG_METHOD;
 
-	// Forward if m_pPath matches element tag
-	if (std::wcscmp(pElement->getTag(), m_pPath) == 0 && m_pFinalListener)
-		m_pFinalListener->elementValueChanged(pElement, pNewValue);
+	// Forward if m_pPath matches tag
+	if (std::wcscmp(pElement->getTag(), m_pPath) == 0 && m_pAutoMagic)
+		m_pAutoMagic->doValueMagic(pElement, pNewValue);
 }
 
 void PathWatcher::elementCreated(Element *pParent, Element *pChild)
@@ -97,6 +98,7 @@ void PathWatcher::elementCreated(Element *pParent, Element *pChild)
 	DEBUG_METHOD;
 
 	// Match pChild tag with m_pPath and install next PathWatcher if it does
+	// or call AutoMagic
 	const wchar_t *pPath = m_pPath;
 	const wchar_t *pTag = pChild->getTag();
 	wchar_t c;
@@ -112,12 +114,13 @@ void PathWatcher::elementCreated(Element *pParent, Element *pChild)
 			if (*pPath == TEXT('/'))
 			{
 				// Not the end of path, install new PathWatcher to Child element
-				new PathWatcher(m_pFinalListener, pChild, ++pPath);
+				new PathWatcher(m_pAutoMagic, pChild, ++pPath);
 			}
 			else if (*pPath == TEXT('\0'))
 			{
-				// End of path, call Magic
-				m_pFinalListener->elementCreated(pParent, pChild);
+				// End of path, create PathWatcher with same path for the new element and call AutoMagic
+				new PathWatcher(m_pAutoMagic, pChild, m_pPath);
+				m_pAutoMagic->doCreatedMagic(pParent, pChild);
 			}
 			return;
 		}
@@ -129,11 +132,30 @@ void PathWatcher::elementDeleted(Element *pElement)
 	DEBUG_METHOD;
 
 	// Forward if m_pPath and Element tag match
-	if (std::wcscmp(pElement->getTag(), m_pPath) == 0 && m_pFinalListener)
-		m_pFinalListener->elementDeleted(pElement);
+	if (std::wcscmp(pElement->getTag(), m_pPath) == 0 && m_pAutoMagic)
+		m_pAutoMagic->doDeletedMagic(pElement);
 
 	// Kill this element listener
 	delete this;
+}
+
+AutoMagic::AutoMagic()
+{
+	DEBUG_METHOD;
+
+	m_pBaseElement = NULL;
+	m_pValueElement = NULL;
+}
+
+AutoMagic::AutoMagic(Element *pBaseElement)
+{
+	DEBUG_METHOD;
+
+	m_pBaseElement = pBaseElement;
+	m_pValueElement = NULL;
+
+	// Watch for BaseElement destruction
+	m_pBaseElement->addElementListener(this);
 }
 
 AutoMagic::AutoMagic(Element *pBaseElement, const wchar_t * pWatchPath, const wchar_t * pValuePath)
@@ -142,6 +164,7 @@ AutoMagic::AutoMagic(Element *pBaseElement, const wchar_t * pWatchPath, const wc
 
 	// Store base element
 	m_pBaseElement = pBaseElement;
+	m_pBaseElement->addElementListener(this);
 
 	// Create value element
 	m_pValueElement = createValueElement(pBaseElement, pValuePath);
@@ -155,7 +178,7 @@ AutoMagic::AutoMagic(Element *pBaseElement, const wchar_t * pWatchPath, const wc
 	}
 }
 
-Element* AutoMagic::createValueElement(Element *pBaseElement, const wchar_t *pValuePath)
+Element* AutoMagic::createValueElement(Element *pBaseElement, const wchar_t *pValuePath, const wchar_t *pDefaultValue)
 {
 	DEBUG_METHOD;
 
@@ -189,6 +212,8 @@ Element* AutoMagic::createValueElement(Element *pBaseElement, const wchar_t *pVa
 			p.clear();
 		}
 	}
+	if (pElement)
+		pElement->setValue(pDefaultValue);
 	return pElement;
 }
 
@@ -229,40 +254,36 @@ CountAutoMagic::CountAutoMagic(Element *pBaseElement, const wchar_t *pWatchPath,
 	m_nCount = 0;
 }
 
-void CountAutoMagic::elementCreated(Element *pParent, Element *pChild)
+void CountAutoMagic::doCreatedMagic(Element *pParent, Element *pChild)
 {
 	DEBUG_METHOD;
 	Element *pValueElement;
 
 	m_nCount++;
 	pValueElement = getValueElement();
-	if(pValueElement)
+	if(pValueElement)	
 		pValueElement->setValue((int)m_nCount);
 
-	AutoMagic::elementCreated(pParent, pChild);
 }
 
-void CountAutoMagic::elementDeleted(Element *pElement)
+void CountAutoMagic::doDeletedMagic(Element *pElement)
 {
 	DEBUG_METHOD;
 	Element *pValueElement;
 
 	pValueElement = getValueElement();
-	if (pElement != pValueElement)
+	if (pValueElement)
 	{
 		m_nCount--;
 
-		if (pValueElement)
-			pValueElement->setValue((int)m_nCount);
+		pValueElement->setValue((int)m_nCount);
 	}
-	AutoMagic::elementDeleted(pElement);
 }
 
-void CountAutoMagic::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
+void CountAutoMagic::doValueMagic(Element *pElement, const wchar_t *pNewValue)
 {
 	DEBUG_METHOD;
 
-	AutoMagic::elementValueChanged(pElement, pNewValue);
 }
 
 SumAutoMagic::SumAutoMagic(Element *pBaseElement, const wchar_t * pWatchPath, const wchar_t * pValuePath)
@@ -270,46 +291,35 @@ SumAutoMagic::SumAutoMagic(Element *pBaseElement, const wchar_t * pWatchPath, co
 {
 	DEBUG_METHOD;
 
+}
+
+void SumAutoMagic::doValueMagic(Element *pElement, const wchar_t *pNewValue)
+{
+	DEBUG_METHOD;
+
 	sum();
 }
 
-void SumAutoMagic::elementValueChanged(Element *pElement, const wchar_t *pNewValue)
-{
-	DEBUG_METHOD;
-
-	// Check for loops
-	if(pElement != getValueElement())
-		sum();
-	AutoMagic::elementValueChanged(pElement, pNewValue);
-}
-
-void SumAutoMagic::elementCreated(Element *pParent, Element *pChild)
+void SumAutoMagic::doCreatedMagic(Element *pParent, Element *pChild)
 {
 	DEBUG_METHOD;
 	
-	pChild->addElementListener(this);
 	m_elements.push_back(pChild);
-	AutoMagic::elementCreated(pParent, pChild);
 }
 
-void SumAutoMagic::elementDeleted(Element *pElement)
+void SumAutoMagic::doDeletedMagic(Element *pElement)
 {
 	DEBUG_METHOD;
 
-	Element *pValueElement = getValueElement();
-	if (pElement != pValueElement)
-	{
-		m_elements.remove(pElement);
-		sum();
-	}
-	AutoMagic::elementDeleted(pElement);
+	m_elements.remove(pElement);
+	sum();
 }
 
 const wchar_t *_num = TEXT("0123456789");
 
 unsigned int SumAutoMagic::atoi(const wchar_t c)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	for (unsigned int i = 0; i < 10; i++)
 	{
@@ -322,20 +332,21 @@ unsigned int SumAutoMagic::atoi(const wchar_t c)
 
 wchar_t SumAutoMagic::itoa(unsigned int i)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	return _num[i];
 }
 
 size_t SumAutoMagic::findCh(const wchar_t *pValue, const wchar_t ch)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	size_t i = 0;
 	while (pValue[i] != ch)
 	{
-		if (pValue[++i] == TEXT('\0'))
+		if (pValue[i] == TEXT('\0'))
 			break;
+		++i;
 	}
 	return i;
 }
@@ -348,31 +359,19 @@ void SumAutoMagic::sum()
 		return;
 
 	std::wstring sum(TEXT("0"));
-	const wchar_t *pValue1 = sum.c_str();
-	const wchar_t *pValue2;
-	unsigned int v = 0;
-
+	
 	for (auto it = m_elements.begin(); it != m_elements.end(); it++)
 	{
+		const wchar_t *pValue1 = sum.c_str();
+		const wchar_t *pValue2;
 		std::wstring nsum;
+		unsigned int v = 0;
 
 		pValue2 = (*it)->getTextValue();
 
 		size_t len1 = std::wcslen(pValue1);
 		size_t len2 = std::wcslen(pValue2);
 
-		// Make value1 always the longest in size
-/*		if (len2 > len1)
-		{
-			size_t tlen = len2;
-			len2 = len1;
-			len1 = tlen;
-
-			const wchar_t *pTemp = pValue2;
-			pValue2 = pValue1;
-			pValue1 = pTemp;
-		}
-*/
 		// Get dot positions and calc decimal count including dot
 		size_t dc1 = len1 - findCh(pValue1, TEXT('.'));
 		size_t dc2 = len2 - findCh(pValue2, TEXT('.'));
@@ -385,7 +384,7 @@ void SumAutoMagic::sum()
 
 			// Get value for v1
 			// Are we in decimals?
-			if (dc1 > 0 || dc2 > 0)
+			if (dc1 > 1 || dc2 > 1)
 			{
 				if (dc1 > dc2)
 				{
@@ -409,7 +408,7 @@ void SumAutoMagic::sum()
 					dc2--;
 				}
 				// Test for dot copy
-				if (dc1 == 0 && dc2 == 0)
+				if (dc1 < 2 && dc2 < 2)
 					dot = true;
 			}
 			else
@@ -423,7 +422,7 @@ void SumAutoMagic::sum()
 			// v1 and v2 should hold values now
 			v += v1 + v2;
 			unsigned int d = v % 10;
-			v -= d;
+			v /= 10;
 			nsum += itoa(d);
 
 			if (dot)
@@ -431,16 +430,19 @@ void SumAutoMagic::sum()
 				nsum += TEXT('.');
 				dot = false;
 
-				if (len1 > 0)
+				if (len1 > 0 && dc1 > 0)
 					--len1;
-				if (len2 > 0)
+				if (len2 > 0 && dc2 > 0)
 					--len2;
 			}
-			
-			// nsum is the reverse of sum
-			sum = nsum;
-			std::reverse(sum.begin(), sum.end());
 		}
+		// Add overflow
+		if (v)
+			nsum += itoa(v);
+
+		// nsum is the reverse of sum
+		sum = nsum;
+		std::reverse(sum.begin(), sum.end());
 	}
 	// Set values
 	pValueElement->setValue(sum.c_str());
@@ -448,42 +450,35 @@ void SumAutoMagic::sum()
 
 template <class T>
 AutoMagicFactory<T>::AutoMagicFactory(SeparatistaDocument *pDocument, const wchar_t *pBasePath, const wchar_t *pWatchPath, const wchar_t *pValuePath)
+	:AutoMagic(pDocument)
 {
 	DEBUG_METHOD;
 
-	m_pDocument = pDocument;
 	m_pWatchPath = pWatchPath;
 	m_pValuePath = pValuePath;
 
 	// Create PathWatcher
 	new PathWatcher(this, pDocument, pBasePath);
-
-	// Set elementlistener for document for destruction
-	pDocument->addElementListener(this);
 }
 
 template <class T>
-void AutoMagicFactory<T>::elementValueChanged(Element* pElement, const wchar_t *pNewValue)
+void AutoMagicFactory<T>::doValueMagic(Element *pElement, const wchar_t *pNewValue)
 {
 	DEBUG_METHOD;
 
 }
 
 template <class T>
-void AutoMagicFactory<T>::elementCreated(Element *pParent, Element *pChild)
+void AutoMagicFactory<T>::doCreatedMagic(Element *pParent, Element *pChild)
 {
 	DEBUG_METHOD;
 
-	if(pParent != m_pDocument)
-		new T(pChild, m_pWatchPath, m_pValuePath);
+	new T(pChild, m_pWatchPath, m_pValuePath);
 }
 
 template <class T>
-void AutoMagicFactory<T>::elementDeleted(Element *pElement)
+void AutoMagicFactory<T>::doDeletedMagic(Element *pElement)
 {
 	DEBUG_METHOD;
 
-	// Destroy self if pElement is pDocument
-	if (pElement == m_pDocument)
-		delete this;
 }

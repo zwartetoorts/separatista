@@ -46,8 +46,11 @@ Element::Element(const ChildElementDescriptor *pChildElementDescriptor)
 
 Element::~Element()
 {
+	DEBUG_METHOD;
+
 	if (m_pParent)
 		delete m_pParent;
+	onElementDeleted();
 }
 
 const ElementDescriptor* Element::getElementDescriptor() const
@@ -97,8 +100,8 @@ void Element::destroyElement(Element *pElement)
 
 void Element::deleteElement(Element *pChildElement)
 {
-	DEBUG_METHOD;
-	pChildElement->onElementDeleted();
+	DEBUG_STATIC_METHOD;
+	
 	delete pChildElement;
 }
 
@@ -154,6 +157,7 @@ void Element::onElementDeleted()
 
 	for (auto it = m_ElementListeners.begin(); it != m_ElementListeners.end(); it++)
 		(*it)->elementDeleted(this);
+
 }
 
 time_t Element::getDateValue() const
@@ -337,7 +341,7 @@ const wchar_t* Element::TagKey::getTagName() const
 
 unsigned int Element::TagKey::HashKey(const wchar_t *pTagName)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	unsigned int hash = 0;
 

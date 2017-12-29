@@ -21,26 +21,57 @@
 #include <string>
 #include <cstdlib>
 #include <sstream>
+#include <fstream>
 
 #include "debug.h"
 
 #ifdef SEPARATISTA_DEBUG
 
+#	ifdef SEPARATISTA_DEBUG_NEW
+
+		std::unordered_map<const void*, Separatista::Debug::MemDebug> *Separatista::Debug::MemDebug::g_memMap = NULL;
+
+#	endif // !defined SEPARATISTA_DEBUG_NEW 
+
 int Separatista::Debug::DebugLogger::g_indent = 0;
 
-Separatista::Debug::DebugLogger::DebugLogger(const wchar_t *pMethodname)
+Separatista::Debug::DebugLogger::DebugLogger(const wchar_t *pMethodname, const void *pObject)
 {
-	std::wstring fmt;
+	std::wostringstream fmt;
 
 	m_pMessage = pMethodname;
 	for (int c = 0; c < g_indent; c++)
-		fmt += TEXT('\t');
+		fmt << TEXT('\t');
 	
-	fmt += TEXT("->");
-	fmt += pMethodname;
-	fmt += TEXT("\r\n");
+	fmt << TEXT("->");
+#ifdef SEPARATISTA_DEBUG_NEW
+	// Add Object information
+	if (pObject)
+	{
+		std::unordered_map<const void *, MemDebug>::iterator &it = Separatista::Debug::MemDebug::g_memMap->find(pObject);
+		if (it != Separatista::Debug::MemDebug::g_memMap->end())
+		{
+			MemDebug &m = it->second;
+			fmt << m.m_TypeName << TEXT("::");
+			fmt << pMethodname << TEXT(" address ");
 
-	OutputDebugString(fmt.data());
+			fmt.setf(std::ios::hex, std::ios::basefield);
+			fmt << it->first;
+			fmt.setf(std::ios::dec);
+			fmt << TEXT(" object allocated in ") << m.m_pFilename << TEXT(" at line ") << m.m_nLine << TEXT("\r\n");
+		}
+		else
+			fmt << pMethodname << TEXT(" ");
+	}
+	else
+		fmt << pMethodname << TEXT(" ");
+#else 
+	fmt << pMethodname << TEXT(" ");
+#endif
+
+	fmt << TEXT("\r\n");
+
+	OutputDebugString(fmt.str().data());
 	g_indent++;
 }
 
@@ -78,8 +109,6 @@ void Separatista::Debug::DebugLogger::log(const wchar_t *pMessage, const wchar_t
 
 #ifdef SEPARATISTA_DEBUG_NEW
 
-std::unordered_map<void*, Separatista::Debug::MemDebug> *Separatista::Debug::MemDebug::g_memMap = NULL;
-
 void Separatista::Debug::MemDebug::trackMemory(void *ptr, const MemDebug &memDebug, const char *pTypeName)
 {
 	if (g_memMap)
@@ -87,6 +116,21 @@ void Separatista::Debug::MemDebug::trackMemory(void *ptr, const MemDebug &memDeb
 		g_memMap->emplace(ptr, memDebug);
 		std::mbstowcs((*g_memMap)[ptr].m_TypeName, pTypeName, 100);
 		(*g_memMap)[ptr].m_TypeName[99] = TEXT('\0');
+
+		// Report allocating object
+		std::wostringstream wos;
+		wos.setf(std::ios::hex, std::ios::basefield);
+
+		for (int c = 0; c < DebugLogger::g_indent; c++)
+			wos << TEXT('\t');
+
+		wos << TEXT("  ");
+		wos << TEXT("Allocated object of type ");
+		wos << (*g_memMap)[ptr].m_TypeName;
+		wos << TEXT(" at ");
+		wos << ptr << TEXT("\r\n");
+
+		OutputDebugString(wos.str().data());
 	}
 }
 
@@ -98,7 +142,22 @@ void Separatista::Debug::MemDebug::releaseMemory(void *ptr)
 	// Check if key exists
 	if (g_memMap->find(ptr) != g_memMap->end())
 	{
+		// Report freeing object
+		std::wostringstream wos;
+		wos.setf(std::ios::hex, std::ios::basefield);
+
+		for (int c = 0; c < DebugLogger::g_indent; c++)
+			wos << TEXT('\t');
+
+		wos << TEXT("  ");
+		wos << TEXT("Freed object of type ");
+		wos << (*g_memMap)[ptr].m_TypeName;
+		wos << TEXT(" at ");
+		wos << ptr << TEXT("\r\n")	;
+
 		g_memMap->erase(ptr);
+
+		OutputDebugString(wos.str().data());
 	}
 	/*else
 	{
@@ -113,8 +172,9 @@ void Separatista::Debug::MemDebug::releaseMemory(void *ptr)
 
 bool Separatista::Debug::MemDebug::init()
 {
-	DEBUG_METHOD;
-	g_memMap = new std::unordered_map < void*, MemDebug >;
+	DEBUG_STATIC_METHOD;
+	
+	g_memMap = new std::unordered_map < const void*, MemDebug >;
 	if (!g_memMap)
 		return false;
 	return true;
@@ -122,8 +182,8 @@ bool Separatista::Debug::MemDebug::init()
 
 bool Separatista::Debug::MemDebug::exit()
 {
-	DEBUG_METHOD;
-	std::unordered_map<void *, MemDebug>* memMap;
+	DEBUG_STATIC_METHOD;
+	std::unordered_map<const void *, MemDebug>* memMap;
 
 	memMap = g_memMap;
 	g_memMap = NULL;
@@ -144,6 +204,7 @@ bool Separatista::Debug::MemDebug::exit()
 		memMap->clear();
 	}
 	delete memMap;
+	
 	return true;
 }
 

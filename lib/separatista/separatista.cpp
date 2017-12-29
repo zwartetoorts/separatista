@@ -31,7 +31,7 @@ static const wchar_t* g_pDebugMessage = NULL;
 
 IOErrorCode Separatista::Init()
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 	try
 	{
 		xercesc::XMLPlatformUtils::Initialize();
@@ -46,7 +46,7 @@ IOErrorCode Separatista::Init()
 
 void Separatista::Terminate()
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 	xercesc::XMLPlatformUtils::Terminate();
 }
 

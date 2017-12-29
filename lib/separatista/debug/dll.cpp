@@ -30,7 +30,7 @@ BOOL WINAPI DllMain(
 	DWORD fdwReason,
 	LPVOID lpvReserved)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	// Get reason
 	switch (fdwReason)

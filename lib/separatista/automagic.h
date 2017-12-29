@@ -30,59 +30,90 @@
 
 namespace Separatista
 {
+	// Forward decl
+	class AutoMagic;
+
+	/**
+		PathWatcher waits until the end element of a full path is created and then notifies an AutoMagic of events.
+	*/
 	class PathWatcher : public ElementListener
 	{
 	public:
-		PathWatcher(ElementListener *pFinalListener, Element *pElement, const wchar_t *pPath);
+		PathWatcher(AutoMagic *pAutoMagic, Element *pElement, const wchar_t *pPath);
 
 		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 		virtual void elementCreated(Element *pParent, Element *pChild);
 		virtual void elementDeleted(Element *pElement);
 	protected:
 		const wchar_t *m_pPath;
-		ElementListener *m_pFinalListener;
+		AutoMagic *m_pAutoMagic;
 	};
 
+	/**
+		Base class for all AutoMagic. 
+	*/
 	class AutoMagic : public ElementListener
 	{
 	public:
-		AutoMagic(Element *m_pBaseElement, const wchar_t *pWatchPath, const wchar_t *pValuePath);
+		/// Empty c'tor
+		AutoMagic();
+
+		/// C'tor for AutomagicFactory, doesn't create valuepath
+		AutoMagic(Element *pBaseElement);
+		/**
+			Creates ValuePath and sets listeners on BaseElement
+		*/
+		AutoMagic(Element *pBaseElement, const wchar_t *pWatchPath, const wchar_t *pValuePath);
 
 		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
 		virtual void elementCreated(Element *pParent, Element *pChild);
 		virtual void elementDeleted(Element *pElement);
 
+		/// Called from PathWatcher when the final element's value changes
+		virtual void doValueMagic(Element *pElement, const wchar_t *pNewValue) = 0;
+		/// Called from PathWatcher when the final element is created
+		virtual void doCreatedMagic(Element *pParent, Element *pChild) = 0;
+		/// Called from PathWatcher when the final element is deleted
+		virtual void doDeletedMagic(Element *pElemenet) = 0;
+
+		/**
+			Global method for hooking AutoMagic to documents
+		*/
 		static void installAutoMagic(SeparatistaDocument *pDocument);
 
 	protected:
+		/**
+			Gets the Value element if it still exists.
+			@return Pointer to the value element, or NULL if the value element was destroyed.
+		*/
 		Element* getValueElement();
 
 	private:
-		Element *createValueElement(Element *pBaseElement, const wchar_t *pValuePath);
+		Element *createValueElement(Element *pBaseElement, const wchar_t *pValuePath, const wchar_t *pDefaultValue = TEXT("0"));
 		Element *m_pValueElement;
 		Element *m_pBaseElement;
 	};
 
 	template <class T>
-	class AutoMagicFactory : public ElementListener
+	class AutoMagicFactory : public AutoMagic
 	{
 	public:
 		AutoMagicFactory(SeparatistaDocument *pDocument, const wchar_t *pBasePath, const wchar_t *pWatchPath, const wchar_t *pValuePath);
 
 		static void Create(SeparatistaDocument *pDocument, const wchar_t *pBasePath, const wchar_t *pWatchPath, const wchar_t *pValuePath)
 		{
-			DEBUG_METHOD;
+			DEBUG_STATIC_METHOD;
 
 			new AutoMagicFactory<T>(pDocument, pBasePath, pWatchPath, pValuePath);
 		};
 
-		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
-		virtual void elementCreated(Element *pParent, Element *pChild);
-		virtual void elementDeleted(Element *pElement);
+		void doValueMagic(Element *pElement, const wchar_t *pNewValue);
+		void doCreatedMagic(Element *pParent, Element *pChild);
+		void doDeletedMagic(Element *pElemenet);
+
 	private:
 		const wchar_t *m_pWatchPath;
 		const wchar_t *m_pValuePath;
-		SeparatistaDocument *m_pDocument;
 	};
 
 	class CountAutoMagic : public AutoMagic
@@ -90,9 +121,9 @@ namespace Separatista
 	public:
 		CountAutoMagic(Element *pBaseElement, const wchar_t *pWatchPath, const wchar_t *pValuePath);
 
-		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
-		virtual void elementCreated(Element *pParent, Element *pChild);
-		virtual void elementDeleted(Element *pElement);
+		void doValueMagic(Element *pElement, const wchar_t *pNewValue);
+		void doCreatedMagic(Element *pParent, Element *pChild);
+		void doDeletedMagic(Element *pElemenet);
 	private:
 		size_t m_nCount;
 	};
@@ -102,9 +133,9 @@ namespace Separatista
 	public:
 		SumAutoMagic(Element *pBaseElement, const wchar_t *pWatchPath, const wchar_t *pValuePath);
 
-		virtual void elementValueChanged(Element *pElement, const wchar_t *pNewValue);
-		virtual void elementCreated(Element *pParent, Element *pChild);
-		virtual void elementDeleted(Element *pElement);
+		void doValueMagic(Element *pElement, const wchar_t *pNewValue);
+		void doCreatedMagic(Element *pParent, Element *pChild);
+		void doDeletedMagic(Element *pElemenet);
 	protected:
 		void sum();
 

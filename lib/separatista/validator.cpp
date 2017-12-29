@@ -37,7 +37,7 @@ using namespace Separatista;
 
 void Separatista::Validator::validateDecimal(const wchar_t * pValue, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 	xercesc::XSValue::Status status;
 
 	if(!xercesc::XSValue::validate(pValue, xercesc::XSValue::dt_decimal, status) || status != xercesc::XSValue::st_Init)
@@ -46,7 +46,7 @@ void Separatista::Validator::validateDecimal(const wchar_t * pValue, Element * p
 
 void Separatista::Validator::validateString(const wchar_t * pValue, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 	xercesc::XSValue::Status status;
 
 	if (!xercesc::XSValue::validate(pValue, xercesc::XSValue::dt_string, status) || status != xercesc::XSValue::st_Init)
@@ -55,7 +55,7 @@ void Separatista::Validator::validateString(const wchar_t * pValue, Element * pE
 
 void Separatista::Validator::validateBoolean(const wchar_t * pValue, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 	xercesc::XSValue::Status status;
 
 	if (!xercesc::XSValue::validate(pValue, xercesc::XSValue::dt_boolean, status) || status != xercesc::XSValue::st_Init)
@@ -65,28 +65,28 @@ void Separatista::Validator::validateBoolean(const wchar_t * pValue, Element * p
 
 void Separatista::Validator::validateMinInclusive(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	validate<xercesc::DecimalDatatypeValidator>(xercesc::SchemaSymbols::fgELT_MININCLUSIVE, pValue, pArg, pElement);
 }
 
 void Separatista::Validator::validateFractionDigits(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	validate<xercesc::DecimalDatatypeValidator>(xercesc::SchemaSymbols::fgELT_FRACTIONDIGITS, pValue, pArg, pElement);
 }
 
 void Separatista::Validator::validateTotalDigits(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	validate<xercesc::DecimalDatatypeValidator>(xercesc::SchemaSymbols::fgELT_TOTALDIGITS, pValue, pArg, pElement);
 }
 
 void Validator::validateNumeric(const wchar_t *pValue, Element *pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	xercesc::XSValue::Status st;
 
@@ -102,7 +102,7 @@ void Validator::validateNumeric(const wchar_t *pValue, Element *pElement)
 
 void Separatista::Validator::validateEnumeration(const wchar_t * pValue, std::initializer_list<const wchar_t*> PossibleValues, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	for (auto possibleValue : PossibleValues)
 	{
@@ -114,7 +114,7 @@ void Separatista::Validator::validateEnumeration(const wchar_t * pValue, std::in
 
 void Separatista::Validator::validatePattern(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	xercesc::RegularExpression rex(pArg);
 	if (!rex.matches(pValue))
@@ -123,21 +123,21 @@ void Separatista::Validator::validatePattern(const wchar_t * pValue, const wchar
 
 void Separatista::Validator::validateMinLength(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	validate<xercesc::StringDatatypeValidator>(xercesc::SchemaSymbols::fgELT_MINLENGTH, pValue, pArg, pElement);
 }
 
 void Separatista::Validator::validateMaxLength(const wchar_t * pValue, const wchar_t * pArg, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	validate<xercesc::StringDatatypeValidator>(xercesc::SchemaSymbols::fgELT_MAXLENGTH, pValue, pArg, pElement);
 }
 
 void Separatista::Validator::validateDateTime(const wchar_t * pValue, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	xercesc::XSValue::Status st;
 
@@ -153,7 +153,7 @@ void Separatista::Validator::validateDateTime(const wchar_t * pValue, Element * 
 
 void Separatista::Validator::validateDate(const wchar_t * pValue, Element * pElement)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	xercesc::XSValue::Status st;
 

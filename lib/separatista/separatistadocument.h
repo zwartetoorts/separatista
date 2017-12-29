@@ -36,13 +36,13 @@ namespace Separatista
 	{
 	public:
 		/// Construct an empty document
-		SeparatistaDocument(const wchar_t *pNamespace);
+		SeparatistaDocument(const wchar_t *pNamespace, bool bEnableAutoMagic = true);
 
 		/// Construct a separatista document from a xerces document
-		SeparatistaDocument(const wchar_t *pNamespace, xercesc::DOMElement *pRootDOMElement);
+		SeparatistaDocument(const wchar_t *pNamespace, xercesc::DOMElement *pRootDOMElement, bool bEnableAutoMagic = false);
 
 		/// Destructor
-		~SeparatistaDocument();
+		//~SeparatistaDocument();
 
 		/// @see Element::toDOMDocument
 		IOErrorCode toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions = ThrowExceptions) const;

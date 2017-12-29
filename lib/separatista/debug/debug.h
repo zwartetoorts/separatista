@@ -38,7 +38,8 @@
 
 // First declare macro's
 #define LOG(message) Separatista::Debug::DebugLogger::log(message, TEXT(__FILE__), __LINE__)
-#define DEBUG_METHOD Separatista::Debug::DebugLogger __debugLogger(TEXT(__FUNCTION__))
+#define DEBUG_METHOD Separatista::Debug::DebugLogger __debugLogger(TEXT(__FUNCTION__), this)
+#define DEBUG_STATIC_METHOD Separatista::Debug::DebugLogger __debugLogger(TEXT(__FUNCTION__))
 
 namespace Separatista
 {
@@ -55,7 +56,7 @@ namespace Separatista
 				Will print '->Methodname' with indent.
 				@param pMethodname Name of the method to print.
 				*/
-			DebugLogger(const wchar_t *pMethodname);
+			DebugLogger(const wchar_t *pMethodname, const void* pObject = NULL);
 
 			/**
 				D'tor, prints '<-Methodname' with indent.
@@ -71,6 +72,8 @@ namespace Separatista
 			static int g_indent;
 
 			const wchar_t *m_pMessage;
+
+			friend class MemDebug;
 		};
 
 #ifdef SEPARATISTA_DEBUG_NEW
@@ -117,7 +120,9 @@ namespace Separatista
 			const wchar_t *m_pFilename;
 			int m_nLine;
 
-			static std::unordered_map<void *, MemDebug>* g_memMap;
+			static std::unordered_map<const void *, MemDebug>* g_memMap;
+
+			friend class DebugLogger;
 		};
 
 		/// Template cast function for debug new
@@ -127,7 +132,7 @@ namespace Separatista
 			return p;
 		}
 
-#endif //!defined SEPARATISTA_DEBUG_NEW
+#endif //defined SEPARATISTA_DEBUG_NEW
 
 	}
 }

@@ -30,7 +30,7 @@
 
 const Separatista::ChildElementDescriptor* Separatista::DocumentRegistry::getDocumentChildElementDescriptor(const wchar_t *pNamespace)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	// Insert new supported document types here...
 	std::unordered_map<std::wstring, const Separatista::ChildElementDescriptor*> documentCreatorMap(

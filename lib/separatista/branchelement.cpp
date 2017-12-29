@@ -44,17 +44,18 @@ Element(pChildElementDescriptor)
 BranchElement::~BranchElement()
 {
 	DEBUG_METHOD;
-	for (auto it = m_childElements.begin(); it != m_childElements.end(); )
+
+	for (auto it = m_childElements.begin(); it != m_childElements.end(); it++)
 	{
 		Element *pElement = it->second;
-		m_childElements.erase(it++);
+		//m_childElements.erase(it++);
 		Element::deleteElement(pElement);
 	}
 }
 
 Element* BranchElement::createElement(const ChildElementDescriptor *pChildElementDescriptor)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	return new BranchElement(pChildElementDescriptor);
 }

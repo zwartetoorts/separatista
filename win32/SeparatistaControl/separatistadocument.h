@@ -40,6 +40,15 @@ DEFINE_GUID(CLSID_SEPARATISTADOCUMENT,
 
 struct ISeparatistaDocument : public IDispatch
 {
+	typedef enum
+	{
+		INVALID = -1,
+		CAMT_053_001_02,
+		PAIN_001_001_03,
+		PAIN_008_001_02,
+		MAX
+	} DocumentNamespace;
+
 	// IDispatch
 	STDMETHOD_(ULONG, AddRef)() PURE;
 	STDMETHOD_(ULONG, Release)() PURE;
@@ -49,9 +58,12 @@ struct ISeparatistaDocument : public IDispatch
 	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId) PURE;
 	STDMETHOD(Invoke)(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS FAR* pDispParams, VARIANT FAR* pVarResult, EXCEPINFO FAR* pExcepInfo, unsigned int FAR* puArgErr) PURE;
 	
-	// ICustomerDirectDebitInitiation
-	STDMETHOD(GetNamespace)(BSTR *pNamespace) PURE;
-	STDMETHOD(SetNamespace)(BSTR NameSpace) PURE;
+	// ISeparatistaDocument
+	STDMETHOD(GetNamespaceText)(BSTR *pNamespaceText) PURE;
+	STDMETHOD(GetNamespace)(DocumentNamespace *pNamespace) PURE;
+	STDMETHOD(SetNamespace)(DocumentNamespace NameSpace) PURE;
+	STDMETHOD(GetEnableAutoMagic)(VARIANT_BOOL *pEnableAutoMagic) PURE;
+	STDMETHOD(SetEnableAutoMagic)(VARIANT_BOOL EnableAutoMagic) PURE;
 	STDMETHOD(GetRootElement)(IElement **ppElement) PURE;
 	STDMETHOD(Save)(LONG hWnd, Separatista::IOErrorCode *pErrorCode) PURE;
 	STDMETHOD(SaveAs)(BSTR Path, Separatista::IOErrorCode *pErrorCode) PURE;
@@ -73,12 +85,17 @@ public:
 	*/
 	SeparatistaDocument();
 
+	static const wchar_t *m_pNamespaceTable[];
+
 	// COM methods
 	// Subclass for ISupportErrorInfo
 	STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject);
 
-	STDMETHOD(GetNamespace)(BSTR *pNamespace);
-	STDMETHOD(SetNamespace)(BSTR NameSpace);
+	STDMETHOD(GetNamespaceText)(BSTR *pNamespaceText);
+	STDMETHOD(GetNamespace)(DocumentNamespace *pNamespace);
+	STDMETHOD(SetNamespace)(DocumentNamespace NameSpace);
+	STDMETHOD(GetEnableAutoMagic)(VARIANT_BOOL *pEnableAutoMagic);
+	STDMETHOD(SetEnableAutoMagic)(VARIANT_BOOL EnableAutoMagic);
 	STDMETHOD(GetRootElement)(IElement **ppElement);
 	STDMETHOD(Save)(LONG hWnd, Separatista::IOErrorCode *pErrorCode);
 	STDMETHOD(SaveAs)(BSTR Path, Separatista::IOErrorCode *pErrorCode);
@@ -92,8 +109,11 @@ protected:
 	~SeparatistaDocument();
 
 private:
+	HRESULT CreateDocument(DocumentNamespace documentNamespace);
+
 	Separatista::SeparatistaDocument *m_pSeparatistaDocument;
-	std::wstring m_Namespace;
+	DocumentNamespace m_nDocumentNamespace;
+	bool m_bEnableAutoMagic;
 };
 
 class __declspec(uuid("{A3142FEC-FB2E-4715-B5DF-C4F7844D2956}")) SeparatistaDocument;

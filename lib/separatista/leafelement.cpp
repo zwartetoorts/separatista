@@ -43,7 +43,7 @@ Element(pChildElementDescriptor)
 
 Element* LeafElement::createElement(const ChildElementDescriptor* pChildElementDescriptor)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	return new LeafElement(pChildElementDescriptor);
 }

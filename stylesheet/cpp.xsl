@@ -115,6 +115,10 @@ namespace Separatista
 				<xsl:apply-templates select="xs:sequence" />
 		};
 		</xsl:when>
+		<!--
+			This is hackish, might be required to replace by proper code in the future.
+			Right now, all included xsd documents ONLY have one element with attributes.
+		-->
 		<xsl:when test="xs:simpleContent">
 		static const Separatista::ElementDescriptor <xsl:value-of select="@name" /> =
 		{

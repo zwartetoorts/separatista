@@ -299,6 +299,15 @@ library Separatista
 		IOERR_USER
 	} IOErrorCode;
 
+
+	typedef enum
+	{
+		INVALID = -1,
+		CAMT_053_001_02,
+		PAIN_001_001_03,
+		PAIN_008_001_02
+	} DocumentNamespace;
+
 	/**
 		SeparatistaDocument
 	*/
@@ -312,12 +321,21 @@ library Separatista
 	]
 	interface ISeparatistaDocument : IDispatch
 	{
+		[ propget, helpstring("The document namespace as text")]
+		HRESULT __stdcall NamespaceText(
+			[out, retval] BSTR *pNamespaceText);
 		[ propget, helpstring("The document namespace.") ]
 		HRESULT __stdcall Namespace(
-			[out, retval] BSTR *pNamespace);
+			[out, retval] DocumentNamespace *pNamespace);
 		[ propput, helpstring("The document namespace.") ]
-		HRESULT __stdcall NameSpace(
-			[in] BSTR Namespace);
+		HRESULT __stdcall Namespace(
+			[in] DocumentNamespace Namespace);
+		[ propget, helpstring("Enable or disable automagic") ]
+		HRESULT __stdcall EnableAutoMagic(
+			[out, retval] VARIANT_BOOL *pEnableAutoMagic);
+		[ propput, helpstring("Enable or disable automagic") ]
+		HRESULT __stdcall EnableAutoMagic(
+			[in] VARIANT_BOOL EnableAutoMagic);
 		[ propget, helpstring("The root element") ]
 		HRESULT __stdcall RootElement(
 			[out, retval] IElement **ppElement);

@@ -49,29 +49,25 @@
 
 using namespace Separatista;
 
-SeparatistaDocument::SeparatistaDocument(const wchar_t *pNameSpaceURI) :
+SeparatistaDocument::SeparatistaDocument(const wchar_t *pNameSpaceURI, bool bEnableAutoMagic) :
 	BranchElement(DocumentRegistry::getDocumentChildElementDescriptor(pNameSpaceURI)),
 	m_NamespaceURI(pNameSpaceURI)
 {
 	DEBUG_METHOD;
 
-	AutoMagic::installAutoMagic(this);
+	if(bEnableAutoMagic)
+		AutoMagic::installAutoMagic(this);
 }
 
-SeparatistaDocument::SeparatistaDocument(const wchar_t *pNameSpaceURI, xercesc::DOMElement *pRootDOMElement) :
+SeparatistaDocument::SeparatistaDocument(const wchar_t *pNameSpaceURI, xercesc::DOMElement *pRootDOMElement, bool bEnableAutoMagic) :
 	BranchElement(DocumentRegistry::getDocumentChildElementDescriptor(pNameSpaceURI)),
 	m_NamespaceURI(pNameSpaceURI)
 {
 	DEBUG_METHOD;
 
-	AutoMagic::installAutoMagic(this);
+	if(bEnableAutoMagic)
+		AutoMagic::installAutoMagic(this);
 	fromDOMDocument(pRootDOMElement);
-}
-
-SeparatistaDocument::~SeparatistaDocument()
-{
-	DEBUG_METHOD;
-
 }
 
 IOErrorCode SeparatistaDocument::toDOMDocument(xercesc::DOMDocument *pDocument, xercesc::DOMElement *pParent, const ErrorOptions errorOptions) const

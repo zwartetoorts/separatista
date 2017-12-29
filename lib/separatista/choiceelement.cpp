@@ -120,7 +120,7 @@ IOErrorCode ChoiceElement::toDOMDocument(xercesc::DOMDocument *pDOMDocument, xer
 
 Element* ChoiceElement::createElement(const ChildElementDescriptor *pChildElementDescriptor)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	return new ChoiceElement(pChildElementDescriptor);
 }

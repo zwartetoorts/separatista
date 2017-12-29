@@ -37,7 +37,7 @@ AttributedLeafElement::AttributedLeafElement(const ChildElementDescriptor *pChil
 
 Element* AttributedLeafElement::createElement(const ChildElementDescriptor *pChildElementDescriptor)
 {
-	DEBUG_METHOD;
+	DEBUG_STATIC_METHOD;
 
 	return new AttributedLeafElement(pChildElementDescriptor);
 }
