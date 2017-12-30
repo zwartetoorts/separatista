@@ -110,7 +110,7 @@ DocumentReader::~DocumentReader()
 	resetErrors();
 }
 
-SeparatistaDocument* DocumentReader::getDocument()
+SeparatistaDocument* DocumentReader::getDocument(bool bWithAutoMagic)
 {
 	DEBUG_METHOD;
 	xercesc::DOMElement *pDocumentElement;
@@ -130,7 +130,7 @@ SeparatistaDocument* DocumentReader::getDocument()
 	if (!pNamespaceURI)
 		return NULL;
 	
-	return new SeparatistaDocument(pNamespaceURI, pDocumentElement);
+	return new SeparatistaDocument(pNamespaceURI, pDocumentElement, bWithAutoMagic);
 }
 
 IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)

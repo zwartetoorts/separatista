@@ -28,6 +28,8 @@
 #include "separatista/automagic.h"
 #include "separatista/separatistadocument.h"
 #include "separatista/debug/debug.h"
+#include "separatista/camt/camt.053.001.02.h"
+#include "separatista/pain/pain.001.001.03.h"
 #include "separatista/pain/pain.008.001.02.h"
 
 using namespace Separatista;
@@ -47,6 +49,18 @@ void AutoMagic::installAutoMagic(SeparatistaDocument *pDocument)
 	// Insert new automagic here
 	std::unordered_map<std::wstring, const std::initializer_list<AutoMagicInfo>> autoMagicMap =
 	{
+		{
+			Separatista::camt_053_001_02::Namespace,
+				{
+					// Order is important here, value elements being watched should be created last
+				}
+		},
+		{
+			Separatista::pain_001_001_03::Namespace,
+				{
+					// Order is important here, value elements being watched should be created last
+				}
+		},
 		{
 			Separatista::pain_008_001_02::Namespace, 
 				{
