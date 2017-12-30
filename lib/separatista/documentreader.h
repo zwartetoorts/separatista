@@ -92,10 +92,11 @@ namespace Separatista
 
 		/**
 			Returns the document as SeparatistaDocument. This is a new instance that will be owned by the caller. The caller should free the object.
+			@param bWithAutoMagic Wether the SeparatistaDocument should have AutoMagic enabled or not.
 			@throws InvalidValueException 
 			@throws InvalidChoiceException
 		*/
-		SeparatistaDocument* getDocument();
+		SeparatistaDocument* getDocument(bool bWithAutoMagic = true);
 
 	protected:
 		void appendError(ErrorType::ErrorCode etc, const xercesc::SAXParseException &e);
