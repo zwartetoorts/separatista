@@ -93,6 +93,7 @@ namespace Separatista
 		/**
 			Returns the document as SeparatistaDocument. This is a new instance that will be owned by the caller. The caller should free the object.
 			@param bWithAutoMagic Wether the SeparatistaDocument should have AutoMagic enabled or not.
+			@return A new SeparatistaDocument or NULL if the document couldn't be created from the file.
 			@throws InvalidValueException 
 			@throws InvalidChoiceException
 		*/

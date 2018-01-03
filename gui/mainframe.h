@@ -18,19 +18,30 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#ifndef SEPARATISTA_GUI_MAINFRAME_H
+#define SEPARATISTA_GUI_MAINFRAME_H
+
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
 
+#include "documenteditor.h"
+
 class MainFrame : public wxFrame
 {
 public:
 	MainFrame();
+
+	~MainFrame();
+
 private:
 	void OnOpen(wxCommandEvent& event);
 	void OnExit(wxCommandEvent& event);
 
 	wxDECLARE_EVENT_TABLE();
+
+	DocumentEditor *m_pDocumentEditor;
 };
 
+#endif // !defined SEPARATISTA_GUI_MAINFRAME_H

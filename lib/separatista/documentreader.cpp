@@ -169,7 +169,12 @@ IOErrorCode DocumentReader::parseFile(const wchar_t *pPath)
 		return Unknown;
 	}
 
-	return m_pDocument ? Success : Document_Invalid;
+	if (m_pDocument)
+	{
+		if (getErrorCount() == 0)
+			return Success;
+	}
+	return Document_Invalid;
 }
 
 int DocumentReader::getErrorCount() const

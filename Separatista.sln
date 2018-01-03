@@ -31,6 +31,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SeparatistaDebug", "win32\SeparatistaDebug\SeparatistaDebug.vcxproj", "{1ED7F69C-2703-4170-B33B-5B6E48AF58BF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SeparatistaGUI", "win32\SeparatistaGUI\SeparatistaGUI.vcxproj", "{E920F8CF-7A3E-43D9-9C4C-6C2114244D80}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1ED7F69C-2703-4170-B33B-5B6E48AF58BF} = {1ED7F69C-2703-4170-B33B-5B6E48AF58BF}
+		{26E137C8-728D-4867-A23B-A3396A99A9D1} = {26E137C8-728D-4867-A23B-A3396A99A9D1}
+		{F97D2ECA-7862-4749-8DCC-DE22F6438C6E} = {F97D2ECA-7862-4749-8DCC-DE22F6438C6E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -31,7 +31,6 @@
 #include "app.h"
 #include "mainframe.h"
 
-
 wxIMPLEMENT_APP(SeparatistaApp);
 
 bool SeparatistaApp::OnInit()

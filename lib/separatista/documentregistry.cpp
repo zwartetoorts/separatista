@@ -48,6 +48,9 @@ const Separatista::ChildElementDescriptor* Separatista::DocumentRegistry::getDoc
 
 	});
 
-	return documentCreatorMap[pNamespace];
+	const Separatista::ChildElementDescriptor *pDescriptor = documentCreatorMap[pNamespace];
+	if (!pDescriptor)
+		SEPARATISTA_THROW_EXCEPTION(UnsupportedNamespaceException, TEXT("Unsupported Namespace"), NULL, pNamespace);
+	return pDescriptor;
 }
 

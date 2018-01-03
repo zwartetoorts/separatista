@@ -1,0 +1,18 @@
+Message identification[Text]:Document/CstmrDrctDbtInitn/GrpHdr/MsgId
+Creation date and time[DateTime]:Document/CstmrDrctDbtInitn/GrpHdr/CreDtTm=Now
+Initiating party/Name[Text]:Document/CstmrDrctDbtInitn/GrpHdr/InitgPty/Nm
+Payment information/Identification[Text]:Document/CstmrDrctDbtInitn/PmtInf/PmtInfId
+Payment information/Method[Readonly]:Document/CstmrDrctDbtInitn/PmtInf/PmtMtd="DD"
+Payment information/Payment type information/Service level code[Readonly]:Document/CstmrDrctDbtInitn/PmtInf/PmtTpInf/SvcLvl/Cd="SEPA"
+Payment information/Payment type information/Local instrument code[Readonly]:Document/CstmrDrctDbtInitn/PmtInf/PmtTpInf/LclInstrm/Cd="CORE"
+Payment information/Payment type information/Sequence type[Options:Final=FNAL,First=FRST,OneOff=OOFF,Recurring=RCUR]:Document/CstmrDrctDbtInitn/PmtInf/PmtTpInf/SeqTp
+Payment information/Requested collection date[Date]:Document/CstmrDrctDbtInitn/PmtInf/ReqdColltnDt
+Payment information/Creditor/Name[Text]:Document/CstmrDrctDbtInitn/PmtInf/Cdtr/Nm
+Payment information/Creditor account/IBAN[IBAN]:Document/CstmrDrctDbtInitn/PmtInf/CdtrAcct/Id/IBAN
+Payment information/Creditor agent/BIC[BIC]:Document/CstmrDrctDbtInitn/PmtInf/CdtrAgt/FininstnId/BIC
+Payment information/Charge bearer[Options:Following service level=SLEV]:Document/CstmrDrctDbtInitn/PmtInf/ChrgBr="SLEV"
+Payment information/Creditor identification/Id[IBAN]:Document/CstmrDrctDbtInitn/PmtInf/CdtrSchmeId/Id/PrvtId/Othr/Id
+Payment information/Creditor identification/Scheme name[Readonly]:Document/CstmrDrctDbtInitn/PmtInf/CdtrSchmeId/Id/PrvtId/Othr/SchmeNm/Prtry="SEPA"
+Payment information/Direct debit transaction information/Payment identification[Text]:Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf/PmtId/EndToEndId
+Payment information/Direct debit transaction information/Amount[Currency]:Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf/InstdAmd
+Payment information/Direct debit transaction information/Amount@Ccy[Options:Euro=EUR]:Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf/InstdAmd@Ccy=EUR

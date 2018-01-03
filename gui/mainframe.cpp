@@ -19,18 +19,20 @@
 ***************************************************************************/
 
 #include <wx/wxprec.h>
-#include <wx/splitter.h>
-#include <wx/treectrl.h>
-
-#include <separatista/separatistadocument.h>
-#include <separatista/documentreader.h>
 
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
 
+#include <wx/splitter.h>
+#include <wx/treectrl.h>
+#include <wx/filename.h>
+#include <wx/txtstrm.h>
+#include <wx/wfstream.h>
+
 #include "app.h"
 #include "mainframe.h"
+#include "documenteditor.h"
 #include "separatista/debug/debug.h"
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
@@ -61,7 +63,14 @@ MainFrame::MainFrame()
 	wxTreeCtrl *pTreeCtrlAdvanced = new wxTreeCtrl(splitterWindow);
 	splitterWindow->SplitVertically(pTreeCtrlSimple, pTreeCtrlAdvanced, -200);
 
+	// And statusbar
 	CreateStatusBar();
+}
+
+MainFrame::~MainFrame()
+{
+	if (m_pDocumentEditor)
+		delete m_pDocumentEditor;
 }
 
 void MainFrame::OnExit(wxCommandEvent& event)
@@ -71,17 +80,63 @@ void MainFrame::OnExit(wxCommandEvent& event)
 
 void MainFrame::OnOpen(wxCommandEvent& event)
 {
+	// Check for modifications
+	if (m_pDocumentEditor && m_pDocumentEditor->hasChanged())
+	{
+		if (wxCANCEL == wxMessageBox(
+			wxT("You have unsaved changes to the document. Do you want to loose current changes? "),
+			wxT("Loose changes?"),
+			wxOK | wxCANCEL | wxCENTER,
+			this))
+		{
+			return;
+		}
+	}
+
+	// Load new document
 	wxFileDialog dlg(this, wxT("Select a SEPA file to open"));
 	if (wxID_OK == dlg.ShowModal())
 	{
-		Separatista::DocumentReader reader;
-		if (reader.parseFile(dlg.GetPath()) == Separatista::IOErrorCode::Success)
+		// Create filename and check it
+		wxFileName fname(dlg.GetPath());
+		if (fname.FileExists() && fname.IsFileReadable())
 		{
-			Separatista::SeparatistaDocument *doc = reader.getDocument();
+			try
+			{
+				m_pDocumentEditor = new DocumentEditor(fname, true);
+			}
+			catch (const Separatista::UnsupportedNamespaceException &nse)
+			{
+				wxMessageBox(
+					wxT("Unsupported document type"),
+					wxT("Failed to load document"),
+					wxOK | wxCENTER,
+					this);
+			}
+			catch (const Separatista::ElementException &ee)
+			{
+				wxMessageBox(
+					wxT("Error reading document"),
+					wxT("Failed to load document"),
+					wxOK | wxCENTER,
+					this);
+			}
+			catch (const wxStringList &errorList)
+			{
+				for (auto it = errorList.begin(); it != errorList.end(); it++)
+				{
+					wxMessageBox(*it);
+				}
+			}
 		}
-
+		else
+		{
+			wxMessageBox(
+				wxT("File not found or inaccessable"),
+				wxT("Error reading file"),
+				wxOK | wxCENTER,
+				this);
+		}
 	}
-
-
-
 }
+
