@@ -135,6 +135,18 @@ Element* ChoiceElement::getElementByTag(const wchar_t *pTagName, size_t nIndex) 
 	return NULL;
 }
 
+Separatista::Element::TagKeyRange Separatista::ChoiceElement::getAllByTagName(const wchar_t * pTagName)
+{
+	DEBUG_METHOD;
+	TagKeyRange range;
+
+	m_map.clear();
+	m_map.insert(std::pair<TagKey, Element*>(TagKey(pTagName, 0, getElementDescriptor()), m_pChosenElement));
+	range.m_begin = m_map.cbegin();
+	range.m_end = m_map.cend();
+	return range;
+}
+
 Element* ChoiceElement::createElementByTag(const wchar_t *pTagName, size_t nIndex)
 {
 	DEBUG_METHOD;

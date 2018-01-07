@@ -63,9 +63,14 @@ public:
 	bool hasChanged() const;
 
 	/**
-		Returns the Simple View Data if it exists.
+		Returns the Simple View Data.
 	*/
 	const SimpleViewData* getSimpleViewData() const;
+
+	/**
+		Returns the Separatista Document
+	*/
+	Separatista::SeparatistaDocument* getDocument() const;
 
 protected:
 	/**

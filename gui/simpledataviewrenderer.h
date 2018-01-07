@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2017 by Okkel Klaver                                    *
+*   Copyright (C) 2018 by Okkel Klaver                                    *
 *   info@vanhetland.nl                                                    *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,41 +18,37 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_GUI_MAINFRAME_H
-#define SEPARATISTA_GUI_MAINFRAME_H
+#ifndef SEPARATISTA_GUI_SIMPLEDATAVIEWRENDERER_H
+#define SEPARATISTA_GUI_SIMPLEDATAVIEWRENDERER_H
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
+
 #include <wx/dataview.h>
-#include <wx/object.h>
 
-#include "documenteditor.h"
-#include "simpledataviewmodel.h"
+#include <separatista/separatista.h>
+#include <separatista/separatistadocument.h>
 
-enum
-{
-	ID_SIMPLEVIEW_CTRL
-};
+#include "simpleviewdata.h"
 
-class MainFrame : public wxFrame
+class SimpleDataViewRenderer : public wxDataViewCustomRenderer
 {
 public:
-	MainFrame();
+	SimpleDataViewRenderer();
 
-	~MainFrame();
+	bool GetValue(wxVariant& value) const;
+	bool SetValue(const wxVariant& value);
+	wxSize GetSize() const;
+	bool Render(wxRect cell, wxDC* dc, int state);
+	bool HasEditorCtrl() const;
+	wxWindow* CreateEditorCtrl(wxWindow *parent, wxRect labelRect, const wxVariant &value);
+	bool GetValueFromEditorCtrl(wxWindow *editor, wxVariant &value);
 
 private:
-	void OnOpen(wxCommandEvent& event);
-	void OnExit(wxCommandEvent& event);
-
-	wxDataViewCtrl *m_pSimpleViewCtrl;
-	wxObjectDataPtr<SimpleDataViewModel> m_simpleDataViewModel;
-
-	wxDECLARE_EVENT_TABLE();
-
-	DocumentEditor *m_pDocumentEditor;
+	Separatista::Element *m_pSepaElement;
+	const SimpleViewData::Element *m_pValueElement;
 };
 
-#endif // !defined SEPARATISTA_GUI_MAINFRAME_H
+#endif // !defined SEPARATISTA_GUI_SIMPLEDATAVIEWRENDERER_H

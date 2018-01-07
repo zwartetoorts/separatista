@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2017 by Okkel Klaver                                    *
+*   Copyright (C) 2018 by Okkel Klaver                                    *
 *   info@vanhetland.nl                                                    *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,41 +18,74 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_GUI_MAINFRAME_H
-#define SEPARATISTA_GUI_MAINFRAME_H
-
 #include <wx/wxprec.h>
+
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
-#include <wx/dataview.h>
-#include <wx/object.h>
 
-#include "documenteditor.h"
+#include "simpledataviewrenderer.h"
 #include "simpledataviewmodel.h"
 
-enum
+SimpleDataViewRenderer::SimpleDataViewRenderer()
+	:wxDataViewCustomRenderer(wxT("void*"), wxDATAVIEW_CELL_EDITABLE)
 {
-	ID_SIMPLEVIEW_CTRL
-};
+	m_pSepaElement = NULL;
+	m_pValueElement = NULL;
+}
 
-class MainFrame : public wxFrame
+bool SimpleDataViewRenderer::GetValue(wxVariant& value) const
 {
-public:
-	MainFrame();
+	return true;
+}
 
-	~MainFrame();
+bool SimpleDataViewRenderer::SetValue(const wxVariant& value)
+{
+	SimpleDataViewModelNode *pNode = (SimpleDataViewModelNode *)value.GetVoidPtr();
 
-private:
-	void OnOpen(wxCommandEvent& event);
-	void OnExit(wxCommandEvent& event);
+	m_pSepaElement = pNode->getSepaElement();
+	m_pValueElement = pNode->getSimpleViewDataElement();
 
-	wxDataViewCtrl *m_pSimpleViewCtrl;
-	wxObjectDataPtr<SimpleDataViewModel> m_simpleDataViewModel;
+	return true;
+}
 
-	wxDECLARE_EVENT_TABLE();
+wxSize SimpleDataViewRenderer::GetSize() const
+{
+	const wchar_t *pText;
+	if (m_pSepaElement && (pText = m_pSepaElement->getTextValue()))
+	{
+		return GetTextExtent(pText);
+	}
+	else
+		return GetTextExtent(wxT(" "));
+}
 
-	DocumentEditor *m_pDocumentEditor;
-};
+bool SimpleDataViewRenderer::Render(wxRect cell, wxDC* dc, int state)
+{
+	if (!m_pSepaElement)
+		return false;
 
-#endif // !defined SEPARATISTA_GUI_MAINFRAME_H
+	const wchar_t *pText = m_pSepaElement->getTextValue();
+	if (pText)
+	{
+		RenderText(pText, 0, cell, dc, state);
+		return true;
+	}
+	return true;
+}
+
+bool SimpleDataViewRenderer::HasEditorCtrl() const
+{
+	return true;
+}
+
+wxWindow * SimpleDataViewRenderer::CreateEditorCtrl(wxWindow * parent, wxRect labelRect, const wxVariant & value)
+{
+	return NULL;
+}
+
+bool SimpleDataViewRenderer::GetValueFromEditorCtrl(wxWindow * editor, wxVariant & value)
+{
+	return false;
+}
+

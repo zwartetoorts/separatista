@@ -49,6 +49,11 @@ SimpleViewData::SimpleViewData(const wxFileName &FileName)
 	}
 }
 
+const SimpleViewData::Element* SimpleViewData::getRootElement() const
+{
+	return &m_RootElement;
+}
+
 const wxChar * SimpleViewData::parseLine(const wxChar *pLine, Element *pParent, Element *pElement)
 {
 	// Parse complete line
@@ -59,7 +64,7 @@ const wxChar * SimpleViewData::parseLine(const wxChar *pLine, Element *pParent, 
 		switch (pElement->getType())
 		{
 		case Element::SimplePath:
-		case Element::SimplePathAttribute:
+		//case Element::SimplePathAttribute:
 			// SimplePath ends with / or [
 			switch (*pLine)
 			{
@@ -78,13 +83,13 @@ const wxChar * SimpleViewData::parseLine(const wxChar *pLine, Element *pParent, 
 			case wxT(':'):
 				pLine = parseLine(++pLine, pElement, new Element(Element::DocumentPath));
 				break;
-			case wxT('@'):
+			/*case wxT('@'):
 				// Attribute
 				pElement->setValue(value);
 				value.clear();
 				pElement = pParent->addChild(pElement);
 				pLine = parseLine(++pLine, pElement, new Element(Element::SimplePathAttribute));
-				break;
+				break;*/
 			case wxT('\0'):
 				throw wxString(wxT("Unexpected end of line"));
 			default:
@@ -256,3 +261,29 @@ SimpleViewData::Element* SimpleViewData::Element::addChild(Element *pElement)
 	return pElement;
 }
 
+const SimpleViewData::Element* SimpleViewData::Element::getChild(size_t index) const
+{
+	try
+	{
+		return m_elements[index];
+	}
+	catch (const std::out_of_range &)
+	{
+		return NULL;
+	}
+}
+
+size_t SimpleViewData::Element::getChildCount() const
+{
+	return m_elements.size();
+}
+
+const SimpleViewData::Element* SimpleViewData::Element::getChildByType(SimpleViewData::Element::ElementType t) const
+{
+	for (auto it = m_elements.begin(); it != m_elements.end(); it++)
+	{
+		if ((*it)->getType() == t)
+			return *it;
+	}
+	return NULL;
+}

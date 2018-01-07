@@ -64,6 +64,9 @@ namespace Separatista
 		/// @see Element::getElementByTag
 		Element* getElementByTag(const wchar_t *pTagName, size_t nIndex = 0) const;
 
+		/// @see Element::getAllByTagName
+		TagKeyRange getAllByTagName(const wchar_t *pTagName);
+
 		/** 
 			As ChoiceElements hold only one child element, the existing child element is destroyed if a new child element is created.
 			@see Element::createElementByTag
@@ -85,6 +88,7 @@ namespace Separatista
 	private:
 		/// The chosen element 
 		Element *m_pChosenElement;
+		TagKeyMap m_map;
 	};
 }
 #endif // SEPARATISTA_CHOICEELEMENT_H

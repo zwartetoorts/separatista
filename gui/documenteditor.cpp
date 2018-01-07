@@ -131,3 +131,9 @@ const SimpleViewData* DocumentEditor::getSimpleViewData() const
 {
 	return m_pSimpleViewData;
 }
+
+Separatista::SeparatistaDocument* DocumentEditor::getDocument() const
+{
+	return m_pDocument;
+}
+

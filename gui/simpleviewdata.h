@@ -40,7 +40,7 @@ public:
 		@throws wxString containing an error, which is a bug in the program
 	*/
 	SimpleViewData(const wxFileName &FileName);
-	
+
 	/**
 		SimpleViewData Elements are build as trees from text maps.
 		@see The maps directory for examples and syntax.
@@ -52,7 +52,7 @@ public:
 		{
 			Root = 0,
 			SimplePath,
-			SimplePathAttribute,
+			//SimplePathAttribute,
 			Type,
 			OptionKey,
 			OptionValue,
@@ -80,12 +80,21 @@ public:
 		*/
 		Element* addChild(Element *pElement);
 
+		const Element* getChild(size_t index) const;
+
+		size_t getChildCount() const;
+
+		const Element* getChildByType(ElementType t) const;
+
 	private:
 		ElementType m_type;
 		std::vector<Element*> m_elements;
 		wxString m_value;
 	};
 	
+	/// Return the root element as pointer, do not delete
+	const Element* getRootElement() const;
+
 protected:
 	/**
 		Recurses into the line read from a map file, creating elements.

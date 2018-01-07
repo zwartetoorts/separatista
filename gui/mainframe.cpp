@@ -35,6 +35,8 @@
 #include "documenteditor.h"
 #include "separatista/debug/debug.h"
 
+#include "simpledataviewrenderer.h"
+
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(wxID_OPEN, MainFrame::OnOpen)
 wxEND_EVENT_TABLE()
@@ -56,12 +58,28 @@ MainFrame::MainFrame()
 	SetMenuBar(menuBar);
 
 	// Create splitter window
-	wxSplitterWindow *splitterWindow = new wxSplitterWindow(this);
+	wxSplitterWindow *pSplitterWindow = new wxSplitterWindow(this);
 
-	// Create TreeView
-	wxTreeCtrl *pTreeCtrlSimple = new wxTreeCtrl(splitterWindow);
-	wxTreeCtrl *pTreeCtrlAdvanced = new wxTreeCtrl(splitterWindow);
-	splitterWindow->SplitVertically(pTreeCtrlSimple, pTreeCtrlAdvanced, -200);
+	// Create views
+	m_pSimpleViewCtrl = new wxDataViewCtrl(
+		pSplitterWindow,
+		ID_SIMPLEVIEW_CTRL,
+		wxDefaultPosition,
+		wxDefaultSize,
+		wxDV_SINGLE);
+
+	wxDataViewTextRenderer *pTextRenderer = new wxDataViewTextRenderer(wxT("string"), wxDATAVIEW_CELL_INERT, wxALIGN_LEFT);
+	wxDataViewCustomRenderer *pSimpleRenderer = new SimpleDataViewRenderer();
+	
+	wxDataViewColumn *pColumn0 =
+		new wxDataViewColumn("Path", pTextRenderer, 0, 200, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
+	wxDataViewColumn *pColumn1 =
+		new wxDataViewColumn("Value", pSimpleRenderer, 1, 80, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
+	m_pSimpleViewCtrl->AppendColumn(pColumn0);
+	m_pSimpleViewCtrl->AppendColumn(pColumn1);
+
+	wxTreeCtrl *pTreeCtrlAdvanced = new wxTreeCtrl(pSplitterWindow);
+	pSplitterWindow->SplitVertically(m_pSimpleViewCtrl, pTreeCtrlAdvanced, -200);
 
 	// And statusbar
 	CreateStatusBar();
@@ -104,6 +122,8 @@ void MainFrame::OnOpen(wxCommandEvent& event)
 			try
 			{
 				m_pDocumentEditor = new DocumentEditor(fname, true);
+				m_simpleDataViewModel = new SimpleDataViewModel(m_pDocumentEditor);
+				m_pSimpleViewCtrl->AssociateModel(m_simpleDataViewModel.get());
 			}
 			catch (const Separatista::UnsupportedNamespaceException &nse)
 			{
