@@ -201,7 +201,7 @@ void Element::setValue(const time_t Value, bool bWithTime, const ErrorOptions er
 	tm *ptm;
 	char buffer[64];
 
-	ptm = std::localtime(&Value);
+	ptm = std::gmtime(&Value);
 	if (!ptm)
 		return;
 
