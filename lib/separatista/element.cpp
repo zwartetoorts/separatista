@@ -189,6 +189,7 @@ time_t Element::getDateValue() const
 	tm.tm_hour = pValue->fData.fValue.f_datetime.f_hour;
 	tm.tm_min = pValue->fData.fValue.f_datetime.f_min;
 	tm.tm_sec = pValue->fData.fValue.f_datetime.f_milisec / 1000;
+	tm.tm_isdst = 0; // Assume no DST
 
 	delete pValue;
 	return std::mktime(&tm);
@@ -201,7 +202,7 @@ void Element::setValue(const time_t Value, bool bWithTime, const ErrorOptions er
 	tm *ptm;
 	char buffer[64];
 
-	ptm = std::gmtime(&Value);
+	ptm = std::localtime(&Value);
 	if (!ptm)
 		return;
 

@@ -36,7 +36,7 @@ HRESULT DateTypeFromStdTime(time_t t, DATE *pDate)
 	tm *pti;
 
 	// Convert time_t to tm
-	pti = localtime(&t);
+	pti = gmtime(&t);
 	if (!pti)
 		return E_FAIL;
 
@@ -68,5 +68,7 @@ time_t StdTimeFromDateType(DATE Value)
 	ti.tm_hour = stime.wHour;
 	ti.tm_min = stime.wMinute;
 	ti.tm_sec = stime.wSecond;
+	ti.tm_isdst = 0; // Assume no DST
+
 	return mktime(&ti);
 }
