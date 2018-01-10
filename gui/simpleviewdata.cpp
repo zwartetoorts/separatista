@@ -58,6 +58,11 @@ const wxChar * SimpleViewData::parseLine(const wxChar *pLine, Element *pParent, 
 {
 	// Parse complete line
 	wxString value;
+
+	// Check line len for empty line or comment
+	if (::wxStrlen(*pLine) == 0 || *pLine==wxT('#'))
+		return NULL;
+
 	while(true)
 	{
 		// Check for type of Element we're handling

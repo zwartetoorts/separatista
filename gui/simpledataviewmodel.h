@@ -39,10 +39,16 @@ public:
 	SimpleDataViewModelNode(const SimpleViewData::Element *pElement, Separatista::SeparatistaDocument *pSepaDocument);
 
 	/// C'tor for a simpele element
-	SimpleDataViewModelNode(const SimpleViewData::Element *pElement, Separatista::Element *pSepaElement, SimpleDataViewModelNode *pParent = NULL);
+	SimpleDataViewModelNode(const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, SimpleDataViewModelNode *pParent = NULL);
+
+	/// D'tor destroys all children
+	~SimpleDataViewModelNode();
 
 	/// Returns the SimpleViewData Element
 	const SimpleViewData::Element* getSimpleViewDataElement() const;
+
+	/// Returns the SimpleViewData Attribute Element
+	const SimpleViewData::Element* getSimpleViewDataAttributeElement() const;
 	
 	/// Returns the Separatista Element pointed to by the SimpleViewElement DocumentPath element
 	Separatista::Element* getSepaElement() const;
@@ -66,23 +72,22 @@ public:
 	void removeChild(SimpleDataViewModelNode *pChild);
 
 protected:
-	/// 
+	/// Builds the internal tree recursively
 	void buildModelTree(const SimpleViewData::Element *pElement, Separatista::Element *pSepaElement);
 
-	
 private:
 	const SimpleViewData::Element *m_pElement;
+	const SimpleViewData::Element *m_pAttribute;
 	Separatista::Element *m_pSepaElement;
 	SimpleDataViewModelNode *m_pParent;
 	std::vector<SimpleDataViewModelNode*> m_children;
 };
 
-
 class SimpleDataViewModel : public wxDataViewModel
 {
 public:
 	SimpleDataViewModel(DocumentEditor *pDocumentEditor);
-	
+
 	bool IsContainer(const wxDataViewItem &item) const;
 
 	wxDataViewItem GetParent(const wxDataViewItem &item) const;

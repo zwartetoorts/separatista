@@ -24,25 +24,39 @@
 #include <wx/wx.h>
 #endif
 
+#include <separatista/debug/debug.h>
+
 #include "simpledataviewmodel.h"
 
 SimpleDataViewModelNode::SimpleDataViewModelNode(const SimpleViewData::Element *pElement, Separatista::SeparatistaDocument *pSepaDocument)
 	:m_pElement(pElement), m_pSepaElement(pSepaDocument)
 {
 	m_pParent = NULL;
+	m_pAttribute = NULL;
 
 	buildModelTree(pElement, pSepaDocument);
 }
 
-SimpleDataViewModelNode::SimpleDataViewModelNode(const SimpleViewData::Element *pElement, Separatista::Element *pSepaElement, SimpleDataViewModelNode *pParent)
-	:m_pElement(pElement), m_pSepaElement(pSepaElement), m_pParent(pParent)
+SimpleDataViewModelNode::SimpleDataViewModelNode(const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, SimpleDataViewModelNode *pParent)
+	:m_pElement(pElement), m_pSepaElement(pSepaElement), m_pParent(pParent), m_pAttribute(pAttributeElement)
 {
 
+}
+
+SimpleDataViewModelNode::~SimpleDataViewModelNode()
+{
+	for (auto it = m_children.begin(); it != m_children.end(); it++)
+		delete *it;
 }
 
 const SimpleViewData::Element* SimpleDataViewModelNode::getSimpleViewDataElement() const
 {
 	return m_pElement;
+}
+
+const SimpleViewData::Element* SimpleDataViewModelNode::getSimpleViewDataAttributeElement() const
+{
+	return m_pAttribute;
 }
 
 Separatista::Element* SimpleDataViewModelNode::getSepaElement() const
@@ -96,7 +110,7 @@ void SimpleDataViewModelNode::removeChild(SimpleDataViewModelNode * pChild)
 
 void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSimpleElement, Separatista::Element *pSepaElement)
 {
-	const SimpleViewData::Element *pSimpleChildElement, *pTypeChildElement, *pDocPathElement;
+	const SimpleViewData::Element *pSimpleChildElement, *pTypeChildElement, *pDocPathElement, *pAttrElement;
 	SimpleDataViewModelNode *pNewNode;
 	Separatista::Element *pSepaChildElement, *pSepaParentElement = NULL;
 
@@ -107,28 +121,30 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 		switch (pSimpleChildElement->getType())
 		{
 		case SimpleViewData::Element::SimplePath:
-		//case SimpleViewData::Element::SimplePathAttribute:
 			// Associate documentpath with this element
 			pTypeChildElement = pSimpleChildElement->getChildByType(SimpleViewData::Element::Type);
 			if (pTypeChildElement)
 			{
 				pSepaChildElement = pSepaElement;
 				pDocPathElement = pSimpleChildElement;
+				pAttrElement = NULL;
 				// Get sepa children by document path
 				while ((pDocPathElement = pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath)) != NULL)
 				{
+					pAttrElement = pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPathAttribute);
 					pSepaParentElement = pSepaChildElement;
 					pSepaChildElement = pSepaParentElement->getElementByTag(pDocPathElement->getValue());
 					if (!pSepaChildElement)
 						break;
 				}
+
 				// Get all sepa parent child nodes by tag
 				if (pSepaChildElement && pSepaParentElement)
 				{
 					Separatista::Element::TagKeyRange range = pSepaParentElement->getAllByTagName(pSepaChildElement->getTag());
 					for (auto it = range.m_begin; it != range.m_end; it++)
 					{
-						pNewNode = new SimpleDataViewModelNode(pSimpleChildElement, it->second, this);
+						pNewNode = new SimpleDataViewModelNode(pSimpleChildElement, pAttrElement, it->second, this);
 						// Recurse if type == Root
 						if(pTypeChildElement->getValue() == wxT("Root"))
 							pNewNode->buildModelTree(pSimpleChildElement, it->second);
@@ -138,7 +154,7 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 			}
 			else
 			{
-				pNewNode = new SimpleDataViewModelNode(pSimpleChildElement, NULL, this);
+				pNewNode = new SimpleDataViewModelNode(pSimpleChildElement, NULL, NULL, this);
 				// Recurse 
 				pNewNode->buildModelTree(pSimpleChildElement, pSepaElement);
 				appendChild(pNewNode);
@@ -148,7 +164,7 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 }
 
 SimpleDataViewModel::SimpleDataViewModel(DocumentEditor *pDocumentEditor)
-	:m_rootNode(pDocumentEditor->getSimpleViewData()->getRootElement(), pDocumentEditor->getDocument())
+	:m_rootNode((pDocumentEditor->getSimpleViewData() ? pDocumentEditor->getSimpleViewData()->getRootElement() : NULL), pDocumentEditor->getDocument())
 {
 	m_pDocumentEditor = pDocumentEditor;
 }

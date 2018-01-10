@@ -45,10 +45,14 @@ public:
 	bool HasEditorCtrl() const;
 	wxWindow* CreateEditorCtrl(wxWindow *parent, wxRect labelRect, const wxVariant &value);
 	bool GetValueFromEditorCtrl(wxWindow *editor, wxVariant &value);
+protected:
+	/// Returns the value of the element or the value of the element attribute
+	const wxString GetTextValue() const;
 
 private:
 	Separatista::Element *m_pSepaElement;
 	const SimpleViewData::Element *m_pValueElement;
+	const SimpleViewData::Element *m_pAttribute;
 };
 
 #endif // !defined SEPARATISTA_GUI_SIMPLEDATAVIEWRENDERER_H
