@@ -196,7 +196,11 @@ wxDataViewItem SimpleDataViewModel::GetParent(const wxDataViewItem & item) const
 {
 	SimpleDataViewModelNode *pNode = (SimpleDataViewModelNode*)item.GetID();
 
-	return wxDataViewItem(pNode->getParent());
+	pNode = pNode->getParent();
+	// Check for Root element
+	if (pNode->getParent() == NULL)
+		return wxDataViewItem(NULL);
+	return wxDataViewItem(pNode);
 }
 
 unsigned int SimpleDataViewModel::GetChildren(const wxDataViewItem & item, wxDataViewItemArray & children) const

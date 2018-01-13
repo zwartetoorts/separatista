@@ -29,6 +29,7 @@
 #include <wx/filename.h>
 #include <wx/txtstrm.h>
 #include <wx/wfstream.h>
+#include <wx/scrolwin.h>
 
 #include "app.h"
 #include "mainframe.h"
@@ -72,9 +73,9 @@ MainFrame::MainFrame()
 	wxDataViewCustomRenderer *pSimpleRenderer = new SimpleDataViewRenderer();
 	
 	wxDataViewColumn *pColumn0 =
-		new wxDataViewColumn("Path", pTextRenderer, 0, 200, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
+		new wxDataViewColumn(wxT("Path"), pTextRenderer, 0, 200, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
 	wxDataViewColumn *pColumn1 =
-		new wxDataViewColumn("Value", pSimpleRenderer, 1, 80, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
+		new wxDataViewColumn(wxT("Value"), pSimpleRenderer, 1, 80, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
 	m_pSimpleViewCtrl->AppendColumn(pColumn0);
 	m_pSimpleViewCtrl->AppendColumn(pColumn1);
 

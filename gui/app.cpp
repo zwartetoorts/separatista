@@ -39,6 +39,14 @@ bool SeparatistaApp::OnInit()
 	if (Separatista::Init() != Separatista::IOErrorCode::Success)
 		return false;
 
+	// Init wxWidgets locale
+	wxLocale::AddCatalogLookupPathPrefix(".");
+	if (!m_locale.Init(wxLANGUAGE_DEFAULT, wxLOCALE_DONT_LOAD_DEFAULT))
+		return false;
+	m_locale.AddCatalog(wxT("separatista"));
+	m_locale.AddCatalog(wxT("wxstd"));
+
+
 	MainFrame *frame = new MainFrame();
 	frame->Show(true);
 	return true;

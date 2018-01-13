@@ -33,6 +33,9 @@
 
 #include "simpleviewdata.h"
 
+// Forward decl
+class SimpleDataViewModelNode;
+
 class SimpleDataViewRenderer : public wxDataViewCustomRenderer
 {
 public:
@@ -47,9 +50,17 @@ public:
 	bool GetValueFromEditorCtrl(wxWindow *editor, wxVariant &value);
 protected:
 	/// Returns the value of the element or the value of the element attribute
-	const wxString GetTextValue() const;
+	const wxString getTextValue() const;
+
+	const wxDateTime getDateValue() const;
+
+	const wxDateTime getDateTimeValue() const;
+
+	/// Returns the type of the element
+	const SimpleViewData::Element* getValueTypeElement() const;
 
 private:
+	SimpleDataViewModelNode *m_pModelNode;
 	Separatista::Element *m_pSepaElement;
 	const SimpleViewData::Element *m_pValueElement;
 	const SimpleViewData::Element *m_pAttribute;
