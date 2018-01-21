@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2017 by Okkel Klaver                                    *
+*   Copyright (C) 2018 by Okkel Klaver                                    *
 *   info@vanhetland.nl                                                    *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,45 +18,78 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_GUI_MAINFRAME_H
-#define SEPARATISTA_GUI_MAINFRAME_H
-
 #include <wx/wxprec.h>
+
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
-#include <wx/dataview.h>
-#include <wx/object.h>
 
-#include "documenteditor.h"
-#include "simpledataviewmodel.h"
-#include "expertdataviewmodel.h"
+#include "ibantextctrl.h"
 
-enum
+IBANTextCtrl::IBANTextCtrl(wxWindow *parent, wxWindowID id, const wxString &value, const wxPoint &pos, const wxSize &size)
+	:wxTextCtrl(
+		parent, 
+		id, 
+		value, 
+		pos, 
+		size)
 {
-	ID_SIMPLEVIEW_CTRL,
-	ID_EXPERTVIEW_CTRL
-};
 
-class MainFrame : public wxFrame
+}
+
+wxString IBANTextCtrl::GetValue() const
 {
-public:
-	MainFrame();
+	wxString value, IBAN;
 
-	~MainFrame();
+	// Get value and strip spaces
+	value = wxTextCtrl::GetValue();
+	for (auto it = value.begin(); it != value.end(); it++)
+	{
+		if (*it != wxT(' '))
+			IBAN += *it;
+	}
+	return IBAN;
+}
 
-private:
-	void OnOpen(wxCommandEvent& event);
-	void OnExit(wxCommandEvent& event);
+void IBANTextCtrl::OnText(wxCommandEvent &event)
+{
+	wxString IBAN, value;
 
-	wxDataViewCtrl *m_pSimpleViewCtrl;
-	wxDataViewCtrl *m_pExpertViewCtrl;
-	wxObjectDataPtr<SimpleDataViewModel> m_simpleDataViewModel;
-	wxObjectDataPtr<ExpertDataViewModel> m_expertDataViewModel;
+	if (!IsModified())
+		return;
 
-	wxDECLARE_EVENT_TABLE();
+	long i = GetInsertionPoint();
+	value = GetValue().Upper();
 
-	DocumentEditor *m_pDocumentEditor;
-};
+	long c = 0;
+	for (auto it = value.begin(); it != value.end(); it++)
+	{
+		// Ignore space
+		if (*it == wxT(' '))
+		{
+			// Decrement insertion point if we didn't pass it yet
+			if(c <= i)
+				--i;
+			continue;
+		}
 
-#endif // !defined SEPARATISTA_GUI_MAINFRAME_H
+		// Insert space if neccesary
+		if (c > 0 && c % 4 == 0)
+		{
+			IBAN += wxT(' ');
+			// Increase insertion point if we didn't pass it yet
+			if (c <= i)
+				++i;
+		}
+		IBAN += *it;
+		++c;
+	}
+
+	ChangeValue(IBAN);
+	SetInsertionPoint(i);
+}
+
+wxBEGIN_EVENT_TABLE(IBANTextCtrl, wxTextCtrl)
+	EVT_TEXT(wxID_ANY, IBANTextCtrl::OnText)
+wxEND_EVENT_TABLE()
+

@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2017 by Okkel Klaver                                    *
+*   Copyright (C) 2018 by Okkel Klaver                                    *
 *   info@vanhetland.nl                                                    *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,45 +18,28 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_GUI_MAINFRAME_H
-#define SEPARATISTA_GUI_MAINFRAME_H
+#ifndef SEPARATISTA_GUI_IBANTEXTCTRL_H
+#define SEPARATISTA_GUI_IBANTEXTCTRL_H
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
-#include <wx/dataview.h>
-#include <wx/object.h>
 
-#include "documenteditor.h"
-#include "simpledataviewmodel.h"
-#include "expertdataviewmodel.h"
+#include <wx/textctrl.h>
 
-enum
-{
-	ID_SIMPLEVIEW_CTRL,
-	ID_EXPERTVIEW_CTRL
-};
+#include <separatista/iban/iban.h>
 
-class MainFrame : public wxFrame
+class IBANTextCtrl : public wxTextCtrl
 {
 public:
-	MainFrame();
+	IBANTextCtrl(wxWindow *parent, wxWindowID id, const wxString &value, const wxPoint &pos, const wxSize &size);
 
-	~MainFrame();
+	void OnText(wxCommandEvent &event);
 
-private:
-	void OnOpen(wxCommandEvent& event);
-	void OnExit(wxCommandEvent& event);
-
-	wxDataViewCtrl *m_pSimpleViewCtrl;
-	wxDataViewCtrl *m_pExpertViewCtrl;
-	wxObjectDataPtr<SimpleDataViewModel> m_simpleDataViewModel;
-	wxObjectDataPtr<ExpertDataViewModel> m_expertDataViewModel;
+	wxString GetValue() const;
 
 	wxDECLARE_EVENT_TABLE();
-
-	DocumentEditor *m_pDocumentEditor;
 };
 
-#endif // !defined SEPARATISTA_GUI_MAINFRAME_H
+#endif // !defined SEPARATISTA_GUI_IBANTEXTCTRL_H

@@ -37,6 +37,7 @@
 #include "separatista/debug/debug.h"
 
 #include "simpledataviewrenderer.h"
+#include "expertdataviewrenderer.h"
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(wxID_OPEN, MainFrame::OnOpen)
@@ -75,12 +76,23 @@ MainFrame::MainFrame()
 	wxDataViewColumn *pColumn0 =
 		new wxDataViewColumn(wxT("Path"), pTextRenderer, 0, 200, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
 	wxDataViewColumn *pColumn1 =
-		new wxDataViewColumn(wxT("Value"), pSimpleRenderer, 1, 80, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
+		new wxDataViewColumn(wxT("Value"), pSimpleRenderer, 1, 200, wxALIGN_LEFT, wxDATAVIEW_COL_RESIZABLE);
 	m_pSimpleViewCtrl->AppendColumn(pColumn0);
 	m_pSimpleViewCtrl->AppendColumn(pColumn1);
 
-	wxTreeCtrl *pTreeCtrlAdvanced = new wxTreeCtrl(pSplitterWindow);
-	pSplitterWindow->SplitVertically(m_pSimpleViewCtrl, pTreeCtrlAdvanced, -200);
+	m_pExpertViewCtrl = new wxDataViewCtrl(
+		pSplitterWindow,
+		ID_EXPERTVIEW_CTRL,
+		wxDefaultPosition,
+		wxDefaultSize,
+		wxDV_SINGLE | wxDV_NO_HEADER | wxDV_ROW_LINES);
+
+	ExpertDataViewRenderer *pExpertRenderer = new ExpertDataViewRenderer();
+	wxDataViewColumn *pExpertColumn0 =
+		new wxDataViewColumn(wxT("Document"), pExpertRenderer, 0, 200, wxALIGN_CENTER, wxDATAVIEW_COL_RESIZABLE);
+	m_pExpertViewCtrl->AppendColumn(pExpertColumn0);
+
+	pSplitterWindow->SplitVertically(m_pSimpleViewCtrl, m_pExpertViewCtrl, 0);
 
 	// And statusbar
 	CreateStatusBar();
@@ -123,8 +135,12 @@ void MainFrame::OnOpen(wxCommandEvent& event)
 			try
 			{
 				m_pDocumentEditor = new DocumentEditor(fname, true);
+
 				m_simpleDataViewModel = new SimpleDataViewModel(m_pDocumentEditor);
 				m_pSimpleViewCtrl->AssociateModel(m_simpleDataViewModel.get());
+
+				m_expertDataViewModel = new ExpertDataViewModel(m_pDocumentEditor);
+				m_pExpertViewCtrl->AssociateModel(m_expertDataViewModel.get());
 			}
 			catch (const Separatista::UnsupportedNamespaceException &nse)
 			{

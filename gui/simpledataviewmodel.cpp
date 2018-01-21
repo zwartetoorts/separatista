@@ -250,5 +250,6 @@ void SimpleDataViewModel::GetValue(wxVariant & variant, const wxDataViewItem & i
 
 bool SimpleDataViewModel::SetValue(const wxVariant & variant, const wxDataViewItem & item, unsigned int col)
 {
+	m_pDocumentEditor->changed();
 	return false;
 }

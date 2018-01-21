@@ -18,74 +18,42 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef SEPARATISTA_GUI_DOCUMENTEDITOR_H
-#define SEPARATISTA_GUI_DOCUMENTEDITOR_H
+#ifndef SEPARATISTA_GUI_EXPERTDATAVIEWRENDERER_H
+#define SEPARATISTA_GUI_EXPERTDATAVIEWRENDERER_H
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
-#include <wx/filename.h>
+
+#include <wx/dataview.h>
 
 #include <separatista/separatista.h>
 #include <separatista/separatistadocument.h>
 
 #include "simpleviewdata.h"
 
-/**
-	This class is responsible for all modifications to the SeparatistaDocument.
-*/
-class DocumentEditor
+// Forward decl
+class ElementDataViewModelNode;
+
+class ExpertDataViewRenderer : public wxDataViewCustomRenderer
 {
 public:
-	/// Empty c'tor, leaves DocumentEditor unintialized
-	DocumentEditor();
+	ExpertDataViewRenderer();
 
-	/**
-		Creates a DocumentEditor with an empty document with the chosen namespace.
-		@see Separatista::SeparatistaDocument(const wchar_t *pNamespace, bool bEnableAutomagic)
-		@throws Separatista::UnsupportedNamespaceException
-	*/
-	DocumentEditor(const wxString &Namespace, bool bEnableAutomagic);
-
-	/**
-		Creates a DocumentEditor from a wxFileName object.
-		@throws Separatista::UnsupportedNamespaceException
-		@throws wxStringList Containing all errors as wxString
-	*/
-	DocumentEditor(const wxFileName &FileName, bool bEnableAutomagic);
-
-	~DocumentEditor();
-
-	/**
-		Checks it the document has changed after editing.
-	*/
-	bool hasChanged() const;
-
-	void changed();
-
-	/**
-		Returns the Simple View Data.
-	*/
-	const SimpleViewData* getSimpleViewData() const;
-
-	/**
-		Returns the Separatista Document
-	*/
-	Separatista::SeparatistaDocument* getDocument() const;
-
+	bool GetValue(wxVariant& value) const;
+	bool SetValue(const wxVariant& value);
+	wxSize GetSize() const;
+	bool Render(wxRect cell, wxDC* dc, int state);
+	bool HasEditorCtrl() const;
+	wxWindow* CreateEditorCtrl(wxWindow *parent, wxRect labelRect, const wxVariant &value);
+	bool GetValueFromEditorCtrl(wxWindow *editor, wxVariant &value);
 protected:
-	/**
-		Loads the Simple View Data file based on the document's namespace.
-		Nothing bad will happen if it fails, it just means we don't have a Simple View.
-		@throws wxString containing an error message. This is a bug in the program or a corrupted map file.
-	*/
-	void loadSimpleViewData();
-
+	
 private:
-	Separatista::SeparatistaDocument *m_pDocument;
-	bool m_bChanged;
-	SimpleViewData *m_pSimpleViewData;
+	ElementDataViewModelNode *m_pModelNode;
+	ElementDataViewModelNode *m_pEditingNode;
+
 };
 
-#endif // !defined SEPARATISTA_GUI_DOCUMENTEDITOR_H
+#endif // !defined SEPARATISTA_GUI_EXPERTDATAVIEWRENDERER_H

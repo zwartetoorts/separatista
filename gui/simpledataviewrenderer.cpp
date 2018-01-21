@@ -24,18 +24,23 @@
 #include <wx/wx.h>
 #endif
 
+#include <wx/app.h>
 #include <wx/datectrl.h>
+#include <wx/timectrl.h>
 
 #include <separatista/debug/debug.h>
+#include <separatista/validator.h>
+#include <separatista/iban/iban.h>
 
 #include "simpledataviewrenderer.h"
 #include "simpledataviewmodel.h"
+#include "ibantextctrl.h"
 
 SimpleDataViewRenderer::SimpleDataViewRenderer()
 	:wxDataViewCustomRenderer(wxT("void*"), wxDATAVIEW_CELL_EDITABLE)
 {
-	m_pSepaElement = NULL;
-	m_pValueElement = NULL;
+	m_pModelNode = NULL;
+	m_pEditingNode = NULL;
 }
 
 bool SimpleDataViewRenderer::GetValue(wxVariant& value) const
@@ -44,37 +49,41 @@ bool SimpleDataViewRenderer::GetValue(wxVariant& value) const
 	return true;
 }
 
-const wxString SimpleDataViewRenderer::getTextValue() const
+const wxString SimpleDataViewRenderer::getTextValue(SimpleDataViewModelNode *pNode) const
 {
 	wxString value;
 	wxDateTime dateTime;
-	const SimpleViewData::Element *pTypeElement; 
+	const SimpleViewData::Element *pSimpleElement, *pTypeElement; 
+	Separatista::Element *pSepaElement;
 
-	if (!m_pValueElement || !m_pSepaElement)
+	if ((pSimpleElement = pNode->getSimpleViewDataElement()) == NULL)
 		return wxEmptyString;
 
+	if ((pSepaElement = pNode->getSepaElement()) == NULL)
+		return wxEmptyString;
+	
 	// Read the text of the element or it's attribute value
-	if (m_pAttribute)
+	if (pNode->getSimpleViewDataAttributeElement())
 	{
-		value = m_pSepaElement->getAttributeValue(m_pAttribute->getValue());
+		value = pSepaElement->getAttributeValue(pNode->getSimpleViewDataAttributeElement()->getValue());
 	}
 	else
 	{
-		value = m_pSepaElement->getTextValue();
+		value = pSepaElement->getTextValue();
 	}
 
-	pTypeElement = getValueTypeElement();
+	pTypeElement = getValueTypeElement(pNode);
 
 	if (pTypeElement)
 	{
 		if (pTypeElement->getValue() == wxT("DateTime"))
 		{
-			dateTime = getDateTimeValue();
+			dateTime = getDateTimeValue(pNode);
 			return dateTime.Format(wxLocale::GetInfo(wxLocaleInfo::wxLOCALE_DATE_TIME_FMT));
 		}
 		else if (pTypeElement->getValue() == wxT("Date"))
 		{
-			dateTime = getDateValue();
+			dateTime = getDateValue(pNode);
 			return dateTime.FormatDate();
 		}
 		else if (pTypeElement->getValue() == wxT("Options"))
@@ -93,6 +102,21 @@ const wxString SimpleDataViewRenderer::getTextValue() const
 				}
 			}
 		}
+		else if (pTypeElement->getValue() == wxT("IBAN"))
+		{
+			// Format iban
+			wxString IBAN;
+
+			size_t n = 0;
+			for (auto it = value.begin(); it != value.end(); it++, n++)
+			{
+				if (n > 0 && n % 4 == 0)
+					IBAN += wxT(' ');
+				IBAN += *it;
+					
+			}
+			return IBAN;
+		}
 		else
 		{
 			return value;
@@ -100,11 +124,11 @@ const wxString SimpleDataViewRenderer::getTextValue() const
 	}
 }
 
-const SimpleViewData::Element* SimpleDataViewRenderer::getValueTypeElement() const
+const SimpleViewData::Element* SimpleDataViewRenderer::getValueTypeElement(SimpleDataViewModelNode *pNode) const
 {
-	if (m_pValueElement)
+	if (pNode->getSimpleViewDataElement())
 	{
-		const SimpleViewData::Element *pTypeElement = m_pValueElement->getChildByType(SimpleViewData::Element::Type);
+		const SimpleViewData::Element *pTypeElement = pNode->getSimpleViewDataElement()->getChildByType(SimpleViewData::Element::Type);
 		if (pTypeElement)
 		{
 			return pTypeElement;
@@ -113,20 +137,20 @@ const SimpleViewData::Element* SimpleDataViewRenderer::getValueTypeElement() con
 	return NULL;
 }
 
-const wxDateTime SimpleDataViewRenderer::getDateValue() const
+const wxDateTime SimpleDataViewRenderer::getDateValue(SimpleDataViewModelNode *pNode) const
 {
-	if (!m_pSepaElement)
+	if (!pNode->getSepaElement())
 		return wxInvalidDateTime;
 
-	return wxDateTime(m_pSepaElement->getDateValue());
+	return wxDateTime(pNode->getSepaElement()->getDateValue());
 }
 
-const wxDateTime SimpleDataViewRenderer::getDateTimeValue() const
+const wxDateTime SimpleDataViewRenderer::getDateTimeValue(SimpleDataViewModelNode *pNode) const
 {
-	if (!m_pSepaElement)
+	if (!pNode->getSepaElement())
 		return wxInvalidDateTime;
 
-	return wxDateTime(m_pSepaElement->getDateValue());
+	return wxDateTime(pNode->getSepaElement()->getDateValue());
 }
 
 bool SimpleDataViewRenderer::SetValue(const wxVariant& value)
@@ -134,27 +158,24 @@ bool SimpleDataViewRenderer::SetValue(const wxVariant& value)
 	SimpleDataViewModelNode *pNode = (SimpleDataViewModelNode *)value.GetVoidPtr();
 
 	m_pModelNode = pNode;
-	m_pSepaElement = pNode->getSepaElement();
-	m_pValueElement = pNode->getSimpleViewDataElement();
-	m_pAttribute = pNode->getSimpleViewDataAttributeElement();
-
+	
 	return true;
 }
 
 wxSize SimpleDataViewRenderer::GetSize() const
 {
-	if (!m_pSepaElement)
+	if (!m_pModelNode->getSepaElement())
 		return wxSize(0, 0);
 
-	return GetTextExtent(getTextValue());
+	return GetTextExtent(getTextValue(m_pModelNode));
 }
 
 bool SimpleDataViewRenderer::Render(wxRect cell, wxDC* dc, int state)
 {
-	if (!m_pSepaElement)
+	if (!m_pModelNode->getSepaElement())
 		return false;
 
-	RenderText(getTextValue(), 0, cell, dc, state);
+	RenderText(getTextValue(m_pModelNode), 0, cell, dc, state);
 	
 	return true;
 }
@@ -162,10 +183,10 @@ bool SimpleDataViewRenderer::Render(wxRect cell, wxDC* dc, int state)
 bool SimpleDataViewRenderer::HasEditorCtrl() const
 {
 	// Check for Readonly type
-	if (!m_pSepaElement || !m_pValueElement)
+	if (!m_pModelNode->getSepaElement() || !m_pModelNode->getSimpleViewDataElement())
 		return false;
 
-	const SimpleViewData::Element *pTypeElement = getValueTypeElement();
+	const SimpleViewData::Element *pTypeElement = getValueTypeElement(m_pModelNode);
 	if (pTypeElement)
 	{
 		if (pTypeElement->getValue() == wxT("Readonly"))
@@ -178,16 +199,12 @@ bool SimpleDataViewRenderer::HasEditorCtrl() const
 
 wxWindow * SimpleDataViewRenderer::CreateEditorCtrl(wxWindow * parent, wxRect labelRect, const wxVariant & value)
 {
-	SimpleDataViewModelNode *pNode = (SimpleDataViewModelNode*)value.GetVoidPtr();
+	m_pEditingNode = (SimpleDataViewModelNode*)value.GetVoidPtr();
 
-	if (!pNode)
+	if (!m_pEditingNode)
 		return NULL;
 
-	Separatista::Element *pSepaElement = pNode->getSepaElement();
-	const SimpleViewData::Element *pElement = pNode->getSimpleViewDataElement();
-	const SimpleViewData::Element *pAttr = pNode->getSimpleViewDataAttributeElement();
-
-	const SimpleViewData::Element *pTypeElement = pElement->getChildByType(SimpleViewData::Element::Type);
+	const SimpleViewData::Element *pTypeElement = getValueTypeElement(m_pEditingNode);
 	if (pTypeElement)
 	{
 		if (pTypeElement->getValue() == wxT("Date"))
@@ -195,19 +212,113 @@ wxWindow * SimpleDataViewRenderer::CreateEditorCtrl(wxWindow * parent, wxRect la
 			return new wxDatePickerCtrl(
 				parent,
 				wxID_ANY,
-				wxDateTime(pSepaElement->getDateValue()),
+				wxDateTime(getDateValue(m_pEditingNode)),
 				labelRect.GetTopLeft(),
 				labelRect.GetSize(),
 				wxDP_DROPDOWN);
+		}
+		else if (pTypeElement->getValue() == wxT("DateTime"))
+		{
+			wxPanel *pPanel;
+			wxDateTime dateTime;
+			wxBoxSizer *pSizer;
+
+			dateTime = getDateTimeValue(m_pEditingNode);
+			pSizer = new wxBoxSizer(wxHORIZONTAL);
+
+			pPanel = new wxPanel(
+				parent,
+				wxID_ANY,
+				labelRect.GetTopLeft(),
+				labelRect.GetSize());
+			
+			pSizer->Add(
+				new wxDatePickerCtrl(
+					pPanel,
+					ID_DATECTRL,
+					dateTime,
+					wxDefaultPosition,
+					wxDefaultSize,
+					wxDP_DROPDOWN),
+				1,
+				wxEXPAND,
+				2);
+			pSizer->Add(
+				new wxTimePickerCtrl(
+					pPanel,
+					ID_TIMECTRL,
+					dateTime,
+					wxDefaultPosition,
+					wxDefaultSize,
+					wxTP_DEFAULT),
+				1,
+				wxEXPAND,
+				2);
+
+			pPanel->SetSizerAndFit(pSizer);
+			return pPanel;
 		}
 		else if (pTypeElement->getValue() == wxT("Text"))
 		{
 			return new wxTextCtrl(
 				parent,
 				wxID_ANY,
-				pSepaElement->getTextValue(),
+				getTextValue(m_pEditingNode),
 				labelRect.GetTopLeft(),
 				labelRect.GetSize());
+		}
+		else if (pTypeElement->getValue() == wxT("Options"))
+		{
+			wxArrayString list;
+			size_t selected = wxNOT_FOUND;;
+			wxChoice *pChoice;
+
+			wxString value = getTextValue(m_pEditingNode);
+
+			const SimpleViewData::Element *pChildElement;
+			for (size_t i = 0; i < pTypeElement->getChildCount(); i++)
+			{
+				pChildElement = pTypeElement->getChild(i);
+
+				if (pChildElement->getType() == SimpleViewData::Element::OptionKey)
+				{
+					// Add the option key to the list
+					list.Add(pChildElement->getValue());
+
+					// Get selected value
+					if (pChildElement->getValue() == value)
+						selected = i;
+				}
+			}
+
+			pChoice = new wxChoice(
+				parent,
+				wxID_ANY,
+				labelRect.GetTopLeft(),
+				labelRect.GetSize(),
+				list);
+			pChoice->SetSelection(selected);
+			return pChoice;
+		}
+		else if (pTypeElement->getValue() == wxT("IBAN"))
+		{
+			return new IBANTextCtrl(
+				parent,
+				wxID_ANY,
+				getTextValue(m_pEditingNode),
+				labelRect.GetTopLeft(),
+				labelRect.GetSize());
+		}
+		else if (pTypeElement->getValue() == wxT("BIC"))
+		{
+			wxTextCtrl *pTextCtrl = new wxTextCtrl(
+				parent,
+				wxID_ANY,
+				getTextValue(m_pEditingNode),
+				labelRect.GetTopLeft(),
+				labelRect.GetSize());
+			pTextCtrl->SetMaxLength(11);
+			return pTextCtrl;
 		}
 	}
 
@@ -216,6 +327,99 @@ wxWindow * SimpleDataViewRenderer::CreateEditorCtrl(wxWindow * parent, wxRect la
 
 bool SimpleDataViewRenderer::GetValueFromEditorCtrl(wxWindow * editor, wxVariant & value)
 {
+	if(!m_pEditingNode)
+		return false;
+
+	Separatista::Element *pSepaElement = m_pEditingNode->getSepaElement();
+	if (!pSepaElement)
+	{
+		m_pEditingNode = NULL;
+		return false;
+	}
+
+	const SimpleViewData::Element *pTypeElement = getValueTypeElement(m_pEditingNode);
+	if (pTypeElement)
+	{
+		try
+		{
+			if (pTypeElement->getValue() == wxT("DateTime"))
+			{
+				wxDatePickerCtrl *pDateCtrl = (wxDatePickerCtrl*)editor->FindWindow(ID_DATECTRL);
+				wxTimePickerCtrl *pTimeCtrl = (wxTimePickerCtrl*)editor->FindWindow(ID_TIMECTRL);
+
+				if (pDateCtrl && pTimeCtrl)
+				{
+					wxDateTime dateTime = pDateCtrl->GetValue();
+					wxDateTime time = pTimeCtrl->GetValue();
+					dateTime.SetHour(time.GetHour());
+					dateTime.SetMinute(time.GetMinute());
+					dateTime.SetSecond(time.GetSecond());
+
+					pSepaElement->setValue(dateTime.GetTicks(), true);
+
+					m_pEditingNode = NULL;
+					return true;
+				}
+			}
+			else if (pTypeElement->getValue() == wxT("Date"))
+			{
+				wxDatePickerCtrl *pDatePicker = (wxDatePickerCtrl*)editor;
+
+				wxDateTime dateTime = pDatePicker->GetValue();
+				pSepaElement->setValue(dateTime.GetTicks(), false);
+
+				m_pEditingNode = NULL;
+				return true;
+			}
+			else if (pTypeElement->getValue() == wxT("Text") || pTypeElement->getValue() == wxT("BIC"))
+			{
+				wxTextCtrl *pTextCtrl = (wxTextCtrl*)editor;
+
+				pSepaElement->setValue(pTextCtrl->GetValue());
+				m_pEditingNode = NULL;
+				return true;
+			}
+			else if (pTypeElement->getValue() == wxT("Options"))
+			{
+				wxChoice *pChoice = (wxChoice*)editor;
+
+				size_t index = pChoice->GetSelection();
+
+				if (index != wxNOT_FOUND && index < pTypeElement->getChildCount())
+				{
+					const SimpleViewData::Element *pChildElement, *pOptionValueElement;
+					
+					pChildElement = pTypeElement->getChild(index);
+					if (pChildElement &&
+						(pOptionValueElement = pChildElement->getChildByType(SimpleViewData::Element::OptionValue)) != NULL)
+					{
+						pSepaElement->setValue(pOptionValueElement->getValue());
+						m_pEditingNode = NULL;
+						return true;
+					}
+				}
+			}
+			else if (pTypeElement->getValue() == wxT("IBAN"))
+			{
+				IBANTextCtrl *pTextCtrl = (IBANTextCtrl*)editor;
+
+				// Check iban
+				Separatista::IBAN iban;
+
+				iban = (const wchar_t*)pTextCtrl->GetValue();
+				if (!iban.Check())
+					wxLogError(wxT("Invalid IBAN"));
+				else
+					pSepaElement->setValue(pTextCtrl->GetValue());
+				m_pEditingNode = NULL;
+			}
+		}
+		catch (const Separatista::InvalidValueException &ive)
+		{
+			wxLogError(ive.getMessage());
+		}
+	}
+	m_pEditingNode = NULL;
 	return false;
 }
 

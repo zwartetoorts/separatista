@@ -36,6 +36,12 @@
 // Forward decl
 class SimpleDataViewModelNode;
 
+enum
+{
+	ID_DATECTRL,
+	ID_TIMECTRL
+};
+
 class SimpleDataViewRenderer : public wxDataViewCustomRenderer
 {
 public:
@@ -50,20 +56,19 @@ public:
 	bool GetValueFromEditorCtrl(wxWindow *editor, wxVariant &value);
 protected:
 	/// Returns the value of the element or the value of the element attribute
-	const wxString getTextValue() const;
+	const wxString getTextValue(SimpleDataViewModelNode *pNode) const;
 
-	const wxDateTime getDateValue() const;
+	const wxDateTime getDateValue(SimpleDataViewModelNode *pNode) const;
 
-	const wxDateTime getDateTimeValue() const;
+	const wxDateTime getDateTimeValue(SimpleDataViewModelNode *pNode) const;
 
-	/// Returns the type of the element
-	const SimpleViewData::Element* getValueTypeElement() const;
+	/// Returns the type child element
+	const SimpleViewData::Element* getValueTypeElement(SimpleDataViewModelNode *pNode) const;
 
 private:
 	SimpleDataViewModelNode *m_pModelNode;
-	Separatista::Element *m_pSepaElement;
-	const SimpleViewData::Element *m_pValueElement;
-	const SimpleViewData::Element *m_pAttribute;
+	SimpleDataViewModelNode *m_pEditingNode;
+	
 };
 
 #endif // !defined SEPARATISTA_GUI_SIMPLEDATAVIEWRENDERER_H

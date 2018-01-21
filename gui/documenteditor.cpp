@@ -127,6 +127,11 @@ bool DocumentEditor::hasChanged() const
 	return m_bChanged;
 }
 
+void DocumentEditor::changed()
+{
+	m_bChanged = true;
+}
+
 const SimpleViewData* DocumentEditor::getSimpleViewData() const
 {
 	return m_pSimpleViewData;
