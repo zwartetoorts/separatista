@@ -68,7 +68,7 @@ MainFrame::MainFrame()
 		ID_SIMPLEVIEW_CTRL,
 		wxDefaultPosition,
 		wxDefaultSize,
-		wxDV_SINGLE);
+		wxDV_SINGLE | wxDV_ROW_LINES);
 
 	wxDataViewTextRenderer *pTextRenderer = new wxDataViewTextRenderer(wxT("string"), wxDATAVIEW_CELL_INERT, wxALIGN_LEFT);
 	wxDataViewCustomRenderer *pSimpleRenderer = new SimpleDataViewRenderer();

@@ -34,12 +34,19 @@
 #	define SEPARATISTADEBUG_EXTERN
 #endif
 
-#ifdef SEPARATISTA_DEBUG
+#ifdef SEPARATISTA_DEBUG 
+#	define LOG(message) Separatista::Debug::DebugLogger::log(message, TEXT(__FILE__), __LINE__)
+
+#	ifdef SEPARATISTA_DEBUG_METHODS
 
 // First declare macro's
-#define LOG(message) Separatista::Debug::DebugLogger::log(message, TEXT(__FILE__), __LINE__)
-#define DEBUG_METHOD Separatista::Debug::DebugLogger __debugLogger(TEXT(__FUNCTION__), this)
-#define DEBUG_STATIC_METHOD Separatista::Debug::DebugLogger __debugLogger(TEXT(__FUNCTION__))
+#		define DEBUG_METHOD Separatista::Debug::DebugLogger __debugLogger(TEXT(__FUNCTION__), this)
+#		define DEBUG_STATIC_METHOD Separatista::Debug::DebugLogger __debugLogger(TEXT(__FUNCTION__))
+
+#	else
+#		define DEBUG_METHOD 
+#		define DEBUG_STATIC_METHOD 
+#	endif
 
 namespace Separatista
 {

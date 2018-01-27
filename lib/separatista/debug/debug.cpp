@@ -117,6 +117,7 @@ void Separatista::Debug::MemDebug::trackMemory(void *ptr, const MemDebug &memDeb
 		std::mbstowcs((*g_memMap)[ptr].m_TypeName, pTypeName, 100);
 		(*g_memMap)[ptr].m_TypeName[99] = TEXT('\0');
 
+#ifdef SEPARATISTA_DEBUG_NEW_REPORT
 		// Report allocating object
 		std::wostringstream wos;
 		wos.setf(std::ios::hex, std::ios::basefield);
@@ -131,6 +132,7 @@ void Separatista::Debug::MemDebug::trackMemory(void *ptr, const MemDebug &memDeb
 		wos << ptr << TEXT("\r\n");
 
 		OutputDebugString(wos.str().data());
+#endif
 	}
 }
 
@@ -143,6 +145,7 @@ void Separatista::Debug::MemDebug::releaseMemory(void *ptr)
 	if (g_memMap->find(ptr) != g_memMap->end())
 	{
 		// Report freeing object
+#ifdef SEPARATISTA_DEBUG_NEW_REPORT
 		std::wostringstream wos;
 		wos.setf(std::ios::hex, std::ios::basefield);
 
@@ -154,10 +157,11 @@ void Separatista::Debug::MemDebug::releaseMemory(void *ptr)
 		wos << (*g_memMap)[ptr].m_TypeName;
 		wos << TEXT(" at ");
 		wos << ptr << TEXT("\r\n")	;
-
+		OutputDebugString(wos.str().data());
+#endif
 		g_memMap->erase(ptr);
 
-		OutputDebugString(wos.str().data());
+		
 	}
 	/*else
 	{

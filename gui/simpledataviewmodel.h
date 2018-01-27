@@ -30,16 +30,21 @@
 
 #include <wx/dataview.h>
 
+#include <separatista/element.h>
+
 #include "documenteditor.h"
 
-class SimpleDataViewModelNode
+// Forward decl
+class SimpleDataViewModel;
+
+class SimpleDataViewModelNode : public Separatista::ElementListener
 {
 public:
 	/// C'tor, builds the tree from the SepaDocument
-	SimpleDataViewModelNode(const SimpleViewData::Element *pElement, Separatista::SeparatistaDocument *pSepaDocument);
+	SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, Separatista::SeparatistaDocument *pSepaDocument);
 
 	/// C'tor for a simpele element
-	SimpleDataViewModelNode(const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, SimpleDataViewModelNode *pParent = NULL);
+	SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, Separatista::Element *pSepaParentElement, SimpleDataViewModelNode *pParent = NULL);
 
 	/// D'tor destroys all children
 	~SimpleDataViewModelNode();
@@ -71,14 +76,21 @@ public:
 	/// Removes the Child SimpleDataViewModelNode
 	void removeChild(SimpleDataViewModelNode *pChild);
 
+	// Separatista::ElementListener methods
+	void elementCreated(Separatista::Element *pParent, Separatista::Element *pElement);
+	void elementDeleted(Separatista::Element *pElement);
+	void elementValueChanged(Separatista::Element *pElement, const wchar_t *pNewValue);
+
 protected:
 	/// Builds the internal tree recursively
 	void buildModelTree(const SimpleViewData::Element *pElement, Separatista::Element *pSepaElement);
 
 private:
+	SimpleDataViewModel *m_pDataViewModel;
 	const SimpleViewData::Element *m_pElement;
 	const SimpleViewData::Element *m_pAttribute;
 	Separatista::Element *m_pSepaElement;
+	Separatista::Element *m_pSepaParentElement;
 	SimpleDataViewModelNode *m_pParent;
 	std::vector<SimpleDataViewModelNode*> m_children;
 };
@@ -102,9 +114,16 @@ public:
 
 	bool SetValue(const wxVariant &variant, const wxDataViewItem &item, unsigned int col);
 
+	bool isLocked() const;
+
+	void lock();
+
+	void unlock();
+
 private:
 	DocumentEditor *m_pDocumentEditor;
 	SimpleDataViewModelNode m_rootNode;
+	bool m_bLocked;
 };
 
 #endif // !defined SEPARATISTA_GUI_SIMPLEDATAVIEWMODEL_H

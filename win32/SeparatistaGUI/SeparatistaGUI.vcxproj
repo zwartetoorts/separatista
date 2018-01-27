@@ -82,7 +82,7 @@
     <Link>
       <AdditionalLibraryDirectories>../../../wxwidgets-3.1.0/lib/vc_lib/;$(OutDir)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>comctl32.lib	;Rpcrt4.lib;wxbase31ud.lib;wxzlibd.lib;wxpngd.lib;wxmsw31ud_core.lib;wxmsw31ud_adv.lib;separatista.lib;separatistadebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib	;Rpcrt4.lib;wxbase31ud.lib;wxzlibd.lib;wxpngd.lib;wxmsw31ud_core.lib;wxmsw31ud_adv.lib;separatista.lib;separatistaiban.lib;separatistadebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -131,6 +131,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\gui\app.cpp" />
     <ClCompile Include="..\..\gui\documenteditor.cpp" />
+    <ClCompile Include="..\..\gui\expertdataviewmodel.cpp" />
+    <ClCompile Include="..\..\gui\expertdataviewrenderer.cpp" />
+    <ClCompile Include="..\..\gui\ibantextctrl.cpp" />
     <ClCompile Include="..\..\gui\mainframe.cpp" />
     <ClCompile Include="..\..\gui\simpledataviewmodel.cpp" />
     <ClCompile Include="..\..\gui\simpledataviewrenderer.cpp" />
@@ -139,6 +142,9 @@
   <ItemGroup>
     <ClInclude Include="..\..\gui\app.h" />
     <ClInclude Include="..\..\gui\documenteditor.h" />
+    <ClInclude Include="..\..\gui\expertdataviewmodel.h" />
+    <ClInclude Include="..\..\gui\expertdataviewrenderer.h" />
+    <ClInclude Include="..\..\gui\ibantextctrl.h" />
     <ClInclude Include="..\..\gui\mainframe.h" />
     <ClInclude Include="..\..\gui\simpledataviewmodel.h" />
     <ClInclude Include="..\..\gui\simpledataviewrenderer.h" />

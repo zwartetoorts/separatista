@@ -35,11 +35,12 @@
 // Forward decl
 class LeafElementDataViewModelNode;
 class AttributedElementDataViewModelNode;
+class ExpertDataViewModel;
 
-class ElementDataViewModelNode
+class ElementDataViewModelNode : public Separatista::ElementListener
 {
 public:
-	ElementDataViewModelNode(Separatista::Element *pElement, ElementDataViewModelNode *pParent = NULL);
+	ElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pSepaElement, ElementDataViewModelNode *pParent = NULL);
 
 	ElementDataViewModelNode* getParent() const;
 
@@ -60,7 +61,12 @@ public:
 
 	virtual wxString getLabel() const;
 
+	void elementValueChanged(Separatista::Element *pElement, const wchar_t *pNewValue);
+	void elementCreated(Separatista::Element *pParent, Separatista::Element *pChild);
+	void elementDeleted(Separatista::Element *pElement);
+
 private:
+	ExpertDataViewModel *m_pDataViewModel;
 	ElementDataViewModelNode *m_pParent;
 	Separatista::Element *m_pSepaElement;
 };
@@ -68,7 +74,7 @@ private:
 class ValueElementDataViewModelNode : public ElementDataViewModelNode
 {
 public:
-	ValueElementDataViewModelNode(Separatista::Element *pElement, LeafElementDataViewModelNode *pParent);
+	ValueElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, LeafElementDataViewModelNode *pParent);
 
 	ElementType getElementType() const;
 
@@ -84,7 +90,7 @@ public:
 class AttributeValueElementDataViewModelNode : public ValueElementDataViewModelNode
 {
 public:
-	AttributeValueElementDataViewModelNode(Separatista::Element *pElement, const wxString &attributeName, AttributedElementDataViewModelNode *pParent);
+	AttributeValueElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, const wxString &attributeName, AttributedElementDataViewModelNode *pParent);
 	
 	wxString getLabel() const;
 
@@ -98,7 +104,7 @@ private:
 class LeafElementDataViewModelNode : public ElementDataViewModelNode
 {
 public:
-	LeafElementDataViewModelNode(Separatista::Element *pElement, ElementDataViewModelNode *pParent = NULL);
+	LeafElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, ElementDataViewModelNode *pParent = NULL);
 
 	size_t getChildren(wxDataViewItemArray &children) const;
 
@@ -120,7 +126,7 @@ private:
 class AttributedElementDataViewModelNode : public LeafElementDataViewModelNode
 {
 public:
-	AttributedElementDataViewModelNode(Separatista::Element *pElement, const wxString &attributeName, ElementDataViewModelNode *pParent = NULL);
+	AttributedElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, const wxString &attributeName, ElementDataViewModelNode *pParent = NULL);
 
 	ElementType getElementType() const;
 
@@ -137,7 +143,7 @@ private:
 class BranchElementDataViewModelNode : public ElementDataViewModelNode
 {
 public:
-	BranchElementDataViewModelNode(Separatista::Element *pElement, ElementDataViewModelNode *pParent = NULL);
+	BranchElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, ElementDataViewModelNode *pParent = NULL);
 
 	ElementType getElementType() const;
 

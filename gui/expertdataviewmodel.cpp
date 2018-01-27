@@ -28,11 +28,16 @@
 
 #include "expertdataviewmodel.h"
 
-ElementDataViewModelNode::ElementDataViewModelNode(Separatista::Element *pElement, ElementDataViewModelNode *pParent)
-	:m_pSepaElement(pElement),
+ElementDataViewModelNode::ElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pSepaElement, ElementDataViewModelNode *pParent)
+	:m_pDataViewModel(pDataViewModel),
+	m_pSepaElement(pSepaElement),
 	m_pParent(pParent)
 {
-
+	// Set listeners on elements
+	if (pSepaElement)
+		pSepaElement->addElementListener(this);
+	if (pParent)
+		pParent->getSepaElement()->addElementListener(this);
 }
 
 Separatista::Element* ElementDataViewModelNode::getSepaElement() const
@@ -50,8 +55,21 @@ wxString ElementDataViewModelNode::getLabel() const
 	return getSepaElement()->getTag();
 }
 
-ValueElementDataViewModelNode::ValueElementDataViewModelNode(Separatista::Element *pElement, LeafElementDataViewModelNode *pParent)
-	:ElementDataViewModelNode(pElement, pParent)
+void ElementDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
+{
+	m_pDataViewModel->ValueChanged(wxDataViewItem(this), 0);
+}
+
+void ElementDataViewModelNode::elementCreated(Separatista::Element * pParent, Separatista::Element * pChild)
+{
+}
+
+void ElementDataViewModelNode::elementDeleted(Separatista::Element * pElement)
+{
+}
+
+ValueElementDataViewModelNode::ValueElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, LeafElementDataViewModelNode *pParent)
+	:ElementDataViewModelNode(pDataViewModel, pElement, pParent)
 {
 
 }
@@ -81,8 +99,8 @@ void ValueElementDataViewModelNode::setValue(const wxString &value)
 	getSepaElement()->setValue(value);
 }
 
-AttributeValueElementDataViewModelNode::AttributeValueElementDataViewModelNode(Separatista::Element *pElement, const wxString &attributeName, AttributedElementDataViewModelNode *pParent)
-	:ValueElementDataViewModelNode(pElement, pParent),
+AttributeValueElementDataViewModelNode::AttributeValueElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, const wxString &attributeName, AttributedElementDataViewModelNode *pParent)
+	:ValueElementDataViewModelNode(pDataViewModel, pElement, pParent),
 	m_attributeName(attributeName)
 {
 
@@ -104,9 +122,9 @@ void AttributeValueElementDataViewModelNode::setValue(const wxString &value)
 }
 
 
-LeafElementDataViewModelNode::LeafElementDataViewModelNode(Separatista::Element *pElement, ElementDataViewModelNode *pParent)
-	:ElementDataViewModelNode(pElement, pParent),
-	m_valueNode(pElement, this)
+LeafElementDataViewModelNode::LeafElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, ElementDataViewModelNode *pParent)
+	:ElementDataViewModelNode(pDataViewModel, pElement, pParent),
+	m_valueNode(pDataViewModel, pElement, this)
 {
 
 }
@@ -132,9 +150,9 @@ void LeafElementDataViewModelNode::setValue(const wxString value)
 	m_valueNode.setValue(value);
 }
 
-AttributedElementDataViewModelNode::AttributedElementDataViewModelNode(Separatista::Element *pElement, const wxString &attributeName, ElementDataViewModelNode *pParent)
-	:LeafElementDataViewModelNode(pElement, pParent),
-	m_attributeValue(pElement, attributeName, this)
+AttributedElementDataViewModelNode::AttributedElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, const wxString &attributeName, ElementDataViewModelNode *pParent)
+	:LeafElementDataViewModelNode(pDataViewModel, pElement, pParent),
+	m_attributeValue(pDataViewModel, pElement, attributeName, this)
 {
 
 }
@@ -161,8 +179,8 @@ void AttributedElementDataViewModelNode::setAttributeValue(const wxString &value
 	m_attributeValue.setValue(value);
 }
 
-BranchElementDataViewModelNode::BranchElementDataViewModelNode(Separatista::Element *pElement, ElementDataViewModelNode *pParent)
-	:ElementDataViewModelNode(pElement, pParent)
+BranchElementDataViewModelNode::BranchElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, ElementDataViewModelNode *pParent)
+	:ElementDataViewModelNode(pDataViewModel, pElement, pParent)
 {
 	// Add all child elements
 	const Separatista::ElementDescriptor *pElementDescriptor;
@@ -178,6 +196,7 @@ BranchElementDataViewModelNode::BranchElementDataViewModelNode(Separatista::Elem
 			for (auto it = range.m_begin; it != range.m_end; it++)
 			{
 				addChild(new BranchElementDataViewModelNode(
+					pDataViewModel,
 					it->second,
 					this
 				));
@@ -191,6 +210,7 @@ BranchElementDataViewModelNode::BranchElementDataViewModelNode(Separatista::Elem
 			for (auto it = range.m_begin; it != range.m_end; it++)
 			{
 				addChild(new AttributedElementDataViewModelNode(
+					pDataViewModel,
 					it->second,
 					wxT("EUR"),
 					this
@@ -203,6 +223,7 @@ BranchElementDataViewModelNode::BranchElementDataViewModelNode(Separatista::Elem
 			for (auto it = range.m_begin; it != range.m_end; it++)
 			{
 				addChild(new LeafElementDataViewModelNode(
+					pDataViewModel,
 					it->second,
 					this
 				));
@@ -233,7 +254,7 @@ ElementDataViewModelNode::ElementType BranchElementDataViewModelNode::getElement
 
 ExpertDataViewModel::ExpertDataViewModel(DocumentEditor *pDocumentEditor)
 	:m_pDocumentEditor(pDocumentEditor),
-	m_documentNode(pDocumentEditor->getDocument())
+	m_documentNode(this, pDocumentEditor->getDocument())
 {
 
 }

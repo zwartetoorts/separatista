@@ -141,7 +141,8 @@ Separatista::Element::TagKeyRange Separatista::ChoiceElement::getAllByTagName(co
 	TagKeyRange range;
 
 	m_map.clear();
-	m_map.insert(std::pair<TagKey, Element*>(TagKey(pTagName, 0, getElementDescriptor()), m_pChosenElement));
+	if(std::wcscmp(pTagName, m_pChosenElement->getTag()) == 0)
+		m_map.insert(std::pair<TagKey, Element*>(TagKey(pTagName, 0, getElementDescriptor()), m_pChosenElement));
 	range.m_begin = m_map.cbegin();
 	range.m_end = m_map.cend();
 	return range;

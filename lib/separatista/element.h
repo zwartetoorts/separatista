@@ -109,6 +109,16 @@ namespace Separatista
 		const wchar_t* getTag() const;
 
 		/**
+			Returns the minimum times this element should occur
+		*/
+		size_t getMinOccurs() const;
+
+		/**
+			Returns the maximum times this element can occur (0 means infinite)
+		*/
+		size_t getMaxOccurs() const;
+
+		/**
 			Returns the child element by tag name and index.
 			@return A pointer to the child element or NULL if not present or unsupported.
 			@throws ElementException if the element doesn't support having child elements.

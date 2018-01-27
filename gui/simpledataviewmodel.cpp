@@ -28,19 +28,24 @@
 
 #include "simpledataviewmodel.h"
 
-SimpleDataViewModelNode::SimpleDataViewModelNode(const SimpleViewData::Element *pElement, Separatista::SeparatistaDocument *pSepaDocument)
-	:m_pElement(pElement), m_pSepaElement(pSepaDocument)
+SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, Separatista::SeparatistaDocument *pSepaDocument)
+	:m_pDataViewModel(pModel), m_pElement(pElement), m_pSepaElement(pSepaDocument)
 {
 	m_pParent = NULL;
 	m_pAttribute = NULL;
+	m_pSepaParentElement = NULL;
 
 	buildModelTree(pElement, pSepaDocument);
 }
 
-SimpleDataViewModelNode::SimpleDataViewModelNode(const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, SimpleDataViewModelNode *pParent)
-	:m_pElement(pElement), m_pSepaElement(pSepaElement), m_pParent(pParent), m_pAttribute(pAttributeElement)
+SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, Separatista::Element *pSepaParentElement, SimpleDataViewModelNode *pParent)
+	:m_pDataViewModel(pModel), m_pElement(pElement), m_pSepaElement(pSepaElement), m_pSepaParentElement(pSepaParentElement), m_pParent(pParent), m_pAttribute(pAttributeElement)
 {
-
+	// Receive notifications for element creation, deletion and updates
+	if(m_pSepaElement)
+		m_pSepaElement->addElementListener(this);
+	if (m_pSepaParentElement)
+		m_pSepaParentElement->addElementListener(this);
 }
 
 SimpleDataViewModelNode::~SimpleDataViewModelNode()
@@ -108,6 +113,25 @@ void SimpleDataViewModelNode::removeChild(SimpleDataViewModelNode * pChild)
 	}
 }
 
+void SimpleDataViewModelNode::elementCreated(Separatista::Element * pParent, Separatista::Element * pElement)
+{
+}
+
+void SimpleDataViewModelNode::elementDeleted(Separatista::Element * pElement)
+{
+}
+
+void SimpleDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
+{
+	if (m_pDataViewModel->isLocked())
+		return;
+
+	if (pElement == m_pSepaElement)
+	{
+		m_pDataViewModel->ValueChanged(wxDataViewItem(this), 1);
+	}
+}
+
 void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSimpleElement, Separatista::Element *pSepaElement)
 {
 	const SimpleViewData::Element *pSimpleChildElement, *pTypeChildElement, *pDocPathElement, *pAttrElement;
@@ -144,7 +168,7 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 					Separatista::Element::TagKeyRange range = pSepaParentElement->getAllByTagName(pSepaChildElement->getTag());
 					for (auto it = range.m_begin; it != range.m_end; it++)
 					{
-						pNewNode = new SimpleDataViewModelNode(pSimpleChildElement, pAttrElement, it->second, this);
+						pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, pSimpleChildElement, pAttrElement, it->second, pSepaParentElement, this);
 						// Recurse if type == Root
 						if(pTypeChildElement->getValue() == wxT("Root"))
 							pNewNode->buildModelTree(pSimpleChildElement, it->second);
@@ -154,7 +178,7 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 			}
 			else
 			{
-				pNewNode = new SimpleDataViewModelNode(pSimpleChildElement, NULL, NULL, this);
+				pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, pSimpleChildElement, NULL, NULL, NULL, this);
 				// Recurse 
 				pNewNode->buildModelTree(pSimpleChildElement, pSepaElement);
 				appendChild(pNewNode);
@@ -164,9 +188,10 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 }
 
 SimpleDataViewModel::SimpleDataViewModel(DocumentEditor *pDocumentEditor)
-	:m_rootNode((pDocumentEditor->getSimpleViewData() ? pDocumentEditor->getSimpleViewData()->getRootElement() : NULL), pDocumentEditor->getDocument())
+	:m_rootNode(this, (pDocumentEditor->getSimpleViewData() ? pDocumentEditor->getSimpleViewData()->getRootElement() : NULL), pDocumentEditor->getDocument())
 {
 	m_pDocumentEditor = pDocumentEditor;
+	m_bLocked = false;
 }
 
 bool SimpleDataViewModel::IsContainer(const wxDataViewItem &item) const
@@ -252,4 +277,19 @@ bool SimpleDataViewModel::SetValue(const wxVariant & variant, const wxDataViewIt
 {
 	m_pDocumentEditor->changed();
 	return false;
+}
+
+bool SimpleDataViewModel::isLocked() const
+{
+	return m_bLocked;
+}
+
+void SimpleDataViewModel::lock()
+{
+	m_bLocked = true;
+}
+
+void SimpleDataViewModel::unlock()
+{
+	m_bLocked = false;
 }

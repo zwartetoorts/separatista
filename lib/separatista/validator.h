@@ -117,11 +117,11 @@ namespace Separatista
 			{
 				pValidator->validate(pValue);
 			}
-			catch (const xercesc::InvalidDatatypeValueException &)
+			catch (const xercesc::InvalidDatatypeValueException &e)
 			{
 				delete pValidator;
 				//delete pFacets;
-				SEPARATISTA_THROW_EXCEPTION(InvalidValueException, TEXT("Invalid value"), pElement, pValue);
+				SEPARATISTA_THROW_EXCEPTION(InvalidValueException, e.getMessage(), pElement, pValue);
 			}
 		}
 		delete pValidator;

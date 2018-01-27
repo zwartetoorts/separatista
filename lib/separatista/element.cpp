@@ -80,6 +80,16 @@ const wchar_t* Element::getTag() const
 	return m_pChildElementDescriptor->m_pTag;
 }
 
+size_t Element::getMinOccurs() const
+{
+	return m_pChildElementDescriptor->m_nMin;
+}
+
+size_t Element::getMaxOccurs() const
+{
+	return m_pChildElementDescriptor->m_nMax;
+}
+
 Element* Element::getElementByTag(const wchar_t *pTagName, size_t nIndex) const
 {
 	DEBUG_METHOD;
