@@ -114,11 +114,7 @@ public:
 
 	bool SetValue(const wxVariant &variant, const wxDataViewItem &item, unsigned int col);
 
-	bool isLocked() const;
-
-	void lock();
-
-	void unlock();
+	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
 
 private:
 	DocumentEditor *m_pDocumentEditor;

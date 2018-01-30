@@ -77,7 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../wxwidgets-3.1.0/include;../../../wxwidgets-3.1.0/lib/vc_lib/mswud;..\..\lib</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>SEPARATISTA_USINGDLL;SEPARATISTADEBUG_USINGDLL;SEPARATISTA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SEPARATISTA_USINGDLL;SEPARATISTADEBUG_USINGDLL;SEPARATISTA_DEBUG;SEPARATISTA_DEBUG_NEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>../../../wxwidgets-3.1.0/lib/vc_lib/;$(OutDir)</AdditionalLibraryDirectories>

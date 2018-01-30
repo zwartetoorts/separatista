@@ -42,6 +42,10 @@ class ElementDataViewModelNode : public Separatista::ElementListener
 public:
 	ElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pSepaElement, ElementDataViewModelNode *pParent = NULL);
 
+	virtual ~ElementDataViewModelNode();
+
+	ExpertDataViewModel* getModel() const;
+
 	ElementDataViewModelNode* getParent() const;
 
 	Separatista::Element* getSepaElement() const;
@@ -59,11 +63,15 @@ public:
 
 	virtual size_t getChildren(wxDataViewItemArray &children) const = NULL;
 
+	virtual void removeChild(ElementDataViewModelNode *pChild) = NULL;
+
 	virtual wxString getLabel() const;
 
 	void elementValueChanged(Separatista::Element *pElement, const wchar_t *pNewValue);
 	void elementCreated(Separatista::Element *pParent, Separatista::Element *pChild);
 	void elementDeleted(Separatista::Element *pElement);
+
+	virtual void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt) = NULL;
 
 private:
 	ExpertDataViewModel *m_pDataViewModel;
@@ -80,11 +88,15 @@ public:
 
 	size_t getChildren(wxDataViewItemArray &children) const;
 
+	void removeChild(ElementDataViewModelNode *pChild);
+
 	wxString getLabel() const;
 
 	wxString getValue() const;
 
 	void setValue(const wxString &value);
+
+	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
 };
 
 class AttributeValueElementDataViewModelNode : public ValueElementDataViewModelNode
@@ -97,6 +109,9 @@ public:
 	wxString getValue() const;
 
 	void setValue(const wxString &value);
+
+	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
+
 private:
 	wxString m_attributeName;
 };
@@ -106,15 +121,22 @@ class LeafElementDataViewModelNode : public ElementDataViewModelNode
 public:
 	LeafElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, ElementDataViewModelNode *pParent = NULL);
 
+	~LeafElementDataViewModelNode();
+
 	size_t getChildren(wxDataViewItemArray &children) const;
+
+	void removeChild(ElementDataViewModelNode *pChild);
 
 	ElementType getElementType() const;
 
 	wxString getValue() const;
 
 	void setValue(const wxString value);
+
+	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
+
 private:
-	ValueElementDataViewModelNode m_valueNode;
+	ValueElementDataViewModelNode *m_pValueNode;
 };
 
 /**
@@ -128,6 +150,8 @@ class AttributedElementDataViewModelNode : public LeafElementDataViewModelNode
 public:
 	AttributedElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, const wxString &attributeName, ElementDataViewModelNode *pParent = NULL);
 
+	~AttributedElementDataViewModelNode();
+
 	ElementType getElementType() const;
 
 	size_t getChildren(wxDataViewItemArray &children) const;
@@ -136,8 +160,10 @@ public:
 
 	void setAttributeValue(const wxString &value);
 
+	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
+
 private:
-	AttributeValueElementDataViewModelNode m_attributeValue;
+	AttributeValueElementDataViewModelNode *m_pAttributeValue;
 };
 
 class BranchElementDataViewModelNode : public ElementDataViewModelNode
@@ -149,7 +175,17 @@ public:
 
 	size_t getChildren(wxDataViewItemArray &children) const;
 
+	void removeChild(ElementDataViewModelNode *pChild);
+
 	void addChild(ElementDataViewModelNode *pChild);
+
+	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
+
+	void OnCommandCreate(wxCommandEvent &evt);
+
+	void OnCommandRemove(wxCommandEvent &evt);
+
+	void elementCreated(Separatista::Element *pParent, Separatista::Element *pChild);
 
 private:
 	std::vector<ElementDataViewModelNode*> m_children;
@@ -173,8 +209,14 @@ public:
 	void GetValue(wxVariant &variant, const wxDataViewItem &item, unsigned int col) const;
 
 	bool SetValue(const wxVariant &variant, const wxDataViewItem &item, unsigned int col);
+
+	bool HasDefaultCompare() const;
+
+	int Compare(const wxDataViewItem &item1, const wxDataViewItem &item2, unsigned int column, bool ascending) const;
+
+	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
 private:
-	BranchElementDataViewModelNode m_documentNode;
+	BranchElementDataViewModelNode *m_pDocumentNode;
 	DocumentEditor* m_pDocumentEditor;
 };
 

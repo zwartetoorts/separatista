@@ -36,11 +36,6 @@
 // Forward decl
 class SimpleDataViewModelNode;
 
-enum
-{
-	ID_DATECTRL,
-	ID_TIMECTRL
-};
 
 class SimpleDataViewRenderer : public wxDataViewCustomRenderer
 {

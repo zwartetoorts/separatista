@@ -56,12 +56,25 @@ bool ExpertDataViewRenderer::SetValue(const wxVariant &value)
 
 wxSize ExpertDataViewRenderer::GetSize() const
 {
-	return GetTextExtent(m_pModelNode->getLabel());
+	wxString label = m_pModelNode->getLabel();
+	if (label.Length() == 0)
+	{
+		// Format empty string
+		label = wxT("(Empty)");
+	}
+	return GetTextExtent(label);
 }
 
 bool ExpertDataViewRenderer::Render(wxRect cell, wxDC * dc, int state)
 {
-	RenderText(m_pModelNode->getLabel(), 0, cell, dc, state);
+	wxString label = m_pModelNode->getLabel();
+	if (label.Length() == 0)
+	{
+		// Format empty string
+		label = wxT("(Empty)");
+		dc->SetFont(dc->GetFont().Italic());
+	}
+	RenderText(label, 0, cell, dc, state);
 	return true;
 }
 

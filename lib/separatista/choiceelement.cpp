@@ -141,7 +141,7 @@ Separatista::Element::TagKeyRange Separatista::ChoiceElement::getAllByTagName(co
 	TagKeyRange range;
 
 	m_map.clear();
-	if(std::wcscmp(pTagName, m_pChosenElement->getTag()) == 0)
+	if(m_pChosenElement && std::wcscmp(pTagName, m_pChosenElement->getTag()) == 0)
 		m_map.insert(std::pair<TagKey, Element*>(TagKey(pTagName, 0, getElementDescriptor()), m_pChosenElement));
 	range.m_begin = m_map.cbegin();
 	range.m_end = m_map.cend();
@@ -171,10 +171,11 @@ Element* ChoiceElement::createElementByTag(const wchar_t *pTagName, size_t nInde
 			pElement = pElementDescriptor->m_pChildren[i].m_pElementDescriptor->m_pfCreateElement(&pElementDescriptor->m_pChildren[i]);
 			if (pElement)
 			{
-				if (m_pChosenElement)
-					Element::deleteElement(m_pChosenElement);
+				Element *pOldElement = m_pChosenElement;
 				m_pChosenElement = pElement;
 				onElementCreated(pElement);
+				if (pOldElement)
+					Element::deleteElement(pOldElement);;
 				return pElement;
 			}
 		}

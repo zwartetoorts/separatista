@@ -34,8 +34,17 @@
 
 enum
 {
-	ID_SIMPLEVIEW_CTRL,
-	ID_EXPERTVIEW_CTRL
+	ID_SIMPLEVIEW_CTRL = 1,
+	ID_EXPERTVIEW_CTRL,
+	ID_DATECTRL,
+	ID_TIMECTRL,
+	ID_COMMAND_EXPERT_REMOVE,
+	ID_COMMAND_EXPERT_CREATE,  // Reserve room for child elements
+};
+
+enum
+{
+	IDM_
 };
 
 class MainFrame : public wxFrame
@@ -48,6 +57,9 @@ public:
 private:
 	void OnOpen(wxCommandEvent& event);
 	void OnExit(wxCommandEvent& event);
+
+	void OnExpertViewContextMenu(wxDataViewEvent &evt);
+	void OnSimpleViewContextMenu(wxDataViewEvent &evt);
 
 	wxDataViewCtrl *m_pSimpleViewCtrl;
 	wxDataViewCtrl *m_pExpertViewCtrl;

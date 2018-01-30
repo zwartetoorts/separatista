@@ -123,9 +123,6 @@ void SimpleDataViewModelNode::elementDeleted(Separatista::Element * pElement)
 
 void SimpleDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
 {
-	if (m_pDataViewModel->isLocked())
-		return;
-
 	if (pElement == m_pSepaElement)
 	{
 		m_pDataViewModel->ValueChanged(wxDataViewItem(this), 1);
@@ -279,17 +276,8 @@ bool SimpleDataViewModel::SetValue(const wxVariant & variant, const wxDataViewIt
 	return false;
 }
 
-bool SimpleDataViewModel::isLocked() const
+void SimpleDataViewModel::OnContextMenu(wxWindow *pWindow, wxDataViewEvent & evt)
 {
-	return m_bLocked;
 }
 
-void SimpleDataViewModel::lock()
-{
-	m_bLocked = true;
-}
 
-void SimpleDataViewModel::unlock()
-{
-	m_bLocked = false;
-}

@@ -41,6 +41,8 @@
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(wxID_OPEN, MainFrame::OnOpen)
+	EVT_DATAVIEW_ITEM_CONTEXT_MENU(ID_EXPERTVIEW_CTRL, OnExpertViewContextMenu)
+	EVT_DATAVIEW_ITEM_CONTEXT_MENU(ID_SIMPLEVIEW_CTRL, OnSimpleViewContextMenu)
 wxEND_EVENT_TABLE()
 
 MainFrame::MainFrame()
@@ -177,3 +179,16 @@ void MainFrame::OnOpen(wxCommandEvent& event)
 	}
 }
 
+void MainFrame::OnExpertViewContextMenu(wxDataViewEvent &evt)
+{
+	ExpertDataViewModel *pModel = (ExpertDataViewModel*)m_pExpertViewCtrl->GetModel();
+	if (pModel)
+		pModel->OnContextMenu(m_pExpertViewCtrl, evt);
+}
+
+void MainFrame::OnSimpleViewContextMenu(wxDataViewEvent &evt)
+{
+	SimpleDataViewModel *pModel = (SimpleDataViewModel*)m_pSimpleViewCtrl->GetModel();
+	if (pModel)
+		pModel->OnContextMenu(m_pSimpleViewCtrl, evt);
+}

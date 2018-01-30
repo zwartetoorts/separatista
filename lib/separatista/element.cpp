@@ -149,7 +149,10 @@ void Element::onElementValueChanged(const wchar_t *pNewValue)
 {
 	DEBUG_METHOD;
 
-	for(auto it = m_ElementListeners.begin(); it != m_ElementListeners.end(); it++)
+	// Safely iterate over listeners
+	std::vector<ElementListener*> listeners(m_ElementListeners.begin(), m_ElementListeners.end());
+
+	for(auto it = listeners.begin(); it != listeners.end(); it++)
 		(*it)->elementValueChanged(this, pNewValue);
 }
 
@@ -157,7 +160,10 @@ void Element::onElementCreated(Element *pChildElement)
 {
 	DEBUG_METHOD;
 
-	for (auto it = m_ElementListeners.begin(); it != m_ElementListeners.end(); it++)
+	// Safely iterate over listeners
+	std::vector<ElementListener*> listeners(m_ElementListeners.begin(), m_ElementListeners.end());
+
+	for (auto it = listeners.begin(); it != listeners.end(); it++)
 		(*it)->elementCreated(this, pChildElement);
 }
 
@@ -165,7 +171,10 @@ void Element::onElementDeleted()
 {
 	DEBUG_METHOD;
 
-	for (auto it = m_ElementListeners.begin(); it != m_ElementListeners.end(); it++)
+	// Safely iterate over listeners
+	std::vector<ElementListener*> listeners(m_ElementListeners.begin(), m_ElementListeners.end());
+
+	for (auto it = listeners.begin(); it != listeners.end(); it++)
 		(*it)->elementDeleted(this);
 
 }

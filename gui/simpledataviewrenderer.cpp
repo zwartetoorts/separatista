@@ -35,6 +35,7 @@
 #include "simpledataviewrenderer.h"
 #include "simpledataviewmodel.h"
 #include "ibantextctrl.h"
+#include "mainframe.h"
 
 SimpleDataViewRenderer::SimpleDataViewRenderer()
 	:wxDataViewCustomRenderer(wxT("void*"), wxDATAVIEW_CELL_EDITABLE)
