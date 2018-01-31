@@ -74,6 +74,10 @@ bool ExpertDataViewRenderer::Render(wxRect cell, wxDC * dc, int state)
 		label = wxT("(Empty)");
 		dc->SetFont(dc->GetFont().Italic());
 	}
+	else
+	{
+		dc->SetFont(dc->GetFont().GetBaseFont());
+	}
 	RenderText(label, 0, cell, dc, state);
 	return true;
 }

@@ -35,11 +35,12 @@
 enum
 {
 	ID_SIMPLEVIEW_CTRL = 1,
-	ID_EXPERTVIEW_CTRL,
-	ID_DATECTRL,
-	ID_TIMECTRL,
-	ID_COMMAND_EXPERT_REMOVE,
-	ID_COMMAND_EXPERT_CREATE,  // Reserve room for child elements
+	ID_EXPERTVIEW_CTRL = 2,
+	ID_DATECTRL = 3,
+	ID_TIMECTRL = 4,
+	ID_COMMAND_EXPERT_REMOVE = 5,
+	ID_COMMAND_EXPERT_CREATE = 6,  // Reserve room for child elements
+
 };
 
 enum

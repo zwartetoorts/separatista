@@ -62,7 +62,6 @@ wxString ElementDataViewModelNode::getLabel() const
 
 void ElementDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
 {
-	m_pDataViewModel->ValueChanged(wxDataViewItem(this), 0);
 }
 
 void ElementDataViewModelNode::elementCreated(Separatista::Element * pParent, Separatista::Element * pChild)
@@ -82,7 +81,6 @@ void ElementDataViewModelNode::elementDeleted(Separatista::Element * pElement)
 ValueElementDataViewModelNode::ValueElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, LeafElementDataViewModelNode *pParent)
 	:ElementDataViewModelNode(pDataViewModel, pElement, pParent)
 {
-
 }
 
 ElementDataViewModelNode::ElementType ValueElementDataViewModelNode::getElementType() const
@@ -118,30 +116,106 @@ void ValueElementDataViewModelNode::OnContextMenu(wxWindow * pWindow, wxDataView
 {
 }
 
-AttributeValueElementDataViewModelNode::AttributeValueElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, const wxString &attributeName, AttributedElementDataViewModelNode *pParent)
-	:ValueElementDataViewModelNode(pDataViewModel, pElement, pParent),
-	m_attributeName(attributeName)
+void ValueElementDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
 {
-
+	getModel()->ValueChanged(wxDataViewItem(this), 0);
 }
 
-wxString AttributeValueElementDataViewModelNode::getLabel() const
+AttributeValueDataViewModelNode::AttributeValueDataViewModelNode(ExpertDataViewModel * pDataViewModel, Separatista::Element * pElement, AttributeDataViewModelNode * pParent)
+	:ElementDataViewModelNode(pDataViewModel, pElement, pParent)
+{
+}
+
+ElementDataViewModelNode::ElementType AttributeValueDataViewModelNode::getElementType() const
+{
+	return AttributeValue;
+}
+
+size_t AttributeValueDataViewModelNode::getChildren(wxDataViewItemArray & children) const
+{
+	return 0;
+}
+
+void AttributeValueDataViewModelNode::removeChild(ElementDataViewModelNode * pChild)
+{
+}
+
+wxString AttributeValueDataViewModelNode::getLabel() const
+{
+	AttributeDataViewModelNode *pParent = (AttributeDataViewModelNode*)getParent();
+
+	return getSepaElement()->getAttributeValue(pParent->getValue());
+}
+
+void AttributeValueDataViewModelNode::OnContextMenu(wxWindow * pWindow, wxDataViewEvent & evt)
+{
+}
+
+void AttributeValueDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
+{
+	getModel()->ValueChanged(wxDataViewItem(this), 0);
+}
+
+wxString AttributeValueDataViewModelNode::getValue() const
+{
+	return getLabel();
+}
+
+void AttributeValueDataViewModelNode::setValue(const wxString & value)
+{
+	AttributeDataViewModelNode *pParent = (AttributeDataViewModelNode*)getParent();
+	getSepaElement()->setAttributeValue(pParent->getValue(), value);
+}
+
+AttributeDataViewModelNode::AttributeDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, const wxString &attributeName, AttributedElementDataViewModelNode *pParent)
+	:ElementDataViewModelNode(pDataViewModel, pElement, pParent),
+	m_attributeName(attributeName)
+{
+	m_pValueNode = new AttributeValueDataViewModelNode(pDataViewModel, pElement, this);
+}
+
+AttributeDataViewModelNode::~AttributeDataViewModelNode()
+{
+	delete m_pValueNode;
+}
+
+ElementDataViewModelNode::ElementType AttributeDataViewModelNode::getElementType() const
+{
+	return AttributeName;
+}
+
+size_t AttributeDataViewModelNode::getChildren(wxDataViewItemArray & children) const
+{
+	size_t count = 1;
+	children.push_back(wxDataViewItem(m_pValueNode));
+	return count + m_pValueNode->getChildren(children);
+}
+
+void AttributeDataViewModelNode::removeChild(ElementDataViewModelNode * pChild)
+{
+}
+
+wxString AttributeDataViewModelNode::getLabel() const
 {
 	return m_attributeName;
 }
 
-wxString AttributeValueElementDataViewModelNode::getValue() const
+wxString AttributeDataViewModelNode::getValue() const
 {
-	return getSepaElement()->getAttributeValue(m_attributeName);
+	return getLabel();
 }
 
-void AttributeValueElementDataViewModelNode::setValue(const wxString &value)
+void AttributeDataViewModelNode::setValue(const wxString &value)
 {
-	getSepaElement()->setValue(value);
 }
 
-void AttributeValueElementDataViewModelNode::OnContextMenu(wxWindow * pWindow, wxDataViewEvent & evt)
+void AttributeDataViewModelNode::OnContextMenu(wxWindow * pWindow, wxDataViewEvent & evt)
 {
+}
+
+void AttributeDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
+{
+	m_pValueNode->elementValueChanged(pElement, pNewValue);
 }
 
 LeafElementDataViewModelNode::LeafElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, ElementDataViewModelNode *pParent)
@@ -188,15 +262,20 @@ void LeafElementDataViewModelNode::OnContextMenu(wxWindow * pWindow, wxDataViewE
 {
 }
 
+void LeafElementDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
+{
+	m_pValueNode->elementValueChanged(pElement, pNewValue);
+}
+
 AttributedElementDataViewModelNode::AttributedElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, const wxString &attributeName, ElementDataViewModelNode *pParent)
 	:LeafElementDataViewModelNode(pDataViewModel, pElement, pParent)
 {
-	m_pAttributeValue = new AttributeValueElementDataViewModelNode(pDataViewModel, pElement, attributeName, this);
+	m_pAttributeNode = new AttributeDataViewModelNode(pDataViewModel, pElement, attributeName, this);
 }
 
 AttributedElementDataViewModelNode::~AttributedElementDataViewModelNode()
 {
-	delete m_pAttributeValue;
+	delete m_pAttributeNode;
 }
 
 ElementDataViewModelNode::ElementType AttributedElementDataViewModelNode::getElementType() const
@@ -206,23 +285,20 @@ ElementDataViewModelNode::ElementType AttributedElementDataViewModelNode::getEle
 
 size_t AttributedElementDataViewModelNode::getChildren(wxDataViewItemArray &children) const
 {
-	size_t count = m_pAttributeValue->getChildren(children);
-	
+	size_t count = 1;
+	children.push_back(wxDataViewItem(m_pAttributeNode));
 	return count + LeafElementDataViewModelNode::getChildren(children);
-}
-
-wxString AttributedElementDataViewModelNode::getAttributeValue() const
-{
-	return m_pAttributeValue->getValue();
-}
-
-void AttributedElementDataViewModelNode::setAttributeValue(const wxString &value)
-{
-	m_pAttributeValue->setValue(value);
 }
 
 void AttributedElementDataViewModelNode::OnContextMenu(wxWindow * pWindow, wxDataViewEvent & evt)
 {
+}
+
+void AttributedElementDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
+{
+	// Notify both super and child
+	m_pAttributeNode->elementValueChanged(pElement, pNewValue);
+	LeafElementDataViewModelNode::elementValueChanged(pElement, pNewValue);
 }
 
 BranchElementDataViewModelNode::BranchElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pElement, ElementDataViewModelNode *pParent)
@@ -258,7 +334,7 @@ BranchElementDataViewModelNode::BranchElementDataViewModelNode(ExpertDataViewMod
 				addChild(new AttributedElementDataViewModelNode(
 					pDataViewModel,
 					it->second,
-					wxT("EUR"),
+					wxT("Ccy"),
 					this
 				));
 			}
@@ -292,9 +368,12 @@ void BranchElementDataViewModelNode::OnContextMenu(wxWindow * pWindow, wxDataVie
 	wxMenu menu;
 	wxMenu *pCreateMenu = new wxMenu();
 
-	// Create a menu to create all child elements, but those who already have reached their max
+	// Create a menu to remove this element, check for top level
 	menu.Append(ID_COMMAND_EXPERT_REMOVE, wxT("Remove"));
+	if (getParent() == NULL)
+		menu.Enable(ID_COMMAND_EXPERT_REMOVE, false);
 	
+	// Create a menu to create all child elements, but those who already have reached their max
 	Separatista::Element *pElement = getSepaElement();
 	const Separatista::ElementDescriptor *pDescriptor = pElement->getElementDescriptor();
 	
@@ -357,8 +436,12 @@ void BranchElementDataViewModelNode::OnCommandCreate(wxCommandEvent & evt)
 
 void BranchElementDataViewModelNode::OnCommandRemove(wxCommandEvent & evt)
 {
+	// Remove this element
+	if (!getParent())
+		return;
 
-
+	Separatista::Element *pParent = getParent()->getSepaElement();
+	pParent->destroyElement(getSepaElement());
 }
 
 void BranchElementDataViewModelNode::elementCreated(Separatista::Element * pParent, Separatista::Element *pChild)
@@ -373,7 +456,7 @@ void BranchElementDataViewModelNode::elementCreated(Separatista::Element * pPare
 	else if (pChild->getElementDescriptor()->m_pTypeParent != NULL)
 	{
 		// AttributedLeafElement
-		pNewNode = new AttributedElementDataViewModelNode(getModel(), pChild, wxT("EUR"), this);
+		pNewNode = new AttributedElementDataViewModelNode(getModel(), pChild, wxT("Ccy"), this);
 		addChild(pNewNode);
 	}
 	else
@@ -429,6 +512,7 @@ bool ExpertDataViewModel::IsContainer(const wxDataViewItem &item) const
 	switch (pNode->getElementType())
 	{
 	case ElementDataViewModelNode::ValueElement:
+	case ElementDataViewModelNode::AttributeValue:
 		return false;
 	default:
 		return true;
@@ -493,6 +577,18 @@ int ExpertDataViewModel::Compare(const wxDataViewItem & item1, const wxDataViewI
 	ElementDataViewModelNode *pNode1 = (ElementDataViewModelNode*)item1.GetID();
 	ElementDataViewModelNode *pNode2 = (ElementDataViewModelNode*)item2.GetID();
 
+	// Sort by type, attributes come first
+	if (pNode1->getElementType() == ElementDataViewModelNode::AttributeName)
+	{
+		if (pNode2->getElementType() == ElementDataViewModelNode::ValueElement)
+			return 1;
+	}
+	else if (pNode2->getElementType() == ElementDataViewModelNode::AttributeName)
+	{
+		if (pNode2->getElementType() == ElementDataViewModelNode::ValueElement)
+			return -1;
+	}
+
 	ElementDataViewModelNode *pParentNode = pNode1->getParent();
 	Separatista::Element *pParentElement = pParentNode->getSepaElement();
 	const Separatista::ElementDescriptor *pParentDescriptor = pParentElement->getElementDescriptor();
@@ -511,7 +607,9 @@ int ExpertDataViewModel::Compare(const wxDataViewItem & item1, const wxDataViewI
 		else if (tag2 == pParentDescriptor->m_pChildren[i].m_pTag)
 			return 1;
 	}
-	return 0;
+
+	// Sort alphabetically
+	return wxStrcmp_String(pNode1->getLabel(), pNode2->getLabel());
 }
 
 void ExpertDataViewModel::OnContextMenu(wxWindow *pWindow, wxDataViewEvent & evt)
