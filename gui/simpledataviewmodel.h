@@ -81,6 +81,12 @@ public:
 	void elementDeleted(Separatista::Element *pElement);
 	void elementValueChanged(Separatista::Element *pElement, const wchar_t *pNewValue);
 
+	const wxString getElementValue() const;
+	void setElementValue(const wxString &value);
+	void setElementValue(const wxDateTime &dt, bool bWithTime);
+
+	Separatista::Element* createDocumentPath() const;
+
 protected:
 	/// Builds the internal tree recursively
 	void buildModelTree(const SimpleViewData::Element *pElement, Separatista::Element *pSepaElement);

@@ -55,9 +55,22 @@ ElementDataViewModelNode* ElementDataViewModelNode::getParent() const
 	return m_pParent;
 }
 
+size_t ElementDataViewModelNode::getChildren(wxDataViewItemArray & children) const
+{
+	return 0;
+}
+
+void ElementDataViewModelNode::removeChild(ElementDataViewModelNode * pChild)
+{
+}
+
 wxString ElementDataViewModelNode::getLabel() const
 {
 	return getSepaElement()->getTag();
+}
+
+void ElementDataViewModelNode::setValue(const wxString & value)
+{
 }
 
 void ElementDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
@@ -88,23 +101,9 @@ ElementDataViewModelNode::ElementType ValueElementDataViewModelNode::getElementT
 	return ValueElement;
 }
 
-size_t ValueElementDataViewModelNode::getChildren(wxDataViewItemArray &children) const
-{
-	return 0;
-}
-
-void ValueElementDataViewModelNode::removeChild(ElementDataViewModelNode * pChild)
-{
-}
-
 wxString ValueElementDataViewModelNode::getLabel() const
 {
 	return getSepaElement()->getTextValue();
-}
-
-wxString ValueElementDataViewModelNode::getValue() const
-{
-	return getLabel();
 }
 
 void ValueElementDataViewModelNode::setValue(const wxString &value)
@@ -131,15 +130,6 @@ ElementDataViewModelNode::ElementType AttributeValueDataViewModelNode::getElemen
 	return AttributeValue;
 }
 
-size_t AttributeValueDataViewModelNode::getChildren(wxDataViewItemArray & children) const
-{
-	return 0;
-}
-
-void AttributeValueDataViewModelNode::removeChild(ElementDataViewModelNode * pChild)
-{
-}
-
 wxString AttributeValueDataViewModelNode::getLabel() const
 {
 	AttributeDataViewModelNode *pParent = (AttributeDataViewModelNode*)getParent();
@@ -154,11 +144,6 @@ void AttributeValueDataViewModelNode::OnContextMenu(wxWindow * pWindow, wxDataVi
 void AttributeValueDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
 {
 	getModel()->ValueChanged(wxDataViewItem(this), 0);
-}
-
-wxString AttributeValueDataViewModelNode::getValue() const
-{
-	return getLabel();
 }
 
 void AttributeValueDataViewModelNode::setValue(const wxString & value)
@@ -246,16 +231,6 @@ size_t LeafElementDataViewModelNode::getChildren(wxDataViewItemArray &children) 
 
 void LeafElementDataViewModelNode::removeChild(ElementDataViewModelNode * pChild)
 {
-}
-
-wxString LeafElementDataViewModelNode::getValue() const
-{
-	return m_pValueNode->getValue();
-}
-
-void LeafElementDataViewModelNode::setValue(const wxString value)
-{
-	m_pValueNode->setValue(value);
 }
 
 void LeafElementDataViewModelNode::OnContextMenu(wxWindow * pWindow, wxDataViewEvent & evt)

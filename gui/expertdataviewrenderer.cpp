@@ -87,6 +87,7 @@ bool ExpertDataViewRenderer::HasEditorCtrl() const
 	switch (m_pModelNode->getElementType())
 	{
 	case ElementDataViewModelNode::ValueElement:
+	case ElementDataViewModelNode::AttributeValue:
 		return true;
 	default:
 		return false;
@@ -96,6 +97,12 @@ bool ExpertDataViewRenderer::HasEditorCtrl() const
 wxWindow * ExpertDataViewRenderer::CreateEditorCtrl(wxWindow * parent, wxRect labelRect, const wxVariant & value)
 {
 	m_pEditingNode = (ElementDataViewModelNode*)value.GetVoidPtr();
+
+	if (m_pEditingNode->getElementType() != ElementDataViewModelNode::ValueElement &&
+		m_pEditingNode->getElementType() != ElementDataViewModelNode::AttributeValue)
+	{
+		return NULL;
+	}
 
 	return new wxTextCtrl(
 		parent,
@@ -107,17 +114,22 @@ wxWindow * ExpertDataViewRenderer::CreateEditorCtrl(wxWindow * parent, wxRect la
 
 bool ExpertDataViewRenderer::GetValueFromEditorCtrl(wxWindow * editor, wxVariant & value)
 {
-	wxString v = ((wxTextCtrl*)editor)->GetValue();
+	if (!m_pEditingNode)
+		return false;
 
+	wxString v = ((wxTextCtrl*)editor)->GetValue();
+	
 	try
 	{
-		m_pEditingNode->getSepaElement()->setValue(v);
+		m_pEditingNode->setValue(v);
 	}
 	catch (Separatista::InvalidValueException &ive)
 	{
 		wxLogError(ive.getMessage());
 		return false;
 	}
+
+	m_pEditingNode = NULL;
 	return true;
 }
 

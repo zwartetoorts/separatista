@@ -61,7 +61,7 @@ const wxString SimpleDataViewRenderer::getTextValue(SimpleDataViewModelNode *pNo
 		return wxEmptyString;
 
 	if ((pSepaElement = pNode->getSepaElement()) == NULL)
-		return wxEmptyString;
+		return getDefaultValue(pNode);
 	
 	// Read the text of the element or it's attribute value
 	if (pNode->getSimpleViewDataAttributeElement())
@@ -123,6 +123,7 @@ const wxString SimpleDataViewRenderer::getTextValue(SimpleDataViewModelNode *pNo
 			return value;
 		}
 	}
+	return wxEmptyString;
 }
 
 const SimpleViewData::Element* SimpleDataViewRenderer::getValueTypeElement(SimpleDataViewModelNode *pNode) const
@@ -141,7 +142,19 @@ const SimpleViewData::Element* SimpleDataViewRenderer::getValueTypeElement(Simpl
 const wxDateTime SimpleDataViewRenderer::getDateValue(SimpleDataViewModelNode *pNode) const
 {
 	if (!pNode->getSepaElement())
-		return wxInvalidDateTime;
+	{
+		const wxString value = getDefaultValue(pNode);
+		if (value == wxT("Now"))
+		{
+			return wxDateTime::Today();
+		}
+		else
+		{
+			wxDateTime dt;
+			dt.ParseDate(value);
+			return dt;
+		}
+	}
 
 	return wxDateTime(pNode->getSepaElement()->getDateValue());
 }
@@ -149,7 +162,19 @@ const wxDateTime SimpleDataViewRenderer::getDateValue(SimpleDataViewModelNode *p
 const wxDateTime SimpleDataViewRenderer::getDateTimeValue(SimpleDataViewModelNode *pNode) const
 {
 	if (!pNode->getSepaElement())
-		return wxInvalidDateTime;
+	{
+		const wxString value = getDefaultValue(pNode);
+		if (value == wxT("Now"))
+		{
+			return wxDateTime::Now();
+		}
+		else
+		{
+			wxDateTime dt;
+			dt.ParseDateTime(value);
+			return dt;
+		}
+	}
 
 	return wxDateTime(pNode->getSepaElement()->getDateValue());
 }
@@ -166,7 +191,7 @@ bool SimpleDataViewRenderer::SetValue(const wxVariant& value)
 wxSize SimpleDataViewRenderer::GetSize() const
 {
 	if (!m_pModelNode->getSepaElement())
-		return wxSize(0, 0);
+		return GetTextExtent(wxT("Empty"));
 
 	return GetTextExtent(getTextValue(m_pModelNode));
 }
@@ -174,7 +199,14 @@ wxSize SimpleDataViewRenderer::GetSize() const
 bool SimpleDataViewRenderer::Render(wxRect cell, wxDC* dc, int state)
 {
 	if (!m_pModelNode->getSepaElement())
-		return false;
+	{
+		dc->SetFont(dc->GetFont().Italic());
+		RenderText(wxT("Empty"), 0, cell, dc, state);
+	}
+	else
+	{
+		dc->SetFont(dc->GetFont().GetBaseFont());
+	}
 
 	RenderText(getTextValue(m_pModelNode), 0, cell, dc, state);
 	
@@ -331,13 +363,6 @@ bool SimpleDataViewRenderer::GetValueFromEditorCtrl(wxWindow * editor, wxVariant
 	if(!m_pEditingNode)
 		return false;
 
-	Separatista::Element *pSepaElement = m_pEditingNode->getSepaElement();
-	if (!pSepaElement)
-	{
-		m_pEditingNode = NULL;
-		return false;
-	}
-
 	const SimpleViewData::Element *pTypeElement = getValueTypeElement(m_pEditingNode);
 	if (pTypeElement)
 	{
@@ -356,7 +381,7 @@ bool SimpleDataViewRenderer::GetValueFromEditorCtrl(wxWindow * editor, wxVariant
 					dateTime.SetMinute(time.GetMinute());
 					dateTime.SetSecond(time.GetSecond());
 
-					pSepaElement->setValue(dateTime.GetTicks(), true);
+					m_pEditingNode->setElementValue(dateTime, true);
 
 					m_pEditingNode = NULL;
 					return true;
@@ -367,7 +392,7 @@ bool SimpleDataViewRenderer::GetValueFromEditorCtrl(wxWindow * editor, wxVariant
 				wxDatePickerCtrl *pDatePicker = (wxDatePickerCtrl*)editor;
 
 				wxDateTime dateTime = pDatePicker->GetValue();
-				pSepaElement->setValue(dateTime.GetTicks(), false);
+				m_pEditingNode->setElementValue(dateTime, false);
 
 				m_pEditingNode = NULL;
 				return true;
@@ -376,7 +401,7 @@ bool SimpleDataViewRenderer::GetValueFromEditorCtrl(wxWindow * editor, wxVariant
 			{
 				wxTextCtrl *pTextCtrl = (wxTextCtrl*)editor;
 
-				pSepaElement->setValue(pTextCtrl->GetValue());
+				m_pEditingNode->setElementValue(pTextCtrl->GetValue());
 				m_pEditingNode = NULL;
 				return true;
 			}
@@ -394,7 +419,7 @@ bool SimpleDataViewRenderer::GetValueFromEditorCtrl(wxWindow * editor, wxVariant
 					if (pChildElement &&
 						(pOptionValueElement = pChildElement->getChildByType(SimpleViewData::Element::OptionValue)) != NULL)
 					{
-						pSepaElement->setValue(pOptionValueElement->getValue());
+						m_pEditingNode->setElementValue(pOptionValueElement->getValue());
 						m_pEditingNode = NULL;
 						return true;
 					}
@@ -411,7 +436,7 @@ bool SimpleDataViewRenderer::GetValueFromEditorCtrl(wxWindow * editor, wxVariant
 				if (!iban.Check())
 					wxLogError(wxT("Invalid IBAN"));
 				else
-					pSepaElement->setValue(pTextCtrl->GetValue());
+					m_pEditingNode->setElementValue(pTextCtrl->GetValue());
 				m_pEditingNode = NULL;
 			}
 		}
@@ -422,5 +447,14 @@ bool SimpleDataViewRenderer::GetValueFromEditorCtrl(wxWindow * editor, wxVariant
 	}
 	m_pEditingNode = NULL;
 	return false;
+}
+
+const wxString SimpleDataViewRenderer::getDefaultValue(SimpleDataViewModelNode * pNode) const
+{
+	const SimpleViewData::Element *pDefaultElement = pNode->getSimpleViewDataElement()->getChildByType(SimpleViewData::Element::DefaultValue);
+	if (pDefaultElement)
+		return pDefaultElement->getValue();
+	else
+		return wxEmptyString;
 }
 

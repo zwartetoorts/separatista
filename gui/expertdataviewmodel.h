@@ -64,11 +64,13 @@ public:
 
 	virtual ElementType getElementType() const = NULL;
 
-	virtual size_t getChildren(wxDataViewItemArray &children) const = NULL;
+	virtual size_t getChildren(wxDataViewItemArray &children) const;
 
-	virtual void removeChild(ElementDataViewModelNode *pChild) = NULL;
+	virtual void removeChild(ElementDataViewModelNode *pChild);
 
 	virtual wxString getLabel() const;
+
+	virtual void setValue(const wxString &value);
 
 	void elementValueChanged(Separatista::Element *pElement, const wchar_t *pNewValue);
 	void elementCreated(Separatista::Element *pParent, Separatista::Element *pChild);
@@ -89,13 +91,7 @@ public:
 
 	ElementType getElementType() const;
 
-	size_t getChildren(wxDataViewItemArray &children) const;
-
-	void removeChild(ElementDataViewModelNode *pChild);
-
 	wxString getLabel() const;
-
-	wxString getValue() const;
 
 	void setValue(const wxString &value);
 
@@ -111,17 +107,11 @@ public:
 
 	ElementType getElementType() const;
 
-	size_t getChildren(wxDataViewItemArray &children) const;
-
-	void removeChild(ElementDataViewModelNode *pChild);
-
 	wxString getLabel() const;
 
 	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
 
 	void elementValueChanged(Separatista::Element *pElement, const wchar_t *pNewValue);
-
-	wxString getValue() const;
 
 	void setValue(const wxString &value);
 
@@ -167,10 +157,6 @@ public:
 	void removeChild(ElementDataViewModelNode *pChild);
 
 	ElementType getElementType() const;
-
-	wxString getValue() const;
-
-	void setValue(const wxString value);
 
 	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
 

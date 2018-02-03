@@ -41,11 +41,9 @@ SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, co
 SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, Separatista::Element *pSepaParentElement, SimpleDataViewModelNode *pParent)
 	:m_pDataViewModel(pModel), m_pElement(pElement), m_pSepaElement(pSepaElement), m_pSepaParentElement(pSepaParentElement), m_pParent(pParent), m_pAttribute(pAttributeElement)
 {
-	// Receive notifications for element creation, deletion and updates
+	// Receive notifications for element deletion and updates
 	if(m_pSepaElement)
 		m_pSepaElement->addElementListener(this);
-	if (m_pSepaParentElement)
-		m_pSepaParentElement->addElementListener(this);
 }
 
 SimpleDataViewModelNode::~SimpleDataViewModelNode()
@@ -119,6 +117,11 @@ void SimpleDataViewModelNode::elementCreated(Separatista::Element * pParent, Sep
 
 void SimpleDataViewModelNode::elementDeleted(Separatista::Element * pElement)
 {
+	if (pElement == getSepaElement())
+	{
+		m_pSepaElement = NULL;
+		m_pDataViewModel->ValueChanged(wxDataViewItem(this), 1);
+	}
 }
 
 void SimpleDataViewModelNode::elementValueChanged(Separatista::Element * pElement, const wchar_t * pNewValue)
@@ -128,6 +131,83 @@ void SimpleDataViewModelNode::elementValueChanged(Separatista::Element * pElemen
 		m_pDataViewModel->ValueChanged(wxDataViewItem(this), 1);
 	}
 }
+
+const wxString SimpleDataViewModelNode::getElementValue() const
+{
+	if (m_pSepaElement)
+		return m_pSepaElement->getTextValue();
+	else
+		return wxEmptyString;
+}
+
+void SimpleDataViewModelNode::setElementValue(const wxString & value)
+{
+	// Check for sepa element
+	if (!m_pSepaElement)
+	{
+		m_pSepaElement = createDocumentPath();
+		if (!m_pSepaElement)
+			return;
+	}
+
+	// Check for attribute
+	if (getSimpleViewDataAttributeElement())
+	{
+		m_pSepaElement->setAttributeValue(getSimpleViewDataAttributeElement()->getValue(), value);
+	}
+	else
+	{
+		m_pSepaElement->setValue(value);
+	}
+}
+
+void SimpleDataViewModelNode::setElementValue(const wxDateTime & dt, bool bWithTime)
+{
+	// Check for sepa element
+	if (!m_pSepaElement)
+	{
+		m_pSepaElement = createDocumentPath();
+		if (!m_pSepaElement)
+			return;
+	}
+
+	// Check for attribute
+	if (getSimpleViewDataAttributeElement())
+	{
+		if (bWithTime)
+			m_pSepaElement->setAttributeValue(getSimpleViewDataAttributeElement()->getValue(), dt.FormatISOCombined());
+		else
+			m_pSepaElement->setAttributeValue(getSimpleViewDataAttributeElement()->getValue(), dt.FormatISODate());
+	}
+	else
+	{
+		m_pSepaElement->setValue(dt.GetTicks(), bWithTime);
+	}
+
+}
+
+Separatista::Element * SimpleDataViewModelNode::createDocumentPath() const
+{
+	Separatista::Element *pSepaParentElement = NULL, *pSepaElement = m_pSepaElement;
+	if (pSepaElement)
+		return pSepaElement;
+	else
+	{
+		if (m_pParent)
+			pSepaParentElement = m_pParent->createDocumentPath();
+		if (!pSepaParentElement)
+			return NULL;
+	}
+
+	const SimpleViewData::Element *pElement;
+	for (pElement = getSimpleViewDataElement(); pElement = pElement->getChildByType(SimpleViewData::Element::DocumentPath); pElement != NULL)
+	{
+		pSepaElement = pSepaParentElement->createElementByTag(pElement->getValue());
+		pSepaParentElement = pSepaElement;
+	}
+	return pSepaElement;
+}
+
 
 void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSimpleElement, Separatista::Element *pSepaElement)
 {
@@ -220,7 +300,7 @@ wxDataViewItem SimpleDataViewModel::GetParent(const wxDataViewItem & item) const
 
 	pNode = pNode->getParent();
 	// Check for Root element
-	if (pNode->getParent() == NULL)
+	if (pNode == NULL || pNode->getParent() == NULL)
 		return wxDataViewItem(NULL);
 	return wxDataViewItem(pNode);
 }

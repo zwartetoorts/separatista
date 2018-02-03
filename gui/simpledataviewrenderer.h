@@ -50,6 +50,9 @@ public:
 	wxWindow* CreateEditorCtrl(wxWindow *parent, wxRect labelRect, const wxVariant &value);
 	bool GetValueFromEditorCtrl(wxWindow *editor, wxVariant &value);
 protected:
+	/// Returns  the default value of the element as text
+	const wxString getDefaultValue(SimpleDataViewModelNode *pNode) const;
+
 	/// Returns the value of the element or the value of the element attribute
 	const wxString getTextValue(SimpleDataViewModelNode *pNode) const;
 
