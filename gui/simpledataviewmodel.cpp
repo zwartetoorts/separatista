@@ -119,8 +119,24 @@ void SimpleDataViewModelNode::elementDeleted(Separatista::Element * pElement)
 {
 	if (pElement == getSepaElement())
 	{
-		m_pSepaElement = NULL;
-		m_pDataViewModel->ValueChanged(wxDataViewItem(this), 1);
+		// Check for root element type
+		const SimpleViewData::Element *pTypeElement = getSimpleViewDataElement()->getChildByType(SimpleViewData::Element::Type);
+		if (pTypeElement && pTypeElement->getValue() == wxT("Root"))
+		{
+			m_pParent->removeChild(this);
+			m_pDataViewModel->ItemDeleted(wxDataViewItem(m_pParent), wxDataViewItem(this));
+
+			// Remove listeners from Sepa Document
+			if (m_pSepaElement)
+				m_pSepaElement->removeElementListener(this);
+
+			delete this;
+		}
+		else
+		{
+			m_pSepaElement = NULL;
+			m_pDataViewModel->ValueChanged(wxDataViewItem(this), 1);
+		}
 	}
 }
 
@@ -166,7 +182,7 @@ void SimpleDataViewModelNode::setElementValue(const wxDateTime & dt, bool bWithT
 	// Check for sepa element
 	if (!m_pSepaElement)
 	{
-		m_pSepaElement = createDocumentPath();
+		createDocumentPath();
 		if (!m_pSepaElement)
 			return;
 	}
@@ -186,26 +202,33 @@ void SimpleDataViewModelNode::setElementValue(const wxDateTime & dt, bool bWithT
 
 }
 
-Separatista::Element * SimpleDataViewModelNode::createDocumentPath() const
+Separatista::Element * SimpleDataViewModelNode::createDocumentPath(size_t index)
 {
-	Separatista::Element *pSepaParentElement = NULL, *pSepaElement = m_pSepaElement;
-	if (pSepaElement)
-		return pSepaElement;
+	const SimpleViewData::Element *pDocPathElement;
+	
+	if (m_pSepaElement)
+		return m_pSepaElement;
+	// No Sepa Element present, check for DocumentPath element
+	if ((pDocPathElement = m_pElement->getChildByType(SimpleViewData::Element::DocumentPath)) == NULL)
+	{
+		// No Documentpath element present, try parent
+		return m_pParent->createDocumentPath();
+	}
 	else
 	{
-		if (m_pParent)
-			pSepaParentElement = m_pParent->createDocumentPath();
-		if (!pSepaParentElement)
-			return NULL;
+		// Create Parent DocumentPath
+		m_pSepaParentElement = m_pParent->createDocumentPath();
+		// Create this DocumentPath
+		for (; pDocPathElement != NULL; pDocPathElement = pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath),
+											m_pSepaParentElement = m_pSepaElement)
+		{
+			m_pSepaElement = m_pSepaParentElement->createElementByTag(pDocPathElement->getValue(), index);
+		}
 	}
 
-	const SimpleViewData::Element *pElement;
-	for (pElement = getSimpleViewDataElement(); pElement = pElement->getChildByType(SimpleViewData::Element::DocumentPath); pElement != NULL)
-	{
-		pSepaElement = pSepaParentElement->createElementByTag(pElement->getValue());
-		pSepaParentElement = pSepaElement;
-	}
-	return pSepaElement;
+	// Set listener
+	m_pSepaElement->addElementListener(this);
+	return m_pSepaElement;
 }
 
 
@@ -247,7 +270,7 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 					{
 						pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, pSimpleChildElement, pAttrElement, it->second, pSepaParentElement, this);
 						// Recurse if type == Root
-						if(pTypeChildElement->getValue() == wxT("Root"))
+						if(pTypeChildElement->getValue() == wxT("Root") || pTypeChildElement->getValue() == wxT("Documentroot"))
 							pNewNode->buildModelTree(pSimpleChildElement, it->second);
 						appendChild(pNewNode);
 					}

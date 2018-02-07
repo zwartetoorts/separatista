@@ -85,7 +85,7 @@ public:
 	void setElementValue(const wxString &value);
 	void setElementValue(const wxDateTime &dt, bool bWithTime);
 
-	Separatista::Element* createDocumentPath() const;
+	Separatista::Element* createDocumentPath(size_t index = 0);
 
 protected:
 	/// Builds the internal tree recursively

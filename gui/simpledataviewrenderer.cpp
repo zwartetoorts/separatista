@@ -191,7 +191,7 @@ bool SimpleDataViewRenderer::SetValue(const wxVariant& value)
 wxSize SimpleDataViewRenderer::GetSize() const
 {
 	if (!m_pModelNode->getSepaElement())
-		return GetTextExtent(wxT("Empty"));
+		return GetTextExtent(wxT("(Empty)"));
 
 	return GetTextExtent(getTextValue(m_pModelNode));
 }
@@ -201,7 +201,7 @@ bool SimpleDataViewRenderer::Render(wxRect cell, wxDC* dc, int state)
 	if (!m_pModelNode->getSepaElement())
 	{
 		dc->SetFont(dc->GetFont().Italic());
-		RenderText(wxT("Empty"), 0, cell, dc, state);
+		RenderText(wxT("(Empty)"), 0, cell, dc, state);
 	}
 	else
 	{

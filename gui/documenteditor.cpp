@@ -85,6 +85,7 @@ DocumentEditor::DocumentEditor(const wxFileName &FileName, bool bEnableAutomagic
 
 DocumentEditor::~DocumentEditor()
 {
+	// Order is important!
 	if (m_pDocument)
 		delete m_pDocument;
 	if (m_pSimpleViewData)
@@ -117,7 +118,7 @@ void DocumentEditor::loadSimpleViewData()
 		{
 			delete m_pSimpleViewData;
 			m_pSimpleViewData = NULL;
-			throw msg;
+			wxLogError(msg);
 		}
 	}
 }

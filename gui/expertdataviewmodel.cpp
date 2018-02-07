@@ -567,24 +567,37 @@ int ExpertDataViewModel::Compare(const wxDataViewItem & item1, const wxDataViewI
 	ElementDataViewModelNode *pParentNode = pNode1->getParent();
 	Separatista::Element *pParentElement = pParentNode->getSepaElement();
 	const Separatista::ElementDescriptor *pParentDescriptor = pParentElement->getElementDescriptor();
-	
+
 	// Walk over all child element descriptors and try to match tags
 	wxString tag1 = pNode1->getSepaElement()->getTag();
 	wxString tag2 = pNode2->getSepaElement()->getTag();
-	// Speedup
+	
+	// Do tags match?
 	if (tag1 == tag2)
-		return 0;
-
-	for (size_t i = 0; i < pParentDescriptor->m_nElementCount; i++)
 	{
-		if (tag1 == pParentDescriptor->m_pChildren[i].m_pTag)
-			return -1;
-		else if (tag2 == pParentDescriptor->m_pChildren[i].m_pTag)
-			return 1;
+		// Sort by index
+		Separatista::Element::TagKeyRange range = pParentElement->getAllByTagName(tag1);
+		for (auto it = range.m_begin; it != range.m_end; it++)
+		{
+			if (it->second == pNode1->getSepaElement())
+				return -1;
+			else if (it->second == pNode2->getSepaElement())
+				return 1;
+		}
 	}
-
-	// Sort alphabetically
-	return wxStrcmp_String(pNode1->getLabel(), pNode2->getLabel());
+	else
+	{
+		// Sort by tag order
+		for (size_t i = 0; i < pParentDescriptor->m_nElementCount; i++)
+		{
+			if (tag1 == pParentDescriptor->m_pChildren[i].m_pTag)
+				return -1;
+			else if (tag2 == pParentDescriptor->m_pChildren[i].m_pTag)
+				return 1;
+		}
+	}
+	
+	return 0;
 }
 
 void ExpertDataViewModel::OnContextMenu(wxWindow *pWindow, wxDataViewEvent & evt)
