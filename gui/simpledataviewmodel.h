@@ -81,11 +81,15 @@ public:
 	void elementDeleted(Separatista::Element *pElement);
 	void elementValueChanged(Separatista::Element *pElement, const wchar_t *pNewValue);
 
+	// Getter and setters
 	const wxString getElementValue() const;
 	void setElementValue(const wxString &value);
 	void setElementValue(const wxDateTime &dt, bool bWithTime);
 
 	Separatista::Element* createDocumentPath(size_t index = 0);
+
+	// Compare
+	int compareTo(const SimpleDataViewModelNode *pOtherNode) const;
 
 protected:
 	/// Builds the internal tree recursively
@@ -99,6 +103,10 @@ private:
 	Separatista::Element *m_pSepaParentElement;
 	SimpleDataViewModelNode *m_pParent;
 	std::vector<SimpleDataViewModelNode*> m_children;
+	size_t m_nIndex;
+
+	/// Global counter for sorting elements in order of creation
+	static size_t m_nElementCounter;
 };
 
 class SimpleDataViewModel : public wxDataViewModel
@@ -119,6 +127,10 @@ public:
 	void GetValue(wxVariant &variant, const wxDataViewItem &item, unsigned int col) const;
 
 	bool SetValue(const wxVariant &variant, const wxDataViewItem &item, unsigned int col);
+
+	bool HasDefaultCompare() const;
+
+	int Compare(const wxDataViewItem &item1, const wxDataViewItem &item2, unsigned int column, bool ascending) const;
 
 	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
 

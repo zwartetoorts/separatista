@@ -57,6 +57,8 @@ public:
 
 private:
 	void OnOpen(wxCommandEvent& event);
+	void OnSave(wxCommandEvent& event);
+	void OnSaveAs(wxCommandEvent& event);
 	void OnExit(wxCommandEvent& event);
 
 	void OnExpertViewContextMenu(wxDataViewEvent &evt);

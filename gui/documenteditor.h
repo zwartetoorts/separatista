@@ -74,6 +74,21 @@ public:
 	*/
 	Separatista::SeparatistaDocument* getDocument() const;
 
+	/**
+		Saves the separatista document.
+	*/
+	bool save();
+
+	/**
+		Saves the separatista document to path and changes the current document to path
+	*/
+	bool saveAs(const wxFileName &fileName);
+
+	/**
+		Returns the filename
+	*/
+	const wxFileName getFileName() const;
+
 protected:
 	/**
 		Loads the Simple View Data file based on the document's namespace.
@@ -86,6 +101,7 @@ private:
 	Separatista::SeparatistaDocument *m_pDocument;
 	bool m_bChanged;
 	SimpleViewData *m_pSimpleViewData;
+	wxFileName m_fileName;
 };
 
 #endif // !defined SEPARATISTA_GUI_DOCUMENTEDITOR_H

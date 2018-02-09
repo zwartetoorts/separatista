@@ -41,6 +41,8 @@
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(wxID_OPEN, MainFrame::OnOpen)
+	EVT_MENU(wxID_SAVE, MainFrame::OnSave)
+	EVT_MENU(wxID_SAVEAS, MainFrame::OnSaveAs)
 	EVT_DATAVIEW_ITEM_CONTEXT_MENU(ID_EXPERTVIEW_CTRL, OnExpertViewContextMenu)
 	EVT_DATAVIEW_ITEM_CONTEXT_MENU(ID_SIMPLEVIEW_CTRL, OnSimpleViewContextMenu)
 wxEND_EVENT_TABLE()
@@ -52,6 +54,10 @@ MainFrame::MainFrame()
 	wxMenu *menuFile = new wxMenu;
 	menuFile->Append(wxID_OPEN, wxT("&Open File\tCtrl-O"),
 		wxT("Open a SEPA document"));
+	menuFile->Append(wxID_SAVE, wxT("&Save File\tCtrl-S"),
+		wxT("Save the current document"));
+	menuFile->Append(wxID_SAVEAS, wxT("Save File as"),
+		wxT("Save the current document to a different location"));
 	menuFile->AppendSeparator();
 	menuFile->Append(wxID_EXIT);
 	wxMenu *menuHelp = new wxMenu;
@@ -176,6 +182,31 @@ void MainFrame::OnOpen(wxCommandEvent& event)
 				wxOK | wxCENTER,
 				this);
 		}
+	}
+}
+
+void MainFrame::OnSave(wxCommandEvent & event)
+{
+	if (!m_pDocumentEditor->save())
+		OnSaveAs(event);
+}
+
+void MainFrame::OnSaveAs(wxCommandEvent & event)
+{
+	wxFileDialog dlg(
+		this,
+		wxT("Save SEPA document to"),
+		m_pDocumentEditor->getFileName().GetPath(true),
+		m_pDocumentEditor->getFileName().GetName(),
+		wxFileSelectorDefaultWildcardStr,
+		wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+	if (dlg.ShowModal() == wxID_CANCEL)
+		return;
+
+	wxFileName fileName = wxFileName(dlg.GetPath());
+	if (!m_pDocumentEditor->saveAs(fileName))
+	{
+		wxLogError(wxT("Error saving document"));
 	}
 }
 

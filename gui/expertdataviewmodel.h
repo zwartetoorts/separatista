@@ -61,6 +61,7 @@ public:
 		AttributeValue
 	};
 
+	size_t getIndex() const;
 
 	virtual ElementType getElementType() const = NULL;
 
@@ -82,6 +83,8 @@ private:
 	ExpertDataViewModel *m_pDataViewModel;
 	ElementDataViewModelNode *m_pParent;
 	Separatista::Element *m_pSepaElement;
+	size_t m_nIndex;
+	static size_t m_nElementCounter;
 };
 
 class ValueElementDataViewModelNode : public ElementDataViewModelNode

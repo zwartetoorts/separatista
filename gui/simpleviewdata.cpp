@@ -292,3 +292,16 @@ const SimpleViewData::Element* SimpleViewData::Element::getChildByType(SimpleVie
 	}
 	return NULL;
 }
+
+int SimpleViewData::Element::compare(const SimpleViewData::Element * pChild1, const SimpleViewData::Element * pChild2) const
+{
+	// Iterate over children and return first found
+	for (auto it = m_elements.begin(); it != m_elements.end(); it++)
+	{
+		if (*it == pChild1)
+			return -1;
+		else if (*it == pChild2)
+			return 1;
+	}
+	return 0;
+}

@@ -107,7 +107,7 @@ Element* BranchElement::createElementByTag(const wchar_t *pTag, size_t nIndex)
 			}
 		}
 		// Bad, element wasn't found
-		SEPARATISTA_THROW_EXCEPTION(UnsupportedTagException, TEXT("Unsupported tag"), this, pTag);
+		SEPARATISTA_THROW_EXCEPTION(UnsupportedTagException, TEXT("Unsupported tag or index out of range"), this, pTag);
 	}
 	return pElement;
 }

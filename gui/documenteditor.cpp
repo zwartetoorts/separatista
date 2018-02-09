@@ -71,6 +71,7 @@ DocumentEditor::DocumentEditor(const wxFileName &FileName, bool bEnableAutomagic
 		m_pDocument = reader.getDocument();
 		if (m_pDocument)
 			loadSimpleViewData();
+		m_fileName = FileName;
 	}
 	else
 	{
@@ -141,5 +142,39 @@ const SimpleViewData* DocumentEditor::getSimpleViewData() const
 Separatista::SeparatistaDocument* DocumentEditor::getDocument() const
 {
 	return m_pDocument;
+}
+
+bool DocumentEditor::save()
+{
+	if (!m_fileName.IsOk())
+		return false;
+	return saveAs(m_fileName);
+}
+
+bool DocumentEditor::saveAs(const wxFileName & fileName)
+{
+	if (!m_pDocument)
+		return false;
+	try
+	{
+		if (m_pDocument->saveAs(fileName.GetFullPath()) == Separatista::IOErrorCode::Success)
+		{
+			m_bChanged = false;
+			m_fileName = fileName;
+		}
+		else
+			return false;
+	}
+	catch (const Separatista::ElementException &ee)
+	{
+		wxLogError(ee.getMessage());
+		return false;
+	}
+	return true;
+}
+
+const wxFileName DocumentEditor::getFileName() const
+{
+	return m_fileName;
 }
 

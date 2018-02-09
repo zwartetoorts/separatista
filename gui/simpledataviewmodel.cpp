@@ -28,12 +28,15 @@
 
 #include "simpledataviewmodel.h"
 
+size_t SimpleDataViewModelNode::m_nElementCounter = 0;
+
 SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, Separatista::SeparatistaDocument *pSepaDocument)
 	:m_pDataViewModel(pModel), m_pElement(pElement), m_pSepaElement(pSepaDocument)
 {
 	m_pParent = NULL;
 	m_pAttribute = NULL;
 	m_pSepaParentElement = NULL;
+	m_nIndex = m_nElementCounter++;
 
 	buildModelTree(pElement, pSepaDocument);
 }
@@ -41,6 +44,8 @@ SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, co
 SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, Separatista::Element *pSepaParentElement, SimpleDataViewModelNode *pParent)
 	:m_pDataViewModel(pModel), m_pElement(pElement), m_pSepaElement(pSepaElement), m_pSepaParentElement(pSepaParentElement), m_pParent(pParent), m_pAttribute(pAttributeElement)
 {
+	m_nIndex = m_nElementCounter++;
+
 	// Receive notifications for element deletion and updates
 	if(m_pSepaElement)
 		m_pSepaElement->addElementListener(this);
@@ -231,6 +236,28 @@ Separatista::Element * SimpleDataViewModelNode::createDocumentPath(size_t index)
 	return m_pSepaElement;
 }
 
+int SimpleDataViewModelNode::compareTo(const SimpleDataViewModelNode * pOtherNode) const
+{
+	// Do both elements have the same value?
+	if (m_pElement->getValue() == pOtherNode->getSimpleViewDataElement()->getValue())
+	{
+		if (m_nIndex < pOtherNode->m_nIndex)
+			return -1;
+		else
+			return 1;
+	}
+	else
+	{
+		// Sort by SimpleViewData order
+		SimpleDataViewModelNode *pParentNode = getParent();
+		if (!pParentNode)
+			return 0;
+
+		return pParentNode->getSimpleViewDataElement()->compare(m_pElement, pOtherNode->getSimpleViewDataElement());
+	}
+	return 0;
+}
+
 
 void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSimpleElement, Separatista::Element *pSepaElement)
 {
@@ -377,6 +404,20 @@ bool SimpleDataViewModel::SetValue(const wxVariant & variant, const wxDataViewIt
 {
 	m_pDocumentEditor->changed();
 	return false;
+}
+
+bool SimpleDataViewModel::HasDefaultCompare() const
+{
+	return true;
+}
+
+int SimpleDataViewModel::Compare(const wxDataViewItem & item1, const wxDataViewItem & item2, unsigned int column, bool ascending) const
+{
+	// Get the SimpleDataViewModelNodes
+	SimpleDataViewModelNode *pNode1 = (SimpleDataViewModelNode*)item1.GetID();
+	SimpleDataViewModelNode *pNode2 = (SimpleDataViewModelNode*)item2.GetID();
+
+	return pNode1->compareTo(pNode2);
 }
 
 void SimpleDataViewModel::OnContextMenu(wxWindow *pWindow, wxDataViewEvent & evt)

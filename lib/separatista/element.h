@@ -263,12 +263,6 @@ namespace Separatista
 		virtual ~Element();
 
 		/**
-			Get the parent element
-			@retrn The parent element or NULL if no parent was found in the ElementDescriptor
-		*/
-		Element* getParentElement() const;
-
-		/**
 			Method to make it possible for derived classes to delete Elements. 
 			Calls pChildElement->onElementDeleted()
 			@see Element::onElementDeleted

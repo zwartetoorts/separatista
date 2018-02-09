@@ -29,11 +29,14 @@
 #include "mainframe.h"
 #include "expertdataviewmodel.h"
 
+size_t ElementDataViewModelNode::m_nElementCounter = 0;
+
 ElementDataViewModelNode::ElementDataViewModelNode(ExpertDataViewModel *pDataViewModel, Separatista::Element *pSepaElement, ElementDataViewModelNode *pParent)
 	:m_pDataViewModel(pDataViewModel),
 	m_pSepaElement(pSepaElement),
 	m_pParent(pParent)
 {
+	m_nIndex = m_nElementCounter++;
 }
 
 ElementDataViewModelNode::~ElementDataViewModelNode()
@@ -53,6 +56,11 @@ Separatista::Element* ElementDataViewModelNode::getSepaElement() const
 ElementDataViewModelNode* ElementDataViewModelNode::getParent() const
 {
 	return m_pParent;
+}
+
+size_t ElementDataViewModelNode::getIndex() const
+{
+	return m_nIndex;
 }
 
 size_t ElementDataViewModelNode::getChildren(wxDataViewItemArray & children) const
@@ -575,15 +583,11 @@ int ExpertDataViewModel::Compare(const wxDataViewItem & item1, const wxDataViewI
 	// Do tags match?
 	if (tag1 == tag2)
 	{
-		// Sort by index
-		Separatista::Element::TagKeyRange range = pParentElement->getAllByTagName(tag1);
-		for (auto it = range.m_begin; it != range.m_end; it++)
-		{
-			if (it->second == pNode1->getSepaElement())
-				return -1;
-			else if (it->second == pNode2->getSepaElement())
-				return 1;
-		}
+		// Sort by index (creation order)
+		if (pNode1->getIndex() < pNode2->getIndex())
+			return -1;
+		else
+			return 1;
 	}
 	else
 	{

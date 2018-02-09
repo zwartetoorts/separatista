@@ -86,6 +86,8 @@ public:
 
 		const Element* getChildByType(ElementType t) const;
 
+		int compare(const SimpleViewData::Element *pChild1, const SimpleViewData::Element *pChild2) const;
+
 	private:
 		ElementType m_type;
 		std::vector<Element*> m_elements;
