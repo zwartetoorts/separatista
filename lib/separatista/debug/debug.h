@@ -192,6 +192,7 @@ inline void operator delete [](void *ptr)
 
 #define LOG(message) 
 #define DEBUG_METHOD
+#define DEBUG_STATIC_METHOD
 
 #endif // defined SEPARATISTA_DEBUG
 

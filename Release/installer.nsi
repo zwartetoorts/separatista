@@ -29,13 +29,19 @@ Section "ClieopControl"
   RegDll "$INSTDIR\SeparatistaControl.dll"
 SectionEnd
 
+Section "SeparatistaGUI"
+   SetOutPath "$INSTDIR"
+   File "SeparatistaGUI.exe"
+   File "..\win32\SeparatistaGUI\urn_iso_std_iso_20022_tech_xsd_pain.008.001.02.txt"
+SectionEnd
+
 Section "Cleanup"
   WriteUninstaller "uninstall.exe"
 SectionEnd
 
 Section "Shortcuts"
   CreateDirectory "$SMPROGRAMS\Separatista"
-#  CreateShortCut "$SMPROGRAMS\Separatista\Separatista Editor.lnk" "$INSTDIR\SeparatistaGUI.exe"
+  CreateShortCut "$SMPROGRAMS\Separatista\Separatista Editor.lnk" "$INSTDIR\SeparatistaGUI.exe"
   CreateShortCut "$SMPROGRAMS\Separatista\Website Separatista.lnk" "http://separatista.eu"
   CreateShortCut "$SMPROGRAMS\Separatista\Uninstall.lnk" "$INSTDIR\uninstall.exe"
 SectionEnd
@@ -43,6 +49,8 @@ SectionEnd
 Section "uninstall"
   UnRegDll "$INSTDIR\SeparatistaControl.dll"
   
+  Delete "$INSTDIR\SeparatistaGUI.exe"
+  Delete "$INSTDIR\urn_iso_std_iso_20022_tech_xsd_pain.008.001.02.txt"
   Delete "$INSTDIR\SeparatistaControl.dll"
   Delete "$INSTDIR\Separatista.dll"
   Delete "$INSTDIR\MT940S.dll"

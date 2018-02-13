@@ -50,6 +50,8 @@ wxEND_EVENT_TABLE()
 MainFrame::MainFrame()
 	: wxFrame(NULL, wxID_ANY, wxT("Separatista editor"))
 {
+	Maximize();
+
 	// Create menus
 	wxMenu *menuFile = new wxMenu;
 	menuFile->Append(wxID_OPEN, wxT("&Open File\tCtrl-O"),
@@ -69,6 +71,7 @@ MainFrame::MainFrame()
 
 	// Create splitter window
 	wxSplitterWindow *pSplitterWindow = new wxSplitterWindow(this);
+	wxSize clientSize = GetClientSize();
 
 	// Create views
 	m_pSimpleViewCtrl = new wxDataViewCtrl(
@@ -100,7 +103,7 @@ MainFrame::MainFrame()
 		new wxDataViewColumn(wxT("Document"), pExpertRenderer, 0, 200, wxALIGN_CENTER, wxDATAVIEW_COL_RESIZABLE);
 	m_pExpertViewCtrl->AppendColumn(pExpertColumn0);
 
-	pSplitterWindow->SplitVertically(m_pSimpleViewCtrl, m_pExpertViewCtrl, 0);
+	pSplitterWindow->SplitVertically(m_pSimpleViewCtrl, m_pExpertViewCtrl, clientSize.GetWidth() / 2);
 
 	// And statusbar
 	CreateStatusBar();
@@ -130,6 +133,13 @@ void MainFrame::OnOpen(wxCommandEvent& event)
 		{
 			return;
 		}
+	}
+
+	// Remove former document
+	if (m_pDocumentEditor)
+	{
+		delete m_pDocumentEditor;
+		m_pDocumentEditor = NULL;
 	}
 
 	// Load new document
