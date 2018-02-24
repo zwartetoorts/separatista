@@ -30,13 +30,12 @@
 
 #include <wx/dataview.h>
 
-#include "documenteditor.h"
-
 // Forward decl
 class LeafElementDataViewModelNode;
 class AttributedElementDataViewModelNode;
 class AttributeDataViewModelNode;
 class ExpertDataViewModel;
+class DocumentEditor;
 
 class ElementDataViewModelNode : public Separatista::ElementListener
 {

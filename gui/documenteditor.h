@@ -31,6 +31,8 @@
 #include <separatista/separatistadocument.h>
 
 #include "simpleviewdata.h"
+#include "simpledataviewmodel.h"
+#include "expertdataviewmodel.h"
 
 /**
 	This class is responsible for all modifications to the SeparatistaDocument.
@@ -89,6 +91,10 @@ public:
 	*/
 	const wxFileName getFileName() const;
 
+	SimpleDataViewModel * getSimpleDataViewModel() const;
+
+	ExpertDataViewModel * getExpertDataViewModel() const;
+
 protected:
 	/**
 		Loads the Simple View Data file based on the document's namespace.
@@ -98,6 +104,9 @@ protected:
 	void loadSimpleViewData();
 
 private:
+	wxObjectDataPtr<SimpleDataViewModel> m_simpleDataViewModel;
+	wxObjectDataPtr<ExpertDataViewModel> m_expertDataViewModel;
+
 	Separatista::SeparatistaDocument *m_pDocument;
 	bool m_bChanged;
 	SimpleViewData *m_pSimpleViewData;

@@ -31,6 +31,10 @@
 #include <wx/wfstream.h>
 #include <wx/scrolwin.h>
 
+#include <separatista/pain/pain.001.001.03.h>
+#include <separatista/pain/pain.008.001.02.h>
+#include <separatista/camt/camt.053.001.02.h>
+
 #include "app.h"
 #include "mainframe.h"
 #include "documenteditor.h"
@@ -40,6 +44,9 @@
 #include "expertdataviewrenderer.h"
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
+	EVT_MENU(ID_COMMAND_NEW_PAIN_001_001_03, OnNewPain_001_001_03)
+	EVT_MENU(ID_COMMAND_NEW_PAIN_008_001_02, OnNewPain_008_001_02)
+	EVT_MENU(ID_COMMAND_NEW_CAMT_053_001_02, OnNewCamt_053_001_02)
 	EVT_MENU(wxID_OPEN, MainFrame::OnOpen)
 	EVT_MENU(wxID_SAVE, MainFrame::OnSave)
 	EVT_MENU(wxID_SAVEAS, MainFrame::OnSaveAs)
@@ -54,6 +61,21 @@ MainFrame::MainFrame()
 
 	// Create menus
 	wxMenu *menuFile = new wxMenu;
+	
+	wxMenu *menuNew = new wxMenu;
+	
+	wxMenu *menuPain = new wxMenu;
+	menuPain->Append(ID_COMMAND_NEW_PAIN_001_001_03, Separatista::pain_001_001_03::Namespace);
+	menuPain->Append(ID_COMMAND_NEW_PAIN_008_001_02, Separatista::pain_008_001_02::Namespace);
+
+	wxMenu *menuCamt = new wxMenu;
+	menuCamt->Append(ID_COMMAND_NEW_CAMT_053_001_02, Separatista::camt_053_001_02::Namespace);
+
+	menuNew->AppendSubMenu(menuPain, wxT("Pain"));
+	menuNew->AppendSubMenu(menuCamt, wxT("Camt"));
+
+	menuFile->AppendSubMenu(menuNew, wxT("New"));
+
 	menuFile->Append(wxID_OPEN, wxT("&Open File\tCtrl-O"),
 		wxT("Open a SEPA document"));
 	menuFile->Append(wxID_SAVE, wxT("&Save File\tCtrl-S"),
@@ -103,6 +125,7 @@ MainFrame::MainFrame()
 		new wxDataViewColumn(wxT("Document"), pExpertRenderer, 0, 200, wxALIGN_CENTER, wxDATAVIEW_COL_RESIZABLE);
 	m_pExpertViewCtrl->AppendColumn(pExpertColumn0);
 
+	pSplitterWindow->SetMinimumPaneSize(50);
 	pSplitterWindow->SplitVertically(m_pSimpleViewCtrl, m_pExpertViewCtrl, clientSize.GetWidth() / 2);
 
 	// And statusbar
@@ -115,9 +138,89 @@ MainFrame::~MainFrame()
 		delete m_pDocumentEditor;
 }
 
+void MainFrame::updateTitle()
+{
+	wxString title = wxT("Separatista");
+	if (m_pDocumentEditor)
+	{
+		title += wxT(" - ") + m_pDocumentEditor->getFileName().GetFullPath();
+		if (m_pDocumentEditor->hasChanged())
+			title += wxT(" *");
+	}
+	SetTitle(title);
+}
+
+void MainFrame::OnNewPain_001_001_03(wxCommandEvent & event)
+{
+	OnNewDocument(Separatista::pain_001_001_03::Namespace);
+}
+
+void MainFrame::OnNewPain_008_001_02(wxCommandEvent & event)
+{
+	OnNewDocument(Separatista::pain_008_001_02::Namespace);
+}
+
+void MainFrame::OnNewCamt_053_001_02(wxCommandEvent & event)
+{
+	OnNewDocument(Separatista::camt_053_001_02::Namespace);
+}
+
 void MainFrame::OnExit(wxCommandEvent& event)
 {
 	Close(true);
+}
+
+void MainFrame::OnNewDocument(const wxString & nameSpace)
+{
+	if (m_pDocumentEditor && m_pDocumentEditor->hasChanged())
+	{
+		if (wxCANCEL == wxMessageBox(
+			wxT("You have unsaved changes to the document. Do you want to loose current changes? "),
+			wxT("Loose changes?"),
+			wxOK | wxCANCEL | wxCENTER,
+			this))
+		{
+			return;
+		}
+	}
+
+	// Remove former document
+	if (m_pDocumentEditor)
+	{
+		delete m_pDocumentEditor;
+		m_pDocumentEditor = NULL;
+	}
+
+	try
+	{
+		m_pDocumentEditor = new DocumentEditor(nameSpace, true);
+
+		if (m_pDocumentEditor->getSimpleViewData())
+		{
+			m_pSimpleViewCtrl->Enable(true);
+			m_pSimpleViewCtrl->AssociateModel(m_pDocumentEditor->getSimpleDataViewModel());
+		}
+		else
+			m_pSimpleViewCtrl->Enable(false);
+		m_pExpertViewCtrl->AssociateModel(m_pDocumentEditor->getExpertDataViewModel());
+	}
+	catch (const Separatista::UnsupportedNamespaceException &nse)
+	{
+		wxMessageBox(
+			wxT("Unsupported document type"),
+			wxT("Failed to load document"),
+			wxOK | wxCENTER,
+			this);
+	}
+	catch (const Separatista::ElementException &ee)
+	{
+		wxMessageBox(
+			wxT("Error reading document"),
+			wxT("Failed to load document"),
+			wxOK | wxCENTER,
+			this);
+	}
+	updateTitle();
 }
 
 void MainFrame::OnOpen(wxCommandEvent& event)
@@ -154,11 +257,17 @@ void MainFrame::OnOpen(wxCommandEvent& event)
 			{
 				m_pDocumentEditor = new DocumentEditor(fname, true);
 
-				m_simpleDataViewModel = new SimpleDataViewModel(m_pDocumentEditor);
-				m_pSimpleViewCtrl->AssociateModel(m_simpleDataViewModel.get());
+				// Assoc models
+				if (m_pDocumentEditor->getSimpleViewData() != NULL)
+				{
+					m_pSimpleViewCtrl->Enable(true);
+					m_pSimpleViewCtrl->AssociateModel(m_pDocumentEditor->getSimpleDataViewModel());
+				}
+				else
+					m_pSimpleViewCtrl->Enable(false);
+				m_pExpertViewCtrl->AssociateModel(m_pDocumentEditor->getExpertDataViewModel());
 
-				m_expertDataViewModel = new ExpertDataViewModel(m_pDocumentEditor);
-				m_pExpertViewCtrl->AssociateModel(m_expertDataViewModel.get());
+				updateTitle();
 			}
 			catch (const Separatista::UnsupportedNamespaceException &nse)
 			{
@@ -199,6 +308,7 @@ void MainFrame::OnSave(wxCommandEvent & event)
 {
 	if (!m_pDocumentEditor->save())
 		OnSaveAs(event);
+	updateTitle();
 }
 
 void MainFrame::OnSaveAs(wxCommandEvent & event)
@@ -218,6 +328,7 @@ void MainFrame::OnSaveAs(wxCommandEvent & event)
 	{
 		wxLogError(wxT("Error saving document"));
 	}
+	updateTitle();
 }
 
 void MainFrame::OnExpertViewContextMenu(wxDataViewEvent &evt)
@@ -225,6 +336,7 @@ void MainFrame::OnExpertViewContextMenu(wxDataViewEvent &evt)
 	ExpertDataViewModel *pModel = (ExpertDataViewModel*)m_pExpertViewCtrl->GetModel();
 	if (pModel)
 		pModel->OnContextMenu(m_pExpertViewCtrl, evt);
+	updateTitle();
 }
 
 void MainFrame::OnSimpleViewContextMenu(wxDataViewEvent &evt)
@@ -232,4 +344,5 @@ void MainFrame::OnSimpleViewContextMenu(wxDataViewEvent &evt)
 	SimpleDataViewModel *pModel = (SimpleDataViewModel*)m_pSimpleViewCtrl->GetModel();
 	if (pModel)
 		pModel->OnContextMenu(m_pSimpleViewCtrl, evt);
+	updateTitle();
 }

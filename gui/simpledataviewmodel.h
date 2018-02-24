@@ -30,12 +30,14 @@
 
 #include <wx/dataview.h>
 
+#include <separatista/separatistadocument.h>
 #include <separatista/element.h>
 
-#include "documenteditor.h"
+#include "simpleviewdata.h"
 
 // Forward decl
 class SimpleDataViewModel;
+class DocumentEditor;
 
 class SimpleDataViewModelNode : public Separatista::ElementListener
 {
@@ -57,6 +59,9 @@ public:
 	
 	/// Returns the Separatista Element pointed to by the SimpleViewElement DocumentPath element
 	Separatista::Element* getSepaElement() const;
+
+	/// Set the Separatista Element, also sets an elementlistener on this element branch
+	void setSepaElement(Separatista::Element *pSepaElement);
 
 	/// Returns the parent node
 	SimpleDataViewModelNode* getParent() const;
@@ -137,7 +142,6 @@ public:
 private:
 	DocumentEditor *m_pDocumentEditor;
 	SimpleDataViewModelNode m_rootNode;
-	bool m_bLocked;
 };
 
 #endif // !defined SEPARATISTA_GUI_SIMPLEDATAVIEWMODEL_H

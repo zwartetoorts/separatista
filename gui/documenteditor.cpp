@@ -52,6 +52,10 @@ DocumentEditor::DocumentEditor(const wxString &Namespace, bool bEnableAutomagic)
 	m_bChanged = true;
 	m_pSimpleViewData = NULL;
 	loadSimpleViewData();
+
+	// Load models
+	m_simpleDataViewModel = new SimpleDataViewModel(this);
+	m_expertDataViewModel = new ExpertDataViewModel(this);
 }
 
 DocumentEditor::DocumentEditor(const wxFileName &FileName, bool bEnableAutomagic)
@@ -72,6 +76,10 @@ DocumentEditor::DocumentEditor(const wxFileName &FileName, bool bEnableAutomagic
 		if (m_pDocument)
 			loadSimpleViewData();
 		m_fileName = FileName;
+
+		// Load models
+		m_simpleDataViewModel = new SimpleDataViewModel(this);
+		m_expertDataViewModel = new ExpertDataViewModel(this);
 	}
 	else
 	{
@@ -81,7 +89,6 @@ DocumentEditor::DocumentEditor(const wxFileName &FileName, bool bEnableAutomagic
 			errorList.Add(reader.getErrorMessage(c));
 		throw(errorList);
 	}
-	m_bChanged = true;
 }
 
 DocumentEditor::~DocumentEditor()
@@ -122,6 +129,8 @@ void DocumentEditor::loadSimpleViewData()
 			wxLogError(msg);
 		}
 	}
+	else
+		wxLogError(wxT("Simple view editor not available for this document type."));
 }
 
 bool DocumentEditor::hasChanged() const
@@ -176,5 +185,15 @@ bool DocumentEditor::saveAs(const wxFileName & fileName)
 const wxFileName DocumentEditor::getFileName() const
 {
 	return m_fileName;
+}
+
+SimpleDataViewModel * DocumentEditor::getSimpleDataViewModel() const
+{
+	return m_simpleDataViewModel.get();
+}
+
+ExpertDataViewModel * DocumentEditor::getExpertDataViewModel() const
+{
+	return m_expertDataViewModel.get();
 }
 

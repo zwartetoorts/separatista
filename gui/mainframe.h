@@ -40,6 +40,14 @@ enum
 	ID_TIMECTRL = 4,
 	ID_COMMAND_EXPERT_REMOVE = 5,
 	ID_COMMAND_EXPERT_CREATE = 6,  // Reserve room for child elements
+	
+	// New Document menu items
+	// PAIN
+	ID_COMMAND_NEW_PAIN_001_001_03 = 100,
+	ID_COMMAND_NEW_PAIN_008_001_02 = 101,
+	
+	// CAMT
+	ID_COMMAND_NEW_CAMT_053_001_02 = 200,
 
 };
 
@@ -55,7 +63,16 @@ public:
 
 	~MainFrame();
 
+	void updateTitle();
+
 private:
+	void OnNewPain_001_001_03(wxCommandEvent& event);
+	void OnNewPain_008_001_02(wxCommandEvent& event);
+
+	void OnNewCamt_053_001_02(wxCommandEvent& event);
+
+	void OnNewDocument(const wxString& nameSpace);
+
 	void OnOpen(wxCommandEvent& event);
 	void OnSave(wxCommandEvent& event);
 	void OnSaveAs(wxCommandEvent& event);
@@ -66,9 +83,7 @@ private:
 
 	wxDataViewCtrl *m_pSimpleViewCtrl;
 	wxDataViewCtrl *m_pExpertViewCtrl;
-	wxObjectDataPtr<SimpleDataViewModel> m_simpleDataViewModel;
-	wxObjectDataPtr<ExpertDataViewModel> m_expertDataViewModel;
-
+	
 	wxDECLARE_EVENT_TABLE();
 
 	DocumentEditor *m_pDocumentEditor;
