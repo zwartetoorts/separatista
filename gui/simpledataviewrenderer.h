@@ -36,7 +36,6 @@
 // Forward decl
 class SimpleDataViewModelNode;
 
-
 class SimpleDataViewRenderer : public wxDataViewCustomRenderer
 {
 public:

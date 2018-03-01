@@ -457,4 +457,3 @@ const wxString SimpleDataViewRenderer::getDefaultValue(SimpleDataViewModelNode *
 	else
 		return wxEmptyString;
 }
-

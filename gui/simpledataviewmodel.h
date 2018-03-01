@@ -96,6 +96,11 @@ public:
 	// Compare
 	int compareTo(const SimpleDataViewModelNode *pOtherNode) const;
 
+	// Menu events
+	void onCommandRemove(wxCommandEvent &evt);
+	void onCommandCreate(wxCommandEvent &evt);
+	void onCommandCreateDefaults(wxCommandEvent &evt);
+
 protected:
 	/// Builds the internal tree recursively
 	void buildModelTree(const SimpleViewData::Element *pElement, Separatista::Element *pSepaElement);
@@ -136,6 +141,8 @@ public:
 	bool HasDefaultCompare() const;
 
 	int Compare(const wxDataViewItem &item1, const wxDataViewItem &item2, unsigned int column, bool ascending) const;
+
+	bool GetAttr(const wxDataViewItem &item, unsigned int col, wxDataViewItemAttr &attr) const;
 
 	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
 

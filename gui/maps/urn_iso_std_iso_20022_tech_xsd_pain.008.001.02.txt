@@ -21,8 +21,8 @@ CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction in
 CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information/Amount Currency[Options:Euro=EUR]:InstdAmt@Ccy="EUR"
 CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information/Mandate Related Information/Mandate Id[Text]:DrctDbtTx/MndtRltdInf/MndtId
 CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information/Mandate Related Information/Date of signature[Date]:DrctDbtTx/MndtRltdInf/DtOfSgntr
-CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information/Debitor agent[Text]:DbtrAgt/FinInstId/BIC
+CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information/Debitor agent[Text]:DbtrAgt/FinInstnId/BIC
 CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information/Debitor Name[Text]:Dbtr/Nm
-CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information/Debitor Account[IBAN]:DbtrAcct/Id/Iban
+CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information/Debitor Account[IBAN]:DbtrAcct/Id/IBAN
 CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information/Remittance information[Root]:RmtInf
 CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information/Remittance information/Unstructured[Text]:Ustrd

@@ -103,7 +103,7 @@ MainFrame::MainFrame()
 		wxDefaultSize,
 		wxDV_SINGLE | wxDV_ROW_LINES);
 
-	wxDataViewTextRenderer *pTextRenderer = new wxDataViewTextRenderer(wxT("string"), wxDATAVIEW_CELL_INERT, wxALIGN_LEFT);
+	wxDataViewTextRenderer *pTextRenderer = new wxDataViewTextRenderer();
 	wxDataViewCustomRenderer *pSimpleRenderer = new SimpleDataViewRenderer();
 	
 	wxDataViewColumn *pColumn0 =

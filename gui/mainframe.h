@@ -38,6 +38,8 @@ enum
 	ID_EXPERTVIEW_CTRL = 2,
 	ID_DATECTRL = 3,
 	ID_TIMECTRL = 4,
+
+	// Expert Context Menu commands
 	ID_COMMAND_EXPERT_REMOVE = 5,
 	ID_COMMAND_EXPERT_CREATE = 6,  // Reserve room for child elements
 	
@@ -48,6 +50,12 @@ enum
 	
 	// CAMT
 	ID_COMMAND_NEW_CAMT_053_001_02 = 200,
+
+	// Simple Context Menu commands
+	ID_COMMAND_SIMPLE_REMOVE = 1000,
+	ID_COMMAND_SIMPLE_CREATE = 1001,
+	ID_COMMAND_SIMPLE_CREATE_DEFAULTS = 1002,
+
 
 };
 
