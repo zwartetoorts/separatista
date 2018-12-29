@@ -54,7 +54,8 @@ DocumentEditor::DocumentEditor(const wxString &Namespace, bool bEnableAutomagic)
 	loadSimpleViewData();
 
 	// Load models
-	m_simpleDataViewModel = new SimpleDataViewModel(this);
+	if (m_pSimpleViewData)
+		m_simpleDataViewModel = new SimpleDataViewModel(this);
 	m_expertDataViewModel = new ExpertDataViewModel(this);
 }
 

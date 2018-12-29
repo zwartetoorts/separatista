@@ -243,7 +243,9 @@ void SimpleDataViewModelNode::elementDeleted(Separatista::Element * pElement)
 		else
 		{
 			m_pSepaElement = NULL;
-			m_pDataViewModel->ValueChanged(wxDataViewItem(this), 1);
+			// DocumentRoot element has Root as type, wx doesn't like ValueChanged on the root element
+			if(getSimpleViewDataElement()->getType() != SimpleViewData::Element::Root)
+				m_pDataViewModel->ValueChanged(wxDataViewItem(this), 1);
 		}
 	}
 }
@@ -597,7 +599,7 @@ void SimpleDataViewModel::OnContextMenu(wxWindow *pWindow, wxDataViewEvent & evt
 			if (pNode->getSimpleViewDataElement()->getChildByType(SimpleViewData::Element::DocumentPath) &&
 				!pNode->getSepaElement())
 			{
-				menu.Enable(ID_COMMAND_SIMPLE_REMOVE, false);
+				menu.Enable(ID_COMMAND_SIMPLE_REMOVE, true);
 			}
 			else
 			{

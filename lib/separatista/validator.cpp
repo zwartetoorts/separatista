@@ -35,6 +35,34 @@
 
 using namespace Separatista;
 
+template<class T>
+inline void Validator::validate(const wchar_t * pSchemaSymbols, const wchar_t * pValue, const wchar_t * pArg, Element *pElement)
+{
+	xercesc::RefHashTableOf<xercesc::KVStringPair>* pFacets = new xercesc::RefHashTableOf<xercesc::KVStringPair>(1, true);
+	pFacets->put(
+		(void*)pSchemaSymbols,
+		new xercesc::KVStringPair(
+			pSchemaSymbols,
+			pArg));
+
+	T *pValidator = new T(NULL, pFacets, NULL, 0);
+	if (pValidator)
+	{
+		try
+		{
+			pValidator->validate(pValue);
+		}
+		catch (const xercesc::InvalidDatatypeValueException &e)
+		{
+			delete pValidator;
+			//delete pFacets;
+			SEPARATISTA_THROW_EXCEPTION(InvalidValueException, e.getMessage(), pElement, pValue);
+		}
+	}
+	delete pValidator;
+	//delete pFacets;
+}
+
 void Separatista::Validator::validateDecimal(const wchar_t * pValue, Element * pElement)
 {
 	DEBUG_STATIC_METHOD;

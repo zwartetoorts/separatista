@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E920F8CF-7A3E-43D9-9C4C-6C2114244D80}</ProjectGuid>
     <RootNamespace>SeparatistaGUI</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,11 +76,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../wxwidgets-3.1.0/include;../../../wxwidgets-3.1.0/lib/vc_lib/mswud;..\..\lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../wxwidgets-3.1.2/include;../../../wxwidgets-3.1.2/lib/vc_lib/mswud;..\..\lib</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SEPARATISTA_USINGDLL;SEPARATISTADEBUG_USINGDLL;SEPARATISTA_DEBUG;SEPARATISTA_DEBUG_NEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>../../../wxwidgets-3.1.0/lib/vc_lib/;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../../wxwidgets-3.1.2/lib/vc_lib/;$(OutDir)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>comctl32.lib	;Rpcrt4.lib;wxbase31ud.lib;wxzlibd.lib;wxpngd.lib;wxmsw31ud_core.lib;wxmsw31ud_adv.lib;separatista.lib;separatistaiban.lib;separatistadebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
