@@ -35,6 +35,7 @@
 #include "simpledataviewrenderer.h"
 #include "simpledataviewmodel.h"
 #include "ibantextctrl.h"
+#include "currencytextctrl.h"
 #include "mainframe.h"
 
 SimpleDataViewRenderer::SimpleDataViewRenderer()
@@ -70,7 +71,14 @@ const wxString SimpleDataViewRenderer::getTextValue(SimpleDataViewModelNode *pNo
 	}
 	else
 	{
-		value = pSepaElement->getTextValue();
+		try
+		{
+			value = pSepaElement->getTextValue();
+		}
+		catch (Separatista::ElementException &e)
+		{
+			wxLogError(wxString(wxT("There's probably an error in your map file: ")) + e.getMessage());
+		}
 	}
 
 	pTypeElement = getValueTypeElement(pNode);
@@ -205,7 +213,7 @@ bool SimpleDataViewRenderer::Render(wxRect cell, wxDC* dc, int state)
 	}
 	else
 	{
-		dc->SetFont(dc->GetFont().GetBaseFont());
+		//dc->SetFont(dc->GetFont().GetBaseFont());
 	}
 
 	RenderText(getTextValue(m_pModelNode), 0, cell, dc, state);
@@ -353,6 +361,15 @@ wxWindow * SimpleDataViewRenderer::CreateEditorCtrl(wxWindow * parent, wxRect la
 			pTextCtrl->SetMaxLength(11);
 			return pTextCtrl;
 		}
+		else if (pTypeElement->getValue() == wxT("Currency"))
+		{
+			return new CurrencyTextCtrl(
+				parent,
+				wxID_ANY,
+				getTextValue(m_pEditingNode),
+				labelRect.GetTopLeft(),
+				labelRect.GetSize());
+		}
 	}
 
 	return NULL;
@@ -438,6 +455,15 @@ bool SimpleDataViewRenderer::GetValueFromEditorCtrl(wxWindow * editor, wxVariant
 				else
 					m_pEditingNode->setElementValue(pTextCtrl->GetValue());
 				m_pEditingNode = NULL;
+				return true;
+			}
+			else if (pTypeElement->getValue() == wxT("Currency"))
+			{
+				CurrencyTextCtrl *pTextCtrl = (CurrencyTextCtrl*)editor;
+
+				m_pEditingNode->setElementValue(pTextCtrl->GetValue());
+				m_pEditingNode = NULL;
+				return true;
 			}
 		}
 		catch (const Separatista::InvalidValueException &ive)

@@ -42,6 +42,9 @@
     <ClCompile Include="..\..\gui\expertdataviewrenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\gui\currencytextctrl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\gui\app.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\gui\expertdataviewrenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\currencytextctrl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

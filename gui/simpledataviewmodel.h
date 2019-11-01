@@ -91,6 +91,10 @@ public:
 	void setElementValue(const wxString &value);
 	void setElementValue(const wxDateTime &dt, bool bWithTime);
 
+	/// Get the default value from the SimpleViewData::Element
+	wxString getDefaultValue() const;
+
+
 	Separatista::Element* createDocumentPath(size_t index = 0);
 
 	// Compare
@@ -100,10 +104,16 @@ public:
 	void onCommandRemove(wxCommandEvent &evt);
 	void onCommandCreate(wxCommandEvent &evt);
 	void onCommandCreateDefaults(wxCommandEvent &evt);
+	void onCommandSetDefaultvalue(wxCommandEvent &evt);
 
 protected:
 	/// Builds the internal tree recursively
 	void buildModelTree(const SimpleViewData::Element *pElement, Separatista::Element *pSepaElement);
+
+	/// Translates the default value into a literal string
+	wxString translateDefaultValue(const wxString &value) const;
+
+	
 
 private:
 	SimpleDataViewModel *m_pDataViewModel;

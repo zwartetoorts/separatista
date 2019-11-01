@@ -293,6 +293,7 @@ const SimpleViewData::Element* SimpleViewData::Element::getChildByType(SimpleVie
 	return NULL;
 }
 
+
 int SimpleViewData::Element::compare(const SimpleViewData::Element * pChild1, const SimpleViewData::Element * pChild2) const
 {
 	// Iterate over children and return first found
@@ -305,3 +306,4 @@ int SimpleViewData::Element::compare(const SimpleViewData::Element * pChild1, co
 	}
 	return 0;
 }
+

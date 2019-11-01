@@ -40,8 +40,8 @@ SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, co
 	m_pSepaParentElement = NULL;
 	m_nIndex = m_nElementCounter++;
 
-	if (m_pSepaElement)
-		m_pSepaElement->addElementListener(this);
+	//if (m_pSepaElement)
+	//	m_pSepaElement->addElementListener(this);
 
 	if(pElement && pSepaDocument)
 		buildModelTree(pElement, pSepaDocument);
@@ -55,28 +55,12 @@ SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, co
 	// Receive notifications for element deletion and updates
 	if(m_pSepaElement)
 		m_pSepaElement->addElementListener(this);
+	if(m_pSepaParentElement)
+		m_pSepaParentElement->addElementListener(this);
 }
 
 SimpleDataViewModelNode::~SimpleDataViewModelNode()
 {
-	// Remove self from Sepa branch as listener
-	//if (m_pSepaElement)
-	//{
-	//	// Find all sepa elements by documentpath
-	//	Separatista::Element *pSepaElement = m_pSepaElement;
-	//	const SimpleViewData::Element *pDocPathElement = m_pElement;
-	//	while ((pDocPathElement = pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath)) != NULL)
-	//	{
-	//		pSepaElement = pSepaElement->getElementByTag(pDocPathElement->getValue());
-	//		if (!pSepaElement)
-	//			break;
-
-	//		// Remove if not the last element which doesn't have an elementlistener set
-	//		if (pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath))
-	//			pSepaElement->removeElementListener(this);
-	//	}
-	//}
-
 	for (auto it = m_children.begin(); it != m_children.end(); it++)
 		delete *it;
 }
@@ -149,100 +133,41 @@ void SimpleDataViewModelNode::removeChild(SimpleDataViewModelNode * pChild)
 
 void SimpleDataViewModelNode::elementCreated(Separatista::Element * pParent, Separatista::Element * pElement)
 {
-	// Find the parent element and check the child if it's to our interest
-	Separatista::Element *pSepaParentElement = m_pSepaElement;
-	const SimpleViewData::Element *pDocPathElement = m_pElement;
 	
-	while (pDocPathElement->getType() == SimpleViewData::Element::Root || 
-		(pDocPathElement = pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath)) != NULL)
-	{
-		// Find parent element
-		if (pSepaParentElement == pParent)
-		{
-			// Found, pParent is in MY document path
-			// Is it the last in the document path branch?
-			if (pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath))
-			{
-				// No, not the last
-				// Set element listener on new element if the tags match
-				if (wxStrcmp(pElement->getTag(), pDocPathElement->getValue()) == 0)
-					pElement->addElementListener(this);
-				break;
-			}
-			else
-			{
-				// Yes, it's the last in the path
-				// Find child element with this element
-				for (auto it = m_children.begin(); it != m_children.end(); it++)
-				{
-					const SimpleViewData::Element *pChildElement = (*it)->getSimpleViewDataElement();
-					const SimpleViewData::Element *pTypeElement = pChildElement->getChildByType(SimpleViewData::Element::Type);
-					const SimpleViewData::Element *pChildDocPathElement = pChildElement->getChildByType(SimpleViewData::Element::DocumentPath);
-					if (pChildDocPathElement &&
-						wxStrcmp(pChildDocPathElement->getValue(), pElement->getTag()) == 0)
-					{
-						// Match, find the empty slot
-						if ((*it)->getSepaElement() == NULL)
-						{
-							(*it)->setSepaElement(pElement);
-							(*it)->buildModelTree(pChildElement, pElement);
-
-							// Add new empty element if type == root and not max elements
-							if (pTypeElement->getValue() == wxT("Root"))
-							{
-								// Get element max and count
-								size_t max = pElement->getMaxOccurs();
-								Separatista::Element::TagKeyRange range = pSepaParentElement->getAllByTagName(pElement->getTag());
-								for (auto it = range.m_begin; max > 0 && it != range.m_end; it++)
-								{
-									--max;
-								}
-
-								if (max >= 0)
-								{
-									SimpleDataViewModelNode *pEmptyNode = new SimpleDataViewModelNode(
-										m_pDataViewModel,
-										(*it)->getSimpleViewDataElement(),
-										(*it)->getSimpleViewDataAttributeElement(),
-										NULL,
-										pSepaParentElement,
-										this);
-									m_children.push_back(pEmptyNode);
-									m_pDataViewModel->ItemAdded(wxDataViewItem(this), wxDataViewItem(pEmptyNode));
-								}
-							}
-							break;
-						}
-					}
-				}
-				break;
-			}
-		}
-		else
-		{
-			// Not found, try next
-			if ((pSepaParentElement = pSepaParentElement->getElementByTag(pDocPathElement->getValue())) == NULL)
-				break;
-		}
-	}
 }
 
 void SimpleDataViewModelNode::elementDeleted(Separatista::Element * pElement)
 {
+	
 	if (pElement == getSepaElement())
 	{
 		// Check for root element type
 		const SimpleViewData::Element *pTypeElement = getSimpleViewDataElement()->getChildByType(SimpleViewData::Element::Type);
-		if (pTypeElement && pTypeElement->getValue() == wxT("Root"))
+		if (!pTypeElement)
+			return;
+		if (pTypeElement->getValue() == wxT("Root") || pTypeElement->getValue() == wxT("Documentroot"))
 		{
-			m_pParent->removeChild(this);
-			m_pDataViewModel->ItemDeleted(wxDataViewItem(m_pParent), wxDataViewItem(this));
+			// Remove all children, but keep this element
+			for (auto it = m_children.begin(); it != m_children.end(); it++)
+			{
+				m_pDataViewModel->ItemDeleted(wxDataViewItem(this), wxDataViewItem(*it));
+			}
+			m_children.clear();
 
-			delete this;
+			m_pSepaElement = NULL;
+			
+			// In case of "Root" element, also remove the element itself
+			if (pTypeElement->getValue() == wxT("Root"))
+			{
+				m_pParent->removeChild(this);
+				m_pDataViewModel->ItemDeleted(wxDataViewItem(m_pParent), wxDataViewItem(this));
+				delete this;
+			}
 		}
 		else
 		{
 			m_pSepaElement = NULL;
+
 			// DocumentRoot element has Root as type, wx doesn't like ValueChanged on the root element
 			if(getSimpleViewDataElement()->getType() != SimpleViewData::Element::Root)
 				m_pDataViewModel->ValueChanged(wxDataViewItem(this), 1);
@@ -310,6 +235,26 @@ void SimpleDataViewModelNode::setElementValue(const wxDateTime & dt, bool bWithT
 		m_pSepaElement->setValue(dt.GetTicks(), bWithTime);
 	}
 
+}
+
+wxString SimpleDataViewModelNode::getDefaultValue() const
+{
+	wxString defaultValue;
+
+	// Find the last DocumentPathElement
+	const SimpleViewData::Element *pDocElement = m_pElement;
+	const SimpleViewData::Element *pElement;
+	while ((pElement = pDocElement->getChildByType(SimpleViewData::Element::DocumentPath)) != NULL ||
+		(pElement = pDocElement->getChildByType(SimpleViewData::Element::DocumentPathAttribute)) != NULL)
+	{
+		pDocElement = pElement;
+	}
+
+	const SimpleViewData::Element *pValueElement = pDocElement->getChildByType(SimpleViewData::Element::DefaultValue);
+	if(pValueElement)
+		defaultValue = translateDefaultValue(pValueElement->getValue());
+
+	return defaultValue;
 }
 
 Separatista::Element * SimpleDataViewModelNode::createDocumentPath(size_t index)
@@ -387,6 +332,21 @@ void SimpleDataViewModelNode::onCommandCreate(wxCommandEvent & evt)
 
 void SimpleDataViewModelNode::onCommandCreateDefaults(wxCommandEvent & evt)
 {
+	// Create nodes
+	onCommandCreate(evt);
+
+	// Set default values if any
+	for (auto it = m_children.begin(); it != m_children.end(); it++)
+	{
+		wxString defaultValue = (*it)->getDefaultValue();
+		if (defaultValue.Len() > 0)
+			(*it)->setElementValue(defaultValue);
+	}
+}
+
+void SimpleDataViewModelNode::onCommandSetDefaultvalue(wxCommandEvent & evt)
+{
+	this->setElementValue(getDefaultValue());
 }
 
 void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSimpleElement, Separatista::Element *pSepaElement)
@@ -395,7 +355,7 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 	SimpleDataViewModelNode *pNewNode;
 	Separatista::Element *pSepaChildElement, *pSepaParentElement = NULL;
 
-	// Enum all children
+	// Enum all simple element children
 	for (size_t i = 0; i < pSimpleElement->getChildCount(); i++)
 	{
 		pSimpleChildElement = pSimpleElement->getChild(i);
@@ -419,7 +379,11 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 						break;
 					// Set elementlisteners on all elements in the branch, but not on the last
 					if (pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath))
+					{
+						// Prevent the elementlistener to be added multiple times
+						pSepaChildElement->removeElementListener(this);
 						pSepaChildElement->addElementListener(this);
+					}
 				}
 
 				// Get all sepa parent child nodes by tag
@@ -449,9 +413,34 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 				// Recurse 
 				pNewNode->buildModelTree(pSimpleChildElement, pSepaElement);
 				appendChild(pNewNode);
+				m_pDataViewModel->ItemAdded(wxDataViewItem(this), wxDataViewItem(pNewNode));
 			}
 		}
 	}
+}
+
+wxString SimpleDataViewModelNode::translateDefaultValue(const wxString &value) const
+{
+	wxString defaultValue;
+
+	
+	size_t len = value.Len();
+
+	if(value[0] == wxT('"') && value[len - 1] == wxT('"'))
+	{
+		defaultValue = value.Mid(1, len - 2);
+	}
+	else
+	{
+		// It's a function
+		if (value == wxT("Now"))
+		{
+			wxDateTime dt = wxDateTime::Now();
+			defaultValue = dt.FormatISOCombined();
+		}
+	}
+
+	return defaultValue;
 }
 
 SimpleDataViewModel::SimpleDataViewModel(DocumentEditor *pDocumentEditor)
@@ -566,13 +555,20 @@ bool SimpleDataViewModel::GetAttr(const wxDataViewItem & item, unsigned int col,
 {
 	SimpleDataViewModelNode *pNode = (SimpleDataViewModelNode*)item.GetID();
 
-	if (pNode->getSimpleViewDataElement()->getChildByType(SimpleViewData::Element::DocumentPath) &&
-		!pNode->getSepaElement())
+	if (!pNode->getSimpleViewDataElement()->getChildByType(SimpleViewData::Element::DocumentPath))
+	{
+		// Has no DocumentPath, let children do the formatting
+		for (size_t i = 0; i < pNode->getChildCount(); i++)
+		{
+			GetAttr(wxDataViewItem(pNode->getChild(i)), col, attr);
+		}
+	}
+	else if (!pNode->getSepaElement())
 	{
 		attr.SetItalic(true);
 		attr.SetColour(*wxRED);
 	}
-
+	
 	return true;
 }
 
@@ -583,56 +579,82 @@ void SimpleDataViewModel::OnContextMenu(wxWindow *pWindow, wxDataViewEvent & evt
 	if (item.IsOk())
 	{
 		SimpleDataViewModelNode *pNode = (SimpleDataViewModelNode*)item.GetID();
-		
-		// Check for empty final node
-		if (pNode->getSimpleViewDataElement()->getChildByType(SimpleViewData::Element::DocumentPath) &&
-			!pNode->getSepaElement())
+
+		// Create context menu
+		wxMenu menu;
+
+		menu.Append(ID_COMMAND_SIMPLE_CREATE, wxT("Create"));
+		menu.Append(ID_COMMAND_SIMPLE_CREATE_DEFAULTS, wxT("Create with default values"));
+		menu.Append(ID_COMMAND_SIMPLE_REMOVE, wxT("Remove"));
+		menu.Append(ID_COMMAND_SIMPLE_SET_DEFAULTVALUE, wxT("Set default value"));
+
+		// Disable menu options
+		const SimpleViewData::Element *pTypeElement = pNode->getSimpleViewDataElement()->getChildByType(SimpleViewData::Element::Type);
+		if (!pTypeElement)
+			return;
+
+		if (pTypeElement->getValue() == wxT("Documentroot") || pTypeElement->getValue() == wxT("Root"))
 		{
-			// Create context menu
-			wxMenu menu;
-
-			menu.Append(ID_COMMAND_SIMPLE_REMOVE, wxT("Remove"));
-			menu.Append(ID_COMMAND_SIMPLE_CREATE, wxT("Create"));
-			menu.Append(ID_COMMAND_SIMPLE_CREATE_DEFAULTS, wxT("Create with default values"));
-
-			// Disable menu options
-			if (pNode->getSimpleViewDataElement()->getChildByType(SimpleViewData::Element::DocumentPath) &&
-				!pNode->getSepaElement())
+			// Check if the element already exists
+			if (pNode->getSepaElement())
 			{
-				menu.Enable(ID_COMMAND_SIMPLE_REMOVE, true);
-			}
-			else
-			{
+				// Exists
 				menu.Enable(ID_COMMAND_SIMPLE_CREATE, false);
 				menu.Enable(ID_COMMAND_SIMPLE_CREATE_DEFAULTS, false);
 			}
-
-			pWindow->Bind(
-				wxEVT_COMMAND_MENU_SELECTED,
-				[pNode](wxCommandEvent &evt)
+			else
 			{
-				pNode->onCommandRemove(evt);
-			},
-				ID_COMMAND_SIMPLE_REMOVE);
-
-			pWindow->Bind(
-				wxEVT_COMMAND_MENU_SELECTED,
-				[pNode](wxCommandEvent &evt)
-			{
-				pNode->onCommandCreate(evt);
-			},
-				ID_COMMAND_SIMPLE_CREATE);
-
-			pWindow->Bind(
-				wxEVT_COMMAND_MENU_SELECTED,
-				[pNode](wxCommandEvent &evt)
-			{
-				pNode->onCommandCreateDefaults(evt);
-			},
-				ID_COMMAND_SIMPLE_CREATE_DEFAULTS);
-			
-			pWindow->PopupMenu(&menu);
+				// Doesn't exist
+				menu.Enable(ID_COMMAND_SIMPLE_REMOVE, false);
+			}
+			menu.Enable(ID_COMMAND_SIMPLE_SET_DEFAULTVALUE, false);
 		}
+		else 
+		{
+			menu.Enable(ID_COMMAND_SIMPLE_CREATE, false);
+			menu.Enable(ID_COMMAND_SIMPLE_CREATE_DEFAULTS, false);
+			menu.Enable(ID_COMMAND_SIMPLE_REMOVE, false);
+			
+			// Check for set default value
+			wxString defaultValue = pNode->getDefaultValue();
+			if(defaultValue.Len() == 0)
+				menu.Enable(ID_COMMAND_SIMPLE_SET_DEFAULTVALUE, false);
+		}
+
+		pWindow->Bind(
+			wxEVT_COMMAND_MENU_SELECTED,
+			[pNode](wxCommandEvent &evt)
+		{
+			pNode->onCommandRemove(evt);
+		},
+			ID_COMMAND_SIMPLE_REMOVE);
+
+		pWindow->Bind(
+			wxEVT_COMMAND_MENU_SELECTED,
+			[pNode](wxCommandEvent &evt)
+		{
+			pNode->onCommandCreate(evt);
+		},
+			ID_COMMAND_SIMPLE_CREATE);
+
+		pWindow->Bind(
+			wxEVT_COMMAND_MENU_SELECTED,
+			[pNode](wxCommandEvent &evt)
+		{
+			pNode->onCommandCreateDefaults(evt);
+		},
+			ID_COMMAND_SIMPLE_CREATE_DEFAULTS);
+
+		pWindow->Bind(
+			wxEVT_COMMAND_MENU_SELECTED,
+			[pNode](wxCommandEvent &evt)
+		{
+			pNode->onCommandSetDefaultvalue(evt);
+		},
+			ID_COMMAND_SIMPLE_SET_DEFAULTVALUE);
+
+		pWindow->PopupMenu(&menu);
+
 	}
 }
 

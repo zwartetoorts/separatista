@@ -76,7 +76,9 @@ bool ExpertDataViewRenderer::Render(wxRect cell, wxDC * dc, int state)
 	}
 	else
 	{
-		dc->SetFont(dc->GetFont().GetBaseFont());
+		/*wxFont font = dc->GetFont();
+		font.SetStyle(wxFONTSTYLE_NORMAL);
+		dc->SetFont(font);*/
 	}
 	RenderText(label, 0, cell, dc, state);
 	return true;

@@ -77,7 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../wxwidgets-3.1.2/include;../../../wxwidgets-3.1.2/lib/vc_lib/mswud;..\..\lib</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>SEPARATISTA_USINGDLL;SEPARATISTADEBUG_USINGDLL;SEPARATISTA_DEBUG;SEPARATISTA_DEBUG_NEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;SEPARATISTA_USINGDLL;SEPARATISTADEBUG_USINGDLL;SEPARATISTA_DEBUG;SEPARATISTA_DEBUG_NEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>../../../wxwidgets-3.1.2/lib/vc_lib/;$(OutDir)</AdditionalLibraryDirectories>
@@ -137,6 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\gui\app.cpp" />
+    <ClCompile Include="..\..\gui\currencytextctrl.cpp" />
     <ClCompile Include="..\..\gui\documenteditor.cpp" />
     <ClCompile Include="..\..\gui\expertdataviewmodel.cpp" />
     <ClCompile Include="..\..\gui\expertdataviewrenderer.cpp" />
@@ -148,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\gui\app.h" />
+    <ClInclude Include="..\..\gui\currencytextctrl.h" />
     <ClInclude Include="..\..\gui\documenteditor.h" />
     <ClInclude Include="..\..\gui\expertdataviewmodel.h" />
     <ClInclude Include="..\..\gui\expertdataviewrenderer.h" />
