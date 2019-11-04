@@ -27,6 +27,7 @@
 #endif
 
 #include <vector>
+#include <stack>
 
 #include <wx/dataview.h>
 
@@ -94,6 +95,9 @@ public:
 	/// Get the default value from the SimpleViewData::Element
 	wxString getDefaultValue() const;
 
+	/// Adds a Separatista parent to the parent stack (and adds itself as an elementlistener)
+	void addSepaParentElement(Separatista::Element *pSepaParentElement);
+
 
 	Separatista::Element* createDocumentPath(size_t index = 0);
 
@@ -120,10 +124,10 @@ private:
 	const SimpleViewData::Element *m_pElement;
 	const SimpleViewData::Element *m_pAttribute;
 	Separatista::Element *m_pSepaElement;
-	Separatista::Element *m_pSepaParentElement;
 	SimpleDataViewModelNode *m_pParent;
 	std::vector<SimpleDataViewModelNode*> m_children;
 	size_t m_nIndex;
+	std::stack<Separatista::Element*> m_parents;
 
 	/// Global counter for sorting elements in order of creation
 	static size_t m_nElementCounter;
