@@ -47,7 +47,7 @@ public:
 	SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, Separatista::SeparatistaDocument *pSepaDocument);
 
 	/// C'tor for a simpele element
-	SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, Separatista::Element *pSepaParentElement, SimpleDataViewModelNode *pParent = NULL);
+	SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, Separatista::Element *pSepaParentElement, SimpleDataViewModelNode *pParent = NULL, size_t nIndex = 0);
 
 	/// D'tor destroys all children
 	~SimpleDataViewModelNode();
@@ -129,8 +129,6 @@ private:
 	size_t m_nIndex;
 	std::stack<Separatista::Element*> m_parents;
 
-	/// Global counter for sorting elements in order of creation
-	static size_t m_nElementCounter;
 };
 
 class SimpleDataViewModel : public wxDataViewModel

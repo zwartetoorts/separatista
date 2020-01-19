@@ -30,14 +30,12 @@
 #include "documenteditor.h"
 #include "simpledataviewmodel.h"
 
-size_t SimpleDataViewModelNode::m_nElementCounter = 0;
-
 SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, Separatista::SeparatistaDocument *pSepaDocument)
 	:m_pDataViewModel(pModel), m_pElement(pElement), m_pSepaElement(pSepaDocument)
 {
 	m_pParent = NULL;
 	m_pAttribute = NULL;
-	m_nIndex = m_nElementCounter++;
+	m_nIndex = 0;
 
 	if (m_pSepaElement)
 		m_pSepaElement->addElementListener(this);
@@ -46,11 +44,9 @@ SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, co
 		buildModelTree(pElement, pSepaDocument);
 }
 
-SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, Separatista::Element *pSepaParentElement, SimpleDataViewModelNode *pParent)
-	:m_pDataViewModel(pModel), m_pElement(pElement), m_pSepaElement(pSepaElement), m_pParent(pParent), m_pAttribute(pAttributeElement)
+SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, Separatista::Element *pSepaParentElement, SimpleDataViewModelNode *pParent, size_t nIndex)
+	:m_pDataViewModel(pModel), m_pElement(pElement), m_pSepaElement(pSepaElement), m_pParent(pParent), m_pAttribute(pAttributeElement), m_nIndex(nIndex)
 {
-	m_nIndex = m_nElementCounter++;
-
 	// Receive notifications for element deletion and updates
 	if(m_pSepaElement)
 		m_pSepaElement->addElementListener(this);
@@ -171,7 +167,7 @@ void SimpleDataViewModelNode::elementCreated(Separatista::Element * pParent, Sep
 				{
 					// Create new node
 					Separatista::Element* pSepaParentElement = m_pParent->m_pSepaElement;
-					SimpleDataViewModelNode* pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, m_pElement, m_pAttribute, NULL, pSepaParentElement, m_pParent);
+					SimpleDataViewModelNode* pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, m_pElement, m_pAttribute, NULL, pSepaParentElement, m_pParent, count);
 					pDocPathElement = m_pElement;
 					while ((pDocPathElement = pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath)) != NULL)
 					{
@@ -264,7 +260,7 @@ void SimpleDataViewModelNode::setElementValue(const wxString & value)
 	// Check for sepa element
 	if (!m_pSepaElement)
 	{
-		m_pSepaElement = createDocumentPath();
+		m_pSepaElement = createDocumentPath(m_nIndex);
 		if (!m_pSepaElement)
 			return;
 	}
@@ -342,13 +338,13 @@ Separatista::Element * SimpleDataViewModelNode::createDocumentPath(size_t index)
 	if ((pDocPathElement = m_pElement->getChildByType(SimpleViewData::Element::DocumentPath)) == NULL)
 	{
 		// No Documentpath element present, try parent
-		return m_pParent->createDocumentPath();
+		return m_pParent->createDocumentPath(index);
 	}
 	else
 	{
 		// Create Parent DocumentPath
-		pSepaParentElement = m_pParent->createDocumentPath();
-		addSepaParentElement(pSepaParentElement);
+		pSepaParentElement = m_pParent->createDocumentPath(index);
+		
 		// Create this DocumentPath
 		for (; pDocPathElement != NULL; pDocPathElement = pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath),
 											pSepaParentElement = pSepaElement)
@@ -554,7 +550,7 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 									if (pSepaChildElement->getMaxOccurs() == 0 ||
 										pSepaChildElement->getMaxOccurs() > count)
 									{
-										pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, pSimpleChildElement, NULL, NULL, pSepaElement, this);
+										pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, pSimpleChildElement, NULL, NULL, pSepaElement, this, count + 1);
 										appendChild(pNewNode);
 										m_pDataViewModel->ItemAdded(wxDataViewItem(this), wxDataViewItem(pNewNode));
 									}
