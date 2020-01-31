@@ -49,6 +49,9 @@ public:
 	/// C'tor for a simpele element
 	SimpleDataViewModelNode(SimpleDataViewModel *pModel, const SimpleViewData::Element *pElement, const SimpleViewData::Element *pAttributeElement, Separatista::Element *pSepaElement, Separatista::Element *pSepaParentElement, SimpleDataViewModelNode *pParent = NULL, size_t nIndex = 0);
 
+	/// Copy C'tor
+	SimpleDataViewModelNode(const SimpleDataViewModelNode& OtherNode);
+	
 	/// D'tor destroys all children
 	~SimpleDataViewModelNode();
 

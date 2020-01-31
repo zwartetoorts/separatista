@@ -54,10 +54,34 @@ SimpleDataViewModelNode::SimpleDataViewModelNode(SimpleDataViewModel *pModel, co
 		addSepaParentElement(pSepaParentElement);
 }
 
+SimpleDataViewModelNode::SimpleDataViewModelNode(const SimpleDataViewModelNode& OtherNode)
+	:m_nIndex(OtherNode.m_nIndex + 1),
+	m_parents(OtherNode.m_parents),
+	m_pAttribute(OtherNode.m_pAttribute),
+	m_pElement(OtherNode.m_pElement),
+	m_pDataViewModel(OtherNode.m_pDataViewModel),
+	m_pParent(OtherNode.m_pParent),
+	m_pSepaElement(NULL)
+{
+	// Add elementlisteners to all parents
+	auto parents = m_parents;
+	while (!parents.empty())
+	{
+		parents.top()->addElementListener(this);
+		parents.pop();
+	}
+}
+
 SimpleDataViewModelNode::~SimpleDataViewModelNode()
 {
 	for (auto it = m_children.begin(); it != m_children.end(); it++)
 		delete *it;
+
+	while (!m_parents.empty())
+	{
+		m_parents.top()->removeElementListener(this);
+		m_parents.pop();
+	}
 }
 
 const SimpleViewData::Element* SimpleDataViewModelNode::getSimpleViewDataElement() const
@@ -167,22 +191,9 @@ void SimpleDataViewModelNode::elementCreated(Separatista::Element * pParent, Sep
 				{
 					// Create new node
 					Separatista::Element* pSepaParentElement = m_pParent->m_pSepaElement;
-					SimpleDataViewModelNode* pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, m_pElement, m_pAttribute, NULL, pSepaParentElement, m_pParent, count);
-					pDocPathElement = m_pElement;
-					while ((pDocPathElement = pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath)) != NULL)
-					{
-						Separatista::Element* pSepaChildElement;
-						if (pSepaParentElement && (pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath)) != NULL)
-						{
-							pSepaChildElement = pSepaParentElement->getElementByTag(pDocPathElement->getValue());
-							if (pSepaChildElement)
-							{
-								// Add all parents to the new node
-								pNewNode->addSepaParentElement(pSepaChildElement);
-							}
-							pSepaParentElement = pSepaChildElement;
-						}
-					}
+					//SimpleDataViewModelNode* pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, m_pElement, m_pAttribute, NULL, NULL, m_pParent, count);
+					SimpleDataViewModelNode* pNewNode = new SimpleDataViewModelNode(*this);
+										
 					// Insert the new node to our parent
 					m_pParent->appendChild(pNewNode);
 					m_pDataViewModel->ItemAdded(wxDataViewItem(m_pParent), wxDataViewItem(pNewNode));
@@ -204,38 +215,56 @@ void SimpleDataViewModelNode::elementDeleted(Separatista::Element * pElement)
 	}
 	else if (pElement == m_pSepaElement)
 	{
-		m_pSepaElement = NULL;
-		
-		// Check for root element type
-		const SimpleViewData::Element* pTypeElement = m_pElement->getChildByType(SimpleViewData::Element::Type);
-		if (pTypeElement)
+		// Decrease sibbling elements index if needed
+		bool found = false;
+		for (size_t i = 0; i < m_pParent->getChildCount(); i++)
 		{
-			if (pTypeElement->getValue() == wxT("Root"))
+			if (!found)
 			{
-				// Root it is, destroy all children and notify DataViewModel
-				for (auto it = m_children.begin(); it != m_children.end(); it++)
+				if (m_pParent->getChild(i)->m_pSepaElement == pElement)
 				{
-					m_pDataViewModel->ItemDeleted(wxDataViewItem(this), wxDataViewItem(*it));
+					found = true;
 				}
-				m_children.clear();
-
-				// Remove self
-				m_pParent->removeChild(this);
-				m_pDataViewModel->ItemDeleted(wxDataViewItem(m_pParent), wxDataViewItem(this));
-
-				while (!m_parents.empty())
+			}
+			else
+			{
+				// Match element
+				SimpleDataViewModelNode* pOthernode = m_pParent->getChild(i);
+				if (pOthernode->getSimpleViewDataAttributeElement() != NULL ? 
+					pOthernode->getSimpleViewDataAttributeElement() == getSimpleViewDataAttributeElement() :
+					pOthernode->getSimpleViewDataElement() == getSimpleViewDataElement())
 				{
-					m_parents.top()->removeElementListener(this);
-					m_parents.pop();
+					if (pOthernode->m_nIndex > m_nIndex)
+						pOthernode->m_nIndex--;
 				}
-
-				delete this;
-				return;
+				else
+					break;
 			}
 		}
 
-		// Notify the current element has changed
-		m_pDataViewModel->ItemChanged(wxDataViewItem(this));
+		// Check for element count, don't remove element if it's still needed
+		size_t max = m_pSepaElement->getMaxOccurs();
+		if (max != 0 && max == m_nIndex - 1)
+		{
+			m_pSepaElement = NULL;
+			m_pDataViewModel->ItemChanged(wxDataViewItem(this));
+		}
+		else
+		{
+			// Destroy all children and notify DataViewModel
+			for (auto it = m_children.begin(); it != m_children.end(); it++)
+			{
+				m_pDataViewModel->ItemDeleted(wxDataViewItem(this), wxDataViewItem(*it));
+			}
+			m_children.clear();
+
+			// Remove self
+			m_pParent->removeChild(this);
+			m_pDataViewModel->ItemDeleted(wxDataViewItem(m_pParent), wxDataViewItem(this));
+
+			delete this;
+			return;
+		}
 	}
 }
 
@@ -350,18 +379,6 @@ Separatista::Element * SimpleDataViewModelNode::createDocumentPath(size_t index)
 											pSepaParentElement = pSepaElement)
 		{
 			pSepaElement = pSepaParentElement->createElementByTag(pDocPathElement->getValue(), index);
-			// Check for last docpath element
-			if (pDocPathElement->getChildByType(SimpleViewData::Element::DocumentPath) == NULL)
-			{
-				// Is last
-				m_pSepaElement = pSepaElement;
-				m_pSepaElement->addElementListener(this);
-			}
-			else
-			{
-				// Not last
-				addSepaParentElement(pSepaElement);
-			}
 		}
 	}
 	return m_pSepaElement;
@@ -477,14 +494,14 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 				Separatista::Element::TagKeyRange range;
 				Separatista::Element::TagKeyMap::const_iterator it;
 				bool cont = true, init = false;
+				size_t count = 0;
 
 				while (cont)
 				{
 					pSimpleDocPathElement = pSimpleChildElement;
 					pSepaParentElement = pSepaElement;
-					size_t count = 0;
-
-					pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, pSimpleChildElement, NULL, NULL, pSepaElement, this);
+					
+					pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, pSimpleChildElement, NULL, NULL, pSepaElement, this, count);
 					appendChild(pNewNode);
 					m_pDataViewModel->ItemAdded(wxDataViewItem(this), wxDataViewItem(pNewNode));
 
@@ -527,6 +544,7 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 								init = true;
 								range = pSepaParentElement->getAllByTagName(pSimpleDocPathElement->getValue());
 								it = range.m_begin;
+								count = 0;
 							}
 							if (it != range.m_end)
 							{
@@ -550,7 +568,7 @@ void SimpleDataViewModelNode::buildModelTree(const SimpleViewData::Element *pSim
 									if (pSepaChildElement->getMaxOccurs() == 0 ||
 										pSepaChildElement->getMaxOccurs() > count)
 									{
-										pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, pSimpleChildElement, NULL, NULL, pSepaElement, this, count + 1);
+										pNewNode = new SimpleDataViewModelNode(m_pDataViewModel, pSimpleChildElement, NULL, NULL, pSepaParentElement, this, count);
 										appendChild(pNewNode);
 										m_pDataViewModel->ItemAdded(wxDataViewItem(this), wxDataViewItem(pNewNode));
 									}
@@ -763,7 +781,6 @@ void SimpleDataViewModel::OnContextMenu(wxWindow *pWindow, wxDataViewEvent & evt
 		{
 			menu.Enable(ID_COMMAND_SIMPLE_CREATE, false);
 			menu.Enable(ID_COMMAND_SIMPLE_CREATE_DEFAULTS, false);
-			menu.Enable(ID_COMMAND_SIMPLE_REMOVE, false);
 			
 			// Check for set default value
 			wxString defaultValue = pNode->getDefaultValue();
