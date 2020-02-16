@@ -28,6 +28,7 @@
 #include <wx/treectrl.h>
 #include <wx/filename.h>
 #include <wx/list.h>
+#include <wx/config.h>
 
 #include <separatista/separatistadocument.h>
 #include <separatista/documentreader.h>
@@ -38,6 +39,7 @@
 #include <separatista/debug/debug.h>
 
 #include "documenteditor.h"
+#include "variabledialog.h"
 
 DocumentEditor::DocumentEditor()
 {
@@ -196,5 +198,33 @@ SimpleDataViewModel * DocumentEditor::getSimpleDataViewModel() const
 ExpertDataViewModel * DocumentEditor::getExpertDataViewModel() const
 {
 	return m_expertDataViewModel.get();
+}
+
+wxString DocumentEditor::getVariable(const wxString& variable) const
+{
+	wxString value;
+
+	if (!m_pDocument)
+		return wxString();
+
+	wxString name = m_pDocument->getNamespaceURI();
+
+	wxConfig config("SeparatistaGUI");
+	config.SetPath(name);
+
+	if (!config.Read(variable, &value))
+	{
+		doVariableDialog();
+		config.Read(variable, &value);
+	}
+
+	return value;
+}
+
+void DocumentEditor::doVariableDialog() const
+{
+	VariableDialog dlg(m_pSimpleViewData, m_pDocument->getNamespaceURI());
+
+	dlg.ShowModal();
 }
 

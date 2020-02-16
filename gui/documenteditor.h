@@ -95,6 +95,13 @@ public:
 
 	ExpertDataViewModel * getExpertDataViewModel() const;
 
+	/**
+		Get a variable for the document namespace or show popup dialog
+	*/
+	wxString getVariable(const wxString& variable) const;
+
+	void doVariableDialog() const;
+
 protected:
 	/**
 		Loads the Simple View Data file based on the document's namespace.

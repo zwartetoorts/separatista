@@ -330,6 +330,20 @@ void SimpleDataViewModelNode::setElementValue(const wxDateTime & dt, bool bWithT
 
 }
 
+bool SimpleDataViewModelNode::hasDefaultValue() const
+{
+	// Find the last DocumentPathElement
+	const SimpleViewData::Element* pDocElement = m_pElement;
+	const SimpleViewData::Element* pElement;
+	while ((pElement = pDocElement->getChildByType(SimpleViewData::Element::DocumentPath)) != NULL ||
+		(pElement = pDocElement->getChildByType(SimpleViewData::Element::DocumentPathAttribute)) != NULL)
+	{
+		pDocElement = pElement;
+	}
+
+	return pDocElement->getChildByType(SimpleViewData::Element::DefaultValue) ? true : false;
+}
+
 wxString SimpleDataViewModelNode::getDefaultValue() const
 {
 	wxString defaultValue;
@@ -591,7 +605,6 @@ wxString SimpleDataViewModelNode::translateDefaultValue(const wxString &value) c
 {
 	wxString defaultValue;
 
-	
 	size_t len = value.Len();
 
 	if(value[0] == wxT('"') && value[len - 1] == wxT('"'))
@@ -605,6 +618,11 @@ wxString SimpleDataViewModelNode::translateDefaultValue(const wxString &value) c
 		{
 			wxDateTime dt = wxDateTime::Now();
 			defaultValue = dt.FormatISOCombined();
+		}
+		// It's a variable
+		else if (value[0] == wxT('%') && value[len - 1] == wxT('%'))
+		{
+			defaultValue = m_pDataViewModel->getVariable(value.Mid(1, len - 2));
 		}
 	}
 
@@ -779,12 +797,21 @@ void SimpleDataViewModel::OnContextMenu(wxWindow *pWindow, wxDataViewEvent & evt
 		}
 		else 
 		{
-			menu.Enable(ID_COMMAND_SIMPLE_CREATE, false);
-			menu.Enable(ID_COMMAND_SIMPLE_CREATE_DEFAULTS, false);
+			// Check if the element already exists
+			if (pNode->getSepaElement())
+			{
+				// Exists
+				menu.Enable(ID_COMMAND_SIMPLE_CREATE, false);
+				menu.Enable(ID_COMMAND_SIMPLE_CREATE_DEFAULTS, false);
+			}
+			else
+			{
+				// Doesn't exist
+				menu.Enable(ID_COMMAND_SIMPLE_REMOVE, false);
+			}
 			
-			// Check for set default value
-			wxString defaultValue = pNode->getDefaultValue();
-			if(defaultValue.Len() == 0)
+			// Check for default value
+			if (!pNode->hasDefaultValue())
 				menu.Enable(ID_COMMAND_SIMPLE_SET_DEFAULTVALUE, false);
 		}
 
@@ -823,6 +850,11 @@ void SimpleDataViewModel::OnContextMenu(wxWindow *pWindow, wxDataViewEvent & evt
 		pWindow->PopupMenu(&menu);
 
 	}
+}
+
+wxString SimpleDataViewModel::getVariable(const wxString& variable)
+{
+	return m_pDocumentEditor->getVariable(variable);
 }
 
 

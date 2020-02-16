@@ -9,11 +9,11 @@ CustomerDirectDebitInitiationV02/Payment information/Payment type information/Se
 CustomerDirectDebitInitiationV02/Payment information/Payment type information/Local instrument code[Options:Core Direct Debit=CORE,Shorter time cycle Core Direct Debit=COR1,B2B=B2B]:PmtTpInf/LclInstrm/Cd="CORE"
 CustomerDirectDebitInitiationV02/Payment information/Payment type information/Sequence type[Options:Final=FNAL,First=FRST,OneOff=OOFF,Recurring=RCUR]:PmtTpInf/SeqTp
 CustomerDirectDebitInitiationV02/Payment information/Requested collection date[Date]:ReqdColltnDt
-CustomerDirectDebitInitiationV02/Payment information/Creditor/Name[Text]:Cdtr/Nm
-CustomerDirectDebitInitiationV02/Payment information/Creditor account/IBAN[IBAN]:CdtrAcct/Id/IBAN
-CustomerDirectDebitInitiationV02/Payment information/Creditor agent/BIC[BIC]:CdtrAgt/FinInstnId/BIC
+CustomerDirectDebitInitiationV02/Payment information/Creditor/Name[Text]:Cdtr/Nm=%Creditor Name%
+CustomerDirectDebitInitiationV02/Payment information/Creditor account/IBAN[IBAN]:CdtrAcct/Id/IBAN=%Creditor IBAN%
+CustomerDirectDebitInitiationV02/Payment information/Creditor agent/BIC[BIC]:CdtrAgt/FinInstnId/BIC=%Creditor BIC%
 CustomerDirectDebitInitiationV02/Payment information/Charge bearer[Options:Following service level=SLEV]:ChrgBr="SLEV"
-CustomerDirectDebitInitiationV02/Payment information/Creditor identification/Id[Text]:CdtrSchmeId/Id/PrvtId/Othr/Id
+CustomerDirectDebitInitiationV02/Payment information/Creditor identification/Id[Text]:CdtrSchmeId/Id/PrvtId/Othr/Id=%Creditor Identification%
 CustomerDirectDebitInitiationV02/Payment information/Creditor identification/Scheme name[Readonly]:CdtrSchmeId/Id/PrvtId/Othr/SchmeNm/Prtry="SEPA"
 CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information[Root]:DrctDbtTxInf
 CustomerDirectDebitInitiationV02/Payment information/Direct debit transaction information/Payment identification[Text]:PmtId/EndToEndId

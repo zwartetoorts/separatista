@@ -27,9 +27,9 @@
 #include <separatista/separatista.h>
 #include <separatista/debug/debug.h>
 
-
 #include "app.h"
 #include "mainframe.h"
+#include "variabledialog.h"
 
 wxIMPLEMENT_APP(SeparatistaApp);
 
@@ -46,6 +46,9 @@ bool SeparatistaApp::OnInit()
 	m_locale.AddCatalog(wxT("separatista"));
 	m_locale.AddCatalog(wxT("wxstd"));
 
+	// Register IBANEditor 
+	IBANPropertyEditor::registerClass();
+	wxPropertyGridInterface::RegisterAdditionalEditors();
 
 	MainFrame *frame = new MainFrame();
 	frame->Show(true);

@@ -60,11 +60,6 @@ enum
 
 };
 
-enum
-{
-	IDM_
-};
-
 class MainFrame : public wxFrame
 {
 public:

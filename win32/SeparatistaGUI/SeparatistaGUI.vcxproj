@@ -82,7 +82,7 @@
     <Link>
       <AdditionalLibraryDirectories>../../../wxwidgets-3.1.2/lib/vc_lib/;$(OutDir)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>comctl32.lib	;Rpcrt4.lib;wxbase31ud.lib;wxzlibd.lib;wxpngd.lib;wxmsw31ud_core.lib;wxmsw31ud_adv.lib;separatista.lib;separatistaiban.lib;separatistadebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib	;Rpcrt4.lib;wxbase31ud.lib;wxzlibd.lib;wxpngd.lib;wxmsw31ud_core.lib;wxmsw31ud_adv.lib;wxmsw31ud_propgrid.lib;separatista.lib;separatistaiban.lib;separatistadebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -146,6 +146,7 @@
     <ClCompile Include="..\..\gui\simpledataviewmodel.cpp" />
     <ClCompile Include="..\..\gui\simpledataviewrenderer.cpp" />
     <ClCompile Include="..\..\gui\simpleviewdata.cpp" />
+    <ClCompile Include="..\..\gui\variabledialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\gui\app.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="..\..\gui\simpledataviewmodel.h" />
     <ClInclude Include="..\..\gui\simpledataviewrenderer.h" />
     <ClInclude Include="..\..\gui\simpleviewdata.h" />
+    <ClInclude Include="..\..\gui\variabledialog.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\gui\maps\urn_iso_std_iso_20022_tech_xsd_pain.008.001.02.txt" />

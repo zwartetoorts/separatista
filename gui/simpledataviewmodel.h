@@ -95,6 +95,9 @@ public:
 	void setElementValue(const wxString &value);
 	void setElementValue(const wxDateTime &dt, bool bWithTime);
 
+	/// Check for a default value
+	bool hasDefaultValue() const;
+
 	/// Get the default value from the SimpleViewData::Element
 	wxString getDefaultValue() const;
 
@@ -160,6 +163,9 @@ public:
 	bool GetAttr(const wxDataViewItem &item, unsigned int col, wxDataViewItemAttr &attr) const;
 
 	void OnContextMenu(wxWindow *pWindow, wxDataViewEvent &evt);
+
+	/// Returns the variable valus
+	wxString getVariable(const wxString& variable);
 
 private:
 	DocumentEditor *m_pDocumentEditor;
