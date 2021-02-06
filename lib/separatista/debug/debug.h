@@ -22,6 +22,7 @@
 #include <array>
 #include <unordered_map>
 #include <cstdlib>
+#include <typeinfo>
 
 #ifndef SEPARATISTA_DEBUG_H
 #define SEPARATISTA_DEBUG_H
